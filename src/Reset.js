@@ -1,0 +1,156 @@
+import React, { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
+import axios from 'axios'
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+  Icon,
+  Loader,
+  Divider,
+} from 'semantic-ui-react'
+import { validatePassword } from './validation'
+import { PasswordRequirements } from './Signup'
+import { requestLogin } from './Login'
+import conf from './conf'
+
+const Reset = () => {
+  const [ searchParams, ] = useSearchParams()
+  const token = searchParams.get("token")
+  // console.log('token:', token)
+
+  const navigate = useNavigate()
+
+  const [ password, setPassword ] = useState('')
+  const [ repassword, setRepassword ] = useState('')
+  const [ passwordValidation, setPasswordValidation ] = useState(validatePassword(''))
+  const [ passwordError, setPasswordError ] = useState('')
+  const [ repasswordError, setRepasswordError ] = useState('')
+  const [ responseError, setResponseError ] = useState('')
+  const [ loading, setLoading ] = useState(false)
+
+  const handleSubmit = async () => {
+    setResponseError('')
+    let valid = true
+    if (!(validatePassword(password)).valid) {
+      valid = false
+      setPasswordError('Please enter a valid password')
+    } else {
+      setPasswordError('')
+    }
+    if (password !== repassword) {
+      valid = false
+      setRepasswordError('Please enter passwords that match')
+    } else {
+      setRepasswordError('')
+    }
+    if (!valid) {
+      return
+    }
+
+    setLoading(true)
+    try {
+      let res
+      res = await axios.post(`${conf.api.url}/reset`, {
+        password,
+        token,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      // console.log('reset res:', res)
+
+      const email = res.data.email
+      console.log('email:', email)
+      await requestLogin({ email, password, rememberme: false })
+      navigate(conf.account.start)
+    } catch (err) {
+      console.error('reset error:', err);
+      return setResponseError(err?.response?.data?.message  || 'Error resetting a password.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Header as='h2' color='teal' textAlign='center'>
+          <Image src='/images/logo192.png' /> Reset Password
+        </Header>
+        <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
+        { responseError &&
+          <Message
+            negative
+            style={{ textAlign: 'left'}}
+            icon='exclamation circle'
+            header='Error'
+            content={responseError}
+            onDismiss={() => setResponseError('')}
+          />
+        }
+
+        <Form size='large'>
+          <Segment stacked>
+            <Form.Input
+              fluid
+              icon='lock'
+              iconPosition='left'
+              placeholder='New Password'
+              type='password'
+              name='password'
+              value={password}
+              onChange={e => { setPassword(e.target.value); setPasswordValidation(validatePassword(e.target.value)); }}
+              error={ !isEmpty(passwordError) && {
+                content: passwordError,
+                pointing: 'above',
+              }}
+              required
+            />
+            <Form.Input
+              fluid
+              icon='repeat'
+              iconPosition='left'
+              placeholder='Repeat Password'
+              type='password'
+              name='repassword'
+              value={repassword}
+              onChange={e => setRepassword(e.target.value)}
+              error={ !isEmpty(repasswordError) && {
+                content: repasswordError,
+                pointing: 'above',
+              }}
+              required
+            />
+
+            <PasswordRequirements
+              passwordValidation={passwordValidation}
+              passwordsMatch={ password === repassword }
+            />
+
+            <Divider />
+            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+              <Icon name='edit outline' />
+              {' '}Reset password{' '}
+            </Button>
+          </Segment>
+        </Form>
+        <Message>
+          Remember password?{' '}
+          <Button color='grey' size='mini' onClick={() => navigate('/login')}>
+            Log In{' '}
+            <Icon name='right arrow' />
+          </Button>
+        </Message>
+      </Grid.Column>
+    </Grid>
+  )
+}
+
+export default Reset

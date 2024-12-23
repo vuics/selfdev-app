@@ -1,0 +1,284 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { isEmpty } from 'lodash'
+import axios from 'axios'
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+  List,
+  Icon,
+  Loader,
+  Divider,
+} from 'semantic-ui-react'
+import { validateEmail, validatePhone, validatePassword } from './validation'
+import { requestLogin } from './Login'
+import conf from './conf'
+
+export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
+  return (
+    <div style={{ textAlign: 'left' }}>
+      The password should satisfy the following criteria:
+      <List bulleted style={{marginTop: '0.5em' }}>
+        <List.Item style={{ color: passwordValidation.upperCase ? 'green' : 'red'}}>
+          At least one upper case English letter.
+        </List.Item>
+        <List.Item style={{ color: passwordValidation.lowerCase ? 'green' : 'red'}}>
+          At least one lower case English letter.
+        </List.Item>
+        <List.Item style={{ color: passwordValidation.digit ? 'green' : 'red'}}>
+          At least one digit.
+        </List.Item>
+        <List.Item style={{ color: passwordValidation.special ? 'green' : 'red'}}>
+          At least one special character.
+        </List.Item>
+        <List.Item style={{ color: passwordValidation.length ? 'green' : 'red'}}>
+          Minimum length is 8 characters.
+        </List.Item>
+        <List.Item style={{ color: passwordsMatch ? 'green' : 'red'}}>
+          Passwords match.
+        </List.Item>
+      </List>
+    </div>
+  )
+}
+
+const Signup = () => {
+  const navigate = useNavigate()
+
+  const [ firstName, setFirstName ] = useState('')
+  const [ lastName, setLastName ] = useState('')
+  const [ email, setEmail ] = useState('')
+  const [ phone, setPhone ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ repassword, setRepassword ] = useState('')
+  const [ passwordValidation, setPasswordValidation ] = useState(validatePassword(''))
+  const [ firstNameError, setFirstNameError ] = useState('')
+  const [ lastNameError, setLastNameError ] = useState('')
+  const [ emailError, setEmailError ] = useState('')
+  const [ phoneError, setPhoneError ] = useState('')
+  const [ passwordError, setPasswordError ] = useState('')
+  const [ repasswordError, setRepasswordError ] = useState('')
+  const [ responseError, setResponseError ] = useState('')
+  const [ loading, setLoading ] = useState(false)
+  const [ agree, setAgree ] = useState(false)
+
+  const handleSubmit = async () => {
+    setResponseError('')
+    let valid = true
+    if (isEmpty(firstName)) {
+      valid = false
+      setFirstNameError('Please enter a valid first name')
+    } else {
+      setFirstNameError('')
+    }
+    if (isEmpty(lastName)) {
+      valid = false
+      setLastNameError('Please enter a valid last name')
+    } else {
+      setLastNameError('')
+    }
+    if (!validateEmail(email)) {
+      valid = false
+      setEmailError('Please enter a valid email address')
+    } else {
+      setEmailError('')
+    }
+    if (phone && !validatePhone(phone)) {
+      valid = false
+      setPhoneError('Please enter a valid phone')
+    } else {
+      setPhoneError('')
+    }
+    if (!(validatePassword(password)).valid) {
+      valid = false
+      setPasswordError('Please enter a valid password')
+    } else {
+      setPasswordError('')
+    }
+    if (password !== repassword) {
+      valid = false
+      setRepasswordError('Please enter passwords that match')
+    } else {
+      setRepasswordError('')
+    }
+    if (!valid) {
+      return
+    }
+
+    setLoading(true)
+    try {
+      let res
+      res = await axios.post(`${conf.api.url}/signup`, {
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      // console.log('signup res:', res)
+
+      await requestLogin({ email, password, rememberme: false })
+      navigate(conf.account.start)
+    } catch (err) {
+      console.error('signup error:', err);
+      return setResponseError(err?.response?.data?.message  || 'Error creating a user account.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Header as='h2' color='teal' textAlign='center'>
+          <Image src='/images/logo192.png' /> Create a New Account
+        </Header>
+        <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
+        { responseError &&
+          <Message
+            negative
+            style={{ textAlign: 'left'}}
+            icon='exclamation circle'
+            header='Error'
+            content={responseError}
+            onDismiss={() => setResponseError('')}
+          />
+        }
+
+        <Form size='large'>
+          <Segment stacked>
+            <Form.Input fluid
+              icon='user'
+              iconPosition='left'
+              placeholder='First Name'
+              name='firstName'
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+              error={ !isEmpty(firstNameError) && {
+                content: firstNameError,
+                pointing: 'above',
+              }}
+              required
+            />
+            <Form.Input
+              fluid
+              icon='user outline'
+              iconPosition='left'
+              placeholder='Last Name'
+              name='lastName'
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
+              error={ !isEmpty(lastNameError) && {
+                content: lastNameError,
+                pointing: 'above',
+              }}
+              required
+            />
+            <Form.Input
+              fluid
+              icon='at'
+              iconPosition='left'
+              placeholder='E-mail address'
+              name='email'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              error={ !isEmpty(emailError) && {
+                content: emailError,
+                pointing: 'above',
+              }}
+              required
+            />
+            <Form.Input
+              fluid
+              icon='phone'
+              iconPosition='left'
+              placeholder='Phone (optionally)'
+              name='phone'
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              error={ !isEmpty(phoneError) && {
+                content: phoneError,
+                pointing: 'above',
+              }}
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              iconPosition='left'
+              placeholder='Password'
+              type='password'
+              name='password'
+              value={password}
+              onChange={e => { setPassword(e.target.value); setPasswordValidation(validatePassword(e.target.value)); }}
+              error={ !isEmpty(passwordError) && {
+                content: passwordError,
+                pointing: 'above',
+              }}
+              required
+            />
+            <Form.Input
+              fluid
+              icon='repeat'
+              iconPosition='left'
+              placeholder='Repeat Password'
+              type='password'
+              name='repassword'
+              value={repassword}
+              onChange={e => setRepassword(e.target.value)}
+              error={ !isEmpty(repasswordError) && {
+                content: repasswordError,
+                pointing: 'above',
+              }}
+              required
+            />
+
+            <PasswordRequirements
+              passwordValidation={passwordValidation}
+              passwordsMatch={ password === repassword }
+            />
+
+            <Divider />
+            <Form.Group>
+              <Form.Checkbox
+                label={
+                  <label style={{ textAlign: 'left' }}>
+                    I have read and agree to the{' '}
+                    <a href="/terms" target="_blank">terms of service</a>
+                    {' '}and{' '}
+                    <a href="/privacy" target="_blank">privacy policy</a>
+                    .
+                  </label>
+                }
+                checked={agree}
+                onChange={(e, data) => setAgree(data.checked)}
+              >
+              </Form.Checkbox>
+            </Form.Group>
+            <Button color='teal' fluid size='large' onClick={handleSubmit} disabled={!agree}>
+              <Icon name='user plus' />
+              {' '}Sign Up{' '}
+            </Button>
+          </Segment>
+        </Form>
+        <Message>
+          Have an existing account?{' '}
+          <Button color='grey' size='mini' onClick={() => navigate('/login')}>
+            Log In{' '}
+            <Icon name='right arrow' />
+          </Button>
+        </Message>
+      </Grid.Column>
+    </Grid>
+  )
+}
+
+export default Signup
