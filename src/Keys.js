@@ -208,6 +208,18 @@ const Keys = () => {
           </Form>
         )}
       </Segment>
+
+      <Segment>
+        You can read the
+        {' '}<a href='https://github.com/ai-az1/selfdev-js/blob/main/API.md' target='_blank'>API.md</a>{' '}
+        document to learn more about the Self-developing API.
+      </Segment>
+
+      <Segment>
+        Check the
+        {' '}<a href='https://github.com/ai-az1/selfdev-js' target='_blank'>selfdev-js</a>{' '}
+        tool on GitHub to use the Self-developing AI from command line.
+      </Segment>
     </Container>
   )
 }
