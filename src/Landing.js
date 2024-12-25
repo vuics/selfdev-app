@@ -73,6 +73,9 @@ const Landing = () => {
         crossOrigin: { mode: 'cors' },
       })
       console.log('interest post res:', res)
+      setEmail('')
+      setFirstName('')
+      setLastName('')
     } catch (err) {
       console.error('interest post error:', err);
       return setResponseError(err?.response?.data?.message || 'Error submitting.')
