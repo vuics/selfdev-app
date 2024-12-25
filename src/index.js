@@ -19,6 +19,7 @@ import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
 import Subscription from './Subscription'
+import Landing from './Landing'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -52,6 +53,7 @@ const Index = () => {
       <Route path="/forgot" element={<Forgot />}/>
       <Route path="/reset" element={<Reset />}/>
       <Route path="/logout" element={<Logout />}/>
+      <Route path="/landing/:id" element={<Landing />}/>
 
       { conf.chat.enable && (
         <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
