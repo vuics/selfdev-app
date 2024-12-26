@@ -18,6 +18,7 @@ import {
   Menu,
   Segment,
   Sidebar,
+  Label
 } from 'semantic-ui-react'
 import conf from './conf'
 
@@ -264,6 +265,24 @@ const HomepageLayout = () => {
         <Container>
           Human-machine collaboration using virtual agents.
         </Container>
+        <br/>
+        <Container>
+          <div>
+            ENTERPISE AI:<br/><br/>
+            <Label>
+              Explainable
+            </Label>
+            <Label>
+              Trusted
+            </Label>
+            <Label>
+              Secure
+            </Label>
+            <Label>
+              Compliant
+            </Label>
+          </div>
+        </Container>
       </Segment>
 
       <Segment inverted vertical style={{ padding: '5em 0em' }}>
@@ -274,7 +293,7 @@ const HomepageLayout = () => {
                 <Header inverted as='h4' content='About' />
                 <List link inverted>
                   <List.Item as='a'>
-                    <a href='mailto:admin@vuics.com'>
+                    <a href='mailto:2@az1.ai'>
                       Contact Us
                     </a>
                   </List.Item>
@@ -299,7 +318,7 @@ const HomepageLayout = () => {
                 <List link inverted>
                   <List.Item as='a'>
                     <p>
-                      Self-developing AI for everyone.
+                      Self-developing AI is uniquely tailored to your business needs.
                     </p>
                   </List.Item>
                   <List.Item as='a'>
