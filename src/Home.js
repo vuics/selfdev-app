@@ -260,15 +260,21 @@ const HomepageLayout = () => {
 
   return (
     <ResponsiveContainer logIn={logIn} available={available}>
-
-      <Segment style={{ padding: '8em 0em' }} vertical>
-        <Container>
-          Human-machine collaboration using virtual agents.
-        </Container>
-        <br/>
-        <Container>
+      <br />
+      <br />
+      <Container>
+        <Segment padded="very" textAlign="center" style={{ background: '#f9f9f9' }}>
+          <Header as="h1" dividing>
+            Welcome to AZ1.AI!
+          </Header>
+          <Header as="h3" color="blue">
+            Empowering Innovation Through AI-Driven Collaboration
+          </Header>
+          <Icon name='users' size='massive' color='blue' inverted bordered />
+          <br/>
+          <br/>
+          <br/>
           <div>
-            ENTERPISE AI:<br/><br/>
             <Label>
               Explainable
             </Label>
@@ -282,8 +288,127 @@ const HomepageLayout = () => {
               Compliant
             </Label>
           </div>
-        </Container>
-      </Segment>
+        </Segment>
+
+        <Segment padded>
+          <Header as="h2" textAlign="center" dividing>
+            Our Mission
+          </Header>
+          <p>
+            At AZ1.AI, we design and deliver cutting-edge agentic AI collaboration platforms tailored for entrepreneurs and their investors. Our mission is to enable measurable growth, amplify human potential, and drive sustainable, high-impact business innovation.
+          </p>
+        </Segment>
+
+        <Segment padded>
+          <Header as="h2" textAlign="center" dividing>
+            Our Vision
+          </Header>
+          <p>
+            Imagine a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive. We envision a world where all stakeholders benefit from sustainable growth driven by AI-powered collaboration.
+          </p>
+        </Segment>
+
+        <Segment padded>
+          <Header as="h2" textAlign="center" dividing>
+            The Solution: Transformative AI Collaboration Platforms
+          </Header>
+          <Grid divided='vertically' columns={3}>
+            <Grid.Row>
+              {[
+                {
+                  icon: 'id badge',
+                  color: 'red',
+                  title: "Seamless Integration of Human and AI Capabilities",
+                  offer: "What We Offer: Harmonious partnerships between human teams and AI agents.",
+                  benefit: "The Benefit: Streamlined workflows and enhanced decision-making lead to amplified creativity.",
+                },
+                {
+                  icon: 'travel',
+                  color: 'orange',
+                  title: "Maximizing Returns on Human and Financial Capital",
+                  offer: "What We Offer: Automation of repetitive tasks.",
+                  benefit: "The Benefit: Teams can focus on strategic and creative activities, driving operational efficiency and investor returns.",
+                },
+                {
+                  icon: 'earlybirds',
+                  color: 'yellow',
+                  title: "Empowering Entrepreneurs and Investors",
+                  offer: "What We Offer: Insightful tools and metrics that support scalable ventures.",
+                  benefit: "The Benefit: Entrepreneurs can swiftly identify growth opportunities, while investors gain real-time transparency on their capital impacts.",
+                },
+                {
+                  icon: 'dna',
+                  color: 'green',
+                  title: "Driving Innovation and Unlocking Growth",
+                  offer: "What We Offer: AI-driven insights and predictive analytics that adapt to business needs.",
+                  benefit: "The Benefit: Breakthrough results with scalable solutions that foster sustainable growth.",
+                },
+                {
+                  icon: 'conversation',
+                  color: 'violet',
+                  title: "Ensuring Ethical, Inclusive, and Sustainable AI Solutions",
+                  offer: "What We Offer: A commitment to fairness, transparency, and accountability in our AI designs.",
+                  benefit: "The Benefit: Trust-building solutions that prioritize long-term societal and environmental impacts.",
+                },
+                {
+                  icon: 'rocket',
+                  color: 'purple',
+                  title: "Enhancing Workforce Skills and AI Literacy",
+                  offer: "What We Offer: Comprehensive training programs that cultivate AI knowledge and upskilling.",
+                  benefit: "The Benefit: A workforce adept at leveraging AI technologies fosters innovation and elevates overall organizational competency.",
+                },
+              ].map((item, index) => (
+                <Grid.Column key={index} width={5} textAlign="center">
+                  <br/>
+                  <Icon name={item.icon} size='massive' color={item.color} fitted circular />
+                  <Header as="h4">{item.title}</Header>
+                  <p>{item.offer}</p>
+                  <p>{item.benefit}</p>
+                  <br/>
+                </Grid.Column>
+              ))}
+            </Grid.Row>
+          </Grid>
+        </Segment>
+
+        <Segment padded>
+          <Header as="h2" textAlign="center" dividing>
+            Expected Outcomes
+          </Header>
+          <List relaxed>
+            <List.Item>Enhanced Operational Efficiency: Reduce by up to 50% the time spent on repetitive tasks.</List.Item>
+            <List.Item>Increased Revenue and ROI: Achieve 10-30% improvements in profitability.</List.Item>
+            <List.Item>Scalability and Growth: Expand dynamically into new markets.</List.Item>
+            <List.Item>Empowered Human Potential: Shift focus towards strategic and impactful work.</List.Item>
+            <List.Item>Sustainability and Trust: Aligning solutions with societal and environmental goals.</List.Item>
+          </List>
+        </Segment>
+
+        <Segment padded textAlign="center" style={{ background: '#f9f9f9' }}>
+          <Header as="h2" dividing>
+            Join Us in Shaping the Future of Work
+          </Header>
+          <p>Are you ready to amplify your potential, drive innovation, and foster sustainable growth? Join us at AZ1.AI and discover a new realm of collaboration where AI enhances human capability.</p>
+          <Button
+            style={{
+              marginTop: '1em',
+              marginBottom: '1em',
+            }}
+            primary size='huge' onClick={() => logIn(false)}
+          >
+            { available ? 'Get Started Today!' : 'Join a Whitelist' }
+            <Icon name='right arrow' />
+          </Button>
+        </Segment>
+
+        <Segment textAlign="center" style={{ padding: '5em 0' }}>
+          <Header as="h2">
+            Elevate your entrepreneurial journey with AZ1.AI — where AI meets human innovation for a brighter, sustainable future.
+          </Header>
+        </Segment>
+        <br />
+        <br />
+      </Container>
 
       <Segment inverted vertical style={{ padding: '5em 0em' }}>
         <Container>
