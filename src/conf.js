@@ -36,6 +36,11 @@ const conf = {
   subscription: {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
   },
+
+  terminal: {
+    enable: bool(process.env.REACT_APP_TERMINAL_ENABLE || true),
+    wsUrl: process.env.REACT_APP_WS_URL || 'ws://localhost:6369',
+  },
 }
 
 export default conf

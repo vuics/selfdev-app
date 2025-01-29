@@ -69,7 +69,7 @@ const Index = () => {
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
       )}
       
-      <Route path="/code" element={<Code />}/>
+      <Route path="/code" element={(<Private> <Code /> </Private>)}/>
       
       <Route path="*" element={<Error />}/>
     </Routes>
