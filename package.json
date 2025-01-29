@@ -35,9 +35,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "serve": "serve -s build -l 3000",
-    "build-serve": "npm run build && serve -s build -l 3000",
-    "build-serve-ssl": "npm run build && serve -s build -l 3000 --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
+    "serve": "serve -s build -l 9099",
+    "build-serve": "npm run build && serve -s build -l 9099",
+    "build-serve-ssl": "npm run build && serve -s build -l 9099 --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
