@@ -20,6 +20,7 @@ import Profile from './Profile'
 import Keys from './Keys'
 import Subscription from './Subscription'
 import Landing from './Landing'
+import Code from './Code'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -67,7 +68,9 @@ const Index = () => {
       { conf.subscription.enable && (
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
       )}
-
+      
+      <Route path="/code" element={<Code />}/>
+      
       <Route path="*" element={<Error />}/>
     </Routes>
   </>

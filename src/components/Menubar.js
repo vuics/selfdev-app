@@ -29,6 +29,10 @@ const Menubar = () => {
           Chat
         </Menu.Item>
       ) }
+      <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
+        <Icon name='code' />
+        Code
+      </Menu.Item>
 
       <Menu.Menu position='right'>
         <Dropdown item
