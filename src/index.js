@@ -18,6 +18,7 @@ import Chat from './Chat'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
+import Note from './Note'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
@@ -68,6 +69,9 @@ const Index = () => {
       )}
       { conf.open.enable && (
         <Route path="/open" element={(<Private> <Open /> </Private>)}/>
+      )}
+      { conf.note.enable && (
+        <Route path="/note" element={(<Private> <Note /> </Private>)}/>
       )}
       { conf.profile.enable && (
         <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>

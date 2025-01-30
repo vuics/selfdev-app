@@ -43,6 +43,12 @@ const conf = {
     topOffset: num(process.env.REACT_APP_OPEN_TOP_OFFSET || 50),
   },
 
+  note: {
+    enable: bool(process.env.REACT_APP_NOTE_ENABLE || false),
+    url: process.env.REACT_APP_NOTE_URL || 'http://localhost:8889/lab?token=my-token-abc',
+    topOffset: num(process.env.REACT_APP_NOTE_TOP_OFFSET || 50),
+  },
+
   profile: {
     enable: bool(process.env.REACT_APP_PROFILE_ENABLE || true),
   },

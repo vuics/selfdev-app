@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Menu,
@@ -41,11 +40,16 @@ const Menubar = () => {
           Build
         </Menu.Item>
       ) }
-
       { conf.open.enable && (
         <Menu.Item onClick={() => navigate('/open')} active={pathname==='/open'}>
           <Icon name='lightbulb outline' />
           Open
+        </Menu.Item>
+      ) }
+      { conf.note.enable && (
+        <Menu.Item onClick={() => navigate('/note')} active={pathname==='/note'}>
+          <Icon name='edit outline' />
+          Note
         </Menu.Item>
       ) }
 
