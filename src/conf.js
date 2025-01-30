@@ -26,19 +26,19 @@ const conf = {
   },
 
   code: {
-    enable: bool(process.env.REACT_APP_CODE_ENABLE || true),
+    enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',
     topOffset: num(process.env.REACT_APP_CODE_TOP_OFFSET || 50),
   },
 
   build: {
-    enable: bool(process.env.REACT_APP_BUILD_ENABLE || true),
+    enable: bool(process.env.REACT_APP_BUILD_ENABLE || false),
     url: process.env.REACT_APP_BUILD_URL || 'http://localhost:9690/',
     topOffset: num(process.env.REACT_APP_BUILD_TOP_OFFSET || 50),
   },
 
   open: {
-    enable: bool(process.env.REACT_APP_OPEN_ENABLE || true),
+    enable: bool(process.env.REACT_APP_OPEN_ENABLE || false),
     url: process.env.REACT_APP_OPEN_URL || 'http://localhost:9990/',
     topOffset: num(process.env.REACT_APP_OPEN_TOP_OFFSET || 50),
   },
@@ -53,11 +53,6 @@ const conf = {
 
   subscription: {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
-  },
-
-  terminal: {
-    enable: bool(process.env.REACT_APP_TERMINAL_ENABLE || true),
-    wsUrl: process.env.REACT_APP_WS_URL || 'ws://localhost:6369',
   },
 }
 
