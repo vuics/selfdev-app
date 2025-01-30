@@ -4,6 +4,7 @@ import {
 } from 'semantic-ui-react'
 import Iframe from 'react-iframe'
 import Menubar from './components/Menubar'
+import conf from './conf.js'
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -31,15 +32,15 @@ function useWindowDimensions() {
 const Code = () => {
   const { height, width } = useWindowDimensions();
 
-  console.log('width:', width, ' height:', height)
+  // console.log('width:', width, ' height:', height)
   return (
     <>
       <Container>
         <Menubar />
       </Container>
-      <Iframe url="http://localhost:8080/"
+      <Iframe url={conf.code.ideUrl}
               width={width}
-              height={height-50}
+              height={height-conf.code.topOffset}
               id=""
               className=""
               display="block"

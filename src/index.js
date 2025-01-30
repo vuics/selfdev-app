@@ -59,6 +59,9 @@ const Index = () => {
       { conf.chat.enable && (
         <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
       )}
+      { conf.code.enable && (
+        <Route path="/code" element={(<Private> <Code /> </Private>)}/>
+      )}
       { conf.profile.enable && (
         <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
       )}
@@ -68,9 +71,6 @@ const Index = () => {
       { conf.subscription.enable && (
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
       )}
-      
-      <Route path="/code" element={(<Private> <Code /> </Private>)}/>
-      
       <Route path="*" element={<Error />}/>
     </Routes>
   </>

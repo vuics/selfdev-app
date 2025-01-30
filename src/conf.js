@@ -1,6 +1,6 @@
 const bool = (val) => ['true', '1', true, 1].includes(val)
 // const json = (val) => val && JSON.parse(val)
-// const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
+const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 // const arr = (str) => str ? str.split(',') : []
 
 const conf = {
@@ -23,6 +23,12 @@ const conf = {
   chat: {
     enable: bool(process.env.REACT_APP_CHAT_ENABLE || true),
     limit: 5,
+  },
+
+  code: {
+    enable: bool(process.env.REACT_APP_CODE_ENABLE || true),
+    ideUrl: process.env.REACT_APP_IDE_URL || 'http://localhost:8080/',
+    topOffset: num(process.env.REACT_APP_TOP_OFFSET || 50),
   },
 
   profile: {
