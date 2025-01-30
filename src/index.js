@@ -19,6 +19,7 @@ import Code from './Code'
 import Build from './Build'
 import Open from './Open'
 import Note from './Note'
+import Sell from './Sell'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
@@ -73,6 +74,10 @@ const Index = () => {
       { conf.note.enable && (
         <Route path="/note" element={(<Private> <Note /> </Private>)}/>
       )}
+      { conf.sell.enable && (
+        <Route path="/sell" element={(<Private> <Sell /> </Private>)}/>
+      )}
+
       { conf.profile.enable && (
         <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
       )}

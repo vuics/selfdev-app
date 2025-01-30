@@ -52,6 +52,12 @@ const Menubar = () => {
           Note
         </Menu.Item>
       ) }
+      { conf.sell.enable && (
+        <Menu.Item onClick={() => navigate('/sell')} active={pathname==='/sell'}>
+          <Icon name='handshake outline' />
+          Sell
+        </Menu.Item>
+      ) }
 
       <Menu.Menu position='right'>
         <Dropdown item
