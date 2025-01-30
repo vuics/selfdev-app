@@ -7,7 +7,7 @@ import Menubar from './components/Menubar'
 import conf from './conf.js'
 import { useWindowDimensions } from './helper.js'
 
-const Code = () => {
+const Open = () => {
   const { height, width } = useWindowDimensions();
 
   // console.log('width:', width, ' height:', height)
@@ -16,10 +16,10 @@ const Code = () => {
       <Container>
         <Menubar />
       </Container>
-      <Iframe url={conf.code.url}
+      <Iframe url={conf.open.url}
               width={width}
-              height={height - conf.code.topOffset}
-              id="code-frame"
+              height={height - conf.open.topOffset}
+              id="open-frame"
               className=""
               display="block"
               position="relative"/>
@@ -27,5 +27,5 @@ const Code = () => {
   )
 }
 
-export default Code
+export default Open
 

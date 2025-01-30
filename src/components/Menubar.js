@@ -42,6 +42,13 @@ const Menubar = () => {
         </Menu.Item>
       ) }
 
+      { conf.open.enable && (
+        <Menu.Item onClick={() => navigate('/open')} active={pathname==='/open'}>
+          <Icon name='lightbulb outline' />
+          Open
+        </Menu.Item>
+      ) }
+
       <Menu.Menu position='right'>
         <Dropdown item
           text={name+'\u00A0\u00A0'}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import conf from './conf.js'
 
 // import App from './App'
@@ -17,6 +17,7 @@ import Logout from './Logout'
 import Chat from './Chat'
 import Code from './Code'
 import Build from './Build'
+import Open from './Open'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
@@ -35,14 +36,13 @@ const Private = ({ children }) => {
       console.error('Unauthorized. Redirect to /')
       navigate('/login')
     }
-  }, [])
+  })
   return children
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const Index = () => {
-  const loc = useLocation()
   return (
   <>
     <Routes>
@@ -65,6 +65,9 @@ const Index = () => {
       )}
       { conf.build.enable && (
         <Route path="/build" element={(<Private> <Build /> </Private>)}/>
+      )}
+      { conf.open.enable && (
+        <Route path="/open" element={(<Private> <Open /> </Private>)}/>
       )}
       { conf.profile.enable && (
         <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>

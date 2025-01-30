@@ -37,6 +37,12 @@ const conf = {
     topOffset: num(process.env.REACT_APP_BUILD_TOP_OFFSET || 50),
   },
 
+  open: {
+    enable: bool(process.env.REACT_APP_OPEN_ENABLE || true),
+    url: process.env.REACT_APP_OPEN_URL || 'http://localhost:9990/',
+    topOffset: num(process.env.REACT_APP_OPEN_TOP_OFFSET || 50),
+  },
+
   profile: {
     enable: bool(process.env.REACT_APP_PROFILE_ENABLE || true),
   },
