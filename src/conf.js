@@ -27,8 +27,14 @@ const conf = {
 
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || true),
-    ideUrl: process.env.REACT_APP_IDE_URL || 'http://localhost:8080/',
-    topOffset: num(process.env.REACT_APP_TOP_OFFSET || 50),
+    url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',
+    topOffset: num(process.env.REACT_APP_CODE_TOP_OFFSET || 50),
+  },
+
+  build: {
+    enable: bool(process.env.REACT_APP_BUILD_ENABLE || true),
+    url: process.env.REACT_APP_BUILD_URL || 'http://localhost:9690/',
+    topOffset: num(process.env.REACT_APP_BUILD_TOP_OFFSET || 50),
   },
 
   profile: {

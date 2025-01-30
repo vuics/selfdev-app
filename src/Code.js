@@ -1,33 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Container,
 } from 'semantic-ui-react'
 import Iframe from 'react-iframe'
 import Menubar from './components/Menubar'
 import conf from './conf.js'
-
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
-
-function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowDimensions;
-}
+import { useWindowDimensions } from './helper.js'
 
 const Code = () => {
   const { height, width } = useWindowDimensions();
@@ -38,10 +16,10 @@ const Code = () => {
       <Container>
         <Menubar />
       </Container>
-      <Iframe url={conf.code.ideUrl}
+      <Iframe url={conf.code.url}
               width={width}
-              height={height-conf.code.topOffset}
-              id=""
+              height={height - conf.code.topOffset}
+              id="code-frame"
               className=""
               display="block"
               position="relative"/>

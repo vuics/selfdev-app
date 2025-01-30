@@ -35,6 +35,12 @@ const Menubar = () => {
           Code
         </Menu.Item>
       ) }
+      { conf.build.enable && (
+        <Menu.Item onClick={() => navigate('/build')} active={pathname==='/build'}>
+          <Icon name='magic' />
+          Build
+        </Menu.Item>
+      ) }
 
       <Menu.Menu position='right'>
         <Dropdown item

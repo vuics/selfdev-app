@@ -15,12 +15,13 @@ import Forgot from './Forgot'
 import Reset from './Reset'
 import Logout from './Logout'
 import Chat from './Chat'
+import Code from './Code'
+import Build from './Build'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
 import Subscription from './Subscription'
 import Landing from './Landing'
-import Code from './Code'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -61,6 +62,9 @@ const Index = () => {
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>
+      )}
+      { conf.build.enable && (
+        <Route path="/build" element={(<Private> <Build /> </Private>)}/>
       )}
       { conf.profile.enable && (
         <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
