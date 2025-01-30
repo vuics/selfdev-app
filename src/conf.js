@@ -13,7 +13,7 @@ const conf = {
   },
 
   interestForm: {
-    url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/TBS',
+    url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/kXhRqMe8RquB377J6',
   },
 
   account: {
