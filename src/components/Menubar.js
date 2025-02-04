@@ -58,6 +58,12 @@ const Menubar = () => {
           Sell
         </Menu.Item>
       ) }
+      { conf.train.enable && (
+        <Menu.Item onClick={() => navigate('/train')} active={pathname==='/train'}>
+          <Icon name='graduation cap' />
+          Train
+        </Menu.Item>
+      ) }
 
       <Menu.Menu position='right'>
         <Dropdown item

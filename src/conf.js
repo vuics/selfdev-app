@@ -55,6 +55,12 @@ const conf = {
     topOffset: num(process.env.REACT_APP_SELL_TOP_OFFSET || 50),
   },
 
+  train: {
+    enable: bool(process.env.REACT_APP_TRAIN_ENABLE || false),
+    url: process.env.REACT_APP_TRAIN_URL || 'http://localhost:8180/vnc.html',
+    topOffset: num(process.env.REACT_APP_TRAIN_TOP_OFFSET || 50),
+  },
+
   profile: {
     enable: bool(process.env.REACT_APP_PROFILE_ENABLE || true),
   },

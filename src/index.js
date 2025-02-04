@@ -20,6 +20,7 @@ import Build from './Build'
 import Open from './Open'
 import Note from './Note'
 import Sell from './Sell'
+import Train from './Train'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
@@ -76,6 +77,9 @@ const Index = () => {
       )}
       { conf.sell.enable && (
         <Route path="/sell" element={(<Private> <Sell /> </Private>)}/>
+      )}
+      { conf.train.enable && (
+        <Route path="/train" element={(<Private> <Train /> </Private>)}/>
       )}
 
       { conf.profile.enable && (
