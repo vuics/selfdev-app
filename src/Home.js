@@ -35,45 +35,78 @@ const { MediaContextProvider, Media } = createMedia({
 
 const HomepageHeading = ({ mobile, available, logIn }) => {
   return (
-    <Container text>
-      <br />
-      <Image alt="logo" style={{height: '300px'}} src='/images/logo512.png' centered />
-      <Header
-        as='h1'
-        style={{
-          fontSize: mobile ? '2em' : '4em',
-          fontWeight: 'normal',
-          marginTop: mobile ? '0' : '0',
-        }}
-      >
-        <br />
-        <span style={{color: 'gray'}}>
-          From A to Z in one step
-        </span>
-      </Header>
-      <Header
-        as='h2'
-        style={{
-          fontSize: mobile ? '1.1em' : '2.2em',
-          fontWeight: 'normal',
-          marginTop: mobile ? '0.25em' : '0.5em',
-          marginBottom: '2em',
-        }}
-      >
-        <span style={{color: 'dimgray'}}>
-          Automate your workflows today!
-        </span>
-      </Header>
-      <Button
-        style={{
-          marginBottom: '5em',
-        }}
-        primary size='huge' onClick={() => logIn(false)}
-      >
-        { available ? 'Chat to AI' : 'Join a Whitelist' }
-        <Icon name='right arrow' />
-      </Button>
-    </Container>
+    <div>
+      <div style={{
+        position: 'realtive',
+      }}>
+        <Image alt="logo" style={{
+            height: '800px',
+            zIndex: 1,
+            position: 'relative',
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.1))',
+          }}
+          src='/images/human-agent-network-1200x800.png'
+          centered
+        />
+        <div style={{
+            zIndex: 2,
+            position: 'absolute',
+            textAlign: 'center',
+            top: '8em',
+          }}
+        >
+          <Header
+            as='h1'
+            style={{
+              fontSize: mobile ? '3em' : '4em',
+              // fontSize: '4em',
+              fontWeight: 'normal',
+              color: 'gray',
+            }}
+          >
+            From A to Z in one step
+          </Header>
+          <Header
+            as='h3'
+            style={{
+              fontSize: mobile ? '1.6em' : '2.2em',
+              // fontSize: '2.2em',
+              fontWeight: 'normal',
+              // marginTop: mobile ? '0.25em' : '0.5em',
+              marginTop: mobile ? '0.25em' : '0.5em',
+              marginBottom: '2em',
+              color: 'gray',
+            }}
+          >
+            AZ1 Agents-as-a-Service plaform for businesses to effortlessly deploy collaborative teams of AI agents — like having experts working 24/7 to supercharge enterprise productivity.
+          </Header>
+          <Header
+            as='h2'
+            style={{
+              fontSize: mobile ? '1.6em' : '2.2em',
+              fontWeight: 'normal',
+              marginTop: mobile ? '0.25em' : '0.5em',
+              marginBottom: '2em',
+            }}
+          >
+            <span style={{color: 'dimgray'}}>
+              Sign-up for AZ1 agents to understand, automate and optimize your business
+            </span>
+          </Header>
+          <br />
+          <Button
+            style={{
+              marginTop: '5em',
+              marginBottom: '5em',
+            }}
+            primary size='huge' onClick={() => logIn(false)}
+          >
+            { available ? 'Sign Up' : 'Join a Whitelist' }
+            <Icon name='right arrow' />
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -101,7 +134,10 @@ const DesktopContainer = ({ children, available, logIn }) => {
           >
             <Container>
               <Menu.Item active>
+                {/*
                 <Image avatar alt="logo" src='/images/logo192.png' />
+                */}
+                <Image avatar alt="logo" src='/images/az1-logomark.png' />
                 <Link to='/'> {' '} Home</Link>
               </Menu.Item>
               <Menu.Item position='right'>
