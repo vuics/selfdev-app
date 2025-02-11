@@ -43,7 +43,7 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
             height: '800px',
             zIndex: 1,
             position: 'relative',
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.1))',
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.2))',
           }}
           src='/images/human-agent-network-1200x800.png'
           centered
@@ -55,55 +55,57 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
             top: '8em',
           }}
         >
-          <Header
-            as='h1'
-            style={{
-              fontSize: mobile ? '3em' : '4em',
-              // fontSize: '4em',
-              fontWeight: 'normal',
-              color: 'gray',
-            }}
-          >
-            From A to Z in one step
-          </Header>
-          <Header
-            as='h3'
-            style={{
-              fontSize: mobile ? '1.6em' : '2.2em',
-              // fontSize: '2.2em',
-              fontWeight: 'normal',
-              // marginTop: mobile ? '0.25em' : '0.5em',
-              marginTop: mobile ? '0.25em' : '0.5em',
-              marginBottom: '2em',
-              color: 'gray',
-            }}
-          >
-            AZ1 Agents-as-a-Service plaform for businesses to effortlessly deploy collaborative teams of AI agents — like having experts working 24/7 to supercharge enterprise productivity.
-          </Header>
-          <Header
-            as='h2'
-            style={{
-              fontSize: mobile ? '1.6em' : '2.2em',
-              fontWeight: 'normal',
-              marginTop: mobile ? '0.25em' : '0.5em',
-              marginBottom: '2em',
-            }}
-          >
-            <span style={{color: 'dimgray'}}>
-              Sign-up for AZ1 agents to understand, automate and optimize your business
-            </span>
-          </Header>
-          <br />
-          <Button
-            style={{
-              marginTop: '5em',
-              marginBottom: '5em',
-            }}
-            primary size='huge' onClick={() => logIn(false)}
-          >
-            { available ? 'Sign Up' : 'Join a Whitelist' }
-            <Icon name='right arrow' />
-          </Button>
+          <Container fluid textAlign='center' style={{ padding: '1em 5em' }}>
+            <Header
+              as='h1'
+              style={{
+                fontSize: mobile ? '3em' : '6em',
+                fontWeight: 'bold',
+                color: 'rgb(35,68,123)',
+              }}
+            >
+              {/*
+              From A to Z in one step
+              */}
+              Supercharge Your Productivity with AZ1
+            </Header>
+            <Header
+              as='h3'
+              style={{
+                fontSize: mobile ? '1.6em' : '3.2em',
+                fontWeight: 'normal',
+                marginTop: mobile ? '0.25em' : '0.5em',
+                marginBottom: '1em',
+                color: 'gray',
+              }}
+            >
+              Agents-as-a-Service plaform for businesses to effortlessly deploy collaborative teams of 24/7 AI agents.
+            </Header>
+            {/* TODO: Make the button bigger */}
+            <Button
+              style={{
+                // marginTop: '1em',
+                marginBottom: '1em',
+              }}
+              primary size='massive' onClick={() => logIn(false)}
+            >
+              { available ? "Let's Go" : 'Join a Whitelist' }
+              <Icon name='right arrow' />
+            </Button>
+            <Header
+              as='h2'
+              style={{
+                fontSize: mobile ? '1.6em' : '3em',
+                fontWeight: 'bold',
+                marginTop: mobile ? '0.25em' : '0.5em',
+                marginBottom: '2em',
+                color: 'rgb(35,68,123)',
+              }}
+            >
+              Understand | Automate | Optimize
+            </Header>
+            <br />
+          </Container>
         </div>
       </div>
     </div>
@@ -137,8 +139,7 @@ const DesktopContainer = ({ children, available, logIn }) => {
                 {/*
                 <Image avatar alt="logo" src='/images/logo192.png' />
                 */}
-                <Image avatar alt="logo" src='/images/az1-logomark.png' />
-                <Link to='/'> {' '} Home</Link>
+                <Image avatar alt="logo" style={{ height: '60px', width: '60px' }} src='/images/az1-logomark.png' />
               </Menu.Item>
               <Menu.Item position='right'>
                 { available ? (
@@ -308,25 +309,30 @@ const HomepageLayout = () => {
       <br />
       <br />
       <Container>
-        <Segment padded="very" textAlign="center" style={{ background: '#f9f9f9' }}>
-          <Header as="h1" dividing>
+        <Segment padded="very" textAlign="center" style={{ background: 'rgba(148,185,224,0.1)' }}>
+          <Header as="h1" style={{ fontSize: '3em' }}>
             Empowering Innovation Through AI-Driven Collaboration
           </Header>
-          <p>
-            At AZ1.AI, we design and deliver cutting-edge agentic AI collaboration platforms tailored for entrepreneurs and their investors. Our mission is to enable measurable growth, amplify human potential, and drive sustainable, high-impact business innovation.
-            Imagine a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive. We envision a world where all stakeholders benefit from sustainable growth driven by AI-powered collaboration.
+          <p style={{ fontSize: '2em'}}>
+            Our mission is to enable measurable growth, amplify human potential, and empower sustainable, high-impact businesses.
+          </p>
+          <p style={{ fontSize: '2em'}}>
+            AZ1 imagines a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive.
+          </p>
+          <p style={{ fontSize: '2em', fontWeight: 'bold' }}>
+            The future is now.
           </p>
           <div>
-            <Label>
+            <Label size="massive" basic color='red'>
               Explainable
             </Label>
-            <Label>
+            <Label size="massive" basic color='yellow'>
               Trusted
             </Label>
-            <Label>
+            <Label size="massive" basic color='green'>
               Secure
             </Label>
-            <Label>
+            <Label size="massive" basic color='blue'>
               Compliant
             </Label>
           </div>
@@ -334,7 +340,7 @@ const HomepageLayout = () => {
 
         <Segment padded>
           <Header as="h2" textAlign="center" dividing>
-            The Solution: Transformative AI Collaboration Platforms
+            The Solution: Transformative AI Collaboration Platform
           </Header>
           <Grid divided='vertically' columns={3}>
             <Grid.Row>
@@ -342,52 +348,66 @@ const HomepageLayout = () => {
                 {
                   icon: 'id badge',
                   color: 'red',
-                  title: "Seamless Integration of Human and AI Capabilities",
-                  offer: "What We Offer: Harmonious partnerships between human teams and AI agents.",
-                  benefit: "The Benefit: Streamlined workflows and enhanced decision-making lead to amplified creativity.",
+                  // value / impact
+                  // feature / what?
+                  // function / how?
+                  title: "Agent-Staffed Workflows",
+                  offer: "Seamless integration of human and AI capabilities.",
+                  benefit: "Grow your business on our platform.",
+                  li3: "Unleash company knowledge with AI-driven search."
                 },
                 {
                   icon: 'travel',
                   color: 'orange',
-                  title: "Maximizing Returns on Human and Financial Capital",
-                  offer: "What We Offer: Automation of repetitive tasks.",
-                  benefit: "The Benefit: Teams can focus on strategic and creative activities, driving operational efficiency and investor returns.",
+                  title: "Maximizing Team Productivity",
+                  offer: "Automate tasks saving time and money.",
+                  benefit: "Auto-generate business intelligence and documentation.",
+                  li3: "Enhance decision-making with AI."
                 },
                 {
                   icon: 'earlybirds',
                   color: 'yellow',
-                  title: "Empowering Entrepreneurs and Investors",
-                  offer: "What We Offer: Insightful tools and metrics that support scalable ventures.",
-                  benefit: "The Benefit: Entrepreneurs can swiftly identify growth opportunities, while investors gain real-time transparency on their capital impacts.",
+                  title: "Empowering Entrepreneurs",
+                  offer: "Scale faster with less head count.",
+                  benefit: "Automate competitive intelligence.",
+                  li3: "Analyze and find new market opportunities.",
                 },
                 {
                   icon: 'dna',
                   color: 'green',
-                  title: "Driving Innovation and Unlocking Growth",
-                  offer: "What We Offer: AI-driven insights and predictive analytics that adapt to business needs.",
-                  benefit: "The Benefit: Breakthrough results with scalable solutions that foster sustainable growth.",
+                  title: "All-in-One Platform",
+                  offer: "Use agents in all your web or desktop apps.",
+                  benefit: "Integrate with APIs and third-party tools and services.",
+                  li3: "Adapt the platform to your business.",
                 },
                 {
                   icon: 'conversation',
                   color: 'violet',
-                  title: "Ensuring Ethical, Inclusive, and Sustainable AI Solutions",
-                  offer: "What We Offer: A commitment to fairness, transparency, and accountability in our AI designs.",
-                  benefit: "The Benefit: Trust-building solutions that prioritize long-term societal and environmental impacts.",
+                  title: "No-code and Code Agents",
+                  offer: "Explainable AI in all agentic steps and processes with clean and understandable audit trail.",
+                  benefit: "Automate repetitive tasks with multiple applications and large language models.",
+                  li3: 'Train agent once and run.'
                 },
                 {
                   icon: 'rocket',
                   color: 'purple',
-                  title: "Enhancing Workforce Skills and AI Literacy",
-                  offer: "What We Offer: Comprehensive training programs that cultivate AI knowledge and upskilling.",
-                  benefit: "The Benefit: A workforce adept at leveraging AI technologies fosters innovation and elevates overall organizational competency.",
+                  title: "Cloud-based: No Infrastructure Needed",
+                  offer: "Drag-and-drop agents: no-code solutions available for businesses without IT resources.",
+                  benefit: "Sophisticated SDK for complex IT requirements all running in your browser.",
+                  li3: "Compliant and secure."
                 },
               ].map((item, index) => (
                 <Grid.Column key={index} width={5} textAlign="center">
                   <br/>
-                  <Icon name={item.icon} size='massive' color={item.color} fitted circular />
-                  <Header as="h4">{item.title}</Header>
-                  <p>{item.offer}</p>
-                  <p>{item.benefit}</p>
+                  <Icon name={item.icon} size='huge' color={item.color} fitted circular />
+                  <Header as="h4" style={{ fontSize: '1.5em' }}>{item.title}</Header>
+                  {/*
+                  */}
+                  <ul style={{ fontSize: '1.3em' }}>
+                    <li style={{ textAlign: 'left' }}>{item.offer}</li>
+                    { item.benefit && (<li style={{ textAlign: 'left' }}>{item.benefit}</li>)}
+                    { item.li3 && (<li style={{ textAlign: 'left' }}>{item.li3}</li>)}
+                  </ul>
                   <br/>
                 </Grid.Column>
               ))}
@@ -434,7 +454,7 @@ const HomepageLayout = () => {
             Code
             <Divider />
             <HeaderSubheader>
-              Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Around 30% of the code is generated to this moment.
+              Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Between 30% and 70% of the code is generated to this moment.
             </HeaderSubheader>
           </Header>
           <br/>
@@ -745,13 +765,14 @@ const HomepageLayout = () => {
                 <Header inverted as='h4' content='About' />
                 <List link inverted>
                   <List.Item as='a'>
-                    <a href='mailto:2@az1.ai'>
+                    <a href='mailto:admin@az1.ai'>
                       Contact Us
                     </a>
                   </List.Item>
                 </List>
               </Grid.Column>
               <Grid.Column width={5}>
+                  {/*
                 <Header inverted as='h4' content='Services' />
                 <List link inverted>
                   <List.Item as='a'>
@@ -765,6 +786,7 @@ const HomepageLayout = () => {
                     </a>
                   </List.Item>
                 </List>
+                  */}
               </Grid.Column>
               <Grid.Column width={7}>
                 <List link inverted>
