@@ -12,13 +12,16 @@ import {
   Container,
   Grid,
   Header,
+  HeaderSubheader,
   Icon,
   Image,
   List,
   Menu,
   Segment,
   Sidebar,
-  Label
+  Label,
+  CardGroup,
+  Divider,
 } from 'semantic-ui-react'
 import conf from './conf'
 
@@ -33,6 +36,7 @@ const { MediaContextProvider, Media } = createMedia({
 const HomepageHeading = ({ mobile, available, logIn }) => {
   return (
     <Container text>
+      <br />
       <Image alt="logo" style={{height: '300px'}} src='/images/logo512.png' centered />
       <Header
         as='h1'
@@ -42,7 +46,10 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
           marginTop: mobile ? '0' : '0',
         }}
       >
-        <span style={{color: 'gray'}}>az1</span>
+        <br />
+        <span style={{color: 'gray'}}>
+          From A to Z in one step
+        </span>
       </Header>
       <Header
         as='h2'
@@ -53,7 +60,9 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
           marginBottom: '2em',
         }}
       >
-        <span style={{color: 'dimgray'}}>Self-developing AI</span>
+        <span style={{color: 'dimgray'}}>
+          Automate your workflows today!
+        </span>
       </Header>
       <Button
         style={{
@@ -265,15 +274,12 @@ const HomepageLayout = () => {
       <Container>
         <Segment padded="very" textAlign="center" style={{ background: '#f9f9f9' }}>
           <Header as="h1" dividing>
-            Welcome to AZ1.AI!
-          </Header>
-          <Header as="h3" color="blue">
             Empowering Innovation Through AI-Driven Collaboration
           </Header>
-          <Icon name='users' size='massive' color='blue' inverted bordered />
-          <br/>
-          <br/>
-          <br/>
+          <p>
+            At AZ1.AI, we design and deliver cutting-edge agentic AI collaboration platforms tailored for entrepreneurs and their investors. Our mission is to enable measurable growth, amplify human potential, and drive sustainable, high-impact business innovation.
+            Imagine a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive. We envision a world where all stakeholders benefit from sustainable growth driven by AI-powered collaboration.
+          </p>
           <div>
             <Label>
               Explainable
@@ -288,24 +294,6 @@ const HomepageLayout = () => {
               Compliant
             </Label>
           </div>
-        </Segment>
-
-        <Segment padded>
-          <Header as="h2" textAlign="center" dividing>
-            Our Mission
-          </Header>
-          <p>
-            At AZ1.AI, we design and deliver cutting-edge agentic AI collaboration platforms tailored for entrepreneurs and their investors. Our mission is to enable measurable growth, amplify human potential, and drive sustainable, high-impact business innovation.
-          </p>
-        </Segment>
-
-        <Segment padded>
-          <Header as="h2" textAlign="center" dividing>
-            Our Vision
-          </Header>
-          <p>
-            Imagine a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive. We envision a world where all stakeholders benefit from sustainable growth driven by AI-powered collaboration.
-          </p>
         </Segment>
 
         <Segment padded>
@@ -370,20 +358,329 @@ const HomepageLayout = () => {
             </Grid.Row>
           </Grid>
         </Segment>
+      </Container>
 
-        <Segment padded>
-          <Header as="h2" textAlign="center" dividing>
-            Expected Outcomes
+      <Container>
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Chat
+            <Divider />
+            <HeaderSubheader>
+              Chat with agents and agentic teams. Interact with agents through the Synthetic UI on all-in-one platform.
+            </HeaderSubheader>
           </Header>
-          <List relaxed>
-            <List.Item>Enhanced Operational Efficiency: Reduce by up to 50% the time spent on repetitive tasks.</List.Item>
-            <List.Item>Increased Revenue and ROI: Achieve 10-30% improvements in profitability.</List.Item>
-            <List.Item>Scalability and Growth: Expand dynamically into new markets.</List.Item>
-            <List.Item>Empowered Human Potential: Shift focus towards strategic and impactful work.</List.Item>
-            <List.Item>Sustainability and Trust: Aligning solutions with societal and environmental goals.</List.Item>
-          </List>
+          <br/>
+          <Image src='/images/screenshots/chat.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Hyper-Personalized Experiences',
+              description: 'Customers get UI elements (dashboards, forms, graphs, documents) tailored in real time to their specific needs and context, eliminating the friction of rigid interfaces.',
+            }, {
+              header: 'Intelligent Automation & Agentic Assistance',
+              description: 'Users interact with AI agents that work proactively, automating tasks, surfacing insights, and adapting to their goals without manual setup.',
+            }, {
+              header: 'All-in-One Platform',
+              description: 'A self-developing, self-selling, and self-funding ecosystem means minimal effort on the customer’s part to maintain or scale the system.',
+            }, {
+              header: 'Effortless Integration',
+              description: 'The agents work inside the customer’s existing tools (e.g., Salesforce), ensuring a seamless experience without switching platforms.',
+            }, {
+              header: 'Continuous Optimization',
+              description: 'The system evolves dynamically, ensuring that customers always have the most effective and relevant UI for their needs.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
         </Segment>
 
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Code
+            <Divider />
+            <HeaderSubheader>
+              Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Around 30% of the code is generated to this moment.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/code.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Accelerated Development',
+              description: 'Customers can build and iterate faster with AI-driven assistance from architect and coder agents, reducing time spent on manual coding.',
+            }, {
+              header: 'Seamless Collaboration',
+              description: 'The web-based IDE enables smooth teamwork between human developers and AI agents, ensuring efficiency and alignment across projects.',
+            }, {
+              header: 'Intelligent Code Generation',
+              description: 'With 30% of the platform’s code already AI-generated, the system continuously improves and evolves, minimizing redundant work and enhancing scalability.',
+            }, {
+              header: 'Self-Developing Capabilities',
+              description: 'AI agents assist in writing, refactoring, and optimizing code, allowing developers to focus on high-value problem-solving rather than repetitive tasks.',
+            }, {
+              header: 'Flexible and Scalable',
+              description: 'The system adapts to customer needs, integrating with existing workflows while providing AI-powered architectural guidance for better long-term development.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Build
+            <Divider />
+            <HeaderSubheader>
+              Build / orgnize / assemble agentic teams with visual editor. Our architect and coder agents can continue developing your agentic teams with prompts from users.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/build.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Effortless Agentic Team Building',
+              description: 'Customers can easily create, organize, and manage agentic teams using a visual editor, streamlining the setup of AI-driven workflows.',
+            }, {
+              header: 'AI-Assisted Development',
+              description: 'Architect and coder agents actively help refine and expand these teams based on user prompts, ensuring continuous improvement without manual effort.',
+            }, {
+              header: 'Scalability & Adaptability',
+              description: 'The system grows with the customer’s needs, dynamically evolving agentic teams to handle increasingly complex tasks and integrations.',
+            }, {
+              header: 'User-Friendly Customization',
+              description: 'A no-code/low-code visual interface makes it easy to structure and optimize AI-driven teams without requiring deep technical expertise.',
+            }, {
+              header: 'Seamless Automation & Execution',
+              description: 'Once assembled, agentic teams work autonomously, collaborating to execute tasks efficiently and intelligently.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Open
+            <Divider />
+            <HeaderSubheader>
+              A chat to communicate to all deployed open-source (Ollama) models and Open AI models. It can be used for testing and comparison of different LLMs.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/open.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Unified AI Access',
+              description: 'Customers can communicate with both open-source models (Ollama) and OpenAI models in a single chat interface, simplifying AI interaction.',
+            }, {
+              header: 'Seamless Testing & Comparison',
+              description: 'Users can test different large language models (LLMs) side by side, evaluating their performance, accuracy, and suitability for specific tasks.',
+            }, {
+              header: 'Enhanced Flexibility',
+              description: 'The platform allows customers to choose the best model for their needs, whether prioritizing cost, privacy, or specific capabilities.',
+            }, {
+              header: 'Optimized AI Workflows',
+              description: 'By integrating multiple models in one interface, customers can streamline experimentation, research, and deployment without switching tools.',
+            }, {
+              header: 'Data-Driven Decision Making',
+              description: 'Real-time insights into LLM responses help customers refine their AI strategies, improving output quality and efficiency.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Note
+            <Divider />
+            <HeaderSubheader>
+              Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/note.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Flexible Prototyping',
+              description: 'Customers can quickly develop and test new AI agents within Jupyter notebooks, enabling rapid iteration and refinement.',
+            }, {
+              header: 'Safe & Scalable Experimentation',
+              description: 'Running notebooks inside safe, isolated, and scalable environments for AI experimentation.',
+            }, {
+              header: 'Agent-Driven Content Generation',
+              description: 'Users can leverage AI agents within notebooks to generate content, automate workflows, and test AI-driven interactions in real time.',
+            }, {
+              header: 'Seamless Integration',
+              description: 'The system allows customers to experiment with agents while maintaining compatibility with existing development pipelines and tools.',
+            }, {
+              header: 'Enhanced Innovation & Efficiency',
+              description: 'By combining Jupyter’s flexibility with Docker’s stability, customers can accelerate AI development, fine-tune models, and optimize agent behavior.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Sell
+            <Divider />
+            <HeaderSubheader>
+              Sell with web CRM, ERP and other apps. The apps can be controlled by the web-automator.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/sell.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Seamless Sales & Operations',
+              description: 'Customers can manage sales, customer relationships (CRM), enterprise processes (ERP), and other business functions within a unified web platform.',
+            }, {
+              header: 'AI-Driven Automation',
+              description: 'The web-automator controls and optimizes app interactions, reducing manual work and ensuring smooth, automated workflows.',
+            }, {
+              header: 'Increased Efficiency & Productivity',
+              description: 'Automated handling of CRM, ERP, and other apps allows teams to focus on strategy and customer engagement rather than administrative tasks.',
+            }, {
+              header: 'Scalability & Adaptability',
+              description: 'The system grows with business needs, integrating with existing tools while enhancing operational flexibility.',
+            }, {
+              header: 'Real-Time Insights & Decision-Making',
+              description: 'AI-powered automation ensures businesses can act on data quickly, improving sales and operational efficiency.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Train
+            <Divider />
+            <HeaderSubheader>
+              Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/train.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Automated Task Execution',
+              description: 'Agents learn to navigate the browser just like users, reducing the need for manual work by automating repetitive tasks.',
+            }, {
+              header: 'Adaptive Learning & Optimization',
+              description: 'Agents observe, repeat, and optimize user actions, continuously improving efficiency based on real-world interactions.',
+            }, {
+              header: 'Seamless Web Automation',
+              description: 'Customers can train agents to handle workflows across websites, web apps, and online services without requiring complex coding or scripting.',
+            }, {
+              header: 'Increased Productivity',
+              description: 'By offloading routine browsing tasks to AI agents, users can focus on higher-value activities while maintaining control over their workflows.',
+            }, {
+              header: 'Personalized & Scalable Automation',
+              description: 'The system adapts to individual user behaviors, evolving over time to enhance precision, speed, and overall performance.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            API
+            <Divider />
+            <HeaderSubheader>
+              The API allows programmatic access to the platform for chat, web page publishing, emails, and web app requests.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <CardGroup items={[ {
+              header: 'Seamless Platform Integration',
+              description: 'The API enables businesses to programmatically interact with the platform, ensuring smooth integration with existing systems and workflows.',
+            }, {
+              header: 'Automated Chat & Communication',
+              description: 'Customers can leverage the API to facilitate automated messaging, AI-driven chat interactions, and email handling, improving engagement and response efficiency.',
+            }, {
+              header: 'Dynamic Web Publishing',
+              description: 'The API allows businesses to publish and update web pages effortlessly, ensuring real-time content management and adaptability.',
+            }, {
+              header: 'Efficient Web App Requests',
+              description: 'Users can automate and streamline web app interactions, reducing manual work and enabling faster execution of tasks.',
+            }, {
+              header: 'Scalable & Customizable',
+              description: 'The API provides flexibility for businesses to tailor automation, communication, and content delivery to their specific needs, enhancing efficiency and scalability.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Command-line Interface (CLI)
+            <Divider />
+            <HeaderSubheader>
+              A command line tool (CLI) to access our API programmatically. The tool can be used from terminal or from the Jupyter notebooks.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/cli.png' fluid bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'Effortless API Access',
+              description: 'The command-line tool (CLI) provides a simple and efficient way to interact with the platform’s API directly from the terminal or Jupyter notebooks.',
+            }, {
+              header: 'Automation & Scripting',
+              description: 'Users can automate workflows, trigger API actions, and integrate platform functionalities into their scripts and development pipelines.',
+            }, {
+              header: 'Flexible & Developer-Friendly',
+              description: 'The CLI allows developers, data scientists, and engineers to interact with the platform in a code-friendly environment without needing a graphical interface.',
+            }, {
+              header: 'Seamless Jupyter Notebook Integration',
+              description: 'Customers can use the CLI within Jupyter notebooks, enabling AI-driven experimentation, data analysis, and workflow automation.',
+            }, {
+              header: 'Scalable & Efficient Operations',
+              description: 'With a lightweight and command-based approach, businesses can execute tasks quickly, improving productivity and reducing reliance on manual operations.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+
+        <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+          <Header as='h1' textAlign='center'>
+            Mobile App
+            <Divider />
+            <HeaderSubheader>
+              A mobile app (iOS, Android, web) with a chat that allows to communicate to agents and see the history of messages.
+            </HeaderSubheader>
+          </Header>
+          <br/>
+          <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
+          <br/>
+          <CardGroup items={[ {
+              header: 'On-the-Go Agent Interaction',
+              description: 'Customers can communicate with AI agents anytime, anywhere through a mobile app available on iOS, Android, and the web.',
+            }, {
+              header: 'Seamless Message History Access',
+              description: 'Users can view past conversations, ensuring continuity and context-aware interactions across devices.',
+            }, {
+              header: 'Real-Time AI Assistance',
+              description: 'The chat enables instant responses from AI agents, allowing for quick decision-making, task execution, and workflow automation.',
+            }, {
+              header: 'Cross-Platform Synchronization',
+              description: 'Conversations are synced across mobile and web, ensuring a unified experience whether on a smartphone, tablet, or desktop.',
+            }, {
+              header: 'Enhanced Productivity & Accessibility',
+              description: 'Businesses and individuals can stay connected to their AI-powered workflows, making it easier to manage tasks, get insights, and automate actions on the go.',
+            }, {
+              header: '',
+              description: '',
+            } ]} />
+        </Segment>
+      </Container>
+
+      <Container>
         <Segment padded textAlign="center" style={{ background: '#f9f9f9' }}>
           <Header as="h2" dividing>
             Join Us in Shaping the Future of Work
@@ -400,15 +697,9 @@ const HomepageLayout = () => {
             <Icon name='right arrow' />
           </Button>
         </Segment>
-
-        <Segment textAlign="center" style={{ padding: '5em 0' }}>
-          <Header as="h2">
-            Elevate your entrepreneurial journey with AZ1.AI — where AI meets human innovation for a brighter, sustainable future.
-          </Header>
-        </Segment>
-        <br />
-        <br />
       </Container>
+      <br />
+      <br />
 
       <Segment inverted vertical style={{ padding: '5em 0em' }}>
         <Container>
