@@ -7,6 +7,7 @@ import conf from './conf.js'
 
 // import App from './App'
 import Home from './Home'
+import Product from './Product'
 import Terms from './Terms'
 import Privacy from './Privacy'
 import Signup from './Signup'
@@ -50,6 +51,7 @@ const Index = () => {
   <>
     <Routes>
       <Route path="/" element={<Home />}/>
+      <Route path="/product" element={<Product />}/>
       <Route path="/test" element={<Test />}/>
       <Route path="/terms" element={<Terms />}/>
       <Route path="/privacy" element={<Privacy />}/>
