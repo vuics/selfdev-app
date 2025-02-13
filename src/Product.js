@@ -36,7 +36,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/chat.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-chat" items={[ {
+        <Card.Group key="card-group-chat" centered items={[ {
             header: 'Hyper-Personalized Experiences',
             description: 'Customers get UI elements (dashboards, forms, graphs, documents) tailored in real time to their specific needs and context, eliminating the friction of rigid interfaces.',
           }, {
@@ -68,7 +68,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/code.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-code" items={[ {
+        <Card.Group key="card-group-code" centered items={[ {
             header: 'Accelerated Development',
             description: 'Customers can build and iterate faster with AI-driven assistance from architect and coder agents, reducing time spent on manual coding.',
           }, {
@@ -100,7 +100,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/build.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-build" items={[ {
+        <Card.Group key="card-group-build" centered items={[ {
             header: 'Effortless Agentic Team Building',
             description: 'Customers can easily create, organize, and manage agentic teams using a visual editor, streamlining the setup of AI-driven workflows.',
           }, {
@@ -132,7 +132,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/open.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-open" items={[ {
+        <Card.Group key="card-group-open" centered items={[ {
             header: 'Unified AI Access',
             description: 'Customers can communicate with both open-source models (Ollama) and OpenAI models in a single chat interface, simplifying AI interaction.',
           }, {
@@ -164,7 +164,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/note.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-note" items={[ {
+        <Card.Group key="card-group-note" centered items={[ {
             header: 'Flexible Prototyping',
             description: 'Customers can quickly develop and test new AI agents within Jupyter notebooks, enabling rapid iteration and refinement.',
           }, {
@@ -246,7 +246,7 @@ const Product = () => (
             </Card.Content>
           </Card>
         </Card.Group>
-        <Card.Group key="card-group-sell" items={[ {
+        <Card.Group key="card-group-sell" centered items={[ {
             header: 'Seamless Sales & Operations',
             description: 'Customers can manage sales, customer relationships (CRM), enterprise processes (ERP), and other business functions within a unified web platform.',
           }, {
@@ -278,7 +278,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/train.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-train" items={[ {
+        <Card.Group key="card-group-train" centered items={[ {
             header: 'Automated Task Execution',
             description: 'Agents learn to navigate the browser just like users, reducing the need for manual work by automating repetitive tasks.',
           }, {
@@ -308,7 +308,7 @@ const Product = () => (
           </HeaderSubheader>
         </Header>
         <br/>
-        <Card.Group key="card-group-api" items={[ {
+        <Card.Group key="card-group-api" centered items={[ {
             header: 'Seamless Platform Integration',
             description: 'The API enables businesses to programmatically interact with the platform, ensuring smooth integration with existing systems and workflows.',
           }, {
@@ -340,7 +340,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/cli.png' fluid bordered rounded />
         <br/>
-        <Card.Group key="card-group-cli" items={[ {
+        <Card.Group key="card-group-cli" centered items={[ {
             header: 'Effortless API Access',
             description: 'The command-line tool (CLI) provides a simple and efficient way to interact with the platform’s API directly from the terminal or Jupyter notebooks.',
           }, {
@@ -372,7 +372,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
         <br/>
-        <Card.Group key="card-group-mobile" items={[ {
+        <Card.Group key="card-group-mobile" centered items={[ {
             header: 'On-the-Go Agent Interaction',
             description: 'Customers can communicate with AI agents anytime, anywhere through a mobile app available on iOS, Android, and the web.',
           }, {
@@ -404,7 +404,7 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/desktop.png' centered bordered rounded />
         <br/>
-        <Card.Group key="card-group-desktop" items={[ {
+        <Card.Group key="card-group-desktop" centered items={[ {
             header: 'Seamless Multi-Platform Access',
             description: 'The desktop app is available for macOS, Linux, and Windows, ensuring users can interact with AI agents on their preferred operating system.',
           }, {
