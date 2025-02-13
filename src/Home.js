@@ -240,6 +240,57 @@ MobileContainer.propTypes = {
   logIn: PropTypes.func.isRequired,
 }
 
+const FEATURE_ITEMS = [
+  {
+    icon: 'id badge',
+    color: 'red',
+    title: "Agent-Staffed Workflows",
+    li1: "Seamless integration of human and AI capabilities.",
+    li2: "Grow your business on our platform.",
+    li3: "Unleash company knowledge with AI-driven search."
+  },
+  {
+    icon: 'travel',
+    color: 'orange',
+    title: "Maximizing Team Productivity", 
+    li1: "Automate tasks saving time and money.",
+    li2: "Auto-generate business intelligence and documentation.",
+    li3: "Enhance decision-making with AI."
+  },
+  {
+    icon: 'earlybirds',
+    color: 'yellow',
+    title: "Empowering Entrepreneurs",
+    li1: "Scale faster with less head count.",
+    li2: "Automate competitive intelligence.", 
+    li3: "Analyze and find new market opportunities.",
+  },
+  {
+    icon: 'dna',
+    color: 'green',
+    title: "All-in-One Platform",
+    li1: "Use agents in all your web or desktop apps.",
+    li2: "Integrate with APIs and third-party tools and services.",
+    li3: "Adapt the platform to your business.",
+  },
+  {
+    icon: 'conversation',
+    color: 'violet',
+    title: "No-code and Code Agents",
+    li1: "Explainable AI in all agentic steps and processes with clean and understandable audit trail.",
+    li2: "Automate repetitive tasks with multiple applications and large language models.",
+    li3: 'Train agent once and run.'
+  },
+  {
+    icon: 'rocket',
+    color: 'purple',
+    title: "Cloud-based: No Infrastructure Needed",
+    li1: "Drag-and-drop agents: no-code solutions available for businesses without IT resources.",
+    li2: "Sophisticated SDK for complex IT requirements all running in your browser.",
+    li3: "Compliant and secure."
+  },
+]
+
 const ResponsiveContainer = ({ children, available, logIn }) => (
   /* Heads up!
    * For large applications it may not be best option to put all page into these containers at
@@ -333,57 +384,7 @@ const HomepageLayout = () => {
           </Header>
           <Grid divided='vertically' columns={3}>
             <Grid.Row>
-              // AI! Is this ok to have an object defined in the return of the component where it renders the UI elements? Does it has any impact on performance or on memory? Should the object be moved to the global scope of the component or defined in another way?
-              {[
-                {
-                  icon: 'id badge',
-                  color: 'red',
-                  title: "Agent-Staffed Workflows",
-                  li1: "Seamless integration of human and AI capabilities.",
-                  li2: "Grow your business on our platform.",
-                  li3: "Unleash company knowledge with AI-driven search."
-                },
-                {
-                  icon: 'travel',
-                  color: 'orange',
-                  title: "Maximizing Team Productivity",
-                  li1: "Automate tasks saving time and money.",
-                  li2: "Auto-generate business intelligence and documentation.",
-                  li3: "Enhance decision-making with AI."
-                },
-                {
-                  icon: 'earlybirds',
-                  color: 'yellow',
-                  title: "Empowering Entrepreneurs",
-                  li1: "Scale faster with less head count.",
-                  li2: "Automate competitive intelligence.",
-                  li3: "Analyze and find new market opportunities.",
-                },
-                {
-                  icon: 'dna',
-                  color: 'green',
-                  title: "All-in-One Platform",
-                  li1: "Use agents in all your web or desktop apps.",
-                  li2: "Integrate with APIs and third-party tools and services.",
-                  li3: "Adapt the platform to your business.",
-                },
-                {
-                  icon: 'conversation',
-                  color: 'violet',
-                  title: "No-code and Code Agents",
-                  li1: "Explainable AI in all agentic steps and processes with clean and understandable audit trail.",
-                  li2: "Automate repetitive tasks with multiple applications and large language models.",
-                  li3: 'Train agent once and run.'
-                },
-                {
-                  icon: 'rocket',
-                  color: 'purple',
-                  title: "Cloud-based: No Infrastructure Needed",
-                  li1: "Drag-and-drop agents: no-code solutions available for businesses without IT resources.",
-                  li2: "Sophisticated SDK for complex IT requirements all running in your browser.",
-                  li3: "Compliant and secure."
-                },
-              ].map((item, index) => (
+              {FEATURE_ITEMS.map((item, index) => (
                 <Grid.Column key={index} width={5} textAlign="center">
                   <br/>
                   <Icon name={item.icon} size='huge' color={item.color} fitted circular />
