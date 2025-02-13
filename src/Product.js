@@ -392,6 +392,38 @@ const Product = () => (
             description: '',
           } ]} />
       </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center'>
+          Desktop App
+          <Divider />
+          <HeaderSubheader>
+            A desktop app (macOS, Linux, Windown) with a chat that allows to communicate to agents and see the history of messages.
+          </HeaderSubheader>
+        </Header>
+        <br/>
+        <Image src='/images/screenshots/desktop.png' centered bordered rounded />
+        <br/>
+        <Card.Group key="card-group-desktop" items={[ {
+            header: 'Seamless Multi-Platform Access',
+            description: 'The desktop app is available for macOS, Linux, and Windows, ensuring users can interact with AI agents on their preferred operating system.',
+          }, {
+            header: 'Persistent Chat History',
+            description: 'Customers can view and retrieve past conversations, maintaining context and continuity in their interactions with agents.',
+          }, {
+            header: 'Real-Time AI Assistance',
+            description: 'The chat enables instant communication with AI agents, allowing users to execute tasks, get insights, and automate workflows efficiently.',
+          }, {
+            header: 'Optimized for Productivity',
+            description: 'A dedicated desktop experience provides better performance, offline capabilities, and smoother multitasking compared to web-based chat solutions.',
+          }, {
+            header: 'Cross-Device Synchronization',
+            description: 'Conversations sync across the desktop, mobile, and web apps, ensuring a unified experience across all platforms.',
+          }, {
+            header: '',
+            description: '',
+          } ]} />
+      </Segment>
     </Container>
     <br />
     <br />
