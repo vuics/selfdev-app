@@ -41,7 +41,7 @@ const Profile = () => {
       setPhone(res?.data?.user?.phone || '')
 
     } catch (err) {
-      console.error('logout error:', err);
+      console.error('get profile error:', err);
       return setResponseError(err?.response?.data?.message || 'Error getting user profile.')
     } finally {
       setLoading(false)

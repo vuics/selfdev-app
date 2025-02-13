@@ -52,7 +52,7 @@ const Forgot = () => {
       setResponseMessage(res.data.message)
     } catch (err) {
       console.error('forgot error:', err);
-      return setResponseError(err?.response?.data?.message  || 'Error creating a user account.')
+      return setResponseError(err?.response?.data?.message  || 'Error sending a reset link.')
     } finally {
       setLoading(false)
     }

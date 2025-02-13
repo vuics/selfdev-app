@@ -5,7 +5,7 @@ const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 
 const conf = {
   contact: {
-    email: '2@az1.ai'
+    email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@az1.ai'
   },
 
   api: {
