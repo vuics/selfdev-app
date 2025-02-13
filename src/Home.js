@@ -14,12 +14,12 @@ import {
   Header,
   Icon,
   Image,
-  List,
   Menu,
   Segment,
   Sidebar,
   Label,
 } from 'semantic-ui-react'
+import Footer from './components/Footer'
 import conf from './conf'
 
 const { MediaContextProvider, Media } = createMedia({
@@ -424,53 +424,7 @@ const HomepageLayout = () => {
       <br />
       <br />
 
-      <Segment inverted vertical style={{ padding: '5em 0em' }}>
-        <Container>
-          <Grid divided inverted stackable>
-            <Grid.Row>
-              <Grid.Column width={3}>
-                <Header inverted as='h4' content='About' />
-                <List link inverted>
-                  <List.Item as='a'>
-                    <a href='mailto:admin@az1.ai'>
-                      Contact Us
-                    </a>
-                  </List.Item>
-                </List>
-              </Grid.Column>
-              <Grid.Column width={5}>
-                <Header inverted as='h4' content='Services' />
-                <List link inverted>
-                  <List.Item as='a'>
-                    <a href='/product'>
-                      Product
-                    </a>
-                  </List.Item>
-                  <List.Item as='a'>
-                    <a href='/team'>
-                      Team
-                    </a>
-                  </List.Item>
-                </List>
-              </Grid.Column>
-              <Grid.Column width={7}>
-                <List link inverted>
-                  <List.Item as='a'>
-                    <p>
-                      Self-developing AI is uniquely tailored to your business needs.
-                    </p>
-                  </List.Item>
-                  <List.Item as='a'>
-                    <p>
-                      © 2024-2025 az1.ai. All rights reserved.
-                    </p>
-                  </List.Item>
-                </List>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Container>
-      </Segment>
+      <Footer />
     </ResponsiveContainer>
   )
 }
