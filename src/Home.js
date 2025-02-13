@@ -12,7 +12,6 @@ import {
   Container,
   Grid,
   Header,
-  HeaderSubheader,
   Icon,
   Image,
   List,
@@ -20,13 +19,6 @@ import {
   Segment,
   Sidebar,
   Label,
-  Divider,
-  CardGroup,
-  Card,
-  CardHeader,
-  CardMeta,
-  CardContent,
-  CardDescription,
 } from 'semantic-ui-react'
 import conf from './conf'
 
@@ -341,6 +333,7 @@ const HomepageLayout = () => {
           </Header>
           <Grid divided='vertically' columns={3}>
             <Grid.Row>
+              // AI! Is this ok to have an object defined in the return of the component where it renders the UI elements? Does it has any impact on performance or on memory? Should the object be moved to the global scope of the component or defined in another way?
               {[
                 {
                   icon: 'id badge',
@@ -410,88 +403,6 @@ const HomepageLayout = () => {
       <br />
 
       <Container>
-        <Segment style={{ margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-          <Header as='h1' textAlign='center'>
-            Team Members
-            <Divider />
-            <HeaderSubheader>
-              We are a diverse multi-national team of three co-founders with very strong business, technology, psychology background.
-            </HeaderSubheader>
-          </Header>
-          <br/>
-          <CardGroup centered>
-            <Card>
-              <Image src='/images/team/hal-casteel.jpg' wrapped />
-              <CardContent>
-                <CardHeader>
-                  Hal Casteel
-                </CardHeader>
-                <CardMeta>
-                  Co-founder, CEO, COO
-                </CardMeta>
-                <CardDescription>
-                  Hal Casteel builds and scales high-growth startups as a serial entrepreneur and SaaS expert. With deep expertise in AI, enterprise software, and healthcare IT, he transforms industries through digital innovation and enterprise-grade solutions.
-                </CardDescription>
-              </CardContent>
-              <CardContent extra textAlign='center'>
-                <a href="https://www.linkedin.com/in/hal-casteel-1a044530/">
-                  <Icon size='big' name='linkedin'/>
-                </a>
-                <a href="https://github.com/halcasteel">
-                  <Icon size='big' name='github' />
-                </a>
-              </CardContent>
-            </Card>
-            <Card>
-              <Image src='/images/team/artem-arakcheev.jpg' wrapped />
-              <CardContent>
-                <CardHeader>
-                  Artem Arakcheev, PhD, DBA
-                </CardHeader>
-                <CardMeta>
-                  Co-founder, CTO, co-CEO
-                </CardMeta>
-                <CardDescription>
-                  Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.
-                </CardDescription>
-              </CardContent>
-              <CardContent extra textAlign='center'>
-                <a href="https://www.linkedin.com/in/artem-arakcheev/">
-                  <Icon size='big' name='linkedin'/>
-                </a>
-                <a href="https://github.com/alphara">
-                  <Icon size='big' name='github' />
-                </a>
-              </CardContent>
-            </Card>
-            <Card>
-              <Image src='/images/team/will-mckinley.jpg' wrapped />
-              <CardContent>
-                <CardHeader>
-                  Will McKinley
-                </CardHeader>
-                <CardMeta>
-                  Co-founder, Chief AI/UX Officer
-                </CardMeta>
-                <CardDescription>
-                  Will McKinley excels as a UI/UX engineer and AI innovator, specializing in generative AI, RAG-enabled chatbots, and enterprise software. He bridges user experience with engineering to create scalable, high-impact solutions.
-                </CardDescription>
-              </CardContent>
-              <CardContent extra textAlign='center'>
-                <a href="https://www.linkedin.com/in/willmckinley/">
-                  <Icon size='big' name='linkedin'/>
-                </a>
-                <a href="https://gitlab.com/wmckinley">
-                  <Icon size='big' name='github' />
-                </a>
-              </CardContent>
-            </Card>
-          </CardGroup>
-        </Segment>
-      </Container>
-      <br />
-
-      <Container>
         <Segment padded textAlign="center" style={{ background: '#f9f9f9' }}>
           <Header as="h2" dividing>
             Join Us in Shaping the Future of Work
@@ -527,21 +438,19 @@ const HomepageLayout = () => {
                 </List>
               </Grid.Column>
               <Grid.Column width={5}>
-                  {/*
                 <Header inverted as='h4' content='Services' />
                 <List link inverted>
                   <List.Item as='a'>
-                    <a href='https://qc.vuics.com/' target='_blank' rel='noopener noreferrer'>
-                      Quantum Copilot
+                    <a href='/product'>
+                      Product
                     </a>
                   </List.Item>
                   <List.Item as='a'>
-                    <a href='https://vuics.com' target='_blank' rel='noopener noreferrer'>
-                      Voice User Interfaces
+                    <a href='/team'>
+                      Team
                     </a>
                   </List.Item>
                 </List>
-                  */}
               </Grid.Column>
               <Grid.Column width={7}>
                 <List link inverted>
