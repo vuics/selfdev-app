@@ -38,6 +38,7 @@ const Product = () => (
         <Header as="h2">
           Features and Functions
         </Header>
+        // AI! There are descriptions after long dash for Chat and Code in the table of contents below. Add descriptions to all the list items. Analyze related segments (description in the HeaderSbuheader) to come up with the short description of each feature.
         <ol style={{ textAlign: 'left', fontSize: '1.4em' }}>
           <li>
             <a href="#chat">
@@ -100,8 +101,7 @@ const Product = () => (
 
     <Container>
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-  // AI! Make styles of all the other segments like this one below (Code, Build, Open, etc.) similar to the style of this block. Move the Card.Group to be above of the screenshot (Image tag). This is an example block, and I want all the other blocks (segments) to be consistent in styling with this one.
-        <Header as='h2' textAlign='center' id="chat">
+        <Header as='h2' textAlign='center' id="chat" dividing>
           Chat
           <br />
         </Header>
