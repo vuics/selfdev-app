@@ -23,19 +23,92 @@ const Product = () => (
         </Header>
       </Segment>
     </Container>
+    <br/>
+
+    <Container>
+      <Segment padded textAlign="center">
+        <Header as="h2">
+          Product Description
+        </Header>
+        <br />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          An Agent-as-a-Service platform with web, mobile and desktop applications.
+        </p>
+        <Divider />
+        <Header as="h2">
+          Features and Functions
+        </Header>
+        <ol style={{ textAlign: 'left', fontSize: '1.4em' }}>
+          <li>
+            <a href="#chat">
+              <b>Chat</b> — communicate to agents and agentic teams.
+            </a>
+          </li>
+          <li>
+            <a href="#code">
+              <b>Code</b> — program using web IDE and architect and coder agents.
+            </a>
+          </li>
+          <li>
+            <a href="#build">
+              <b>Build</b>
+            </a>
+          </li>
+          <li>
+            <a href="#open">
+              <b>Open</b>
+            </a>
+          </li>
+          <li>
+            <a href="#note">
+              <b>Note</b>
+            </a>
+          </li>
+          <li>
+            <a href="#sell">
+              <b>Sell</b>
+            </a>
+          </li>
+          <li>
+            <a href="#train">
+              <b>Train</b>
+            </a>
+          </li>
+          <li>
+            <a href="#api">
+              <b>API</b>
+            </a>
+          </li>
+          <li>
+            <a href="#cli">
+              <b>Command-line interface (CLI)</b>
+            </a>
+          </li>
+          <li>
+            <a href="#mobile">
+              <b>Mobile App</b>
+            </a>
+          </li>
+          <li>
+            <a href="#desktop">
+              <b>Desktop App</b>
+            </a>
+          </li>
+        </ol>
+      </Segment>
+    </Container>
 
     <Container>
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+  // AI! Make styles of all the other segments like this one below (Code, Build, Open, etc.) similar to the style of this block. Move the Card.Group to be above of the screenshot (Image tag). This is an example block, and I want all the other blocks (segments) to be consistent in styling with this one.
+        <Header as='h2' textAlign='center' id="chat">
           Chat
-          <Divider />
-          <HeaderSubheader>
-            Chat with agents and agentic teams. Interact with agents through the Synthetic UI on all-in-one platform.
-          </HeaderSubheader>
+          <br />
         </Header>
-        <br/>
-        <Image src='/images/screenshots/chat.png' fluid bordered rounded />
-        <br/>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Chat with agents and agentic teams. Interact with agents through the Synthetic UI on all-in-one platform.
+        </p>
+        <br />
         <Card.Group key="card-group-chat" centered items={[ {
             header: 'Hyper-Personalized Experiences',
             description: 'Customers get UI elements (dashboards, forms, graphs, documents) tailored in real time to their specific needs and context, eliminating the friction of rigid interfaces.',
@@ -55,10 +128,13 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/chat.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h1' textAlign='center' id="code">
           Code
           <Divider />
           <HeaderSubheader>
@@ -90,7 +166,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="build">
           Build
           <Divider />
           <HeaderSubheader>
@@ -122,7 +198,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="open">
           Open
           <Divider />
           <HeaderSubheader>
@@ -154,7 +230,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="note">
           Note
           <Divider />
           <HeaderSubheader>
@@ -186,7 +262,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="sell">
           Sell
           <Divider />
           <HeaderSubheader>
@@ -196,56 +272,6 @@ const Product = () => (
         <br/>
         <Image src='/images/screenshots/sell.png' fluid bordered rounded />
         <br/>
-        <Card.Group>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content>
-              <Card.Header>
-              </Card.Header>
-              <Card.Description>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-        </Card.Group>
         <Card.Group key="card-group-sell" centered items={[ {
             header: 'Seamless Sales & Operations',
             description: 'Customers can manage sales, customer relationships (CRM), enterprise processes (ERP), and other business functions within a unified web platform.',
@@ -268,7 +294,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="train">
           Train
           <Divider />
           <HeaderSubheader>
@@ -300,7 +326,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="api">
           API
           <Divider />
           <HeaderSubheader>
@@ -330,7 +356,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="cli">
           Command-line Interface (CLI)
           <Divider />
           <HeaderSubheader>
@@ -362,7 +388,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="mobile">
           Mobile App
           <Divider />
           <HeaderSubheader>
@@ -394,7 +420,7 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center'>
+        <Header as='h2' textAlign='center' id="desktop">
           Desktop App
           <Divider />
           <HeaderSubheader>
