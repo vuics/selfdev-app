@@ -38,6 +38,7 @@ const Product = () => (
         <Header as="h2">
           Features and Functions
         </Header>
+        // AI! In the list below, set the vertical interval between line to be 1.5 times more than current interval.
         <ol style={{ textAlign: 'left', fontSize: '1.4em' }}>
           <li>
             <a href="#chat">
