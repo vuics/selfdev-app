@@ -38,7 +38,6 @@ const Product = () => (
         <Header as="h2">
           Features and Functions
         </Header>
-        // AI! There are descriptions after long dash for Chat and Code in the table of contents below. Add descriptions to all the list items. Analyze related segments (description in the HeaderSbuheader) to come up with the short description of each feature.
         <ol style={{ textAlign: 'left', fontSize: '1.4em' }}>
           <li>
             <a href="#chat">
@@ -52,47 +51,47 @@ const Product = () => (
           </li>
           <li>
             <a href="#build">
-              <b>Build</b>
+              <b>Build</b> — build and organize agentic teams with visual editor.
             </a>
           </li>
           <li>
             <a href="#open">
-              <b>Open</b>
+              <b>Open</b> — communicate with deployed open-source and OpenAI models.
             </a>
           </li>
           <li>
             <a href="#note">
-              <b>Note</b>
+              <b>Note</b> — prototype and experiment with agents using Jupyter notebooks.
             </a>
           </li>
           <li>
             <a href="#sell">
-              <b>Sell</b>
+              <b>Sell</b> — manage sales and operations with web CRM and ERP apps.
             </a>
           </li>
           <li>
             <a href="#train">
-              <b>Train</b>
+              <b>Train</b> — train agents by demonstrating browser interactions.
             </a>
           </li>
           <li>
             <a href="#api">
-              <b>API</b>
+              <b>API</b> — access platform features programmatically.
             </a>
           </li>
           <li>
             <a href="#cli">
-              <b>Command-line interface (CLI)</b>
+              <b>Command-line interface (CLI)</b> — interact with API via terminal commands.
             </a>
           </li>
           <li>
             <a href="#mobile">
-              <b>Mobile App</b>
+              <b>Mobile App</b> — communicate with agents on iOS and Android devices.
             </a>
           </li>
           <li>
             <a href="#desktop">
-              <b>Desktop App</b>
+              <b>Desktop App</b> — interact with agents on macOS, Linux and Windows.
             </a>
           </li>
         </ol>
