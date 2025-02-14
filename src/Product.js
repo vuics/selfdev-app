@@ -76,12 +76,12 @@ const Product = () => (
           </li>
           <li>
             <a href="#api">
-              <b>API</b> — access platform features programmatically.
+              <b>API</b> — access platform features programmatically through application-programming interface.
             </a>
           </li>
           <li>
             <a href="#cli">
-              <b>Command-line interface (CLI)</b> — interact with API via terminal commands.
+              <b>CLI</b> — interact with API via command-line interface in your terminal.
             </a>
           </li>
           <li>
@@ -133,15 +133,12 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center' id="code">
+        <Header as='h1' textAlign='center' id="code" dividing>
           Code
-          <Divider />
-          <HeaderSubheader>
-            Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Between 30% and 70% of the code is generated to this moment.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/code.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Between 30% and 70% of the code is generated to this moment.
+        </p>
         <br/>
         <Card.Group key="card-group-code" centered items={[ {
             header: 'Accelerated Development',
@@ -162,18 +159,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/code.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="build">
+        <Header as='h2' textAlign='center' id="build" dividing>
           Build
-          <Divider />
-          <HeaderSubheader>
-            Build / orgnize / assemble agentic teams with visual editor. Our architect and coder agents can continue developing your agentic teams with prompts from users.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/build.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Build / orgnize / assemble agentic teams with visual editor. Our architect and coder agents can continue developing your agentic teams with prompts from users.
+        </p>
         <br/>
         <Card.Group key="card-group-build" centered items={[ {
             header: 'Effortless Agentic Team Building',
@@ -194,18 +191,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/build.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="open">
+        <Header as='h2' textAlign='center' id="open" dividing>
           Open
-          <Divider />
-          <HeaderSubheader>
-            A chat to communicate to all deployed open-source (Ollama) models and Open AI models. It can be used for testing and comparison of different LLMs.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/open.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          A chat to communicate to all deployed open-source (Ollama) models and Open AI models. It can be used for testing and comparison of different LLMs.
+        </p>
         <br/>
         <Card.Group key="card-group-open" centered items={[ {
             header: 'Unified AI Access',
@@ -226,18 +223,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/open.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="note">
+        <Header as='h2' textAlign='center' id="note" dividing>
           Note
-          <Divider />
-          <HeaderSubheader>
-            Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/note.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
+        </p>
         <br/>
         <Card.Group key="card-group-note" centered items={[ {
             header: 'Flexible Prototyping',
@@ -258,18 +255,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/note.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="sell">
+        <Header as='h2' textAlign='center' id="sell" dividing>
           Sell
-          <Divider />
-          <HeaderSubheader>
-            Sell with web CRM, ERP and other apps. The apps can be controlled by the web-automator.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/sell.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Sell with web CRM, ERP and other apps. The apps can be controlled by the web-automator.
+        </p>
         <br/>
         <Card.Group key="card-group-sell" centered items={[ {
             header: 'Seamless Sales & Operations',
@@ -290,18 +287,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/sell.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="train">
+        <Header as='h2' textAlign='center' id="train" dividing>
           Train
-          <Divider />
-          <HeaderSubheader>
-            Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/train.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
+        </p>
         <br/>
         <Card.Group key="card-group-train" centered items={[ {
             header: 'Automated Task Execution',
@@ -322,16 +319,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/train.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="api">
+        <Header as='h2' textAlign='center' id="api" dividing>
           API
-          <Divider />
-          <HeaderSubheader>
-            The API allows programmatic access to the platform for chat, web page publishing, emails, and web app requests.
-          </HeaderSubheader>
         </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          The API allows programmatic access to the platform for chat, web page publishing, emails, and web app requests.
+        </p>
         <br/>
         <Card.Group key="card-group-api" centered items={[ {
             header: 'Seamless Platform Integration',
@@ -352,18 +351,16 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="cli">
+        <Header as='h2' textAlign='center' id="cli" dividing>
           Command-line Interface (CLI)
-          <Divider />
-          <HeaderSubheader>
-            A command line tool (CLI) to access our API programmatically. The tool can be used from terminal or from the Jupyter notebooks.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/cli.png' fluid bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          A command line tool (CLI) to access our API programmatically. The tool can be used from terminal or from the Jupyter notebooks.
+        </p>
         <br/>
         <Card.Group key="card-group-cli" centered items={[ {
             header: 'Effortless API Access',
@@ -384,18 +381,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/cli.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="mobile">
+        <Header as='h2' textAlign='center' id="mobile" dividing>
           Mobile App
-          <Divider />
-          <HeaderSubheader>
-            A mobile app (iOS, Android, web) with a chat that allows to communicate to agents and see the history of messages.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          A mobile app (iOS, Android, web) with a chat that allows to communicate to agents and see the history of messages.
+        </p>
         <br/>
         <Card.Group key="card-group-mobile" centered items={[ {
             header: 'On-the-Go Agent Interaction',
@@ -416,18 +413,18 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="desktop">
+        <Header as='h2' textAlign='center' id="desktop" dividing>
           Desktop App
-          <Divider />
-          <HeaderSubheader>
-            A desktop app (macOS, Linux, Windown) with a chat that allows to communicate to agents and see the history of messages.
-          </HeaderSubheader>
         </Header>
-        <br/>
-        <Image src='/images/screenshots/desktop.png' centered bordered rounded />
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          A desktop app (macOS, Linux, Windown) with a chat that allows to communicate to agents and see the history of messages.
+        </p>
         <br/>
         <Card.Group key="card-group-desktop" centered items={[ {
             header: 'Seamless Multi-Platform Access',
@@ -448,6 +445,9 @@ const Product = () => (
             header: '',
             description: '',
           } ]} />
+        <br/>
+        <Image src='/images/screenshots/desktop.png' centered bordered rounded />
+        <br/>
       </Segment>
     </Container>
     <br />
