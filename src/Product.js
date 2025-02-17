@@ -352,6 +352,8 @@ const Product = () => (
             description: '',
           } ]} />
         <br/>
+        <Image src='/images/screenshots/api.png' fluid bordered rounded />
+        <br/>
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
