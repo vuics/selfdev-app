@@ -128,7 +128,7 @@ const DesktopContainer = ({ children, available, logIn }) => {
           >
             <Container>
               <Menu.Item active>
-                <Image avatar alt="logo" style={{ height: '60px', width: '60px' }} src='/images/az1-logomark.png' />
+                <Image avatar alt="logo" style={{ height: '60px', width: '60px' }} src='/images/logo192.png' />
               </Menu.Item>
               <Menu.Item position='right'>
                 { available ? (

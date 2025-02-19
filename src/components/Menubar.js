@@ -18,7 +18,7 @@ const Menubar = () => {
   return (
     <Menu size='tiny'>
       <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
-        <Image avatar alt="logo" src='/images/logo192.png' />
+        <Image alt="logo" src='/images/logo192.png' height='32px' />
         {'\u00A0'}
         <span style={{color: 'grey'}}>AZ1</span>
       </Menu.Item>
