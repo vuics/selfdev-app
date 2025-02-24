@@ -17,6 +17,7 @@ import Forgot from './Forgot'
 import Reset from './Reset'
 import Logout from './Logout'
 import Chat from './Chat'
+import Talk from './Talk'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
@@ -66,6 +67,9 @@ const Index = () => {
 
       { conf.chat.enable && (
         <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
+      )}
+      { conf.talk.enable && (
+        <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>

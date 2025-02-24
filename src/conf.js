@@ -25,6 +25,10 @@ const conf = {
     limit: 5,
   },
 
+  talk: {
+    enable: bool(process.env.REACT_APP_TALK_ENABLE || false),
+  },
+
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',

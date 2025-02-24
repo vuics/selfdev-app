@@ -28,6 +28,12 @@ const Menubar = () => {
           Chat
         </Menu.Item>
       ) }
+      { conf.talk.enable && (
+        <Menu.Item onClick={() => navigate('/talk')} active={pathname==='/talk'}>
+          <Icon name='talk' />
+          Talk
+        </Menu.Item>
+      ) }
       { conf.code.enable && (
         <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
           <Icon name='code' />
