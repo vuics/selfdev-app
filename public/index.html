@@ -25,6 +25,9 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Self-developing AI</title>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="%PUBLIC_URL%/converse/v10.1.8/converse.min.css" />
+    <script src="%PUBLIC_URL%/converse/v10.1.8/converse.min.js" charset="utf-8"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -53,4 +56,12 @@
     </script>
     <!--End of Tawk.to Script-->
   </body>
+  <script>
+    converse.initialize({
+      bosh_service_url: 'https://conversejs.org/http-bind/', // Please use this connection manager only for testing purposes
+      show_controlbox_by_default: true,
+      allow_logout: false,
+      // view_mode: 'fullscreen'
+    });
+  </script>
 </html>
