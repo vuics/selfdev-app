@@ -30,16 +30,31 @@ const Talk = () => {
       const { converse } = event.detail;
       console.log('converse:', converse)
       converse.initialize({
+        root: converseRoot,
+
         // bosh_service_url: 'https://selfdev-prosody.dev.local:5281/bosh/',
         discover_connection_methods: false,
         websocket_url: 'wss://selfdev-prosody.dev.local:5281/xmpp-websocket',
-        // root: converseRoot,
+        auto_reconnect: true,
+
+        // FIXME: hardcodded:
+        authentication: 'login',
+        auto_login: true,
+        jid: 'art@selfdev-prosody.dev.local',
+        password: '123',
+        allow_logout: false,
+
+        // TODO: experiment with:
+        // credentials_url: '',
+        // prebind_url: '',
+
         // view_mode: 'fullscreen',
         // view_mode: 'embedded',
         view_mode: 'overlayed',
         // view_mode: 'mobile',
 
         show_controlbox_by_default: true,
+
       });
       setLoading(false)
     });
@@ -70,7 +85,6 @@ const Talk = () => {
       </Segment>
 
       <Loader active={loading} inline='centered' />
-
 
     </Container>
   )
