@@ -22,37 +22,44 @@ const Talk = () => {
 
   const [ converseRoot, setConverseRoot ] = useState(null)
 
-  useEffect(() => {
-    console.log('converseRoot:', converseRoot)
-    window.addEventListener("converse-loaded", function(event) {
-      const { converse } = event.detail;
-      console.log('converse:', converse)
-      converse.initialize({
-        root: converseRoot,
-        // view_mode: 'fullscreen',
-        // view_mode: 'embedded',
-        view_mode: 'overlayed',
-        // view_mode: 'mobile',
-        show_controlbox_by_default: true,
-        // Other settings go here...
-      });
-      setLoading(false)
-    });
-  }, [converseRoot])
+  // useEffect(() => {
+  //   console.log('converseRoot:', converseRoot)
+  //   window.addEventListener("converse-loaded", function(event) {
+  //     const { converse } = event.detail;
+  //     console.log('converse:', converse)
+  //     converse.initialize({
+  //       // bosh_service_url: 'https://selfdev-prosody.dev.local:5281/bosh/',
+
+  //       discover_connection_methods: false,
+  //       websocket_url: 'wss://selfdev-prosody.dev.local:5281/xmpp-websocket',
+
+  //       root: converseRoot,
+  //       // view_mode: 'fullscreen',
+  //       // view_mode: 'embedded',
+  //       view_mode: 'overlayed',
+  //       // view_mode: 'mobile',
+
+  //       show_controlbox_by_default: true,
+  //     });
+  //     setLoading(false)
+  //   });
+  // }, [converseRoot])
 
 
   return (
     <Container>
+    {/*
       <Helmet>
         <link rel="stylesheet" type="text/css" media="screen" href="/converse/v10.1.8/converse.min.css" />
         <script src="/converse/v10.1.8/converse.min.js" charset="utf-8"></script>
       </Helmet>
+    */}
 
       <Menubar />
 
       <Segment secondary>
-        {/*
         <converse-root></converse-root>
+        {/*
         */}
         <div ref={ (ref) => setConverseRoot(ref) } />
       </Segment>
