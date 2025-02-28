@@ -33,6 +33,7 @@
   "scripts": {
     "start": "react-scripts start",
     "serve": "serve -s build",
+    "serve:ssl": "serve -s build --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
