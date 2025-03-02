@@ -76,6 +76,10 @@ const conf = {
   subscription: {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
   },
+
+  xmpp: {
+    host: process.env.REACT_APP_XMPP_HOST || 'localhost',
+  },
 }
 
 export default conf
