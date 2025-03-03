@@ -45,6 +45,11 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#talk">
+              <b>Talk</b> — include humans, agents and human-agentic collaborative teams to your workflows.
+            </a>
+          </li>
+          <li>
             <a href="#code">
               <b>Code</b> — program using web IDE and architect and coder agents.
             </a>
@@ -129,6 +134,39 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/chat.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="talk" dividing>
+          Talk
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Include humans, agents and human-agentic collaborative teams to your workflows. Bridge human expertise with AI intelligence, making workflows smarter and more effective.
+        </p>
+        <br />
+        <Card.Group key="card-group-talk" centered items={[ {
+            header: 'Seamless Human-Agent Collaboration',
+            description: 'Effortlessly integrate AI agents and humans in chats to enhance teamwork and decision-making.',
+          }, {
+            header: 'Flexible Communication Channels',
+            description: 'Organize personal or group chats with both human and agent participants for structured collaboration.',
+          }, {
+            header: 'Real-Time AI Assistance',
+            description: 'Leverage agentic AI to automate tasks, provide insights, and streamline workflows instantly.',
+          }, {
+            header: 'Secure & Scalable Messaging',
+            description: 'Built on the Prosody XMPP server, ensuring reliable, private, and scalable communication.',
+          }, {
+            header: 'Enhanced Productivity',
+            description: 'Reduce manual effort with AI-driven automation, testing, and integration processes.',
+          }, {
+            header: 'Adaptive Workflows',
+            description: 'Customize chat interactions to fit your team’s needs, enhancing efficiency across projects.',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/talk.png' fluid bordered rounded />
         <br/>
       </Segment>
 
