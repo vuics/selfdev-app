@@ -43,10 +43,16 @@ const Talk = () => {
           const converseOptions = {
             root: converseRoot,
 
+            // loglevel: 'info',
+            loglevel: 'debug',
+
             // bosh_service_url: `https://${conf.xmpp.host}:5281/bosh/`,
             discover_connection_methods: false,
             websocket_url: `wss://${conf.xmpp.host}:5281/xmpp-websocket`,
             auto_reconnect: true,
+            clear_messages_on_reconnection: false,
+            stanza_timeout: 300000, // 5m
+            keepalive: true,
 
             authentication: 'login',
             auto_login: true,
@@ -54,6 +60,7 @@ const Talk = () => {
             jid: `${credentials.user}@${conf.xmpp.host}`,
             password: credentials.password,
             allow_logout: false,
+            clear_cache_on_logout: true,
 
             // TODO: experiment with:
             // credentials_url: `${conf.api.url}/talk/user`,
@@ -64,11 +71,44 @@ const Talk = () => {
             view_mode: 'overlayed',
             // view_mode: 'mobile',
 
-            // show_controlbox_by_default: true,
+            i18n: 'en',
+            show_controlbox_by_default: true,
+            show_client_info: false,
+            sticky_controlbox: true, // control box will not be closeable
+            allow_registration: false,
+            allow_url_history_change: false,
+            allow_adhoc_commands: false,
+            allow_bookmarks: true,
+            allow_non_roster_messaging: true,
+            theme: 'drakula', // theme: 'concord',
+            // allow_message_corrections: 'last',
+            allow_message_corrections: false,
+            allow_message_retraction: 'own',
+            hide_offline_users: false,
+            muc_disable_slash_commands: ['nick', 'register', 'destroy'], // ['mute', 'voice']
 
             auto_join_on_invite: true,
-            auto_join_rooms: [{'jid': `team@conference.${conf.xmpp.host}`, 'nick': credentials.user, 'minimized': false }],
+            auto_subscribe: true,
+
+            auto_join_rooms: [
+              { jid: `team@conference.${conf.xmpp.host}`, minimized: false },
+              { jid: `a-suite@conference.${conf.xmpp.host}`, minimized: false },
+            ],
+            auto_register_muc_nickname: 'unregister',
             // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
+
+            domain_placeholder: conf.xmpp.host,
+            locked_domain: conf.xmpp.host,
+            muc_domain: `conference.${conf.xmpp.host}`,
+            locked_muc_domain: 'hidden',
+            muc_nickname_from_jid: true,
+            auto_list_rooms: true,
+
+            // Status
+            idle_presence_timeout: 300, // 5m
+            csi_waiting_time: 600, // 10m
+            auto_away: 3600,  // 1h
+            auto_xa: 24*3600, // 24h
           }
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
