@@ -4,25 +4,33 @@ import {Helmet} from "react-helmet"
 import {
   Container,
   Loader,
+  Message,
 } from 'semantic-ui-react'
 import Menubar from './components/Menubar'
 import conf from './conf'
 
 const Talk = () => {
   const [ loading, setLoading ] = useState(true)
+  const [ responseError, setResponseError ] = useState('')
   const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
 
   useEffect(async () => {
-    const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-      crossOrigin: { mode: 'cors' },
-    })
-    // console.log('response:', response);
-    const { user, password } = response.data
-    setCredentials({ user, password })
-    // console.log('user:', user, ', password:', password)
+    try {
+      const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      // console.log('response:', response);
+      const { user, password } = response.data
+      setCredentials({ user, password })
+      // console.log('setCredentials> user:', user, ', password:', password)
+    } catch (err) {
+      console.error('xmpp/credentials error:', err)
+      setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -59,13 +67,14 @@ const Talk = () => {
             // show_controlbox_by_default: true,
 
             auto_join_on_invite: true,
-            auto_join_rooms: [{'jid': `team@conference.${conf.xmpp.host}`, 'nick': credentials.user, 'minimized': true }],
-            auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
+            auto_join_rooms: [{'jid': `team@conference.${conf.xmpp.host}`, 'nick': credentials.user, 'minimized': false }],
+            // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
           }
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
         } catch (err) {
-          console.error('xmpp/credentials error:', err)
+          console.error('converse.initialize error:', err)
+          setResponseError('Error initializing converse.')
         } finally {
           setLoading(false)
         }
@@ -92,6 +101,16 @@ const Talk = () => {
       </div>
 
       <Loader active={loading} inline='centered' />
+      { responseError &&
+        <Message
+          negative
+          style={{ textAlign: 'left'}}
+          icon='exclamation circle'
+          header='Error'
+          content={responseError}
+          onDismiss={() => setResponseError('')}
+        />
+      }
 
     </Container>
   )
