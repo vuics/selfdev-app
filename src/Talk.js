@@ -6,8 +6,26 @@ import {
   Loader,
   Message,
 } from 'semantic-ui-react'
+import { ErrorBoundary } from "react-error-boundary";
 import Menubar from './components/Menubar'
 import conf from './conf'
+
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{ color: "red" }}>{error.message}</pre>
+    </div>
+  );
+}
+
+const logError = (error: Error, info: { componentStack: string }) => {
+  // Do something with the error, e.g. log to an external API
+  console.error("Talk Error Boundary:", error, ', info:', info)
+}
 
 const Talk = () => {
   const [ loading, setLoading ] = useState(true)
@@ -124,35 +142,37 @@ const Talk = () => {
 
 
   return (
-    <Container>
-      { credentials && (
-        <Helmet>
-          <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
-          <script src="/dist/converse.min.js" charset="utf-8"></script>
-        </Helmet>
-      )}
-
-      <Menubar />
-
-      <div>
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+      <Container>
         { credentials && (
-          <div ref={ (ref) => setConverseRoot(ref) } />
+          <Helmet>
+            <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
+            <script src="/dist/converse.min.js" charset="utf-8"></script>
+          </Helmet>
         )}
-      </div>
 
-      <Loader active={loading} inline='centered' />
-      { responseError &&
-        <Message
-          negative
-          style={{ textAlign: 'left'}}
-          icon='exclamation circle'
-          header='Error'
-          content={responseError}
-          onDismiss={() => setResponseError('')}
-        />
-      }
+        <Menubar />
 
-    </Container>
+        <div>
+          { credentials && (
+            <div ref={ (ref) => setConverseRoot(ref) } />
+          )}
+        </div>
+
+        <Loader active={loading} inline='centered' />
+        { responseError &&
+          <Message
+            negative
+            style={{ textAlign: 'left'}}
+            icon='exclamation circle'
+            header='Error'
+            content={responseError}
+            onDismiss={() => setResponseError('')}
+          />
+        }
+
+      </Container>
+    </ErrorBoundary>
   )
 }
 
