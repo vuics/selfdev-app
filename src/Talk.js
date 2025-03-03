@@ -61,27 +61,25 @@ const Talk = () => {
           const converseOptions = {
             root: converseRoot,
 
-            // loglevel: 'info',
-            loglevel: 'debug',
+            loglevel: 'info',
+            // loglevel: 'debug',
 
             // bosh_service_url: `https://${conf.xmpp.host}:5281/bosh/`,
             discover_connection_methods: false,
             websocket_url: `wss://${conf.xmpp.host}:5281/xmpp-websocket`,
             auto_reconnect: true,
-            clear_messages_on_reconnection: false,
             stanza_timeout: 300000, // 5m
             keepalive: true,
 
             authentication: 'login',
-            auto_login: true,
-
+            // reuse_scram_keys: true, // what if credentials updated on server?
             jid: `${credentials.user}@${conf.xmpp.host}`,
             password: credentials.password,
+            auto_login: true,
             allow_logout: false,
             clear_cache_on_logout: true,
 
             // TODO: experiment with:
-            // credentials_url: `${conf.api.url}/talk/user`,
             // prebind_url: '',
 
             // view_mode: 'fullscreen',
@@ -98,29 +96,34 @@ const Talk = () => {
             allow_adhoc_commands: false,
             allow_bookmarks: true,
             allow_non_roster_messaging: true,
-            theme: 'drakula', // theme: 'concord',
+            theme: 'concord',
+            dark_theme: 'concord', // drakula',
+            play_sounds: false,
             // allow_message_corrections: 'last',
             allow_message_corrections: false,
             allow_message_retraction: 'own',
             hide_offline_users: false,
-            muc_disable_slash_commands: ['nick', 'register', 'destroy'], // ['mute', 'voice']
+            clear_messages_on_reconnection: false,
+            // muc_disable_slash_commands: ['nick', 'register', 'destroy', 'mute', 'voice', 'kick', 'ban'],
+            // modtools_disable_assign: ['owner', 'admin', 'member', 'outcast', 'none', 'moderator', 'participant', 'visitor'],
+            // modtools_disable_query: ['owner', 'admin', 'member', 'outcast', 'none', 'moderator', 'participant', 'visitor'],
 
             auto_join_on_invite: true,
             auto_subscribe: true,
-
-            auto_join_rooms: [
-              { jid: `team@conference.${conf.xmpp.host}`, minimized: false },
-              { jid: `a-suite@conference.${conf.xmpp.host}`, minimized: false },
-            ],
-            auto_register_muc_nickname: 'unregister',
-            // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
-
             domain_placeholder: conf.xmpp.host,
+            default_domain: conf.xmpp.host,
             locked_domain: conf.xmpp.host,
             muc_domain: `conference.${conf.xmpp.host}`,
             locked_muc_domain: 'hidden',
             muc_nickname_from_jid: true,
+            auto_join_rooms: [
+              { jid: `team@conference.${conf.xmpp.host}`, minimized: false },
+              { jid: `a-suite@conference.${conf.xmpp.host}`, minimized: false },
+            ],
             auto_list_rooms: true,
+            auto_register_muc_nickname: 'unregister',
+            // muc_respect_autojoin: false,
+            // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
 
             // Status
             idle_presence_timeout: 300, // 5m
