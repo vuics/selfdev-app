@@ -107,6 +107,12 @@ const Talk = () => {
             // muc_disable_slash_commands: ['nick', 'register', 'destroy', 'mute', 'voice', 'kick', 'ban'],
             // modtools_disable_assign: ['owner', 'admin', 'member', 'outcast', 'none', 'moderator', 'participant', 'visitor'],
             // modtools_disable_query: ['owner', 'admin', 'member', 'outcast', 'none', 'moderator', 'participant', 'visitor'],
+            visible_toolbar_buttons: {
+              call: true,
+              spoiler: true,
+              emoji: true,
+              toggle_occupants: true
+            },
 
             auto_join_on_invite: true,
             auto_subscribe: true,
@@ -130,9 +136,21 @@ const Talk = () => {
             csi_waiting_time: 600, // 10m
             auto_away: 3600,  // 1h
             auto_xa: 24*3600, // 24h
+
           }
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
+
+          // FIXME: it does not work as shown in examples
+          //        https://m.conversejs.org/docs/html/configuration.html#visible-toolbar-buttons
+          //
+          // converse.listen.on('callButtonClicked', function(data) {
+          //     console.log('Strophe connection is', data.connection);
+          //     console.log('Bare buddy JID is', data.model.get('jid'));
+          //     // ... Third-party library code ...
+          // });
+
+          console.log('after converse:', converse)
         } catch (err) {
           console.error('converse.initialize error:', err)
           setResponseError('Error initializing converse.')
