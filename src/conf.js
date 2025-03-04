@@ -84,6 +84,11 @@ const conf = {
   xmpp: {
     host: process.env.REACT_APP_XMPP_HOST || 'localhost',
   },
+
+  jitsi: {
+    domain: process.env.REACT_APP_JITSI_DOMAIN || 'localhost:8443',
+    roomName: process.env.REACT_APP_JITSI_ROOM_NAME || 'selfdev-meet-room',
+  },
 }
 
 export default conf
