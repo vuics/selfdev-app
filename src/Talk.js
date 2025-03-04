@@ -141,10 +141,23 @@ const Talk = () => {
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
 
+          // TODO: add Jitsi Meet pluging:
+          // https://www.npmjs.com/package/@converse-plugins/jitsimeet
+
           // FIXME: it does not work as shown in examples
           //        https://m.conversejs.org/docs/html/configuration.html#visible-toolbar-buttons
           //
           // converse.listen.on('callButtonClicked', function(data) {
+          //     console.log('Converse.listen')
+          //     console.log('Strophe connection is', data.connection);
+          //     console.log('Bare buddy JID is', data.model.get('jid'));
+          //     // ... Third-party library code ...
+          // });
+          // console.log('converse:', converse)
+          // console.log('converse.api:', converse.api)
+          // console.log('converse.api.listen:', converse.api.listen)
+          // converse.api.listen.on('callButtonClicked', function(data) {
+          //     console.log('Converse.api.listen')
           //     console.log('Strophe connection is', data.connection);
           //     console.log('Bare buddy JID is', data.model.get('jid'));
           //     // ... Third-party library code ...

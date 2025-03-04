@@ -18,6 +18,7 @@ import Reset from './Reset'
 import Logout from './Logout'
 import Chat from './Chat'
 import Talk from './Talk'
+import Meet from './Meet'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
@@ -70,6 +71,9 @@ const Index = () => {
       )}
       { conf.talk.enable && (
         <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
+      )}
+      { conf.meet.enable && (
+        <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>

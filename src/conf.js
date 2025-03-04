@@ -29,6 +29,10 @@ const conf = {
     enable: bool(process.env.REACT_APP_TALK_ENABLE || false),
   },
 
+  meet: {
+    enable: bool(process.env.REACT_APP_MEET_ENABLE || false),
+  },
+
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',
