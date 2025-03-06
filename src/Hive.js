@@ -14,14 +14,17 @@ import {
   Header,
   Dropdown,
 } from 'semantic-ui-react'
+import { faker } from '@faker-js/faker'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
+
 
 function defaultOptions() {
   return {
     schemaVersion: '0.1',
 
-    name: '',
+    name: faker.internet.username().toLowerCase(),
     description: '',
   }
 }
@@ -152,8 +155,11 @@ const Hive = () => {
       }
 
       { !adding && (
-        <Button onClick={() => setAdding(!adding) }>
-          <Icon name='add' />
+        <Button size='large' onClick={() => setAdding(!adding) }>
+          <Icon.Group size='large'>
+            <Icon name='spy' />
+            <Icon corner name='add' />
+          </Icon.Group>
           {' '}Add Agent{' '}
         </Button>
       )}

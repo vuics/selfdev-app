@@ -33,22 +33,25 @@ const Talk = () => {
   const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
 
-  useEffect(async () => {
-    try {
-      const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-        crossOrigin: { mode: 'cors' },
-      })
-      // console.log('response:', response);
-      const { user, password } = response.data
-      setCredentials({ user, password })
-      // console.log('setCredentials> user:', user, ', password:', password)
-    } catch (err) {
-      console.error('xmpp/credentials error:', err)
-      setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
-      setLoading(false)
+  useEffect(() =>{
+    async function fetchCredentials () {
+      try {
+        const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+          crossOrigin: { mode: 'cors' },
+        })
+        // console.log('response:', response);
+        const { user, password } = response.data
+        setCredentials({ user, password })
+        // console.log('setCredentials> user:', user, ', password:', password)
+      } catch (err) {
+        console.error('xmpp/credentials error:', err)
+        setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
+        setLoading(false)
+      }
     }
+    fetchCredentials()
   }, [])
 
   useEffect(() => {
