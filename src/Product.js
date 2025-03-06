@@ -5,7 +5,6 @@ import React from 'react'
 import {
   Container,
   Header,
-  HeaderSubheader,
   Image,
   Segment,
   Card,

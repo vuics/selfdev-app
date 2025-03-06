@@ -35,11 +35,11 @@ const Keys = () => {
         withCredentials: true,
         crossOrigin: { mode: 'cors' },
       })
-      console.log('index res:', res)
+      console.log('keys index res:', res)
       setKeys(res?.data || [])
     } catch (err) {
-      console.error('logout error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting user profile.')
+      console.error('getKeys error:', err);
+      return setResponseError(err?.response?.data?.message || 'Error getting keys.')
     } finally {
       setLoading(false)
     }
