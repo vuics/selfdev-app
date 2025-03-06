@@ -14,7 +14,6 @@ import {
   Icon,
   Header,
   Dropdown,
-  Menu,
 } from 'semantic-ui-react'
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -24,7 +23,7 @@ const Hive = () => {
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
 
   const [ options, setOptions ] = useState({ agent: 'alice' })
-  const [ optionsError, setOptionsError ] = useState('')
+  // const [ optionsError, setOptionsError ] = useState('')
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
   const [ adding, setAdding ] = useState(false)
@@ -284,66 +283,3 @@ const Hive = () => {
 }
 
 export default Hive
-
-
-      {/*
-      <Card.Group>
-        <Card>
-          <Card.Content>
-            <Image
-              floated='right'
-              size='mini'
-              src='/images/avatar/large/steve.jpg'
-            />
-            <Card.Header>Alice</Card.Header>
-            <Card.Meta>Friends of Elliot</Card.Meta>
-            <Card.Description>
-              Alice is one of the crypto couple.
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <div className='ui three buttons'>
-              <Button basic color='green'>
-                Deploy
-              </Button>
-              <Button basic color='blue'>
-                Edit
-              </Button>
-              <Button basic color='red'>
-                Delete
-              </Button>
-            </div>
-          </Card.Content>
-        </Card>
-
-        <Card>
-          <Card.Content>
-            <Image
-              floated='right'
-              size='mini'
-              src='/images/avatar/large/steve.jpg'
-            />
-            <Card.Header>Bob</Card.Header>
-            <Card.Meta>Friends of Elliot</Card.Meta>
-            <Card.Description>
-              Bob is one of the crypto couple.
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <div className='ui three buttons'>
-              <Button basic color='green'>
-                Deploy
-              </Button>
-              <Button basic color='blue'>
-                Edit
-              </Button>
-              <Button basic color='red'>
-                Delete
-              </Button>
-            </div>
-          </Card.Content>
-        </Card>
-      </Card.Group>
-      */}
-
-

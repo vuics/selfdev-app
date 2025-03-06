@@ -59,7 +59,7 @@ const Keys = () => {
         withCredentials: true,
         crossOrigin: { mode: 'cors' },
       })
-      console.log('post res:', res)
+      console.log('post key res:', res)
       // setResponseMessage(`${res.statusText} API key "${res.data.name}"`)
       keys.push(res.data)
       setKeys(keys)
@@ -80,12 +80,12 @@ const Keys = () => {
         withCredentials: true,
         crossOrigin: { mode: 'cors' },
       })
-      console.log('delete res:', res)
+      console.log('delete key res:', res)
       // setResponseMessage(`API key "${name}" deleted`)
       setKeys(keys.filter(obj => obj._id !== _id))
     } catch (err) {
-      console.error('post key error:', err);
-      return setResponseError(err.toString() || 'Error posting key.')
+      console.error('delete key error:', err);
+      return setResponseError(err.toString() || 'Error deleting key.')
     } finally {
       setLoading(false)
     }
