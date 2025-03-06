@@ -19,6 +19,7 @@ import Logout from './Logout'
 import Chat from './Chat'
 import Talk from './Talk'
 import Meet from './Meet'
+import Hive from './Hive'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
@@ -74,6 +75,9 @@ const Index = () => {
       )}
       { conf.meet.enable && (
         <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
+      )}
+      { conf.hive.enable && (
+        <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>

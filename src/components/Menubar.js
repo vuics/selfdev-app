@@ -40,6 +40,12 @@ const Menubar = () => {
           Meet
         </Menu.Item>
       ) }
+      { conf.hive.enable && (
+        <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>
+          <Icon name='sitemap' />
+          Hive
+        </Menu.Item>
+      ) }
       { conf.code.enable && (
         <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
           <Icon name='code' />
