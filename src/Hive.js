@@ -171,6 +171,7 @@ const Hive = () => {
             data={ options }
             setData={ setOptions }
             rootName=''
+            maxWidth='1100px'
             />
           <br/>
           <Button.Group>
@@ -192,7 +193,7 @@ const Hive = () => {
       <Grid>
         { agents.map((agent) => (
           <Grid.Row key={agent._id}>
-            <Grid.Column width={5}>
+            <Grid.Column width={4}>
               <Card>
                 <Card.Content>
                   <Card.Header>
@@ -272,7 +273,7 @@ const Hive = () => {
               </Card>
             </Grid.Column>
             { agent.editing && (
-              <Grid.Column width={11}>
+              <Grid.Column width={12}>
                 <JsonEditor
                   data={ agent.options || {} }
                   setData={ (options) => {
@@ -281,6 +282,7 @@ const Hive = () => {
                     ))
                   } }
                   rootName=''
+                  maxWidth='1000px'
                   />
               </Grid.Column>
             )}
