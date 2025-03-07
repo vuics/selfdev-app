@@ -15,10 +15,39 @@ import {
   Dropdown,
 } from 'semantic-ui-react'
 import { faker } from '@faker-js/faker'
+import Ajv from 'ajv'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 
+// import schema from './my-json-schema.json'
+
+const schema = {
+  type: 'object',
+  properties: {
+    schemaVersion: { type: 'string' },
+
+    name: { type: 'string' },
+    description: { type: 'string' },
+
+    systemMessage: { type: 'string' },
+    protoAgent: { type: 'string' },
+
+    joinRooms: {
+      type: 'array',
+      items: { type: 'string' }
+    },
+    model: {
+      type: 'object',
+      properties: {
+        provider: { type: 'string' },
+        name: { type: 'string' }
+      }
+    }
+  }
+}
+const ajv = new Ajv()
+const validate = ajv.compile(schema)
 
 function defaultOptions() {
   return {
@@ -26,6 +55,15 @@ function defaultOptions() {
 
     name: faker.internet.username().toLowerCase(),
     description: '',
+
+    systemMessage: '',
+    protoAgent: 'AliceAgent',
+
+    joinRooms: [ 'all' ],
+    model: {
+      provider: 'openai',
+      name: 'gpt-4o-mini',
+    },
   }
 }
 
@@ -35,6 +73,7 @@ const Hive = () => {
 
   const [ options, setOptions ] = useState(() => defaultOptions())
   const [ responseError, setResponseError ] = useState('')
+  const [ validationError, setValidationError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
   const [ adding, setAdding ] = useState(false)
   const [ loading, setLoading ] = useState(true)
@@ -153,6 +192,16 @@ const Hive = () => {
           onDismiss={() => setResponseMessage('')}
         />
       }
+      { validationError &&
+        <Message
+          negative
+          style={{ textAlign: 'left'}}
+          icon='exclamation circle'
+          header='Schema Validation Error'
+          content={validationError}
+          onDismiss={() => setValidationError('')}
+        />
+      }
 
       { !adding && (
         <Button size='large' onClick={() => setAdding(!adding) }>
@@ -172,6 +221,19 @@ const Hive = () => {
             setData={ setOptions }
             rootName=''
             maxWidth='1100px'
+            onUpdate={ ({ newData }) => {
+              const valid = validate(newData)
+              if (!valid) {
+                console.log('Validation Errors:', validate.errors)
+                const errorMessage = validate.errors
+                  ?.map((error) => `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`)
+                  .join('\n')
+                setValidationError(
+                  `Not compliant with JSON Schema ${errorMessage}`
+                )
+                return 'JSON Schema error'
+              }
+            }}
             />
           <br/>
           <Button.Group>
