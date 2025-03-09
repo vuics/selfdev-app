@@ -221,6 +221,7 @@ const Hive = () => {
           <JsonEditor
             data={ options }
             setData={ setOptions }
+            defaultValue=''
             rootName=''
             maxWidth='1100px'
             onUpdate={ ({ newData }) => {
@@ -350,6 +351,7 @@ const Hive = () => {
                       a._id === agent._id ? { ...agent, options, edited: true } : a
                     ))
                   } }
+                  defaultValue=''
                   rootName=''
                   maxWidth='1000px'
                   />
