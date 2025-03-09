@@ -269,7 +269,10 @@ const Hive = () => {
                           {agent.options?.name || '(no name)'}
                         </Grid.Column>
                         <Grid.Column width={3}>
-                          <Dropdown item icon='cog' simple position='right'>
+                          <Dropdown item simple position='right'
+                            icon={
+                             <Icon name='cog' color='grey'/>
+                            }>
                             <Dropdown.Menu>
                               <Dropdown.Item
                                 onClick={() => {
@@ -295,7 +298,7 @@ const Hive = () => {
                       </Grid.Row>
                     </Grid>
                   </Card.Header>
-                  <Card.Meta>
+                  <Card.Meta textAlign='center'>
                     { agent.options?.protoAgent }
                   </Card.Meta>
                   <Card.Description>
