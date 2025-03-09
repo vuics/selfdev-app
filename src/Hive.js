@@ -295,6 +295,9 @@ const Hive = () => {
                       </Grid.Row>
                     </Grid>
                   </Card.Header>
+                  <Card.Meta>
+                    { agent.options?.protoAgent }
+                  </Card.Meta>
                   <Card.Description>
                     {agent.options?.description || '(no description)' }
                   </Card.Description>
