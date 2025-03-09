@@ -16,64 +16,22 @@ import {
   List,
   Label,
 } from 'semantic-ui-react'
-import { faker } from '@faker-js/faker'
 import Ajv from 'ajv'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
+import archetypes, { defaultArchetype } from './archetypes'
 
-// import schema from './my-json-schema.json'
-
-const schema = {
-  type: 'object',
-  properties: {
-    schemaVersion: { type: 'string' },
-
-    name: { type: 'string' },
-    description: { type: 'string' },
-
-    systemMessage: { type: 'string' },
-    protoAgent: { type: 'string' },
-
-    joinRooms: {
-      type: 'array',
-      items: { type: 'string' }
-    },
-    model: {
-      type: 'object',
-      properties: {
-        provider: { type: 'string' },
-        name: { type: 'string' }
-      }
-    }
-  }
-}
 const ajv = new Ajv()
-const validate = ajv.compile(schema)
-
-function defaultOptions() {
-  return {
-    schemaVersion: '0.1',
-
-    name: faker.internet.username().toLowerCase(),
-    description: '',
-
-    systemMessage: '',
-    protoAgent: 'AliceAgent',
-
-    joinRooms: [ 'all' ],
-    model: {
-      provider: 'openai',
-      name: 'gpt-4o-mini',
-    },
-  }
-}
 
 const Hive = () => {
   const [ agents, setAgents ] = useState([])
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
 
-  const [ options, setOptions ] = useState(() => defaultOptions())
+  const [ archetype, setArchetype ] = useState(defaultArchetype.value)
+  const [ options, setOptions ] = useState(() => defaultArchetype.defaultOptions())
+  const [ validate, setValidate ] = useState(() => ajv.compile(defaultArchetype.schema))
+
   const [ responseError, setResponseError ] = useState('')
   const [ validationError, setValidationError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
@@ -100,6 +58,12 @@ const Hive = () => {
   }
 
   useEffect(() => {
+    setOptions(archetypes[archetype].defaultOptions())
+    setValidate(archetypes[archetype].schema)
+  }, [archetype])
+
+
+  useEffect(() => {
     indexAgents()
   }, [])
 
@@ -108,6 +72,7 @@ const Hive = () => {
     try {
       const res = await axios.post(`${conf.api.url}/agent`, {
         deployed: false,
+        archetype,
         options,
       }, {
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +83,8 @@ const Hive = () => {
       // setResponseMessage(`Agent created successfully`)
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
-      setOptions(() => defaultOptions())
+      setOptions(archetypes[archetype].defaultOptions())
+      setValidate(archetypes[archetype].schema)
     } catch (err) {
       console.error('post agent error:', err);
       return setResponseError(err.toString() || 'Error posting agent.')
@@ -218,6 +184,19 @@ const Hive = () => {
       { adding && (
         <Segment stacked>
           <Header as='h4'>Add Agent</Header>
+          <span>
+            Archetype:{' '}
+            <Dropdown
+              inline
+              placeholder='Select Archetype'
+              search
+              options={ Object.values(archetypes) }
+              defaultValue={ archetype }
+              onChange={(e, { value }) => setArchetype(value) }
+            />
+          </span>
+          <br/>
+          <span>Options:</span>
           <JsonEditor
             data={ options }
             setData={ setOptions }
@@ -299,7 +278,7 @@ const Hive = () => {
                     </Grid>
                   </Card.Header>
                   <Card.Meta textAlign='center'>
-                    { agent.options?.protoAgent }
+                    { agent.archetype }
                   </Card.Meta>
                   <Card.Description>
                     {agent.options?.description || '(no description)' }

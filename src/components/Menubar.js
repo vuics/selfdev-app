@@ -42,7 +42,7 @@ const Menubar = () => {
       ) }
       { conf.hive.enable && (
         <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>
-          <Icon name='sitemap' />
+          <Icon name='cubes' />
           Hive
         </Menu.Item>
       ) }
