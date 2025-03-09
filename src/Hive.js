@@ -13,6 +13,8 @@ import {
   Icon,
   Header,
   Dropdown,
+  List,
+  Label,
 } from 'semantic-ui-react'
 import { faker } from '@faker-js/faker'
 import Ajv from 'ajv'
@@ -295,17 +297,22 @@ const Hive = () => {
                   <Card.Description>
                     {agent.options?.description || '(no description)' }
                   </Card.Description>
+                  { agent.options?.joinRooms?.length > 0 && (
+                    <List>
+                    { agent.options?.joinRooms?.map(room => (
+                        <Label><List.Item>{room}</List.Item></Label>
+                    ))}
+                    </List>
+                  ) }
                 </Card.Content>
                 <Card.Content extra>
-                  <Card.Meta>
-                    <Checkbox toggle label='Deployed'
-                      disabled={agent.editing}
-                      onChange={(e, data) => {
-                        putAgent({ agent: {...agent, deployed: data.checked } })
-                      }}
-                      checked={agent.deployed}
-                    />
-                  </Card.Meta>
+                  <Checkbox toggle label='Deployed'
+                    disabled={agent.editing}
+                    onChange={(e, data) => {
+                      putAgent({ agent: {...agent, deployed: data.checked } })
+                    }}
+                    checked={agent.deployed}
+                  />
                 </Card.Content>
                 { agent.editing && (
                   <Card.Content extra>
