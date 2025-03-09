@@ -30,7 +30,6 @@ const Hive = () => {
 
   const [ archetype, setArchetype ] = useState(defaultArchetype.value)
   const [ options, setOptions ] = useState(() => defaultArchetype.defaultOptions())
-  const [ validate, setValidate ] = useState(() => ajv.compile(defaultArchetype.schema))
 
   const [ responseError, setResponseError ] = useState('')
   const [ validationError, setValidationError ] = useState('')
@@ -59,7 +58,6 @@ const Hive = () => {
 
   useEffect(() => {
     setOptions(archetypes[archetype].defaultOptions())
-    setValidate(archetypes[archetype].schema)
   }, [archetype])
 
 
@@ -84,7 +82,6 @@ const Hive = () => {
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
       setOptions(archetypes[archetype].defaultOptions())
-      setValidate(archetypes[archetype].schema)
     } catch (err) {
       console.error('post agent error:', err);
       return setResponseError(err.toString() || 'Error posting agent.')
@@ -204,6 +201,7 @@ const Hive = () => {
             rootName=''
             maxWidth='1100px'
             onUpdate={ ({ newData }) => {
+              const validate = ajv.compile(archetypes[archetype].schema)
               const valid = validate(newData)
               if (!valid) {
                 console.log('Validation Errors:', validate.errors)
@@ -278,7 +276,7 @@ const Hive = () => {
                     </Grid>
                   </Card.Header>
                   <Card.Meta textAlign='center'>
-                    { agent.archetype }
+                    { archetypes[agent.archetype].text }
                   </Card.Meta>
                   <Card.Description>
                     {agent.options?.description || '(no description)' }
