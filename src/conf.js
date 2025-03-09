@@ -35,6 +35,8 @@ const conf = {
 
   hive: {
     enable: bool(process.env.REACT_APP_HIVE_ENABLE || false),
+    skip: 0,
+    limit: 1000,
   },
 
   code: {

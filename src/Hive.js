@@ -83,7 +83,7 @@ const Hive = () => {
   const indexAgents = async () => {
     setLoading(true)
     try {
-      const res = await axios.get(`${conf.api.url}/agent`, {
+      const res = await axios.get(`${conf.api.url}/agent?skip=${conf.hive.skip}&limit=${conf.hive.limit}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
         crossOrigin: { mode: 'cors' },
