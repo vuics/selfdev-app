@@ -192,6 +192,16 @@ const archetypes = {
           type: 'array',
           items: { type: 'string' }
         },
+        notebook: {
+          type: 'object',
+          properties: {
+            filePath: { type: 'string' },
+            kernelName: { type: 'string' },
+            parameters: { },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
+        }
       }
     },
     defaultOptions: () => {
@@ -199,6 +209,16 @@ const archetypes = {
         name: faker.internet.username().toLowerCase(),
         description: '',
         joinRooms: [ 'all' ],
+        notebook: {
+          filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
+          kernelName: 'python3',
+          parameters: {
+            who: 'Earth',
+            num: 0.3,
+          },
+          parseJson: true,
+          promptKey: 'prompt',
+        },
       }
     }
   },
