@@ -8,6 +8,7 @@ import {
   Image,
   Segment,
   Card,
+  Embed,
   Divider,
 } from 'semantic-ui-react'
 import Footer from './components/Footer'
@@ -46,6 +47,16 @@ const Product = () => (
           <li>
             <a href="#talk">
               <b>Talk</b> — include humans, agents and human-agentic collaborative teams to your workflows.
+            </a>
+          </li>
+          <li>
+            <a href="#meet">
+              <b>Meet</b> — video conference with humans and agents.
+            </a>
+          </li>
+          <li>
+            <a href="#hive">
+              <b>Hive</b> — create and deploy agentic teams.
             </a>
           </li>
           <li>
@@ -166,6 +177,74 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/talk.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="meet" dividing>
+          Meet
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Meet with humans and virtual agents that have talking faces through video conferencing. Use chat, breakout rooms, whiteboard, collaboraition documents. Record sessions.
+        </p>
+        <br/>
+        <Card.Group key="card-group-meet" centered items={[ {
+            header: 'Immersive & Engaging Meetings',
+            description: 'The inclusion of talking virtual agents enhances interaction, making meetings more dynamic and visually engaging.',
+          }, {
+            header: 'Enhanced Collaboration & Productivity',
+            description: 'With integrated chat, breakout rooms, whiteboards, and collaborative documents, teams can work seamlessly within a single platform.',
+          }, {
+            header: 'AI-Powered Assistance',
+            description: 'Virtual agents can provide real-time support, summarize discussions, take notes, and answer queries, reducing manual effort.',
+          }, {
+            header: 'Efficient Knowledge Retention',
+            description: 'Session recording ensures important discussions, decisions, and insights are preserved for future reference and training.',
+          }, {
+            header: 'Seamless Hybrid Communication',
+            description: 'Bringing together humans and AI-powered agents in meetings allows for a more interactive and data-driven communication experience.',
+          }, {
+            header: 'Scalability & Accessibility',
+            description: 'Virtual agents can assist in multiple conversations, making large-scale collaboration and knowledge sharing more efficient across organizations.',
+          } ]} />
+        <br/>
+        <Embed
+          icon='right circle arrow'
+          placeholder='/images/screenshots/meet.png'
+          url='/images/screenshots/meet.mp4'
+        />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="hive" dividing>
+          Hive
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Create and deploy virtual agents using JSON format. There are 3 types of agents: Chat, RAG and Notebook. The agents can talk in private conversations or join rooms to communicate with group conosisting of humans and agents.
+        </p>
+        <br/>
+        <Card.Group key="card-group-hive" centered items={[ {
+            header: 'Automation & Efficiency',
+            description: 'Customers can streamline workflows by deploying virtual agents that handle tasks, answer questions, and assist in group conversations.',
+          }, {
+            header: 'Seamless Human-Agent Collaboration',
+            description: 'The ability for agents to join rooms and interact with both humans and other agents enhances teamwork and productivity.',
+          }, {
+            header: 'Flexible AI Deployment',
+            description: 'Users can create different types of agents (Chat, RAG, Notebook) tailored to their specific needs, such as conversational AI, retrieval-augmented generation, or structured data handling.',
+          }, {
+            header: 'Enhanced Knowledge Sharing',
+            description: 'RAG agents can fetch and deliver relevant information in real-time, improving decision-making and reducing manual research.',
+          }, {
+            header: 'Scalability & Adaptability',
+            description: 'JSON-based agent configurations allow for easy customization and deployment, enabling businesses to scale AI solutions efficiently.',
+          }, {
+            header: 'Privacy & Control',
+            description: 'Private conversations ensure sensitive discussions remain confidential while still benefiting from AI assistance.',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/hive.png' fluid bordered rounded />
         <br/>
       </Segment>
 
