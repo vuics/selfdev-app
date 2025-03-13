@@ -210,7 +210,7 @@ const Product = () => (
         <br/>
         <Embed
           icon='right circle arrow'
-          placeholder='/images/screenshots/meet.png'
+          // placeholder='/images/screenshots/meet.png'
           url='/images/screenshots/meet.mp4'
         />
         <br/>
