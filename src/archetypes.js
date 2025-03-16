@@ -29,7 +29,7 @@ const archetypes = {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'all' ],
+        joinRooms: [ 'chat' ],
         model: {
           provider: 'openai',
           name: 'gpt-4o-mini',
@@ -112,7 +112,7 @@ const archetypes = {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'all' ],
+        joinRooms: [ 'rag' ],
         model: {
           provider: 'openai',
           name: 'gpt-4o-mini',
@@ -208,7 +208,7 @@ const archetypes = {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'all' ],
+        joinRooms: [ 'notebook' ],
         notebook: {
           filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
           kernelName: 'python3',
@@ -218,6 +218,42 @@ const archetypes = {
           },
           parseJson: true,
           promptKey: 'prompt',
+        },
+      }
+    }
+  },
+
+  'command-v1.0': {
+    key: 'command-v1.0',
+    value: 'command-v1.0',
+    icon: 'terminal',
+    text: 'Command v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        command: {
+          type: 'object',
+          properties: {
+            execute: { type: 'string' },
+            shell: { type: 'boolean' },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'command' ],
+        command: {
+          execute: '/bin/sh',
+          shell: false,
         },
       }
     }
