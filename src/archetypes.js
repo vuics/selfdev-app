@@ -95,6 +95,7 @@ const archetypes = {
               // google-drive loader
               folderId: { type: 'string' },
               recursive: { type: 'boolean' },
+              unstructured: { type: 'boolean' },
               filesIds: {
                 type: 'array',
                 items: { type: 'string' }
@@ -147,6 +148,7 @@ const archetypes = {
           kind: "google-drive",
           folderId: "",
           recursive: true,
+          unstructured: false,
           filesIds: [
             // ""
           ],
