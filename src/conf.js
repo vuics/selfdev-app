@@ -89,6 +89,7 @@ const conf = {
 
   xmpp: {
     host: process.env.REACT_APP_XMPP_HOST || 'localhost',
+    mucHost: process.env.REACT_APP_XMPP_MUC_HOST || 'conference.localhost',
   },
 
   jitsi: {
