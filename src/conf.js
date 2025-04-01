@@ -89,6 +89,9 @@ const conf = {
 
   xmpp: {
     host: process.env.REACT_APP_XMPP_HOST || 'localhost',
+    boshServiceUrl: process.env.REACT_APP_XMPP_BOSH_SERVICE_URL || '',  // 'https://localhost:5281/http-bind/',
+    discoverConnectionMethods: bool(process.env.REACT_APP_XMPP_DISCOVER_CONNECTION_METHODS || false),
+    websocketUrl: process.env.REACT_APP_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
     mucHost: process.env.REACT_APP_XMPP_MUC_HOST || 'conference.localhost',
   },
 

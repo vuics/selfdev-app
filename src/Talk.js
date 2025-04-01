@@ -67,9 +67,9 @@ const Talk = () => {
             loglevel: 'info',
             // loglevel: 'debug',
 
-            // bosh_service_url: `https://${conf.xmpp.host}:5281/bosh/`,
-            discover_connection_methods: false,
-            websocket_url: `wss://${conf.xmpp.host}:5281/xmpp-websocket`,
+            bosh_service_url: conf.xmpp.boshServiceUrl,
+            discover_connection_methods: conf.xmpp.discoverConnectionMethods,
+            websocket_url: conf.xmpp.websocketUrl,
             auto_reconnect: true,
             stanza_timeout: 300000, // 5m
             keepalive: true,
