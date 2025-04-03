@@ -9,6 +9,7 @@ import {
   Segment,
   Card,
   Embed,
+  Grid,
   Divider,
 } from 'semantic-ui-react'
 import Footer from './components/Footer'
@@ -51,7 +52,12 @@ const Product = () => (
           </li>
           <li>
             <a href="#meet">
-              <b>Meet</b> — video conference with humans and agents.
+              <b>Meet</b> — meet in video conference with humans and agents.
+            </a>
+          </li>
+          <li>
+            <a href="#vr">
+              <b>VR / AR</b> — talk to agents in virtual reality or agumented reality.
             </a>
           </li>
           <li>
@@ -107,6 +113,11 @@ const Product = () => (
           <li>
             <a href="#desktop">
               <b>Desktop App</b> — interact with agents on macOS, Linux and Windows.
+            </a>
+          </li>
+          <li>
+            <a href="#distributed">
+              <b>Distributed System</b> — connect humans and agents through a server-to-server network.
             </a>
           </li>
         </ol>
@@ -213,6 +224,38 @@ const Product = () => (
           // placeholder='/images/screenshots/meet.png'
           url='/images/screenshots/meet.mp4'
         />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="vr" dividing>
+          Virtual Reality & Augmented Reality
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Chat to agents in virtual or augmented reality. The 3D-models for virtual agents can be generated or manually created in glTF format compatible with web. Each VR agent can communicate using text or voice.
+        </p>
+        <br/>
+        <Card.Group key="card-group-vr" centered items={[ {
+          header: 'Immersive Interaction',
+          description: 'Engaging with agents in virtual or augmented reality offers a deeply immersive experience, enhancing communication and making interactions more memorable.',
+        }, {
+          header: 'Personalized & Human-like Assistance',
+          description: 'Custom or auto-generated 3D agents allow for branded, relatable support experiences that resonate with users on a personal level.',
+        }, {
+          header: 'Flexible Communication Modes',
+          description: 'Support for both text and voice interactions ensures accessibility and caters to a wide range of user preferences.',
+        }, {
+          header: 'Web-Based VR Accessibility',
+          description: 'Using the glTF format enables VR experiences to be delivered directly through the web, removing the need for specialized apps and making access simple and instant.',
+        }, {
+          header: 'Futuristic & Innovative Brand Perception',
+          description: 'Offering VR/AR agent interaction sets the brand apart as a forward-thinking innovator, improving customer perception and engagement.',
+        }, {
+          header: 'Customizable and Scalable Experiences',
+          description: 'glTF support enables easy customization and scalability of 3D agent designs, allowing businesses to adapt quickly to new use cases.',
+        } ]} />
+        <br/>
+        <Image src='/images/screenshots/vr.png' fluid bordered rounded />
         <br/>
       </Segment>
 
@@ -567,6 +610,54 @@ const Product = () => (
         <Image src='/images/screenshots/desktop.png' centered bordered rounded />
         <br/>
       </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="distributed" dividing>
+          Distributed System
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Use a distributed system that allows to connect people and agents running on different machines (network nodes) through direct server-to-server connection. The messages are stored only on network nodes that participate in the communication channel and not shared with third parties. Share agents from your node to help your friends, colleagues and customers.
+        </p>
+        <br/>
+        <Card.Group key="card-group-distributed" centered items={[ {
+          header: 'Privacy-First Communication',
+          description: 'Messages are only stored on participating nodes and never shared with third parties, ensuring maximum privacy and data control for users.',
+        }, {
+          header: 'Decentralized & Resilient Architecture',
+          description: 'Direct server-to-server connections remove dependency on central servers, increasing reliability and eliminating single points of failure.',
+        }, {
+          header: 'Agent Sharing Made Easy',
+          description: 'Easily share agents hosted on your node with friends, colleagues, or customers to support collaboration and extend assistance across networks.',
+        }, {
+          header: 'Secure & Localized Data Control',
+          description: 'Data remains within the communication participants’ nodes, giving users sovereignty over their data and simplifying compliance with privacy standards.',
+        }, {
+          header: 'Scalable Peer-to-Peer Collaboration',
+          description: 'The distributed model supports seamless growth, enabling direct communication between nodes without the need for centralized coordination.',
+        }, {
+          header: 'Custom Network Participation',
+          description: 'Users can choose which agents and nodes to interact with, allowing for fully customizable, trusted communication environments.',
+        } ]} />
+        <br/>
+        <Grid divided='vertically'>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Server A
+              </Header>
+              <Image src='/images/screenshots/distributed-dev.png' fluid bordered rounded />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Server B
+              </Header>
+              <Image src='/images/screenshots/distributed-ops.png' fluid bordered rounded />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <br/>
+      </Segment>
+
     </Container>
     <br />
     <br />
