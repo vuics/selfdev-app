@@ -120,6 +120,11 @@ const Product = () => (
               <b>Distributed System</b> — connect humans and agents through a server-to-server network.
             </a>
           </li>
+          <li>
+            <a href="#bridge">
+              <b>Social Bridge</b> — connect AZ1.ai with social networks and messangers.
+            </a>
+          </li>
         </ol>
       </Segment>
     </Container>
@@ -655,6 +660,41 @@ const Product = () => (
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="bridge" dividing>
+          Social Bridge
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Build a bridge between AZ1.ai and social networks and messangers such as WhatsApp, Slack, Discord, Telegram, Microsoft Teams, VK, XMPP, Twitch, IRC, MatterMost, Matrix, RocketChat, Keybase, NextCloud, Mumble, Gitter, Ssh-chat, Zulip, and more with REST API.
+        </p>
+        <p style={{ fontSize: '1em', textAlign: 'center' }}>
+          Also, Discourse, Facebook Messanger, Minecraft, Reddit, MatterAMXX, Vintage Storey, Ultima Online Emulator, Teamspeak.
+        </p>
+        <br/>
+        <Card.Group key="card-group-bridge" centered items={[ {
+          header: 'Unified Communication Across Platforms',
+          description: 'Connect AZ1.ai with messaging apps like WhatsApp, Slack, Discord, and more, enabling seamless cross-platform communication without leaving preferred environments.',
+        }, {
+          header: 'Maximized Reach and Engagement',
+          description: 'Reach users on the platforms they already use, increasing accessibility and engagement across social networks and chat applications.',
+        }, {
+          header: 'Automation and AI Anywhere',
+          description: 'Deploy AZ1.ai’s intelligent agents and automation features into existing messaging ecosystems to enhance productivity and responsiveness.',
+        }, {
+          header: 'Custom Workflows Through REST API',
+          description: 'Use the flexible REST API to build tailored workflows, bots, and integrations suited to your organization’s unique needs and services.',
+        }, {
+          header: 'Cost and Time Efficiency',
+          description: 'Avoid building one-off integrations for each platform—use a single bridge to deploy agents across multiple channels and save on dev time.',
+        }, {
+          header: 'Future-Proof & Extensible Integration',
+          description: 'Support a growing list of platforms with a single, adaptable API interface, ensuring long-term flexibility as new communication tools emerge.',
+        } ]} />
+        <br/>
+        <Image src='/images/screenshots/bridge.png' fluid bordered rounded />
         <br/>
       </Segment>
 
