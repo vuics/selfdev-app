@@ -48,8 +48,7 @@ const conf = {
     enable: bool(process.env.REACT_APP_FLOW_ENABLE || false),
     url: process.env.REACT_APP_FLOW_URL || 'http://localhost:7860/',
 
-    // widget: bool(process.env.REACT_APP_FLOW_WIDGET || false),
-    widget: bool(process.env.REACT_APP_FLOW_WIDGET || true),
+    widget: bool(process.env.REACT_APP_FLOW_WIDGET || false),
     widgetOffset: num(process.env.REACT_APP_FLOW_WIDGET_OFFSET || 50),
     flowId: process.env.REACT_APP_FLOW_FLOW_ID || '0d9fa75c-61f6-4a21-afe6-609975ea4082',
     chatInputs: process.env.REACT_APP_FLOW_CHAT_INPUTS || '{"your_key":"value"}',

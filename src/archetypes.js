@@ -127,21 +127,22 @@ const archetypes = {
           enable: false,
           kind: "text",
           files: [
-            "/opt/app/README.md",
-            "/opt/app/input/tech-docs/raw-features-list.md",
-            "/opt/app/input/tech-docs/tech-development-leading_draft.md",
+            // "/opt/app/README.md",
+            // "/opt/app/input/tech-docs/raw-features-list.md",
+            // "/opt/app/input/tech-docs/tech-development-leading_draft.md",
           ],
         }, {
           enable: false,
           kind: "directory",
-          path: "/opt/app/input",
+          // path: "/opt/app/input",
+          path: "",
           glob: "**/*.*",
         }, {
           enable: false,
           kind: "web",
           urls: [
-            "https://web.az1.ai",
-            "https://en.wikipedia.org/wiki/Agent-based_model",
+            // "https://web.az1.ai",
+            // "https://en.wikipedia.org/wiki/Agent-based_model",
           ],
         }, {
           enable: false,
@@ -153,27 +154,27 @@ const archetypes = {
             // ""
           ],
           documentIds: [
-            "1pi95Wc03l8poJoIJpRXniILIPNGIbDn9VMBfmZPdgZY",
-            "1PdeQWPP1EZMXCnNNeMAdUhuRQffTbigfKU3bYC3hGjA",
-            "12adeT8_7-9ZP7mO205zFlLxU1PjrvtMviV7uwhRunAY",
-            "17U3QGlmaKxY_DoXkSZCC5EhSQ7iVehBJSWVifxRpLPo",
-            "114agEJugBBjhOoY8Tj0o0tXdntLg94kyGLPmNBemq1A",
-            "1DOwKaugogQy-yR9H-rAd-gqPDIfcDV7B3s6orvytKso",
-            "1H9OjmYsSJ8Bq2HE4X3bMidranqvkjqP-kLjkcVxQIGA",
-            "1zKuMfvQx0Lq_cJgJmzssOZnIHi7hLEpcILsDq7IPOAY",
-            "1iJQQ-__EGdsApjFAPJu2c0-raDnCebcXq33UgWL-2CM",
-            "1j1_cTw01NUO7tiVWfRADFV2WddZV-ttORupmkMd66vs",
-            "16PrhlaVbOqWL-J6N2zKBzKxROICbbf_R7FCoNEmpXac",
-            "1RBULCW0TXrYjTL8i9rFcZXu6cvMIkYmJr4cMqf1B9eI",
-            "1ozAo6OGcJRj96pk6OXNLCo-cBHT-vZaJ0PEckEAJzUc",
-            "1Oq1T9H6EM-XKmQ1FjGTC7SvZRXoz6k1Z1QLBnx6osDY",
-            "1lgvjB6RKYviPHC9sgEaCpZc-lbiBTZ1XWEop3Vbq_iQ",
-            "1c1cJSqJKJDYj-w8nSWXoc43uFlyNshqDTscMkk-mFuk",
-            "1EfDV6cVE4ipe4ZiAFYhFd4jPsCOrYJ-3ENT0wYf1IDk",
-            "1882BF98pW90cb5tS-nCyEuOB2eXO7EOTrNJdyykdC3Q",
-            "162yIECys1DdLF88jqfMm9kTvt7HoYs47ixPVqxTir94",
-            "15JwiNM-28Z9L-ZMvnLaqXd80yxOO9hAmZ6mU87Kk5zA",
-            "1MCPlsbmsyTU_h2ehDiqcLSaDOAGoIIJc4KVz7Nh_J9M",
+            // "1pi95Wc03l8poJoIJpRXniILIPNGIbDn9VMBfmZPdgZY",
+            // "1PdeQWPP1EZMXCnNNeMAdUhuRQffTbigfKU3bYC3hGjA",
+            // "12adeT8_7-9ZP7mO205zFlLxU1PjrvtMviV7uwhRunAY",
+            // "17U3QGlmaKxY_DoXkSZCC5EhSQ7iVehBJSWVifxRpLPo",
+            // "114agEJugBBjhOoY8Tj0o0tXdntLg94kyGLPmNBemq1A",
+            // "1DOwKaugogQy-yR9H-rAd-gqPDIfcDV7B3s6orvytKso",
+            // "1H9OjmYsSJ8Bq2HE4X3bMidranqvkjqP-kLjkcVxQIGA",
+            // "1zKuMfvQx0Lq_cJgJmzssOZnIHi7hLEpcILsDq7IPOAY",
+            // "1iJQQ-__EGdsApjFAPJu2c0-raDnCebcXq33UgWL-2CM",
+            // "1j1_cTw01NUO7tiVWfRADFV2WddZV-ttORupmkMd66vs",
+            // "16PrhlaVbOqWL-J6N2zKBzKxROICbbf_R7FCoNEmpXac",
+            // "1RBULCW0TXrYjTL8i9rFcZXu6cvMIkYmJr4cMqf1B9eI",
+            // "1ozAo6OGcJRj96pk6OXNLCo-cBHT-vZaJ0PEckEAJzUc",
+            // "1Oq1T9H6EM-XKmQ1FjGTC7SvZRXoz6k1Z1QLBnx6osDY",
+            // "1lgvjB6RKYviPHC9sgEaCpZc-lbiBTZ1XWEop3Vbq_iQ",
+            // "1c1cJSqJKJDYj-w8nSWXoc43uFlyNshqDTscMkk-mFuk",
+            // "1EfDV6cVE4ipe4ZiAFYhFd4jPsCOrYJ-3ENT0wYf1IDk",
+            // "1882BF98pW90cb5tS-nCyEuOB2eXO7EOTrNJdyykdC3Q",
+            // "162yIECys1DdLF88jqfMm9kTvt7HoYs47ixPVqxTir94",
+            // "15JwiNM-28Z9L-ZMvnLaqXd80yxOO9hAmZ6mU87Kk5zA",
+            // "1MCPlsbmsyTU_h2ehDiqcLSaDOAGoIIJc4KVz7Nh_J9M",
           ]
         } ],
       }
@@ -212,7 +213,8 @@ const archetypes = {
         description: '',
         joinRooms: [ 'notebook' ],
         notebook: {
-          filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
+          // filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
+          filePath: '',
           kernelName: 'python3',
           parameters: {
             who: 'Earth',
@@ -254,8 +256,45 @@ const archetypes = {
         description: '',
         joinRooms: [ 'command' ],
         command: {
-          execute: '/bin/sh',
+          // execute: '/bin/sh',
+          execute: '',
           shell: false,
+        },
+      }
+    }
+  },
+
+  'langflow-v1.0': {
+    key: 'langflow-v1.0',
+    value: 'langflow-v1.0',
+    icon: 'terminal',
+    text: 'Langflow v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        flow: {
+          type: 'object',
+          properties: {
+            flowId: { type: 'string' },
+            sessionId: { type: 'string' },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'langflow' ],
+        flow: {
+          flowId: '',
+          sessionId: '',
         },
       }
     }
