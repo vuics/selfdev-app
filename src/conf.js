@@ -44,6 +44,11 @@ const conf = {
     limit: 1000,
   },
 
+  flow: {
+    enable: bool(process.env.REACT_APP_FLOW_ENABLE || false),
+    url: process.env.REACT_APP_FLOW_URL || 'http://localhost:7860/',
+  },
+
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',

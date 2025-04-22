@@ -20,6 +20,7 @@ import Chat from './Chat'
 import Talk from './Talk'
 import Meet from './Meet'
 import Hive from './Hive'
+import Flow from './Flow'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
@@ -78,6 +79,9 @@ const Index = () => {
       )}
       { conf.hive.enable && (
         <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
+      )}
+      { conf.flow.enable && (
+        <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>

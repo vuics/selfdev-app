@@ -46,6 +46,12 @@ const Menubar = () => {
           Hive
         </Menu.Item>
       ) }
+      { conf.flow.enable && (
+        <Menu.Item onClick={() => navigate('/flow')} active={pathname==='/flow'}>
+          <Icon name='code branch' />
+          Flow
+        </Menu.Item>
+      ) }
       { conf.code.enable && (
         <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
           <Icon name='code' />
