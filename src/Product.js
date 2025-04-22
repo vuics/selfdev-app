@@ -34,10 +34,10 @@ const Product = () => (
         <Image src='/images/logo192.png' centered />
         <br />
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          A distribued Agent-as-a-Service self-developing AI platform with web, mobile and desktop applications that allows to assemble and run agentic workflows using any APIs, models and databases.
+          A distribued Agent-as-a-Service transforms the way how innovative teams run their businesses by automating processes and saving time. The self-developing AI platform allows to assemble and run agentic workflows using any APIs, models and databases.
         </p>
         <p style={{ fontSize: '1.3em', textAlign: 'center' }}>
-          The plaform bridges agents and humans interactions over native communication app, social networks and phone lines.
+          The plaform bridges agents and humans interactions over native web, mobile and desktop communication apps, video conferencing, virtual reality, command line, social networks and phone lines.
         </p>
         <Divider />
         <Header as="h2">
