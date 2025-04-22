@@ -20,7 +20,7 @@ const Product = () => (
     <Container>
       <Segment padded textAlign="center" inverted color='blue'>
         <Header as="h1">
-          AZ1 Product
+          AZ1.ai
         </Header>
       </Segment>
     </Container>
@@ -29,11 +29,15 @@ const Product = () => (
     <Container>
       <Segment padded textAlign="center">
         <Header as="h2">
-          Product Description
+          Description
         </Header>
+        <Image src='/images/logo192.png' centered />
         <br />
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          An Agent-as-a-Service platform with web, mobile and desktop applications.
+          A distribued Agent-as-a-Service self-developing AI platform with web, mobile and desktop applications that allows to assemble and run agentic workflows using any APIs, models and databases.
+        </p>
+        <p style={{ fontSize: '1.3em', textAlign: 'center' }}>
+          The plaform bridges agents and humans interactions over native communication app, social networks and phone lines.
         </p>
         <Divider />
         <Header as="h2">
@@ -56,13 +60,13 @@ const Product = () => (
             </a>
           </li>
           <li>
-            <a href="#vr">
-              <b>VR / AR</b> — talk to agents in virtual reality or agumented reality.
+            <a href="#hive">
+              <b>Hive</b> — create and deploy agentic teams.
             </a>
           </li>
           <li>
-            <a href="#hive">
-              <b>Hive</b> — create and deploy agentic teams.
+            <a href="#flow">
+              <b>Flow</b> — assemble agentic workflows using APIs, models, databases.
             </a>
           </li>
           <li>
@@ -122,7 +126,17 @@ const Product = () => (
           </li>
           <li>
             <a href="#bridge">
-              <b>Social Bridge</b> — connect AZ1.ai with social networks and messangers.
+              <b>Social Bridge</b> — connect agents with social networks and messangers.
+            </a>
+          </li>
+          <li>
+            <a href="#phone">
+              <b>Phone</b> — communicate with agents on phone calls and messages.
+            </a>
+          </li>
+          <li>
+            <a href="#vr">
+              <b>VR / AR</b> — talk to agents in virtual reality or agumented reality.
             </a>
           </li>
         </ol>
@@ -133,6 +147,7 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="chat" dividing>
           Chat
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
@@ -166,6 +181,7 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="talk" dividing>
           Talk
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
@@ -199,6 +215,7 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="meet" dividing>
           Meet
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Meet with humans and virtual agents that have talking faces through video conferencing. Use chat, breakout rooms, whiteboard, collaboraition documents. Record sessions.
@@ -233,43 +250,13 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h1' textAlign='center' id="vr" dividing>
-          Virtual Reality & Augmented Reality
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Chat to agents in virtual or augmented reality. The 3D-models for virtual agents can be generated or manually created in glTF format compatible with web. Each VR agent can communicate using text or voice.
-        </p>
-        <br/>
-        <Card.Group key="card-group-vr" centered items={[ {
-          header: 'Immersive Interaction',
-          description: 'Engaging with agents in virtual or augmented reality offers a deeply immersive experience, enhancing communication and making interactions more memorable.',
-        }, {
-          header: 'Personalized & Human-like Assistance',
-          description: 'Custom or auto-generated 3D agents allow for branded, relatable support experiences that resonate with users on a personal level.',
-        }, {
-          header: 'Flexible Communication Modes',
-          description: 'Support for both text and voice interactions ensures accessibility and caters to a wide range of user preferences.',
-        }, {
-          header: 'Web-Based VR Accessibility',
-          description: 'Using the glTF format enables VR experiences to be delivered directly through the web, removing the need for specialized apps and making access simple and instant.',
-        }, {
-          header: 'Futuristic & Innovative Brand Perception',
-          description: 'Offering VR/AR agent interaction sets the brand apart as a forward-thinking innovator, improving customer perception and engagement.',
-        }, {
-          header: 'Customizable and Scalable Experiences',
-          description: 'glTF support enables easy customization and scalability of 3D agent designs, allowing businesses to adapt quickly to new use cases.',
-        } ]} />
-        <br/>
-        <Image src='/images/screenshots/vr.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="hive" dividing>
           Hive
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Create and deploy virtual agents using JSON format. There are 3 types of agents: Chat, RAG and Notebook. The agents can talk in private conversations or join rooms to communicate with group conosisting of humans and agents.
+          Create and deploy virtual agents using JSON format. There are agents of such archetypes as: Chat, RAG, Notebook, Command, Langflow. The agents can talk in private conversations or join rooms to communicate with group conosisting of humans and agents.
         </p>
         <br/>
         <Card.Group key="card-group-hive" centered items={[ {
@@ -297,8 +284,44 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="flow" dividing>
+          Flow
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Use Langflow as a low-code visual editor to build powerful AI agents and workflows that can use any API, model, or database.
+        </p>
+        <br/>
+        <Card.Group key="card-group-flow" centered items={[ {
+            header: 'Visual Simplicity with Low-Code Power',
+            description: 'Quickly assemble sophisticated AI workflows without heavy coding. Flow’s visual editor empowers non-engineers and speeds up prototyping across teams.',
+          }, {
+            header: 'API and Toolchain Flexibility',
+            description: 'Integrate any API, model, or database effortlessly—ensuring your agents and workflows align with your existing stack and evolving needs.',
+          }, {
+            header: 'Reusable and Modular Workflows',
+            description: 'Build once, reuse everywhere. Create modular components and templates to accelerate development and ensure consistent best practices.',
+          }, {
+            header: 'Scalable AI Agent Design',
+            description: 'Design agents from simple automations to complex, autonomous systems with memory, feedback, and tools—scaling as your ambitions grow.',
+          }, {
+            header: 'Real-Time Testing and Debugging',
+            description: 'Iterate fast with live testing and inspection. Inject data, observe outputs, and refine logic on the fly for better performance and reliability.',
+          }, {
+            header: 'Collaboration and Shareability',
+            description: 'Share, clone, and co-edit workflows across your team. Flow makes collaboration seamless and promotes reuse of successful agent designs.',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/flow.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="code" dividing>
           Code
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Code with online code editor / web IDE with architect and coder agents that can help self-develop code of the platform. Between 30% and 70% of the code is generated to this moment.
@@ -328,9 +351,12 @@ const Product = () => (
         <br/>
       </Segment>
 
+      {/*
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="build" dividing>
           Build
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Build / orgnize / assemble agentic teams with visual editor. Our architect and coder agents can continue developing your agentic teams with prompts from users.
@@ -359,10 +385,13 @@ const Product = () => (
         <Image src='/images/screenshots/build.png' fluid bordered rounded />
         <br/>
       </Segment>
+      */}
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="open" dividing>
           Open
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           A chat to communicate to all deployed open-source (Ollama) models and Open AI models. It can be used for testing and comparison of different LLMs.
@@ -395,6 +424,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="note" dividing>
           Note
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
@@ -427,6 +458,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="sell" dividing>
           Sell
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Sell with web CRM, ERP and other apps. The apps can be controlled by the web-automator.
@@ -459,6 +492,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="train" dividing>
           Train
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
@@ -491,6 +526,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="api" dividing>
           API
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           The API allows programmatic access to the platform for chat, web page publishing, emails, and web app requests.
@@ -523,6 +560,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="cli" dividing>
           Command-line Interface (CLI)
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           A command line tool (CLI) to access our API programmatically. The tool can be used from terminal or from the Jupyter notebooks.
@@ -555,6 +594,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="mobile" dividing>
           Mobile App
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           A mobile app (iOS, Android, web) with a chat that allows to communicate to agents and see the history of messages.
@@ -587,6 +628,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="desktop" dividing>
           Desktop App
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           A desktop app (macOS, Linux, Windown) with a chat that allows to communicate to agents and see the history of messages.
@@ -619,6 +662,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="distributed" dividing>
           Distributed System
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Use a distributed system that allows to connect people and agents running on different machines (network nodes) through direct server-to-server connection. The messages are stored only on network nodes that participate in the communication channel and not shared with third parties. Share agents from your node to help your friends, colleagues and customers.
@@ -666,6 +711,8 @@ const Product = () => (
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="bridge" dividing>
           Social Bridge
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Build a bridge between AZ1.ai and social networks and messangers such as WhatsApp, Slack, Discord, Telegram, Microsoft Teams, VK, XMPP, Twitch, IRC, MatterMost, Matrix, RocketChat, Keybase, NextCloud, Mumble, Gitter, Ssh-chat, Zulip, and more with REST API.
@@ -695,6 +742,74 @@ const Product = () => (
         } ]} />
         <br/>
         <Image src='/images/screenshots/bridge.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="phone" dividing>
+          Phone
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Communicate with agents on phone calls and message using Voice-over-IP / SIP protocols, speech-to-text and text-to-speech. Agnets can answer on a call to a regular phone number.
+        </p>
+        <br/>
+        <Card.Group key="card-group-phone" centered items={[ {
+            header: 'Natural, Human-Like Communication',
+            description: 'Leverage speech-to-text and text-to-speech to enable agents that converse fluently over phone or message—offering human-like interactions for support, sales, or onboarding.',
+          }, {
+            header: 'Always-On, Scalable Voice Support',
+            description: 'Deploy agents that can answer phone calls via VoIP/SIP any time of day—scaling communication without increasing staffing costs.',
+          }, {
+            header: 'Multi-Channel Agent Reachability',
+            description: 'Agents can communicate through regular phone numbers and messaging platforms, offering customers familiar and convenient access points.',
+          }, {
+            header: 'Seamless Backend Integration',
+            description: 'Agents can query APIs and databases during calls to check account details, answer questions, or complete transactions in real-time.',
+          }, {
+            header: 'Customizable Voice Personas',
+            description: 'Define unique voices, tones, and behaviors to create branded agent personas that resonate with your users or customers.',
+          }, {
+            header: 'Call Logging and Conversation Analysis',
+            description: 'All interactions are transcribed and logged, enabling post-call analysis, searchable history, and ongoing performance improvements.',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/phone.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="vr" dividing>
+          Virtual Reality & Augmented Reality
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Chat to agents in virtual or augmented reality. The 3D-models for virtual agents can be generated or manually created in glTF format compatible with web. Each VR agent can communicate using text or voice.
+        </p>
+        <br/>
+        <Card.Group key="card-group-vr" centered items={[ {
+          header: 'Immersive Interaction',
+          description: 'Engaging with agents in virtual or augmented reality offers a deeply immersive experience, enhancing communication and making interactions more memorable.',
+        }, {
+          header: 'Personalized & Human-like Assistance',
+          description: 'Custom or auto-generated 3D agents allow for branded, relatable support experiences that resonate with users on a personal level.',
+        }, {
+          header: 'Flexible Communication Modes',
+          description: 'Support for both text and voice interactions ensures accessibility and caters to a wide range of user preferences.',
+        }, {
+          header: 'Web-Based VR Accessibility',
+          description: 'Using the glTF format enables VR experiences to be delivered directly through the web, removing the need for specialized apps and making access simple and instant.',
+        }, {
+          header: 'Futuristic & Innovative Brand Perception',
+          description: 'Offering VR/AR agent interaction sets the brand apart as a forward-thinking innovator, improving customer perception and engagement.',
+        }, {
+          header: 'Customizable and Scalable Experiences',
+          description: 'glTF support enables easy customization and scalability of 3D agent designs, allowing businesses to adapt quickly to new use cases.',
+        } ]} />
+        <br/>
+        <Image src='/images/screenshots/vr.png' fluid bordered rounded />
         <br/>
       </Segment>
 
