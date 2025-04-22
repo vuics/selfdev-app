@@ -34,10 +34,10 @@ const Product = () => (
         <Image src='/images/logo192.png' centered />
         <br />
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          A distribued Agent-as-a-Service transforms the way how innovative teams run their businesses by automating processes and saving time. The self-developing AI platform allows to assemble and run agentic workflows using any APIs, models and databases.
+          AZ1.ai is a distributed Agent-as-a-Service platform that empowers forward-thinking teams to automate operations and accelerate execution saving time and money. Build and run intelligent agentic workflows with any API, model, or database — effortlessly.
         </p>
         <p style={{ fontSize: '1.3em', textAlign: 'center' }}>
-          The plaform bridges agents and humans interactions over native web, mobile and desktop communication apps, video conferencing, virtual reality, command line, social networks and phone lines.
+          Seamlessly connect agents and humans across all channels — web, mobile, desktop, video calls, virtual reality, command line, social media and messangers, and even phone lines and sms.
         </p>
         <Divider />
         <Header as="h2">
