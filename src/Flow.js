@@ -11,9 +11,9 @@ export function ChatWidget({ className }) {
   return (
     <div className={className}>
       <langflow-chat
-        chat_inputs='{"your_key":"value"}'
-        chat_input_field="your_chat_key"
         window_title="Flow Widget"
+        chat_inputs={conf.flow.flowId}
+        chat_input_field={conf.flow.chatInputs}
         flow_id={conf.flow.flowId}
         host_url={conf.flow.url}
       ></langflow-chat>
