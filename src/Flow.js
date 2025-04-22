@@ -7,7 +7,21 @@ import Menubar from './components/Menubar'
 import conf from './conf.js'
 import { useWindowDimensions } from './helper.js'
 
-const Flow = () => {
+export function ChatWidget({ className }) {
+  return (
+    <div className={className}>
+      <langflow-chat
+        chat_inputs='{"your_key":"value"}'
+        chat_input_field="your_chat_key"
+        window_title="Flow Widget"
+        flow_id={conf.flow.flowId}
+        host_url={conf.flow.url}
+      ></langflow-chat>
+    </div>
+  );
+}
+
+export default function Flow () {
   const { height, width } = useWindowDimensions();
 
   // console.log('width:', width, ' height:', height)
@@ -16,9 +30,15 @@ const Flow = () => {
       <Container>
         <Menubar />
       </Container>
+
+      { conf.flow.widget && (
+        <ChatWidget className={''} />
+      )}
+
       <Iframe url={conf.flow.url}
               width={width}
-              height={height - conf.iframe.topOffset}
+              height={height - conf.iframe.topOffset -
+                        (conf.flow.widget ? conf.flow.widgetOffset : 0)}
               id="flow-frame"
               className=""
               display="block"
@@ -26,6 +46,4 @@ const Flow = () => {
     </>
   )
 }
-
-export default Flow
 
