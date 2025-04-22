@@ -18,7 +18,7 @@ const Open = () => {
       </Container>
       <Iframe url={conf.open.url}
               width={width}
-              height={height - conf.open.topOffset}
+              height={height - conf.iframe.topOffset}
               id="open-frame"
               className=""
               display="block"

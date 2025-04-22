@@ -18,7 +18,7 @@ const Note = () => {
       </Container>
       <Iframe url={conf.note.url}
               width={width}
-              height={height - conf.note.topOffset}
+              height={height - conf.iframe.topOffset}
               id="note-frame"
               className=""
               display="block"

@@ -18,7 +18,7 @@ const Train = () => {
       </Container>
       <Iframe url={conf.train.url}
               width={width}
-              height={height - conf.train.topOffset}
+              height={height - conf.iframe.topOffset}
               id="train-frame"
               className=""
               display="block"

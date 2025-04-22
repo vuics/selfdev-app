@@ -18,7 +18,7 @@ const Build = () => {
       </Container>
       <Iframe url={conf.build.url}
               width={width}
-              height={height - conf.build.topOffset}
+              height={height - conf.iframe.topOffset}
               id="build-frame"
               className=""
               display="block"

@@ -18,7 +18,7 @@ const Code = () => {
       </Container>
       <Iframe url={conf.code.url}
               width={width}
-              height={height - conf.code.topOffset}
+              height={height - conf.iframe.topOffset}
               id="code-frame"
               className=""
               display="block"

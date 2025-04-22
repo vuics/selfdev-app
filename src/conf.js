@@ -16,6 +16,11 @@ const conf = {
     url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/kXhRqMe8RquB377J6',
   },
 
+  iframe: {
+    topOffset: num(process.env.REACT_APP_IFRAME_TOP_OFFSET || 50),
+    // topOffset: num(process.env.REACT_APP_IFRAME_TOP_OFFSET || 0),
+  },
+
   account: {
     start: process.env.REACT_APP_ACCOUNT_START || '/chat',
   },
@@ -42,37 +47,31 @@ const conf = {
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',
-    topOffset: num(process.env.REACT_APP_CODE_TOP_OFFSET || 50),
   },
 
   build: {
     enable: bool(process.env.REACT_APP_BUILD_ENABLE || false),
     url: process.env.REACT_APP_BUILD_URL || 'http://localhost:9690/',
-    topOffset: num(process.env.REACT_APP_BUILD_TOP_OFFSET || 50),
   },
 
   open: {
     enable: bool(process.env.REACT_APP_OPEN_ENABLE || false),
     url: process.env.REACT_APP_OPEN_URL || 'http://localhost:9990/',
-    topOffset: num(process.env.REACT_APP_OPEN_TOP_OFFSET || 50),
   },
 
   note: {
     enable: bool(process.env.REACT_APP_NOTE_ENABLE || false),
     url: process.env.REACT_APP_NOTE_URL || 'http://localhost:8889/lab?token=my-token-abc',
-    topOffset: num(process.env.REACT_APP_NOTE_TOP_OFFSET || 50),
   },
 
   sell: {
     enable: bool(process.env.REACT_APP_SELL_ENABLE || false),
     url: process.env.REACT_APP_SELL_URL || 'http://localhost:8069',
-    topOffset: num(process.env.REACT_APP_SELL_TOP_OFFSET || 50),
   },
 
   train: {
     enable: bool(process.env.REACT_APP_TRAIN_ENABLE || false),
     url: process.env.REACT_APP_TRAIN_URL || 'http://localhost:8180/vnc.html',
-    topOffset: num(process.env.REACT_APP_TRAIN_TOP_OFFSET || 50),
   },
 
   profile: {

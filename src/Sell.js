@@ -27,7 +27,7 @@ const Sell = () => {
       </Container>
       <Iframe url={conf.sell.url}
               width={width}
-              height={height - conf.sell.topOffset}
+              height={height - conf.iframe.topOffset}
               id="sell-frame"
               className=""
               display="block"
