@@ -55,6 +55,11 @@ const conf = {
     chatInputField: process.env.REACT_APP_FLOW_CHAT_INPUT_FIELD || "your_chat_key",
   },
 
+  node: {
+    enable: bool(process.env.REACT_APP_NODE_ENABLE || false),
+    url: process.env.REACT_APP_NODE_URL || 'http://localhost:1880/',
+  },
+
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
     url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',

@@ -52,6 +52,12 @@ const Menubar = () => {
           Flow
         </Menu.Item>
       ) }
+      { conf.node.enable && (
+        <Menu.Item onClick={() => navigate('/node')} active={pathname==='/node'}>
+          <Icon name='map signs' />
+          Node
+        </Menu.Item>
+      ) }
       { conf.code.enable && (
         <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
           <Icon name='code' />

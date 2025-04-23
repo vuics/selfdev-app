@@ -21,6 +21,7 @@ import Talk from './Talk'
 import Meet from './Meet'
 import Hive from './Hive'
 import Flow from './Flow'
+import Node from './Node'
 import Code from './Code'
 import Build from './Build'
 import Open from './Open'
@@ -82,6 +83,9 @@ const Index = () => {
       )}
       { conf.flow.enable && (
         <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>
+      )}
+      { conf.node.enable && (
+        <Route path="/node" element={(<Private> <Node /> </Private>)}/>
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>
