@@ -7,8 +7,11 @@ import {
   Message,
 } from 'semantic-ui-react'
 import { ErrorBoundary } from "react-error-boundary";
+import Iframe from 'react-iframe'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
+import { useWindowDimensions } from './helper.js'
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -32,6 +35,9 @@ const Talk = () => {
   const [ responseError, setResponseError ] = useState('')
   const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
+  const { height, width } = useWindowDimensions();
+  const [ flow, setFlow ] = useState(false)
+  const [ node, setNode ] = useState(true)
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -61,6 +67,64 @@ const Talk = () => {
         const { converse } = event.detail;
         console.log('converse:', converse)
         try {
+          converse.plugins.add('synthetic-ui-plugin', {
+            initialize: function () {
+              // console.log('this._converse:', this._converse)
+              this._converse.api.listen.on('callButtonClicked', function(data) {
+                console.log('callButtonClicked data:', data)
+                // console.log('Strophe connection is', data.connection);
+                // console.log('Bare buddy JID is', data.model.get('jid'));
+              });
+
+              // Node-RED function "Process Data": On Message
+              //
+              // let name = msg.payload.name || 'Guest';
+              // const prompt = msg.payload.prompt
+              // msg.payload = {
+              //   message: `Hello, ${name}!`,
+              //   action: "",
+              //   prompt,
+              // };
+              // if (prompt.includes('/flow')) {
+              //     msg.payload.action += "[[synthetic-ui:show('flow')]]"
+              // }
+              // if (prompt.includes('/node')) {
+              //     msg.payload.action += "[[synthetic-ui:show('node')]]"
+              // }
+              // return msg;
+              //
+              this._converse.api.listen.on('message', function (data) {
+                console.log('converse api message> data:', data)
+                if (data && data.stanza) {
+                  console.log('data.attrs:', data.attrs)
+                  const { body } = data.attrs
+                  if (body && body.includes("[[synthetic-ui:hide()]]")) {
+                    setFlow(false)
+                    setNode(false)
+                  } else {
+                    if (body && body.includes("[[synthetic-ui:show('flow')]]")) {
+                      setFlow(true)
+                      // alert("Action triggered by bot message: [[synthetic-ui:show('flow')]]");
+                    }
+                    if (body && body.includes("[[synthetic-ui:show('node')]]")) {
+                      setNode(true)
+                      // alert("Action triggered by bot message: [[synthetic-ui:show('node')]]");
+                    }
+                  }
+                }
+              });
+            },
+            // overrides: {
+            //   ChatBoxView: {
+            //     renderMessage: function (attrs) {
+            //       console.log("!!!!!!!! renderMessage attrs:", attrs)
+            //       alert('render message.');
+            //       return this.__super__.renderMessage.apply(this, arguments);
+            //     }
+            //   }
+            // }
+          });
+
           const converseOptions = {
             root: converseRoot,
 
@@ -93,7 +157,7 @@ const Talk = () => {
             i18n: 'en',
             show_controlbox_by_default: true,
             show_client_info: false,
-            sticky_controlbox: true, // control box will not be closeable
+            sticky_controlbox: false, // control box will not be closeable
             allow_registration: false,
             allow_url_history_change: false,
             allow_adhoc_commands: false,
@@ -126,7 +190,7 @@ const Talk = () => {
             // locked_muc_domain: 'hidden',
             muc_nickname_from_jid: true,
             auto_join_rooms: [
-              { jid: `all@${conf.xmpp.mucHost}`, minimized: false },
+              // { jid: `all@${conf.xmpp.mucHost}`, minimized: false },
             ],
             auto_list_rooms: true,
             auto_register_muc_nickname: 'unregister',
@@ -139,9 +203,13 @@ const Talk = () => {
             auto_away: 3600,  // 1h
             auto_xa: 24*3600, // 24h
 
+            whitelisted_plugins: ['synthetic-ui-plugin'],
           }
+
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
+
+          // await converse.initialize(converseOptions)
 
           // TODO: add Jitsi Meet pluging:
           // https://www.npmjs.com/package/@converse-plugins/jitsimeet
@@ -149,23 +217,6 @@ const Talk = () => {
           // FIXME: it does not work as shown in examples
           //        https://m.conversejs.org/docs/html/configuration.html#visible-toolbar-buttons
           //
-          // converse.listen.on('callButtonClicked', function(data) {
-          //     console.log('Converse.listen')
-          //     console.log('Strophe connection is', data.connection);
-          //     console.log('Bare buddy JID is', data.model.get('jid'));
-          //     // ... Third-party library code ...
-          // });
-          // console.log('converse:', converse)
-          // console.log('converse.api:', converse.api)
-          // console.log('converse.api.listen:', converse.api.listen)
-          // converse.api.listen.on('callButtonClicked', function(data) {
-          //     console.log('Converse.api.listen')
-          //     console.log('Strophe connection is', data.connection);
-          //     console.log('Bare buddy JID is', data.model.get('jid'));
-          //     // ... Third-party library code ...
-          // });
-
-          console.log('after converse:', converse)
         } catch (err) {
           console.error('converse.initialize error:', err)
           setResponseError('Error initializing converse.')
@@ -179,35 +230,54 @@ const Talk = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
-      <Container>
-        { credentials && (
-          <Helmet>
-            <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
-            <script src="/dist/converse.min.js" charset="utf-8"></script>
-          </Helmet>
-        )}
+      { credentials && (
+        <Helmet>
+          <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
+          <script src="/dist/converse.min.js" charset="utf-8"></script>
+        </Helmet>
+      )}
 
+      <Container>
         <Menubar />
+      </Container>
+
+      <Loader active={loading} inline='centered' />
+      { responseError &&
+        <Message
+          negative
+          style={{ textAlign: 'left'}}
+          icon='exclamation circle'
+          header='Error'
+          content={responseError}
+          onDismiss={() => setResponseError('')}
+        />
+      }
+
+      { flow && (
+        <Iframe url={conf.flow.url}
+                width={width}
+                height={height - conf.iframe.topOffset - conf.iframe.bottomOffset -
+                          (conf.flow.widget ? conf.flow.widgetOffset : 0)}
+                id="flow-frame"
+                className=""
+                display="block"
+                position="relative"/>
+      )}
+      { node && (
+        <Iframe url={conf.node.url}
+                width={width}
+                height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+                id="node-frame"
+                className=""
+                display="block"
+                position="relative"/>
+      )}
 
         <div>
           { credentials && (
             <div ref={ (ref) => setConverseRoot(ref) } />
           )}
         </div>
-
-        <Loader active={loading} inline='centered' />
-        { responseError &&
-          <Message
-            negative
-            style={{ textAlign: 'left'}}
-            icon='exclamation circle'
-            header='Error'
-            content={responseError}
-            onDismiss={() => setResponseError('')}
-          />
-        }
-
-      </Container>
     </ErrorBoundary>
   )
 }
