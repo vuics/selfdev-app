@@ -267,7 +267,7 @@ const archetypes = {
   'langflow-v1.0': {
     key: 'langflow-v1.0',
     value: 'langflow-v1.0',
-    icon: 'terminal',
+    icon: 'code branch',
     text: 'Langflow v1.0',
     schema: {
       type: 'object',
@@ -295,6 +295,50 @@ const archetypes = {
         flow: {
           flowId: '',
           sessionId: '',
+        },
+      }
+    }
+  },
+
+  'nodered-v1.0': {
+    key: 'nodered-v1.0',
+    value: 'nodered-v1.0',
+    icon: 'map signs',
+    text: 'Node-RED v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        webhook: {
+          type: 'object',
+          properties: {
+            method: { type: 'string' },
+            route: { type: 'string' },
+            payload: { },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'nodered' ],
+        webhook: {
+          method: 'POST',
+          route: '',
+          payload: {
+            prompt: '',
+          },
+          parseJson: true,
+          promptKey: 'prompt',
         },
       }
     }
