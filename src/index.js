@@ -28,6 +28,7 @@ import Open from './Open'
 import Note from './Note'
 import Sell from './Sell'
 import Train from './Train'
+import Docs from './Docs'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
@@ -104,6 +105,9 @@ const Index = () => {
       )}
       { conf.train.enable && (
         <Route path="/train" element={(<Private> <Train /> </Private>)}/>
+      )}
+      { conf.docs.enable && (
+        <Route path="/docs" element={(<Private> <Docs /> </Private>)}/>
       )}
 
       { conf.profile.enable && (

@@ -94,6 +94,12 @@ const Menubar = () => {
           Train
         </Menu.Item>
       ) }
+      { conf.docs.enable && (
+        <Menu.Item onClick={() => navigate('/docs')} active={pathname==='/docs'}>
+          <Icon name='book' />
+          Docs
+        </Menu.Item>
+      ) }
 
       <Menu.Menu position='right'>
         <Dropdown item

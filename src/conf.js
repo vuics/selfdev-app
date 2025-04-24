@@ -1,7 +1,7 @@
 const bool = (val) => ['true', '1', true, 1].includes(val)
 // const json = (val) => val && JSON.parse(val)
 const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
-// const arr = (str) => str ? str.split(',') : []
+const arr = (str) => str ? str.split(',') : []
 
 const conf = {
   contact: {
@@ -14,6 +14,11 @@ const conf = {
 
   interestForm: {
     url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/kXhRqMe8RquB377J6',
+  },
+
+  synthetic: {
+    components: arr(process.env.REACT_APP_SYNTHETIC_COMPONENTS || 'chat,meet,hive,flow,node,code,build,open,note,sell,train,docs'),
+    frames: arr(process.env.REACT_APP_SYNTHETIC_FRAMES || 'flow,node,code,build,open,note,sell,train,docs'),
   },
 
   iframe: {
@@ -88,6 +93,11 @@ const conf = {
   train: {
     enable: bool(process.env.REACT_APP_TRAIN_ENABLE || false),
     url: process.env.REACT_APP_TRAIN_URL || 'http://localhost:8180/vnc.html',
+  },
+
+  docs: {
+    enable: bool(process.env.REACT_APP_DOCS_ENABLE || false),
+    url: process.env.REACT_APP_DOCS_URL || 'http://localhost:9188',
   },
 
   profile: {
