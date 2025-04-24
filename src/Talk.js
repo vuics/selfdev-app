@@ -35,9 +35,10 @@ const logError = (error: Error, info: { componentStack: string }) => {
 
 export function Pane ({ panel, width, height }) {
   // console.log('panel:', panel, ', width:', width, ', height:', height)
-  return (
-    <>
-    { panel === 'flow' && (
+  if (panel === 'chat') {
+    return
+  } else if (panel === 'flow') {
+    return (
       <Iframe url={conf.flow.url}
               width={width}
               height={height - conf.iframe.topOffset - conf.iframe.bottomOffset }
@@ -45,8 +46,13 @@ export function Pane ({ panel, width, height }) {
               className=""
               display="block"
               position="relative"/>
-    )}
-    { panel === 'node' && (
+    )
+  } else if (panel === 'meet') {
+    return
+  } else if (panel === 'hive') {
+    return
+  } else if (panel === 'node') {
+    return (
       <Iframe url={conf.node.url}
               width={width}
               height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
@@ -54,9 +60,74 @@ export function Pane ({ panel, width, height }) {
               className=""
               display="block"
               position="relative"/>
-    )}
-    </>
-  )
+    )
+  } else if (panel === 'code') {
+    return (
+      <Iframe url={conf.code.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="code-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )
+  } else if (panel === 'build') {
+    return (
+      <Iframe url={conf.build.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="build-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )
+  } else if (panel === 'open') {
+    return (
+      <Iframe url={conf.open.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="open-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )
+  } else if (panel === 'note') {
+    return (
+      <Iframe url={conf.note.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="note-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )
+  } else if (panel === 'sell') {
+    return (
+      <Iframe url={conf.sell.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="sell-frame"
+              className=""
+              display="block"
+              position="relative"
+              />
+    )
+  } else if (panel === 'train') {
+    return (
+      <Iframe url={conf.train.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="train-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )
+  } else {
+    return (
+      <>
+      </>
+    )
+  }
 }
 
 export function SplitLayout ({ panels }) {
@@ -218,16 +289,79 @@ export default function Talk () {
               //   action: "",
               //   prompt,
               // };
-              // if (prompt.includes('/hide')) {
+              //
+              // if (prompt.includes('/hide all')) {
               //     msg.payload.action += "[[synthetic-ui:hide()]]"
-              // } else {
-              //     if (prompt.includes('/show flow')) {
-              //         msg.payload.action += "[[synthetic-ui:show('flow')]]"
-              //     }
-              //     if (prompt.includes('/show node')) {
-              //         msg.payload.action += "[[synthetic-ui:show('node')]]"
-              //     }
               // }
+              //
+              // if (prompt.includes('/hide chat')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('chat')]]"
+              // }
+              // if (prompt.includes('/hide meet')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('meet')]]"
+              // }
+              // if (prompt.includes('/hide hive')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('hive')]]"
+              // }
+              // if (prompt.includes('/hide flow')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('flow')]]"
+              // }
+              // if (prompt.includes('/hide node')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('node')]]"
+              // }
+              // if (prompt.includes('/hide code')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('code')]]"
+              // }
+              // if (prompt.includes('/hide build')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('build')]]"
+              // }
+              // if (prompt.includes('/hide open')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('open')]]"
+              // }
+              // if (prompt.includes('/hide note')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('note')]]"
+              // }
+              // if (prompt.includes('/hide sell')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('sell')]]"
+              // }
+              // if (prompt.includes('/hide train')) {
+              //     msg.payload.action += "[[synthetic-ui:hide('train')]]"
+              // }
+              //
+              // if (prompt.includes('/show chat')) {
+              //     msg.payload.action += "[[synthetic-ui:show('chat')]]"
+              // }
+              // if (prompt.includes('/show meet')) {
+              //     msg.payload.action += "[[synthetic-ui:show('meet')]]"
+              // }
+              // if (prompt.includes('/show hive')) {
+              //     msg.payload.action += "[[synthetic-ui:show('hive')]]"
+              // }
+              // if (prompt.includes('/show flow')) {
+              //     msg.payload.action += "[[synthetic-ui:show('flow')]]"
+              // }
+              // if (prompt.includes('/show node')) {
+              //     msg.payload.action += "[[synthetic-ui:show('node')]]"
+              // }
+              // if (prompt.includes('/show code')) {
+              //     msg.payload.action += "[[synthetic-ui:show('code')]]"
+              // }
+              // if (prompt.includes('/show build')) {
+              //     msg.payload.action += "[[synthetic-ui:show('build')]]"
+              // }
+              // if (prompt.includes('/show open')) {
+              //     msg.payload.action += "[[synthetic-ui:show('open')]]"
+              // }
+              // if (prompt.includes('/show note')) {
+              //     msg.payload.action += "[[synthetic-ui:show('note')]]"
+              // }
+              // if (prompt.includes('/show sell')) {
+              //     msg.payload.action += "[[synthetic-ui:show('sell')]]"
+              // }
+              // if (prompt.includes('/show train')) {
+              //     msg.payload.action += "[[synthetic-ui:show('train')]]"
+              // }
+              //
               // return msg;
               //
               this._converse.api.listen.on('message', function (data) {
@@ -241,17 +375,73 @@ export default function Talk () {
                   if (body.includes("[[synthetic-ui:hide('all')]]")) {
                     setPanels([])
                   }
+
+                  if (body.includes("[[synthetic-ui:hide('chat')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'chat'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('meet')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'meet'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('hive')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'hive'));
+                  }
                   if (body.includes("[[synthetic-ui:hide('flow')]]")) {
                     setPanels(prevPanels => prevPanels.filter(panel => panel !== 'flow'));
                   }
                   if (body.includes("[[synthetic-ui:hide('node')]]")) {
                     setPanels(prevPanels => prevPanels.filter(panel => panel !== 'node'));
                   }
+                  if (body.includes("[[synthetic-ui:hide('code')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'code'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('build')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'build'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('open')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'open'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('note')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'note'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('sell')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'sell'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('train')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'train'));
+                  }
+
+                  if (body.includes("[[synthetic-ui:show('chat')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'chat'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('meet')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'meet'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('hive')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'hive'])
+                  }
                   if (body.includes("[[synthetic-ui:show('flow')]]")) {
                     setPanels(prevPanels => [...prevPanels, 'flow'])
                   }
                   if (body.includes("[[synthetic-ui:show('node')]]")) {
                     setPanels(prevPanels => [...prevPanels, 'node'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('code')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'code'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('build')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'build'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('open')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'open'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('note')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'note'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('sell')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'sell'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('train')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'train'])
                   }
                 }
               });
