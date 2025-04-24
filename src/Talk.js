@@ -59,15 +59,8 @@ export function Pane ({ panel, width, height }) {
   )
 }
 
-export default function Talk () {
+export function SplitLayout ({ panels }) {
   const { height, width } = useWindowDimensions();
-
-  const [ loading, setLoading ] = useState(true)
-  const [ responseError, setResponseError ] = useState('')
-  const [ converseRoot, setConverseRoot ] = useState(null)
-  const [ credentials, setCredentials ] = useState(null)
-  // const [ panels, setPanels ] = useState(["node", "flow"])
-  const [ panels, setPanels ] = useState([])
 
   const containerRef = useRef(null);
   const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
@@ -99,6 +92,83 @@ export default function Talk () {
 
   const dividerWidth = isResizing ? 8 : (isHovering ? 2 : 1);
   const dividerColor = isResizing ? "#eee" : (isHovering ? "#ddd" : "#bbb");
+
+  if (!panels || panels.length === 0) {
+    return
+  }
+  if (panels.length === 1) {
+    return (
+      <Pane panel={panels[0]} width={width} height={height}/>
+    )
+  }
+
+  return (
+    <>
+      <div
+        ref={containerRef}
+        style={{ display: "flex", width: "100vw", height: "100vh", overflow: "hidden" }}
+      >
+        <Segment
+          style={{
+            width: leftWidth,
+            height: "100%",
+            margin: '0 0 0 0',
+            padding: '0 0 0 0',
+            borderRadius: 0
+          }}
+        >
+          <Pane panel={panels[0]} width={panels.length > 1 ? leftWidth : width} height={height} />
+        </Segment>
+        { panels.length > 1 && (
+          <>
+            <div
+              onMouseDown={startResizing}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              style={{
+                width: dividerWidth,
+                cursor: "col-resize",
+                backgroundColor: dividerColor,
+                zIndex: 10,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "width 0.2s, background-color 0.2s"
+              }}
+            >
+              <Button icon  size="mini" style={{
+                width: '3px',
+                  margin: '0 1px 0 0',
+                  padding: '4px 0 4px 0'
+              }}>
+                <Icon fitted name="ellipsis vertical" />
+              </Button>
+            </div>
+            <Segment
+              style={{
+                flex: 1,
+                height: "100%",
+                margin: '0 0 0 0',
+                padding: '0 0 0 0',
+                borderRadius: 0
+              }}
+            >
+              <Pane panel={panels[1]} width={width - leftWidth - 1} height={height} />
+            </Segment>
+          </>
+        )}
+      </div>
+    </>
+  )
+}
+
+export default function Talk () {
+  const [ loading, setLoading ] = useState(true)
+  const [ responseError, setResponseError ] = useState('')
+  const [ converseRoot, setConverseRoot ] = useState(null)
+  const [ credentials, setCredentials ] = useState(null)
+  // const [ panels, setPanels ] = useState(["node", "flow"])
+  const [ panels, setPanels ] = useState([])
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -137,6 +207,8 @@ export default function Talk () {
                 // console.log('Bare buddy JID is', data.model.get('jid'));
               });
 
+              // TODO: update
+              //
               // Node-RED function "Process Data": On Message
               //
               // let name = msg.payload.name || 'Guest';
@@ -166,7 +238,7 @@ export default function Talk () {
                   if (!body) {
                     return
                   }
-                  if (body.includes("[[synthetic-ui:hide()]]")) {
+                  if (body.includes("[[synthetic-ui:hide('all')]]")) {
                     setPanels([])
                   }
                   if (body.includes("[[synthetic-ui:hide('flow')]]")) {
@@ -315,37 +387,7 @@ export default function Talk () {
         />
       }
 
-
-      <div
-        ref={containerRef}
-        style={{ display: "flex", width: "100vw", height: "100vh", overflow: "hidden" }}
-      >
-        <Segment
-          style={{ width: leftWidth, height: "100%", margin: 0, borderRadius: 0 }}
-        >
-          <Pane panel={panels[0]} width={leftWidth - 30} height={height}/>
-        </Segment>
-        { panels.length > 1 && (
-          <>
-            <div
-              onMouseDown={startResizing}
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              style={{ width: dividerWidth, cursor: "col-resize", backgroundColor: dividerColor, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", transition: "width 0.2s, background-color 0.2s" }}
-              // style={{ width: 1, cursor: "col-resize", backgroundColor: "#ccc", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              <Button icon  size="mini" style={{ width: '3px', margin: '0 1px 0 0', padding: '4px 0 4px 0'}}>
-                <Icon fitted name="ellipsis vertical" />
-              </Button>
-            </div>
-            <Segment
-              style={{ flex: 1, height: "100%", margin: 0, borderRadius: 0 }}
-            >
-              <Pane panel={panels[1]} width={width - leftWidth - 30 } height={height} />
-            </Segment>
-          </>
-        )}
-      </div>
+      <SplitLayout panels={panels} />
 
       <div>
         { credentials && (
