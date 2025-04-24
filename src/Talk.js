@@ -5,6 +5,9 @@ import {
   Container,
   Loader,
   Message,
+  Segment,
+  Button,
+  Icon,
 } from 'semantic-ui-react'
 import { ErrorBoundary } from "react-error-boundary";
 import Iframe from 'react-iframe'
@@ -30,14 +33,72 @@ const logError = (error: Error, info: { componentStack: string }) => {
   console.error("Talk Error Boundary:", error, ', info:', info)
 }
 
-const Talk = () => {
+export function Pane ({ panel, width, height }) {
+  // console.log('panel:', panel, ', width:', width, ', height:', height)
+  return (
+    <>
+    { panel === 'flow' && (
+      <Iframe url={conf.flow.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset }
+              id="flow-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )}
+    { panel === 'node' && (
+      <Iframe url={conf.node.url}
+              width={width}
+              height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
+              id="node-frame"
+              className=""
+              display="block"
+              position="relative"/>
+    )}
+    </>
+  )
+}
+
+export default function Talk () {
+  const { height, width } = useWindowDimensions();
+
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
-  const { height, width } = useWindowDimensions();
-  const [ flow, setFlow ] = useState(false)
-  const [ node, setNode ] = useState(true)
+  // const [ panels, setPanels ] = useState(["node", "flow"])
+  const [ panels, setPanels ] = useState([])
+
+  const containerRef = useRef(null);
+  const [leftWidth, setLeftWidth] = useState(window.innerWidth / 2);
+  const [isResizing, setIsResizing] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const startResizing = () => setIsResizing(true);
+  const stopResizing = () => setIsResizing(false);
+
+  const resize = (mouseMoveEvent) => {
+    if (isResizing && containerRef.current) {
+      const newLeftWidth = mouseMoveEvent.clientX;
+      setLeftWidth(newLeftWidth);
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => resize(e);
+    const handleMouseUp = () => stopResizing();
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
+  const dividerWidth = isResizing ? 8 : (isHovering ? 2 : 1);
+  const dividerColor = isResizing ? "#eee" : (isHovering ? "#ddd" : "#bbb");
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -85,11 +146,15 @@ const Talk = () => {
               //   action: "",
               //   prompt,
               // };
-              // if (prompt.includes('/flow')) {
-              //     msg.payload.action += "[[synthetic-ui:show('flow')]]"
-              // }
-              // if (prompt.includes('/node')) {
-              //     msg.payload.action += "[[synthetic-ui:show('node')]]"
+              // if (prompt.includes('/hide')) {
+              //     msg.payload.action += "[[synthetic-ui:hide()]]"
+              // } else {
+              //     if (prompt.includes('/show flow')) {
+              //         msg.payload.action += "[[synthetic-ui:show('flow')]]"
+              //     }
+              //     if (prompt.includes('/show node')) {
+              //         msg.payload.action += "[[synthetic-ui:show('node')]]"
+              //     }
               // }
               // return msg;
               //
@@ -98,31 +163,27 @@ const Talk = () => {
                 if (data && data.stanza) {
                   console.log('data.attrs:', data.attrs)
                   const { body } = data.attrs
-                  if (body && body.includes("[[synthetic-ui:hide()]]")) {
-                    setFlow(false)
-                    setNode(false)
-                  } else {
-                    if (body && body.includes("[[synthetic-ui:show('flow')]]")) {
-                      setFlow(true)
-                      // alert("Action triggered by bot message: [[synthetic-ui:show('flow')]]");
-                    }
-                    if (body && body.includes("[[synthetic-ui:show('node')]]")) {
-                      setNode(true)
-                      // alert("Action triggered by bot message: [[synthetic-ui:show('node')]]");
-                    }
+                  if (!body) {
+                    return
+                  }
+                  if (body.includes("[[synthetic-ui:hide()]]")) {
+                    setPanels([])
+                  }
+                  if (body.includes("[[synthetic-ui:hide('flow')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'flow'));
+                  }
+                  if (body.includes("[[synthetic-ui:hide('node')]]")) {
+                    setPanels(prevPanels => prevPanels.filter(panel => panel !== 'node'));
+                  }
+                  if (body.includes("[[synthetic-ui:show('flow')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'flow'])
+                  }
+                  if (body.includes("[[synthetic-ui:show('node')]]")) {
+                    setPanels(prevPanels => [...prevPanels, 'node'])
                   }
                 }
               });
             },
-            // overrides: {
-            //   ChatBoxView: {
-            //     renderMessage: function (attrs) {
-            //       console.log("!!!!!!!! renderMessage attrs:", attrs)
-            //       alert('render message.');
-            //       return this.__super__.renderMessage.apply(this, arguments);
-            //     }
-            //   }
-            // }
           });
 
           const converseOptions = {
@@ -228,6 +289,7 @@ const Talk = () => {
   }, [converseRoot, credentials])
 
 
+  console.log('panels:', panels)
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
       { credentials && (
@@ -253,33 +315,43 @@ const Talk = () => {
         />
       }
 
-      { flow && (
-        <Iframe url={conf.flow.url}
-                width={width}
-                height={height - conf.iframe.topOffset - conf.iframe.bottomOffset -
-                          (conf.flow.widget ? conf.flow.widgetOffset : 0)}
-                id="flow-frame"
-                className=""
-                display="block"
-                position="relative"/>
-      )}
-      { node && (
-        <Iframe url={conf.node.url}
-                width={width}
-                height={height - conf.iframe.topOffset - conf.iframe.bottomOffset}
-                id="node-frame"
-                className=""
-                display="block"
-                position="relative"/>
-      )}
 
-        <div>
-          { credentials && (
-            <div ref={ (ref) => setConverseRoot(ref) } />
-          )}
-        </div>
+      <div
+        ref={containerRef}
+        style={{ display: "flex", width: "100vw", height: "100vh", overflow: "hidden" }}
+      >
+        <Segment
+          style={{ width: leftWidth, height: "100%", margin: 0, borderRadius: 0 }}
+        >
+          <Pane panel={panels[0]} width={leftWidth - 30} height={height}/>
+        </Segment>
+        { panels.length > 1 && (
+          <>
+            <div
+              onMouseDown={startResizing}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              style={{ width: dividerWidth, cursor: "col-resize", backgroundColor: dividerColor, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", transition: "width 0.2s, background-color 0.2s" }}
+              // style={{ width: 1, cursor: "col-resize", backgroundColor: "#ccc", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <Button icon  size="mini" style={{ width: '3px', margin: '0 1px 0 0', padding: '4px 0 4px 0'}}>
+                <Icon fitted name="ellipsis vertical" />
+              </Button>
+            </div>
+            <Segment
+              style={{ flex: 1, height: "100%", margin: 0, borderRadius: 0 }}
+            >
+              <Pane panel={panels[1]} width={width - leftWidth - 30 } height={height} />
+            </Segment>
+          </>
+        )}
+      </div>
+
+      <div>
+        { credentials && (
+          <div ref={ (ref) => setConverseRoot(ref) } />
+        )}
+      </div>
     </ErrorBoundary>
   )
 }
-
-export default Talk
