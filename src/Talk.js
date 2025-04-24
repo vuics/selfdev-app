@@ -278,8 +278,6 @@ export default function Talk () {
                 // console.log('Bare buddy JID is', data.model.get('jid'));
               });
 
-              // TODO: update
-              //
               // Node-RED function "Process Data": On Message
               //
               // let name = msg.payload.name || 'Guest';
@@ -526,20 +524,55 @@ export default function Talk () {
             auto_away: 3600,  // 1h
             auto_xa: 24*3600, // 24h
 
-            whitelisted_plugins: ['synthetic-ui-plugin'],
+            whitelisted_plugins: [
+              'synthetic-ui-plugin',
+
+              // FIXME: possible to enable?
+              //
+              // "download-dialog",
+              // "stickers",
+              // "toolbar-utilities",
+              // "search",
+              // "directory",
+              // "muc-directory",
+              // "diagrams",
+              // "vmsg",
+              // "screencast",
+              // "jitsimeet",
+              // "location",
+              // "http-auth",
+              // "actions",
+              // "voicechat",
+              // "galene",
+              // "mastodon",
+              // "adaptive-cards"
+              //
+              //
+              // "muc-presence-probe",
+              // "converse-oauth",
+              // "polls",
+            ],
+
+            // FIXME: possible to enable?
+            //
+            // galene_url: "https://selfdev-web.dev.local:3690/community-plugins/packages/galene",
+            // galene_host: 'selfdev-web.dev.local',
+            //
+            // jitsimeet_modal: false,
+            // jitsimeet_url: 'https://meet.jit.si',
+            //
+            // mastodon: {
+            //   url: "https://toot.igniterealtime.org",
+            //   token: "(TBS)",
+            //   toolbar: true,
+            //   limit: 25,
+            //   check: 15,
+            //   title: "Mastodon Feed"
+            // },
           }
 
           // console.log('converseOptions:', converseOptions)
           converse.initialize(converseOptions)
-
-          // await converse.initialize(converseOptions)
-
-          // TODO: add Jitsi Meet pluging:
-          // https://www.npmjs.com/package/@converse-plugins/jitsimeet
-
-          // FIXME: it does not work as shown in examples
-          //        https://m.conversejs.org/docs/html/configuration.html#visible-toolbar-buttons
-          //
         } catch (err) {
           console.error('converse.initialize error:', err)
           setResponseError('Error initializing converse.')
@@ -558,6 +591,140 @@ export default function Talk () {
         <Helmet>
           <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
           <script src="/dist/converse.min.js" charset="utf-8"></script>
+
+                                      {/*
+                                      FIXME: Remove?
+                                      <link rel="stylesheet" type="text/css" media="screen" href="/community-plugins/dist/converse.min.css" />
+                                      <script src="/community-plugins/dist/converse.min.js" charset="utf-8"></script>
+                                      */}
+
+                                      {/*
+                                      FIXME: Remove?
+
+
+                                      <script src="/community-plugins/packages/actions/actions.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/adaptive-cards/adaptivecards.min.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/diagrams/abcjs.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/diagrams/mermaid.min.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/diagrams/diagrams.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" media="screen" href="/community-plugins/packages/directory/directory.css" />
+                                      <script src="/community-plugins/packages/directory/directory.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/download-dialog/dist/download-dialog.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/common.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/galene.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/external/fontawesome/css/fontawesome.min.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/external/fontawesome/css/solid.min.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/external/fontawesome/css/regular.min.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/external/toastify/toastify.css"/>
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/galene/external/contextual/contextual.css"/>
+                                      <script src="/community-plugins/packages/galene/galene.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/galene/protocol.js"></script>
+                                      <script src="/community-plugins/packages/galene/stophe.min.js"></script>
+                                      <script src="/community-plugins/packages/galene/galene-socket.js"></script>
+                                      <script src="/community-plugins/packages/galene/external/toastify/toastify.js"></script>
+                                      <script src="/community-plugins/packages/galene/external/contextual/contextual.js"></script>
+                                      <script src="/community-plugins/packages/galene/galene-ui.js"></script>
+
+                                      <script src="/community-plugins/packages/http-auth/http-auth.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/jitsimeet/jitsimeet.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/location/location.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/mastodon/mastodon.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/muc-directory/muc-directory.css"/>
+                                      <script src="/community-plugins/packages/muc-directory/muc-directory.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/muc-presence-probe/src/muc-presence-probe.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/oauth/styles.scss"/>
+                                      <script src="/community-plugins/packages/oauth/index.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/polls/polls.css"/>
+                                      <script src="/community-plugins/packages/polls/lit-html.min.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/polls/polls.js" charset="utf-8"></script>
+
+                                      <script src="/community-plugins/packages/screencast/screencast.js" charset="utf-8"></script>
+
+                                      <link rel="stylesheet" type="text/css" href="/community-plugins/packages/search/search.css"/>
+                                      <script src="/community-plugins/packages/search/jspdf.debug.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/search/jspdf.plugin.autotable.js" charset="utf-8"></script>
+                                      <script src="/community-plugins/packages/search/search.js" charset="utf-8"></script>
+
+                                      <script src=" " charset="utf-8"></script>
+                                      */}
+
+                                      {/*
+                                      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                                      <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+                                      <link type="text/css" rel="stylesheet" media="screen" href="./dist/converse.css" />
+                                      */}
+                                      {/*
+                                      <script src="https://conversejs.org/3rdparty/libsignal-protocol.min.js"></script>
+                                      */}
+                                      {/*
+                                      <script src="./dist/converse.js"></script>
+                                      */}
+
+          {/*
+          FIXME: Is there a way to fix it?
+
+          <script src="packages/download-dialog/dist/download-dialog.js"></script>
+          <script src="packages/toolbar-utilities/toolbar-utilities.js"></script>
+          <script src="packages/location/location.js"></script>
+          <script src="packages/jitsimeet/jitsimeet.js"></script>
+          <script src="packages/screencast/screencast.js"></script>
+          <script src="packages/vmsg/vmsg.js"></script>
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/stickers/stickers.css" />
+          <script src="packages/stickers/stickers.js"></script>
+
+          <script src="packages/muc-directory/muc-directory.js"></script>
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/muc-directory/muc-directory.css" />
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/search/search.css" />
+          <script src="packages/search/jspdf.debug.js"></script>
+          <script src="packages/search/jspdf.plugin.autotable.js"></script>
+          <script src="packages/search/search.js"></script>
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/directory/directory.css" />
+          <script src="packages/directory/directory.js"></script>
+
+          <script src="packages/diagrams/mermaid.min.js"></script>
+          <script src="packages/diagrams/diagrams.js"></script>
+          <script src="packages/diagrams/abcjs.js"></script>
+
+          <script src="packages/http-auth/http-auth.js"></script>
+          <script src="packages/actions/actions.js"></script>
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/voicechat/voicechat.css" />
+          <script src="packages/voicechat/hark.js"></script>
+          <script src="packages/voicechat/jquery-3.5.1.min.js"></script>
+          <script src="packages/voicechat/lib-jitsi-meet.min.js"></script>
+          <script src="packages/voicechat/voicechat.js"></script>
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/adaptive-cards/adaptivecards.css" />
+          <script src="packages/adaptive-cards/adaptivecards.min.js"></script>
+          <script src="packages/adaptive-cards/markdown-it.min.js"></script>
+          <script src="packages/adaptive-cards/adaptive-cards.js"></script>
+
+          <link type="text/css" rel="stylesheet" media="screen" href="packages/polls/polls.css" />
+          <script src="packages/polls/polls.js"></script>
+
+          <script src="packages/galene/protocol.js"></script>
+          <script src="packages/galene/galene-socket.js"></script>
+          <script src="packages/galene/galene.js"></script>
+
+          <script src="packages/mastodon/timeago.min.js"></script>
+          <script src="packages/mastodon/mastodon.js"></script>
+          */}
+
         </Helmet>
       )}
 
