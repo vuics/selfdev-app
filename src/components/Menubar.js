@@ -34,6 +34,12 @@ const Menubar = () => {
           Talk
         </Menu.Item>
       ) }
+      { conf.map.enable && (
+        <Menu.Item onClick={() => navigate('/map')} active={pathname==='/map'}>
+          <Icon name='map' />
+          Map
+        </Menu.Item>
+      ) }
       { conf.meet.enable && (
         <Menu.Item onClick={() => navigate('/meet')} active={pathname==='/meet'}>
           <Icon name='video' />

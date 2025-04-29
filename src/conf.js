@@ -38,6 +38,10 @@ const conf = {
     enable: bool(process.env.REACT_APP_TALK_ENABLE || false),
   },
 
+  map: {
+    enable: bool(process.env.REACT_APP_MAP_ENABLE || false),
+  },
+
   meet: {
     enable: bool(process.env.REACT_APP_MEET_ENABLE || false),
   },

@@ -18,6 +18,7 @@ import Reset from './Reset'
 import Logout from './Logout'
 import Chat from './Chat'
 import Talk from './Talk'
+import Map from './Map'
 import Meet from './Meet'
 import Hive from './Hive'
 import Flow from './Flow'
@@ -75,6 +76,9 @@ const Index = () => {
       )}
       { conf.talk.enable && (
         <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
+      )}
+      { conf.map.enable && (
+        <Route path="/map" element={(<Private> <Map /> </Private>)}/>
       )}
       { conf.meet.enable && (
         <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
