@@ -70,6 +70,11 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#node">
+              <b>Node</b> — build automation flows that collect, transform and visualize data.
+            </a>
+          </li>
+          <li>
             <a href="#code">
               <b>Code</b> — program using web IDE and architect and coder agents.
             </a>
@@ -95,8 +100,38 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#ecommerce">
+              <b>E-commerce</b> — create fully tailored backend for online stores.
+            </a>
+          </li>
+          <li>
+            <a href="#storefront">
+              <b>Storefront</b> — create fully customizable, high-performance online shopping experiences.
+            </a>
+          </li>
+          <li>
+            <a href="#bank">
+              <b>Bank</b> — manage, and scale core banking and digital financial services.
+            </a>
+          </li>
+          <li>
+            <a href="#blockchain">
+              <b>Blockchain</b> — build blockchain apps with distributed networks, databases, and messaging systems.
+            </a>
+          </li>
+          <li>
+            <a href="#contract">
+              <b>Smart Contract</b> — execute smart contracts to automate and enforce business logic among multiple parties.
+            </a>
+          </li>
+          <li>
             <a href="#train">
               <b>Train</b> — train agents by demonstrating browser interactions.
+            </a>
+          </li>
+          <li>
+            <a href="#synthetic">
+              <b>Synthetic UI</b> — experience dynamically generated or controlled programmatically user interface.
             </a>
           </li>
           <li>
@@ -137,6 +172,11 @@ const Product = () => (
           <li>
             <a href="#vr">
               <b>VR / AR</b> — talk to agents in virtual reality or agumented reality.
+            </a>
+          </li>
+          <li>
+            <a href="#docs">
+              <b>Docs</b> — learn, build, and succeed with clear and actionable guidance.
             </a>
           </li>
         </ol>
@@ -317,6 +357,43 @@ const Product = () => (
         <br/>
       </Segment>
 
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="node" dividing>
+          Node
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Node empowers users to design and execute sophisticated automation flows that seamlessly collect, transform, and visualize data. By integrating Node-RED — a popular flow-based development tool — users can rapidly orchestrate complex data-driven workflows with minimal coding effort.
+        </p>
+        <br/>
+        <Card.Group key="card-group-node" centered items={[
+          {
+            header: 'Visual Flow-Based Automation',
+            description: 'Design and deploy powerful data workflows through an intuitive, visual editor powered by Node-RED—making complex automations accessible to everyone.',
+          }, {
+            header: 'Seamless Agent-Driven Triggers',
+            description: 'Initiate flows instantly with our integrated agent that triggers Node-RED webhooks and processes responses in real time, enabling dynamic, reactive systems.',
+          }, {
+            header: 'Flexible Data Collection and Transformation',
+            description: 'Connect to APIs, databases, and services effortlessly. Collect raw data, transform it into actionable insights, and prepare it for visualization or further processing.',
+          }, {
+            header: 'Real-Time Response Handling',
+            description: 'Capture and utilize real-time responses from automation flows to drive decisions, trigger downstream actions, and keep your operations agile and informed.',
+          }, {
+            header: 'Modular and Reusable Workflows',
+            description: 'Build scalable, modular components that can be reused across projects—speeding up automation development and ensuring consistency in your operations.',
+          }, {
+            header: 'Team Collaboration and Sharing',
+            description: 'Collaborate easily by sharing flows, templates, and best practices across teams, fostering innovation and operational excellence through collective knowledge.',
+          }
+        ]} />
+        <br/>
+        <Image src='/images/screenshots/node.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="code" dividing>
           Code
@@ -490,6 +567,186 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="ecommerce" dividing>
+          E-commerce
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Create fully tailored online stores with complete control over products, orders, payments, and customer experiences. Built on Medusa.js, it offers a modular, headless architecture that enables rapid customization and seamless integration with any frontend. Agents can automate catalog management, price updates, order fulfillment, inventory tracking, customer support workflows, and dynamic promotional campaigns — helping businesses scale faster while reducing manual overhead.
+        </p>
+        <br/>
+          <Card.Group key="card-group-ecommerce" centered items={[
+            {
+              header: 'Fully Customizable Online Stores',
+              description: 'Design unique storefronts and customer journeys with complete flexibility, ensuring a perfect match to brand vision and business needs.',
+            }, {
+              header: 'Agent-Driven Store Automation',
+              description: 'Automate product catalog updates, inventory management, order fulfillment, and customer service workflows to streamline operations.',
+            }, {
+              header: 'Increased Operational Efficiency',
+              description: 'Free up team resources by automating repetitive tasks, enabling a stronger focus on strategic growth and customer engagement.',
+            }, {
+              header: 'Scalable and Modular Commerce Infrastructure',
+              description: 'Expand product offerings, integrate new payment systems, and open new sales channels without replatforming or heavy technical overhead.',
+            }, {
+              header: 'Real-Time Promotions and Dynamic Pricing',
+              description: 'Use intelligent agents to launch campaigns, adjust prices, and personalize offers instantly based on customer behavior and market trends.',
+            }, {
+              header: 'Cost-Effective, Open-Source Innovation',
+              description: 'Leverage the power of Medusa.js to grow and innovate without costly vendor lock-ins, reducing total cost of ownership over time.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/ecommerce.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="storefront" dividing>
+          Storefront
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Create fully customizable, high-performance online shopping experiences with complete control over design, checkout flows, product displays, and customer interactions. Agents can automate catalog updates, personalize shopping experiences, optimize checkout processes, launch targeted promotions, and monitor storefront performance in real-time — helping businesses boost conversion rates, improve user satisfaction, and scale effortlessly.
+        </p>
+        <br/>
+          <Card.Group key="card-group-storefront" centered items={[
+            {
+              header: 'Fully Customizable Storefronts',
+              description: 'Create unique, branded shopping experiences with complete control over design, checkout flows, and customer engagement.',
+            }, {
+              header: 'Agent-Driven Content and Catalog Automation',
+              description: 'Automate product updates, pricing changes, and promotional content across your storefront to keep everything fresh and dynamic.',
+            }, {
+              header: 'Increased Conversion and User Engagement',
+              description: 'Deliver personalized shopping journeys, optimize checkout processes, and reduce cart abandonment with intelligent automation.',
+            }, {
+              header: 'Scalable and Flexible Store Architecture',
+              description: 'Grow your storefront easily by adding new products, regions, and features without replatforming or disrupting the customer experience.',
+            }, {
+              header: 'Real-Time Store Performance Monitoring',
+              description: 'Track load times, customer interactions, and storefront health in real-time, ensuring a seamless and responsive shopping experience.',
+            }, {
+              header: 'Cost-Effective Growth and Innovation',
+              description: 'Leverage open-source flexibility to innovate faster, reduce tech debt, and adapt your storefront to changing market demands.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/storefront.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="bank" dividing>
+          Bank
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Efficiently manage, automate, and scale core banking and digital financial services. Built on the robust foundations of Apache Fineract and Mifos, it offers an open, modular, and extensible platform for delivering loans, savings, payments, and a broad range of financial products. Native agents automate key banking operations, streamline internal processes, and enhance customer service experiences.
+        </p>
+        <br/>
+          <Card.Group key="card-group-bank" centered items={[
+            {
+              header: 'Unified Core Banking Management',
+              description: 'Easily manage loans, savings, customer accounts, transactions, and financial services within a powerful, open-source banking platform.',
+            }, {
+              header: 'Agent-Powered Banking Automation',
+              description: 'Automate customer service, onboarding, loan processing, and account management through intelligent agent-driven workflows.',
+            }, {
+              header: 'Increased Operational Efficiency',
+              description: 'Streamline internal banking processes, reduce manual workloads, and accelerate service delivery with minimal overhead.',
+            }, {
+              header: 'Scalable and Modular Infrastructure',
+              description: 'Grow seamlessly from microfinance to full-scale digital banking, leveraging a flexible architecture that adapts to evolving business needs.',
+            }, {
+              header: 'Real-Time Customer Support and Operations',
+              description: 'Enable real-time interactions, updates, and decision-making with instant agent-triggered workflows and dynamic data processing.',
+            }, {
+              header: 'Cost-Effective Financial Innovation',
+              description: 'Leverage open-source frameworks to innovate faster, reduce development costs, and customize banking services without vendor lock-in.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/bank.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="blockchain" dividing>
+          Blockchain
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Build, integrate, and scale blockchain-based applications across distributed networks, combining smart contracts, decentralized databases, and event-driven messaging. Built on top of Hyperledger FireFly and Hyperledger Fabric, this feature provides enterprise-grade tools for managing both private and public blockchain interactions — with seamless integration to Ethereum and other major blockchain platforms. With an embedded agent, users can automate complex blockchain workflows, enabling end-to-end orchestration of transactions, smart contract interactions, and cross-chain processes.
+        </p>
+        <br/>
+          <Card.Group key="card-group-blockchain" centered items={[
+            {
+              header: 'Unified Blockchain Application Management',
+              description: 'Build, deploy, and manage blockchain apps across distributed networks, databases, and messaging systems from a single platform.',
+            }, {
+              header: 'Agent-Driven Workflow Automation',
+              description: 'Automate smart contract execution, blockchain transactions, and multi-party processes through intelligent, event-driven agents.',
+            }, {
+              header: 'Secure and Private Blockchain Networks',
+              description: 'Create enterprise-grade, permissioned blockchain networks with Hyperledger Fabric to ensure data privacy and trusted collaboration.',
+            }, {
+              header: 'Cross-Chain and Ecosystem Integration',
+              description: 'Seamlessly connect to Ethereum and other blockchain platforms, enabling flexible, future-proof decentralized application development.',
+            }, {
+              header: 'Scalable and Modular Blockchain Architecture',
+              description: 'Expand applications and networks easily with modular components and flexible orchestration, supporting growth without rework.',
+            }, {
+              header: 'Reduced Development Complexity and Costs',
+              description: 'Simplify blockchain app development with pre-integrated orchestration tools and automation, cutting time-to-market and operational overhead.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/blockchain.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="contract" dividing>
+          Smart Contract
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Execute and automate smart business agreements. Contract enables users to design, execute, and manage smart contracts that automate and enforce business logic across multiple parties on a secure, permissioned blockchain network. Built on Hyperledger Fabric, it offers enterprise-grade reliability, privacy, and scalability for digital agreements. Agents help drafting codechains and ensure seamless performance by continuously validating contract conditions, managing renewals or expirations, and triggering alerts or remediation actions when terms are violated or fulfilled.
+        </p>
+        <br/>
+          <Card.Group key="card-group-contract" centered items={[
+            {
+              header: 'Smart Contract Creation and Deployment',
+              description: 'Easily generate, customize, and deploy smart contracts on a secure, permissioned blockchain network, streamlining business agreement setup.',
+            }, {
+              header: 'Agent-Driven Automation and Enforcement',
+              description: 'Automate contract execution, monitor compliance, and enforce terms through intelligent, event-driven agents that reduce manual intervention.',
+            }, {
+              header: 'Real-Time Contract Monitoring',
+              description: 'Track contract performance, detect breaches or completions instantly, and trigger corrective actions without delays or human error.',
+            }, {
+              header: 'Scalable and Secure Contract Management',
+              description: 'Manage thousands of concurrent contracts with Hyperledger Fabric’s permissioned blockchain, ensuring privacy, scalability, and reliability.',
+            }, {
+              header: 'Proactive Lifecycle Management',
+              description: 'Automate contract renewals, amendments, and expirations by monitoring lifecycle events and engaging stakeholders at critical moments.',
+            }, {
+              header: 'Reduced Legal and Operational Overhead',
+              description: 'Lower costs and risks by replacing manual audits and enforcement with transparent, verifiable smart contract execution and immutable blockchain records.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/contract.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="train" dividing>
           Train
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
@@ -520,6 +777,42 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/train.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="synthetic" dividing>
+          Synthetic UI
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Experience dynamically generated, programmatically controlled interfaces that adapt to specific workflows and needs. Agents can synthesize custom web UIs or UX flows on demand, tailored to individual users or business processes, automate interactions across multiple apps, personalize layouts and actions in real-time, and continuously optimize experiences based on behavior and goals — enabling a truly adaptive, intelligent front-end experience.
+        </p>
+        <br/>
+          <Card.Group key="card-group-synthetic" centered items={[
+            {
+              header: 'Dynamic Interface Generation',
+              description: 'Agents synthesize custom web UIs and user experiences on demand, tailored to personal workflows and business requirements.',
+            }, {
+              header: 'Automated Multi-App Interaction',
+              description: 'Programmatically control actions across multiple apps and services, seamlessly navigating, filling forms, clicking buttons, and more.',
+            }, {
+              header: 'Real-Time UI Personalization',
+              description: 'Adapt layouts, components, and actions dynamically based on user behavior, preferences, and changing business logic.',
+            }, {
+              header: 'Adaptive Experience Optimization',
+              description: 'Continuously learn and optimize UI and UX flows to maximize task completion rates, engagement, and overall productivity.',
+            }, {
+              header: 'Faster Deployment with Lower Overhead',
+              description: 'Reduce development time and costs by automating UI creation and updates without needing traditional design and engineering cycles.',
+            }, {
+              header: 'Seamless Scalability Across Systems',
+              description: 'Unify fragmented experiences across multiple apps and systems into one coherent, adaptive interface, scaling with user and business growth.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/synthetic.png' fluid bordered rounded />
         <br/>
       </Segment>
 
@@ -810,6 +1103,42 @@ const Product = () => (
         } ]} />
         <br/>
         <Image src='/images/screenshots/vr.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="docs" dividing>
+          Docs
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Learn, build, and succeed with clear, actionable guidance. Agents can automatically load documentation into Retrieval-Augmented Generation (RAG) systems, allowing users to ask any question and instantly receive contextually accurate answers. They can also update content dynamically, monitor usage patterns to surface the most relevant information, and personalize documentation experiences based on user needs and goals — making knowledge access faster, smarter, and more interactive.
+        </p>
+        <br/>
+          <Card.Group key="card-group-docs" centered items={[
+            {
+              header: 'Instant, Searchable Knowledge',
+              description: 'Agents load documentation into intelligent systems, allowing users to instantly search and retrieve accurate, context-rich answers to any question.',
+            }, {
+              header: 'Personalized Learning Paths',
+              description: 'Tailor documentation delivery based on user roles, experience levels, and goals to create a more relevant and effective learning experience.',
+            }, {
+              header: 'Continuous Content Updates',
+              description: 'Keep documentation fresh and reliable by automatically monitoring and updating content within RAG systems as products and processes evolve.',
+            }, {
+              header: 'Enhanced Productivity and Focus',
+              description: 'Reduce time spent digging through manuals by providing direct, actionable guidance exactly when and where users need it.',
+            }, {
+              header: 'Smarter Onboarding and Training',
+              description: 'Accelerate user onboarding and ongoing education by making documentation interactive, responsive, and easy to navigate with natural prompts.',
+            }, {
+              header: 'Scalable Knowledge Management',
+              description: 'Turn static documents into dynamic, evolving knowledge bases that grow and improve alongside your organization’s needs.',
+            }
+          ]} />
+        <br/>
+        <Image src='/images/screenshots/docs.png' fluid bordered rounded />
         <br/>
       </Segment>
 
