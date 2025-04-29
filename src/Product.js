@@ -11,6 +11,7 @@ import {
   Embed,
   Grid,
   Divider,
+  Icon,
 } from 'semantic-ui-react'
 import Footer from './components/Footer'
 
@@ -40,7 +41,7 @@ const Product = () => (
           Seamlessly connect agents and humans across all channels — web, mobile, desktop, video calls, virtual reality, command line, social media and messangers, and even phone lines and sms.
         </p>
         <Divider />
-        <Header as="h2">
+        <Header as="h2" id="toc">
           Features and Functions
         </Header>
         <ol style={{ textAlign: 'left', fontSize: '1.4em', lineHeight: '1.5' }}>
@@ -79,11 +80,13 @@ const Product = () => (
               <b>Code</b> — program using web IDE and architect and coder agents.
             </a>
           </li>
+          {/*
           <li>
             <a href="#build">
               <b>Build</b> — build and organize agentic teams with visual editor.
             </a>
           </li>
+          */}
           <li>
             <a href="#open">
               <b>Open</b> — communicate with deployed open-source and OpenAI models.
@@ -186,6 +189,9 @@ const Product = () => (
     <Container>
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="chat" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Chat
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -220,6 +226,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="talk" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Talk
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -254,6 +263,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="meet" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Meet
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
         </Header>
@@ -291,6 +303,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="hive" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Hive
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -325,6 +340,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="flow" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Flow
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -360,6 +378,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="node" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Node
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -396,6 +417,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="code" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Code
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -431,6 +455,9 @@ const Product = () => (
       {/*
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="build" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Build
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -466,6 +493,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="open" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Open
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -500,6 +530,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="note" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Note
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -534,6 +567,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="sell" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Sell
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -568,6 +604,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="ecommerce" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           E-commerce
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -604,6 +643,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="storefront" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Storefront
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -640,6 +682,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="bank" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Bank
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -676,6 +721,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="blockchain" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Blockchain
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -712,6 +760,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="contract" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Smart Contract
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -748,6 +799,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="train" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Train
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -782,6 +836,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="synthetic" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Synthetic UI
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -818,6 +875,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="api" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           API
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -852,6 +912,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="cli" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Command-line Interface (CLI)
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -886,6 +949,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="mobile" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Mobile App
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -920,6 +986,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="desktop" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Desktop App
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -954,6 +1023,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="distributed" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Distributed System
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -1003,6 +1075,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="bridge" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Social Bridge
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -1040,6 +1115,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="phone" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Phone
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -1074,6 +1152,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="vr" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Virtual Reality & Augmented Reality
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
@@ -1108,6 +1189,9 @@ const Product = () => (
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="docs" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
           Docs
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
