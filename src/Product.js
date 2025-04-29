@@ -76,6 +76,16 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#train">
+              <b>Train</b> — train agents by demonstrating browser interactions.
+            </a>
+          </li>
+          <li>
+            <a href="#note">
+              <b>Note</b> — prototype and experiment with agents using Jupyter notebooks.
+            </a>
+          </li>
+          <li>
             <a href="#code">
               <b>Code</b> — program using web IDE and architect and coder agents.
             </a>
@@ -90,11 +100,6 @@ const Product = () => (
           <li>
             <a href="#open">
               <b>Open</b> — communicate with deployed open-source and OpenAI models.
-            </a>
-          </li>
-          <li>
-            <a href="#note">
-              <b>Note</b> — prototype and experiment with agents using Jupyter notebooks.
             </a>
           </li>
           <li>
@@ -125,11 +130,6 @@ const Product = () => (
           <li>
             <a href="#contract">
               <b>Smart Contract</b> — execute smart contracts to automate and enforce business logic among multiple parties.
-            </a>
-          </li>
-          <li>
-            <a href="#train">
-              <b>Train</b> — train agents by demonstrating browser interactions.
             </a>
           </li>
           <li>
@@ -416,6 +416,80 @@ const Product = () => (
       </Segment>
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="train" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
+          Train
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
+        </p>
+        <br/>
+        <Card.Group key="card-group-train" centered items={[ {
+            header: 'Automated Task Execution',
+            description: 'Agents learn to navigate the browser just like users, reducing the need for manual work by automating repetitive tasks.',
+          }, {
+            header: 'Adaptive Learning & Optimization',
+            description: 'Agents observe, repeat, and optimize user actions, continuously improving efficiency based on real-world interactions.',
+          }, {
+            header: 'Seamless Web Automation',
+            description: 'Customers can train agents to handle workflows across websites, web apps, and online services without requiring complex coding or scripting.',
+          }, {
+            header: 'Increased Productivity',
+            description: 'By offloading routine browsing tasks to AI agents, users can focus on higher-value activities while maintaining control over their workflows.',
+          }, {
+            header: 'Personalized & Scalable Automation',
+            description: 'The system adapts to individual user behaviors, evolving over time to enhance precision, speed, and overall performance.',
+          }, {
+            header: '',
+            description: '',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/train.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="note" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
+          Note
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
+        </p>
+        <br/>
+        <Card.Group key="card-group-note" centered items={[ {
+            header: 'Flexible Prototyping',
+            description: 'Customers can quickly develop and test new AI agents within Jupyter notebooks, enabling rapid iteration and refinement.',
+          }, {
+            header: 'Safe & Scalable Experimentation',
+            description: 'Running notebooks inside safe, isolated, and scalable environments for AI experimentation.',
+          }, {
+            header: 'Agent-Driven Content Generation',
+            description: 'Users can leverage AI agents within notebooks to generate content, automate workflows, and test AI-driven interactions in real time.',
+          }, {
+            header: 'Seamless Integration',
+            description: 'The system allows customers to experiment with agents while maintaining compatibility with existing development pipelines and tools.',
+          }, {
+            header: 'Enhanced Innovation & Efficiency',
+            description: 'By combining Jupyter’s flexibility with Docker’s stability, customers can accelerate AI development, fine-tune models, and optimize agent behavior.',
+          }, {
+            header: '',
+            description: '',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/note.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h1' textAlign='center' id="code" dividing>
           <a href="#toc">
             <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
@@ -525,43 +599,6 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/open.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="note" dividing>
-          <a href="#toc">
-            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          </a>
-          Note
-          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
-          <br />
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Jupyter notebooks executed in safe environment. It allows prototyping new agents, experimenting with agents, generating content with agents, etc.
-        </p>
-        <br/>
-        <Card.Group key="card-group-note" centered items={[ {
-            header: 'Flexible Prototyping',
-            description: 'Customers can quickly develop and test new AI agents within Jupyter notebooks, enabling rapid iteration and refinement.',
-          }, {
-            header: 'Safe & Scalable Experimentation',
-            description: 'Running notebooks inside safe, isolated, and scalable environments for AI experimentation.',
-          }, {
-            header: 'Agent-Driven Content Generation',
-            description: 'Users can leverage AI agents within notebooks to generate content, automate workflows, and test AI-driven interactions in real time.',
-          }, {
-            header: 'Seamless Integration',
-            description: 'The system allows customers to experiment with agents while maintaining compatibility with existing development pipelines and tools.',
-          }, {
-            header: 'Enhanced Innovation & Efficiency',
-            description: 'By combining Jupyter’s flexibility with Docker’s stability, customers can accelerate AI development, fine-tune models, and optimize agent behavior.',
-          }, {
-            header: '',
-            description: '',
-          } ]} />
-        <br/>
-        <Image src='/images/screenshots/note.png' fluid bordered rounded />
         <br/>
       </Segment>
 
@@ -794,43 +831,6 @@ const Product = () => (
           ]} />
         <br/>
         <Image src='/images/screenshots/contract.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="train" dividing>
-          <a href="#toc">
-            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          </a>
-          Train
-          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
-          <br />
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Users train agents use browser the way you use the browser themselves. Agents observe, repeat and optimize what users do with the browser.
-        </p>
-        <br/>
-        <Card.Group key="card-group-train" centered items={[ {
-            header: 'Automated Task Execution',
-            description: 'Agents learn to navigate the browser just like users, reducing the need for manual work by automating repetitive tasks.',
-          }, {
-            header: 'Adaptive Learning & Optimization',
-            description: 'Agents observe, repeat, and optimize user actions, continuously improving efficiency based on real-world interactions.',
-          }, {
-            header: 'Seamless Web Automation',
-            description: 'Customers can train agents to handle workflows across websites, web apps, and online services without requiring complex coding or scripting.',
-          }, {
-            header: 'Increased Productivity',
-            description: 'By offloading routine browsing tasks to AI agents, users can focus on higher-value activities while maintaining control over their workflows.',
-          }, {
-            header: 'Personalized & Scalable Automation',
-            description: 'The system adapts to individual user behaviors, evolving over time to enhance precision, speed, and overall performance.',
-          }, {
-            header: '',
-            description: '',
-          } ]} />
-        <br/>
-        <Image src='/images/screenshots/train.png' fluid bordered rounded />
         <br/>
       </Segment>
 
