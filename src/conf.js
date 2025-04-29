@@ -1,7 +1,7 @@
 const bool = (val) => ['true', '1', true, 1].includes(val)
-// const json = (val) => val && JSON.parse(val)
+const json = (val) => val && JSON.parse(val)
 const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
-const arr = (str) => str ? str.split(',') : []
+// const arr = (str) => str ? str.split(',') : []
 
 const conf = {
   contact: {
@@ -17,8 +17,7 @@ const conf = {
   },
 
   synthetic: {
-    components: arr(process.env.REACT_APP_SYNTHETIC_COMPONENTS || 'chat,meet,hive,flow,node,code,build,open,note,sell,train,docs'),
-    frames: arr(process.env.REACT_APP_SYNTHETIC_FRAMES || 'flow,node,code,build,open,note,sell,train,docs'),
+    components: json(process.env.REACT_APP_SYNTHETIC_COMPONENTS || '{"chat":{},"meet":{},"hive":{},"flow":{"url":"http://localhost:7860/"},"node":{"url":"http://localhost:1880/"},"code":{"url":"http://localhost:8000/"},"build":{"url":"http://localhost:9690/"},"open":{"url":"http://localhost:8321/"},"note":{"url":"http://localhost:8889/lab?token=my-token-abc"},"sell":{"url":"http://localhost:8059"},"train":{"url":"http://localhost:8180/vnc.html"},"bank":{"url":"http://localhost:4200"},"fly1":{"url":"http://localhost:5000/ui"},"box1":{"url":"http://localhost:5109"},"fly2":{"url":"http://localhost:5001/ui"},"box2":{"url":"http://localhost:5209"},"fly3":{"url":"http://localhost:5002/ui"},"box3":{"url":"http://localhost:5309"},"ecommerce":{"url":"http://localhost:9012"},"storefront":{"url":"http://localhost:8012"},"docs":{"url":"http://localhost:9188"}}'),
   },
 
   iframe: {
@@ -49,6 +48,7 @@ const conf = {
     limit: 1000,
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   flow: {
     enable: bool(process.env.REACT_APP_FLOW_ENABLE || false),
     url: process.env.REACT_APP_FLOW_URL || 'http://localhost:7860/',
@@ -60,41 +60,48 @@ const conf = {
     chatInputField: process.env.REACT_APP_FLOW_CHAT_INPUT_FIELD || "your_chat_key",
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   node: {
     enable: bool(process.env.REACT_APP_NODE_ENABLE || false),
     url: process.env.REACT_APP_NODE_URL || 'http://localhost:1880/',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   code: {
     enable: bool(process.env.REACT_APP_CODE_ENABLE || false),
-    url: process.env.REACT_APP_CODE_URL || 'http://localhost:9390/',
+    url: process.env.REACT_APP_CODE_URL || 'http://localhost:8000/',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   build: {
     enable: bool(process.env.REACT_APP_BUILD_ENABLE || false),
     url: process.env.REACT_APP_BUILD_URL || 'http://localhost:9690/',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   open: {
     enable: bool(process.env.REACT_APP_OPEN_ENABLE || false),
-    url: process.env.REACT_APP_OPEN_URL || 'http://localhost:9990/',
+    url: process.env.REACT_APP_OPEN_URL || 'http://localhost:8321/',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   note: {
     enable: bool(process.env.REACT_APP_NOTE_ENABLE || false),
     url: process.env.REACT_APP_NOTE_URL || 'http://localhost:8889/lab?token=my-token-abc',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   sell: {
     enable: bool(process.env.REACT_APP_SELL_ENABLE || false),
-    url: process.env.REACT_APP_SELL_URL || 'http://localhost:8069',
+    url: process.env.REACT_APP_SELL_URL || 'http://localhost:8059',
   },
-
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   train: {
     enable: bool(process.env.REACT_APP_TRAIN_ENABLE || false),
     url: process.env.REACT_APP_TRAIN_URL || 'http://localhost:8180/vnc.html',
   },
 
+  // TODO: deprecate the section and related component (replaced with synthetic UI)
   docs: {
     enable: bool(process.env.REACT_APP_DOCS_ENABLE || false),
     url: process.env.REACT_APP_DOCS_URL || 'http://localhost:9188',

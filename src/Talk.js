@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {Helmet} from "react-helmet"
+import { has } from 'lodash'
+import { Helmet } from "react-helmet"
 import axios from 'axios'
 import {
   Container,
@@ -42,13 +43,17 @@ export function Pane ({ panel, width, height }) {
   } else if (panel === 'hive') {
     return
   } else {
-    for (const frame of conf.synthetic.frames) {
-      if (panel === frame) {
+    // console.log('conf.synthetic.components:', conf.synthetic.components)
+    for (const componentKey in conf.synthetic.components) {
+      // console.log('componentKey:', componentKey)
+      const component = conf.synthetic.components[componentKey]
+      // console.log('component:', component)
+      if (panel === componentKey && has(component, 'url')) {
         return (
-          <Iframe url={conf[frame].url}
+          <Iframe url={component.url}
                   width={width}
                   height={height - conf.iframe.topOffset - conf.iframe.bottomOffset }
-                  id={`${frame}-frame`}
+                  id={`${componentKey}-frame`}
                   className=""
                   display="block"
                   position="relative"/>
@@ -266,10 +271,12 @@ export default function Talk () {
                   if (body.includes("[[synthetic-ui:hide('all')]]")) {
                     setPanels([])
                   } else {
-                    for (const component of conf.synthetic.components) {
+                    for (const component in conf.synthetic.components) {
                       if (body.includes(`[[synthetic-ui:hide('${component}')]]`)) {
+                        // remove element
                         setPanels(prevPanels => prevPanels.filter(panel => panel !== component));
                       } else if (body.includes(`[[synthetic-ui:show('${component}')]]`)) {
+                        // prepend element
                         setPanels(prevPanels => [...prevPanels, component])
                       }
                     }
