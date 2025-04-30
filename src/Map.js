@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 // import { has } from 'lodash'
 import { Helmet } from "react-helmet"
 import axios from 'axios'
@@ -29,6 +29,7 @@ import { client, xml } from '@xmpp/client'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
+import { generateUUID } from './helper'
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -43,7 +44,10 @@ export default function Map () {
   const [ responseError, setResponseError ] = useState('')
   // const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
-  // const [ prompt, setPrompt ] = useState(' ')
+  const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+  const [ room, setRoom ] = useState('matrix')
+  const [ recipient, setRecipient ] = useState('morpheus')
+  const xmppRef = useRef(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -78,48 +82,21 @@ export default function Map () {
       return console.error("No credentials error")
     }
 
-    // Configuration
-    const xmppConfig = {
-      enable: true,
-
-      // jid: `art@${conf.xmpp.host}`,
-      // password: '123',  // FIXME
-
-      // jid: `${credentials.user}@${conf.xmpp.host}`,
-      jid: credentials.jid,
-      password: credentials.password,
-
-      server: conf.xmpp.host,
-      conferenceServer: conf.xmpp.mucHost,
-      botJid: `morpheus@${conf.xmpp.host}`,
-      botNickname: 'morpheus',
-      groupChatRoom: 'matrix',
-      // message: 'Tell me a new random joke. And print a random number at the end.',
-      message: 'Tell me a what city would you live in? And print a random number at the end. Give a short and concise one sentence answer.',
-      enablePersonalMessage: true, // Set to true to try personal messaging
-      enableGroupChat: true, // Set to true to send group chat messages
-    };
-
     // Initialize XMPP client
     const xmpp = client({
       service: conf.xmpp.websocketUrl,
-      domain: xmppConfig.server,
-      username: xmppConfig.jid.split('@')[0],
-      password: xmppConfig.password,
+      domain: conf.xmpp.host,
+      username: credentials.user,
+      password: credentials.password,
       tls: {
         rejectUnauthorized: false
       }
     });
-
-    // Track state
-    let nickname = null;
-    let clientFullJid = null; // Store the full JID including resource
+    xmppRef.current = xmpp;
 
     // Handle online event
     xmpp.on('online', async (jid) => {
       console.log(`Connected as ${jid.toString()}`);
-      nickname = xmppConfig.jid.split('@')[0];
-      clientFullJid = jid.toString(); // Store the full JID
 
       // Get roster (contact list)
       await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
@@ -132,26 +109,6 @@ export default function Map () {
       console.log('Sent initial presence');
 
       setLoading(false)
-
-      // Optionally try personal message
-      if (xmppConfig.enablePersonalMessage) {
-        // Wait a moment for roster and presence to be processed
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        await sendPersonalMessage({ text: xmppConfig.message });
-
-        // If we're only doing personal messaging, wait longer
-        if (!xmppConfig.enableGroupChat) {
-          await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
-          xmpp.stop().catch(console.error);
-        } else {
-          await new Promise(resolve => setTimeout(resolve, 5000));
-        }
-      }
-
-      // Join group chat and continue if enabled
-      if (xmppConfig.enableGroupChat) {
-        await joinGroupChat();
-      }
     });
 
     // Handle errors
@@ -167,10 +124,8 @@ export default function Map () {
       console.log('Connection closed');
     });
 
-
     // Handle incoming stanzas
     xmpp.on('stanza', (stanza) => {
-      // For debugging specific stanzas
       // console.log('Got stanza:', stanza.toString());
 
       // Handle roster responses
@@ -200,7 +155,7 @@ export default function Map () {
       // Handle group chat messages
       else if (type === 'groupchat') {
         // Skip our own messages
-        if (from.includes(`/${nickname}`)) return;
+        if (from.includes(`/${credentials.user}`)) return;
 
         // Skip historical messages
         const delay = stanza.getChild('delay');
@@ -210,99 +165,64 @@ export default function Map () {
       }
     });
 
-    // Send a personal message
-    async function sendPersonalMessage({ text }) {
-      console.log(`Sending personal message to ${xmppConfig.botJid}...`);
-
-      // Send with more complete attributes
-      const message = xml(
-        'message',
-        {
-          type: 'chat',
-          to: xmppConfig.botJid,
-          from: clientFullJid,
-          id: generateUUID()
-        },
-        xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
-        xml('body', {}, text)
-      );
-
-      await xmpp.send(message);
-      console.log('Personal message text sent:', text);
-    }
-
-    // Join group chat and send a message with mention
-    async function joinGroupChat() {
-      const roomJid = `${xmppConfig.groupChatRoom}@${xmppConfig.conferenceServer}`;
-
-      console.log(`Joining group chat ${roomJid} as ${nickname}...`);
-
-      // Join room with no history
-      const presence = xml(
-        'presence',
-        { to: `${roomJid}/${nickname}` },
-        xml('x', { xmlns: 'http://jabber.org/protocol/muc' },
-          xml('history', { maxstanzas: '0', maxchars: '0' })
-        )
-      );
-
-      await xmpp.send(presence);
-      console.log('Joined group chat');
-
-      // Wait to ensure we're joined properly
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Send message with mention
-      await sendGroupChatMessage({ roomJid, text: xmppConfig.message });
-
-      // Wait for responses then disconnect
-      await new Promise(resolve => setTimeout(resolve, 5000));
-
-      // xmpp.stop().catch(console.error);
-    }
-
-    // Send a message with a mention to the group chat
-    async function sendGroupChatMessage({ roomJid, text }) {
-      console.log(`Sending message with proper mention format...`);
-
-      const messageText = `@${xmppConfig.botNickname} ${text}`;
-
-      const message = xml(
-        'message',
-        {
-          type: 'groupchat',
-          to: roomJid,
-          id: generateUUID(),
-          'xml:lang': 'en'
-        },
-        xml('body', {}, messageText),
-        xml('reference', {
-          xmlns: 'urn:xmpp:reference:0',
-          type: 'mention',
-          begin: '0',
-          end: xmppConfig.botNickname.length + 1,
-          uri: `xmpp:${xmppConfig.botNickname}@${xmppConfig.conferenceServer}/${xmppConfig.botNickname}`
-        })
-      );
-
-      await xmpp.send(message);
-      console.log('Message with mention sent:', messageText);
-    }
-
-    // Generate a random UUID
-    function generateUUID() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    }
-
-    if (xmppConfig.enable) {
-      // Start the client
-      xmpp.start().catch(console.error);
-    }
-
+    xmpp.start().catch(console.error);
   }, [credentials])
+
+  async function sendPersonalMessage({ recipient, prompt }) {
+    if (!recipient || !prompt) {
+      return
+    }
+    const to = recipient.includes("@") ? recipient : `${recipient}@${conf.xmpp.host}`
+    const message = xml('message', {
+        type: 'chat',
+        to,
+        from: credentials.jid,
+        id: generateUUID()
+      },
+      xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
+      xml('body', {}, prompt)
+    );
+    await xmppRef.current.send(message);
+    console.log('Personal message sent, prompt:', prompt, ', to:', to);
+  }
+
+  async function joinRoom({ roomJid }) {
+    console.log(`Joining group chat ${roomJid} as ${credentials.user}...`);
+    const presence = xml(
+      'presence',
+      { to: `${roomJid}/${credentials.user}` },
+      xml('x', { xmlns: 'http://jabber.org/protocol/muc' },
+        xml('history', { maxstanzas: '0', maxchars: '0' })
+      )
+    );
+    await xmppRef.current.send(presence);
+    console.log('Joined group chat');
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+
+  async function sendRoomMessage({ room, recipient, prompt }) {
+    const roomJid = room.includes("@") ? room: `${room}@${conf.xmpp.mucHost}`
+    await joinRoom({ roomJid })
+    const nickname = recipient.split('@')[0];
+    const body = `@${nickname} ${prompt}`;
+    const message = xml('message', {
+        type: 'groupchat',
+        to: roomJid,
+        id: generateUUID(),
+        'xml:lang': 'en',
+      },
+      xml('body', {}, body),
+      xml('reference', {
+        xmlns: 'urn:xmpp:reference:0',
+        type: 'mention',
+        begin: '0',
+        end: nickname.length + 1,
+        uri: `xmpp:${nickname}@${conf.xmpp.mucHost}/${nickname}`
+      })
+    );
+    await xmppRef.current.send(message);
+    console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
+  }
 
   // useEffect(() => {
   //   if (converseRoot && credentials) {
@@ -546,17 +466,36 @@ export default function Map () {
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
-            <Button basic size='mini'>Chat</Button>
-            <Button basic size='mini'>Groupchat</Button>
+            <Input
+              iconPosition='left' size='mini' placeholder='jid | user | mention'
+              value={recipient}
+              onChange={e => setRecipient(e.target.value)}
+            ><Icon name='at' /><input /></Input>
             <br />
-            <Input iconPosition='left' size='mini' placeholder='jid | user | mention'>
-              <Icon name='at' />
-              <input />
-            </Input>
+            <Input
+              iconPosition='left' placeholder='room...' size='mini'
+              value={room}
+              onChange={e => setRoom(e.target.value)}
+            ><Icon name='group' /><input /></Input>
             <br />
-            <Input placeholder='room...' size='mini' />
+            <Input
+              iconPosition='left' placeholder='prompt...' size='mini'
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+            ><Icon name='edit outline' /><input /></Input>
             <br />
-            <Input placeholder='prompt...' size='mini' />
+            <br />
+            <Button basic size='mini'
+              onClick={async () => {
+                await sendPersonalMessage({ recipient, prompt });
+              }}
+            >Chat</Button>
+            <Button basic size='mini'
+              onClick={async () => {
+                await sendRoomMessage({ room, recipient, prompt });
+              }}
+            >Groupchat</Button>
+            <br />
           </Panel>
         </ReactFlow>
       </div>

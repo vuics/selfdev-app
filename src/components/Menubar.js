@@ -36,7 +36,7 @@ const Menubar = () => {
       ) }
       { conf.map.enable && (
         <Menu.Item onClick={() => navigate('/map')} active={pathname==='/map'}>
-          <Icon name='map' />
+          <Icon name='sitemap' />
           Map
         </Menu.Item>
       ) }
