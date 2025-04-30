@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react'
 import { has } from 'lodash'
 import { Helmet } from "react-helmet"
 import axios from 'axios'
@@ -26,6 +26,10 @@ import {
   ReactFlowProvider,
   Handle,
   Position,
+  BaseEdge,
+  EdgeLabelRenderer,
+  getBezierPath,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -104,9 +108,57 @@ function ResponseNode({ data, isConnectable }) {
   );
 }
 
+function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }) {
+  const { setEdges } = useReactFlow();
+  const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+  });
+
+  return (
+    <>
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <EdgeLabelRenderer>
+        <Button.Group icon compact size='mini'
+          className="nodrag nopan"
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            pointerEvents: 'all',
+          }}
+        >
+          <Button
+            compact
+            size='mini'
+            onClick={() => {
+              window.alert(`${data.recipient} has been clicked!`);
+            }}
+          >
+            {data.recipient}
+          </Button>
+          <Button compact size='mini'
+            onClick={() => {
+              // Below, it deletes the edge
+              setEdges((es) => es.filter((e) => e.id !== id));
+            }}
+          >
+            <Icon name='trash' />
+          </Button>
+        </Button.Group>
+      </EdgeLabelRenderer>
+    </>
+  );
+}
+
 const nodeTypes = {
   NoteNode: NoteNode,
   ResponseNode: ResponseNode,
+};
+
+const edgeTypes = {
+  RequestEdge: RequestEdge,
 };
 
 const initialNodes = [ {
@@ -337,7 +389,14 @@ function Map () {
       };
       setNodes((nds) => nds.concat(newNode));
       setEdges((eds) =>
-        eds.concat({ id, source: connectionState.fromNode.id, target: id }),
+        eds.concat({
+          id: `${connectionState.fromNode.id}->${id}`,
+          source: connectionState.fromNode.id,
+          target: id,
+          type: "RequestEdge",
+          data: { recipient },
+          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+        }),
       );
 
       await sendPersonalMessage({ credentials, recipient, prompt: connectionState.fromNode.data.text });
@@ -369,11 +428,12 @@ function Map () {
       >
         <ReactFlow
           style={{ backgroundColor: "#F7F9FB" }}
-          nodeTypes={nodeTypes}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onConnect={onConnect}
           onConnectEnd={onConnectEnd}
           fitView
