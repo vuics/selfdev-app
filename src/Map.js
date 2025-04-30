@@ -36,12 +36,12 @@ import { generateUUID } from './helper'
 
 import { Handle, Position } from '@xyflow/react';
 
-function PromptNode({ data, isConnectable }) {
+function NoteNode({ data, isConnectable }) {
   const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
 
   return (
     <Card style={{ width: '15em' }}>
-      <Card.Content header='Prompt' />
+      <Card.Content header='Note' />
       <Card.Content>
         <TextareaAutosize
           defaultValue="Just a single line..."
@@ -65,14 +65,14 @@ function PromptNode({ data, isConnectable }) {
 }
 
 const nodeTypes = {
-  promptNode: PromptNode,
+  noteNode: NoteNode,
 };
 
 const initialNodes = [
   {
     id: '0',
     // type: 'input',
-    type: 'promptNode',
+    type: 'noteNode',
     data: { label: 'Node' },
     position: { x: 0, y: 50 },
   },
