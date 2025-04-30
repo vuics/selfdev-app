@@ -20,6 +20,9 @@ import {
   addEdge,
   Panel,
   SelectionMode,
+  useReactFlow,
+  ReactFlowProvider,
+
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -29,15 +32,28 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { generateUUID } from './helper'
 
+// const initialNodes = [
+//   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
+//   { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+// ];
+// const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+// const panOnDrag = [1, 2];
+
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
+  {
+    id: '0',
+    type: 'input',
+    data: { label: 'Node' },
+    position: { x: 0, y: 50 },
+  },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
-const panOnDrag = [1, 2];
+
+let id = 1;
+const getId = () => `${id++}`;
+const nodeOrigin = [0.5, 0];
 
 
-export default function Map () {
+function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
@@ -45,14 +61,6 @@ export default function Map () {
   const [ room, setRoom ] = useState('matrix')
   const [ recipient, setRecipient ] = useState('morpheus')
   const xmppRef = useRef(null);
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  );
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -131,7 +139,7 @@ export default function Map () {
         if (query) {
           const items = query.getChildren('item');
           if (items && items.length) {
-            console.log('Roster received, contacts:', items.length);
+            console.log('Roster received, contacts:', items.length, ', items:', items);
           }
         }
       }
@@ -221,15 +229,50 @@ export default function Map () {
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
 
+  const reactFlowWrapper = useRef(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  // const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { screenToFlowPosition } = useReactFlow();
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [],
+  );
+  // const onConnect = useCallback(
+  //   (params) => setEdges((eds) => addEdge(params, eds)),
+  //   [setEdges],
+  // );
+
+  const onConnectEnd = useCallback(
+    (event, connectionState) => {
+      // when a connection is dropped on the pane it's not valid
+      if (!connectionState.isValid) {
+        // we need to remove the wrapper bounds, in order to get the correct position
+        const id = getId();
+        const { clientX, clientY } =
+          'changedTouches' in event ? event.changedTouches[0] : event;
+        const newNode = {
+          id,
+          position: screenToFlowPosition({
+            x: clientX,
+            y: clientY,
+          }),
+          data: { label: `Node ${id}` },
+          origin: [0.5, 0.0],
+        };
+ 
+        setNodes((nds) => nds.concat(newNode));
+        setEdges((eds) =>
+          eds.concat({ id, source: connectionState.fromNode.id, target: id }),
+        );
+      }
+    },
+    [screenToFlowPosition],
+  );
+
+
   return (
     <>
-      { credentials && (
-        <Helmet>
-          <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
-          <script src="/dist/converse.min.js" charset="utf-8"></script>
-        </Helmet>
-      )}
-
       <Container>
         <Menubar />
       </Container>
@@ -246,16 +289,25 @@ export default function Map () {
         />
       }
 
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div
+        className="wrapper" ref={reactFlowWrapper}
+        style={{ width: '100vw', height: '100vh' }}
+      >
         <ReactFlow
+          style={{ backgroundColor: "#F7F9FB" }}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onConnectEnd={onConnectEnd}
+          fitView
+          fitViewOptions={{ padding: 2 }}
+          nodeOrigin={nodeOrigin}
+
           panOnScroll={true}
           selectionOnDrag={true}
-          panOnDrag={panOnDrag}
+          // panOnDrag={panOnDrag}
           selectionMode={SelectionMode.Partial}
         >
           <Controls />
@@ -298,3 +350,11 @@ export default function Map () {
     </>
   )
 }
+
+export default function MapProvider () {
+  return (
+    <ReactFlowProvider>
+      <Map />
+    </ReactFlowProvider>
+  )
+};
