@@ -24,7 +24,8 @@ import {
   SelectionMode,
   useReactFlow,
   ReactFlowProvider,
-
+  Handle,
+  Position,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -34,22 +35,33 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { generateUUID } from './helper'
 
-import { Handle, Position } from '@xyflow/react';
 
-function NoteNode({ data, isConnectable }) {
-  const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+function NoteNode({ id, data, isConnectable }) {
+  const { getNodes, setNodes } = useReactFlow();
+  const [note, setNote] = useState(data.note || '');
+
+  const handleNoteChange = (e) => {
+    const newNote = e.target.value;
+    setNote(newNote);
+
+    // Update the note in the React Flow global state
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, note: newNote } } : node
+      )
+    );
+  };
 
   return (
     <Card style={{ width: '15em' }}>
-      <Card.Content header='Note' />
+      <Card.Content header={data.header} />
       <Card.Content>
         <TextareaAutosize
-          defaultValue="Just a single line..."
+          value={note}
+          onChange={handleNoteChange}
+          className="nodrag"
           minRows={1}
           maxRows={12}
-          className="nodrag"
-          value={prompt}
-          onChange={e => setPrompt(e.target.value)}
           style={{ width: '100%' }}
           useCacheForDOMMeasurements
         />
@@ -64,19 +76,59 @@ function NoteNode({ data, isConnectable }) {
   );
 }
 
+function ResponseNode({ data, isConnectable }) {
+  const [ response, setResponse ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+  const [ loading, setLoading ] = useState(true)
+  console.log('ResponseNode data:', data)
+
+  return (
+    <Card style={{ width: '15em' }}>
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="a"
+        isConnectable={isConnectable}
+      />
+      <Card.Content header={data.header} />
+      <Card.Content>
+        <Loader active={loading} inline='centered' />
+        {data.sourceNote}
+        {/*
+        {response}
+
+        <TextareaAutosize
+          defaultValue="Just a single line..."
+          minRows={1}
+          maxRows={12}
+          className="nodrag"
+          value={response}
+          onChange={e => setResponse(e.target.value)}
+          style={{ width: '100%' }}
+          useCacheForDOMMeasurements
+        />
+        */}
+      </Card.Content>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="a"
+        isConnectable={isConnectable}
+      />
+    </Card>
+  );
+}
+
 const nodeTypes = {
-  noteNode: NoteNode,
+  NoteNode: NoteNode,
+  ResponseNode: ResponseNode,
 };
 
-const initialNodes = [
-  {
-    id: '0',
-    // type: 'input',
-    type: 'noteNode',
-    data: { label: 'Node' },
-    position: { x: 0, y: 50 },
-  },
-];
+const initialNodes = [ {
+  id: '0',
+  type: 'NoteNode',
+  data: { header: 'Node 0', note: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
+  position: { x: 0, y: 50 },
+} ];
 
 let id = 1;
 const getId = () => `${id++}`;
@@ -274,20 +326,19 @@ function Map () {
   // );
 
   const onConnectEnd = useCallback((event, connectionState) => {
+    console.log('onConnectEnd connectionState:', connectionState)
     // when a connection is dropped on the pane it's not valid
     if (!connectionState.isValid) {
       // we need to remove the wrapper bounds, in order to get the correct position
       const id = getId();
-      const { clientX, clientY } =
-        'changedTouches' in event ? event.changedTouches[0] : event;
+      const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
       const newNode = {
         id,
         position: screenToFlowPosition({ x: clientX, y: clientY, }),
-        data: { label: `Node ${id}` },
+        data: { header: `Response ${id}`, sourceNote: connectionState.fromNode.data.note },
         origin: [0.5, 0.0],
-        type: "nodeStatusIndicatorDemo",
+        type: "ResponseNode",
       };
-
       setNodes((nds) => nds.concat(newNode));
       setEdges((eds) =>
         eds.concat({ id, source: connectionState.fromNode.id, target: id }),
