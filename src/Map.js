@@ -22,6 +22,9 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  Panel,
+  SelectionMode,
+  Handle, Position, NodeToolbar,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -31,6 +34,7 @@ const initialNodes = [
   { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const panOnDrag = [1, 2];
 
 
 export default function Map () {
@@ -73,23 +77,109 @@ export default function Map () {
         const { converse } = event.detail;
         console.log('converse:', converse)
         try {
-          converse.plugins.add('synthetic-ui-plugin', {
-            initialize: function () {
-              this._converse.api.listen.on('callButtonClicked', function(data) {
-                console.log('callButtonClicked data:', data)
+          // converse.plugins.add('synthetic-ui-plugin', {
+          //   initialize: function () {
+          //     this._converse.api.listen.on('callButtonClicked', function(data) {
+          //       console.log('callButtonClicked data:', data)
+          //     });
+
+          //     this._converse.api.listen.on('message', function (data) {
+          //       console.log('converse api message> data:', data)
+          //       if (data && data.stanza) {
+          //         console.log('data.attrs:', data.attrs)
+          //         const { body } = data.attrs
+          //         if (!body) {
+          //           return
+          //         }
+          //       }
+          //     });
+          //   },
+          // });
+
+          converse.plugins.add("messaging-plugin", {
+            initialize() {
+              const { Strophe, $msg } = converse.env;
+
+              // const messageText = 'Hello World! Whare are you from? Give a short one phrase answer.';
+              // const messageText = 'How do you use phone line? Give a short one phrase answer.';
+              // const messageText = 'In what relationship are you with architect? Give a short one phrase answer.';
+              const messageText = 'In what relationship are you with the oracle? Give a short one phrase answer.';
+
+              const sendToRecipient = true
+              const recipientJID = 'morpheus@selfdev-prosody.dev.local';
+
+              const sendToRoom = true
+              const roomJID = 'matrix@conference.selfdev-prosody.dev.local';
+              const recipientNick = 'morpheus';
+              const recipientMention = `@${recipientNick}`
+              const groupMessageText = `${recipientMention} ${messageText}`
+              console.log('recipientMention:', recipientMention, ', length:', recipientMention.length)
+
+              this._converse.once('connected', () => {
+                if (sendToRecipient) {
+                  this._converse.api.send(
+                    $msg({
+                      to: recipientJID,
+                      type: 'chat'
+                    }).c('body').t(messageText)
+                  );
+                }
+
+                if (sendToRoom) {
+                  const stanza = $msg({
+                    to: roomJID,
+                    type: 'groupchat',
+                    // id: this._converse.connection.getUniqueId()
+                  })
+                  .c('body').t(groupMessageText).up()
+                  .c('reference', {
+                    xmlns: 'urn:xmpp:reference:0',
+                    type: 'mention',
+                    begin: 0,
+                    end: recipientMention.length,
+                    uri: `xmpp:${recipientJID}/${recipientNick}`
+                  });
+                  this._converse.api.send(stanza);
+                }
+
+                // this._converse.api.rooms.open(roomJID, {
+                //   nick: 'artem_nickname',   // e.g., 'artem'
+                //   auto_join: true
+                // }).then(room => {
+                //   room.sendMessage(messageText);
+                // });
+
+                // const chatbox = this._converse.api.chats.open(recipientJID, { auto_focus: true });
+                // chatbox.then(chat => {
+                //   chat.messages.create({
+                //     // msgid: this._converse.env.crypto.randomUUID?.() || Date.now().toString(),
+                //     msgid: 'msg-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000),
+                //     // message: messageText,
+                //     body: messageText,
+                //     direction: 'outgoing', // 'incoming' for received messages
+                //     time: new Date(),
+                //     type: 'chat'
+                //   });
+                //   chat.sendMessage(messageText);
+                // });
               });
 
-              this._converse.api.listen.on('message', function (data) {
+              this._converse.api.listen.on('message', (data) => {
                 console.log('converse api message> data:', data)
                 if (data && data.stanza) {
                   console.log('data.attrs:', data.attrs)
-                  const { body } = data.attrs
-                  if (!body) {
-                    return
+                  const { body, type, from } = data.attrs
+                  console.log('body:', body, ', type:', type, ', from:', from)
+                  if (body && type === 'chat' && from === recipientJID) {
+                    console.log(`Received response from ${from}: ${body}`);
+                    // You can add custom logic here, such as responding or triggering other actions
+                  }
+                  if (body && type === 'groupchat' && from.startsWith(roomJID)) {
+                    console.log(`Received message from room: ${from}, text: ${body}`);
                   }
                 }
               });
-            },
+            }
           });
 
           const converseOptions = {
@@ -161,8 +251,10 @@ export default function Map () {
             auto_xa: 24*3600, // 24h
 
             whitelisted_plugins: [
-              'synthetic-ui-plugin',
+              "messaging-plugin",
             ],
+
+            allow_non_roster_messaging: true,
           }
 
           // console.log('converseOptions:', converseOptions)
@@ -211,10 +303,15 @@ export default function Map () {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          panOnScroll={true}
+          selectionOnDrag={true}
+          panOnDrag={panOnDrag}
+          selectionMode={SelectionMode.Partial}
         >
           <Controls />
-          <MiniMap />
+          <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
+          <Panel position="top-right">top-right</Panel>
         </ReactFlow>
       </div>
 
