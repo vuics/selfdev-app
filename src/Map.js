@@ -7,8 +7,9 @@ import {
   Loader,
   Message,
   // Segment,
-  // Button,
-  // Icon,
+  Button,
+  Input,
+  Icon,
 } from 'semantic-ui-react'
 import {
   ReactFlow,
@@ -20,7 +21,7 @@ import {
   addEdge,
   Panel,
   SelectionMode,
-  Handle, Position, NodeToolbar,
+  // Handle, Position, NodeToolbar,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -37,228 +38,12 @@ const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 const panOnDrag = [1, 2];
 
 
-// Configuration
-const config = {
-  jid: 'art@selfdev-prosody.dev.local',
-  password: '123',
-  server: 'selfdev-prosody.dev.local',
-  conferenceServer: 'conference.selfdev-prosody.dev.local',
-  // botJid: 'assist@selfdev-prosody.dev.local', // For testing with yourself
-  // botNickname: 'assist',
-  // groupChatRoom: 'testroom',
-  botJid: 'morpheus@selfdev-prosody.dev.local', // For testing with yourself
-  botNickname: 'morpheus',
-  groupChatRoom: 'matrix',
-  // message: 'Tell me a new random joke. And print a random number at the end.',
-  message: 'Tell me a what city would you live in? And print a random number at the end. Give a short and concise one sentence answer.',
-  enablePersonalMessage: true, // Set to true to try personal messaging
-  enableGroupChat: true, // Set to true to send group chat messages
-};
-
-// Initialize XMPP client
-const xmpp = client({
-  // service: `xmpp://${config.server}:5222`,
-  // service: process.env.REACT_APP_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
-  service: conf.xmpp.websocketUrl,
-  domain: config.server,
-  username: config.jid.split('@')[0],
-  password: config.password,
-  tls: {
-    rejectUnauthorized: false
-  }
-});
-
-// Track state
-let nickname = null;
-let clientFullJid = null; // Store the full JID including resource
-
-// Handle online event
-xmpp.on('online', async (jid) => {
-  console.log(`Connected as ${jid.toString()}`);
-  nickname = config.jid.split('@')[0];
-  clientFullJid = jid.toString(); // Store the full JID
-
-  // Get roster (contact list)
-  await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
-    xml('query', { xmlns: 'jabber:iq:roster' })
-  ));
-  console.log('Requested roster');
-
-  // Send initial presence to let the server know we're online
-  xmpp.send(xml('presence'));
-  console.log('Sent initial presence');
-
-  // Optionally try personal message
-  if (config.enablePersonalMessage) {
-    // Wait a moment for roster and presence to be processed
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    await sendPersonalMessage();
-
-    // If we're only doing personal messaging, wait longer
-    if (!config.enableGroupChat) {
-      await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
-      xmpp.stop().catch(console.error);
-    } else {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-    }
-  }
-
-  // Join group chat and continue if enabled
-  if (config.enableGroupChat) {
-    await joinGroupChat();
-  }
-});
-
-// Handle incoming stanzas
-xmpp.on('stanza', (stanza) => {
-  // For debugging specific stanzas
-  // console.log('Got stanza:', stanza.toString());
-
-  // Handle roster responses
-  if (stanza.is('iq') && stanza.attrs.type === 'result') {
-    const query = stanza.getChild('query', 'jabber:iq:roster');
-    if (query) {
-      const items = query.getChildren('item');
-      if (items && items.length) {
-        console.log('Roster received, contacts:', items.length);
-      }
-    }
-  }
-
-  // Skip non-message stanzas
-  if (!stanza.is('message')) return;
-
-  const body = stanza.getChildText('body');
-  if (!body) return;
-
-  const from = stanza.attrs.from;
-  const type = stanza.attrs.type;
-
-  // Handle personal messages
-  if (type === 'chat' || type === 'normal' || !type) {
-    console.log(`Personal message response from ${from}: ${body}`);
-  }
-  // Handle group chat messages
-  else if (type === 'groupchat') {
-    // Skip our own messages
-    if (from.includes(`/${nickname}`)) return;
-
-    // Skip historical messages
-    const delay = stanza.getChild('delay');
-    if (delay) return;
-
-    console.log(`Group chat message from ${from}: ${body}`);
-  }
-});
-
-// Handle errors
-xmpp.on('error', (err) => {
-  console.error('XMPP error:', err);
-});
-
-// Handle disconnection
-xmpp.on('close', () => {
-  console.log('Connection closed');
-});
-
-// Send a personal message
-async function sendPersonalMessage() {
-  console.log(`Sending personal message to ${config.botJid}...`);
-
-  // Send with more complete attributes
-  const message = xml(
-    'message',
-    {
-      type: 'chat',
-      to: config.botJid,
-      from: clientFullJid,
-      id: generateUUID()
-    },
-    xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
-    xml('body', {}, config.message)
-  );
-
-  await xmpp.send(message);
-  console.log('Personal message sent:', config.message);
-}
-
-// Join group chat and send a message with mention
-async function joinGroupChat() {
-  const roomJid = `${config.groupChatRoom}@${config.conferenceServer}`;
-
-  console.log(`Joining group chat ${roomJid} as ${nickname}...`);
-
-  // Join room with no history
-  const presence = xml(
-    'presence',
-    { to: `${roomJid}/${nickname}` },
-    xml('x', { xmlns: 'http://jabber.org/protocol/muc' },
-      xml('history', { maxstanzas: '0', maxchars: '0' })
-    )
-  );
-
-  await xmpp.send(presence);
-  console.log('Joined group chat');
-
-  // Wait to ensure we're joined properly
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  // Send message with mention
-  await sendGroupChatMessage(roomJid);
-
-  // Wait for responses then disconnect
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  xmpp.stop().catch(console.error);
-}
-
-// Send a message with a mention to the group chat
-async function sendGroupChatMessage(roomJid) {
-  console.log(`Sending message with proper mention format...`);
-
-  const messageText = `@${config.botNickname} ${config.message}`;
-
-  const message = xml(
-    'message',
-    {
-      type: 'groupchat',
-      to: roomJid,
-      id: generateUUID(),
-      'xml:lang': 'en'
-    },
-    xml('body', {}, messageText),
-    xml('reference', {
-      xmlns: 'urn:xmpp:reference:0',
-      type: 'mention',
-      begin: '0',
-      end: config.botNickname.length + 1,
-      uri: `xmpp:${config.botNickname}@${config.conferenceServer}/${config.botNickname}`
-    })
-  );
-
-  await xmpp.send(message);
-  console.log('Message with mention sent:', messageText);
-}
-
-// Generate a random UUID
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-// Start the client
-xmpp.start().catch(console.error);
-
-
-
-
-
 export default function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
-  const [ converseRoot, setConverseRoot ] = useState(null)
+  // const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
+  // const [ prompt, setPrompt ] = useState(' ')
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -276,8 +61,9 @@ export default function Map () {
           withCredentials: true,
           crossOrigin: { mode: 'cors' },
         })
-        const { user, password } = response.data
-        setCredentials({ user, password })
+        console.log('fetchCredentials response:', response)
+        const { user, password, jid } = response.data
+        setCredentials({ user, password, jid })
       } catch (err) {
         console.error('xmpp/credentials error:', err)
         setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
@@ -286,6 +72,237 @@ export default function Map () {
     }
     fetchCredentials()
   }, [])
+
+  useEffect(() => {
+    if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
+      return console.error("No credentials error")
+    }
+
+    // Configuration
+    const xmppConfig = {
+      enable: true,
+
+      // jid: `art@${conf.xmpp.host}`,
+      // password: '123',  // FIXME
+
+      // jid: `${credentials.user}@${conf.xmpp.host}`,
+      jid: credentials.jid,
+      password: credentials.password,
+
+      server: conf.xmpp.host,
+      conferenceServer: conf.xmpp.mucHost,
+      botJid: `morpheus@${conf.xmpp.host}`,
+      botNickname: 'morpheus',
+      groupChatRoom: 'matrix',
+      // message: 'Tell me a new random joke. And print a random number at the end.',
+      message: 'Tell me a what city would you live in? And print a random number at the end. Give a short and concise one sentence answer.',
+      enablePersonalMessage: true, // Set to true to try personal messaging
+      enableGroupChat: true, // Set to true to send group chat messages
+    };
+
+    // Initialize XMPP client
+    const xmpp = client({
+      service: conf.xmpp.websocketUrl,
+      domain: xmppConfig.server,
+      username: xmppConfig.jid.split('@')[0],
+      password: xmppConfig.password,
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+
+    // Track state
+    let nickname = null;
+    let clientFullJid = null; // Store the full JID including resource
+
+    // Handle online event
+    xmpp.on('online', async (jid) => {
+      console.log(`Connected as ${jid.toString()}`);
+      nickname = xmppConfig.jid.split('@')[0];
+      clientFullJid = jid.toString(); // Store the full JID
+
+      // Get roster (contact list)
+      await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
+        xml('query', { xmlns: 'jabber:iq:roster' })
+      ));
+      console.log('Requested roster');
+
+      // Send initial presence to let the server know we're online
+      xmpp.send(xml('presence'));
+      console.log('Sent initial presence');
+
+      setLoading(false)
+
+      // Optionally try personal message
+      if (xmppConfig.enablePersonalMessage) {
+        // Wait a moment for roster and presence to be processed
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await sendPersonalMessage({ text: xmppConfig.message });
+
+        // If we're only doing personal messaging, wait longer
+        if (!xmppConfig.enableGroupChat) {
+          await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
+          xmpp.stop().catch(console.error);
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+      }
+
+      // Join group chat and continue if enabled
+      if (xmppConfig.enableGroupChat) {
+        await joinGroupChat();
+      }
+    });
+
+    // Handle errors
+    xmpp.on('error', (err) => {
+      setLoading(false)
+      console.error('XMPP error:', err);
+      setResponseError(`XMPP error: ${err}`)
+    });
+
+    // Handle disconnection
+    xmpp.on('close', () => {
+      setLoading(false)
+      console.log('Connection closed');
+    });
+
+
+    // Handle incoming stanzas
+    xmpp.on('stanza', (stanza) => {
+      // For debugging specific stanzas
+      // console.log('Got stanza:', stanza.toString());
+
+      // Handle roster responses
+      if (stanza.is('iq') && stanza.attrs.type === 'result') {
+        const query = stanza.getChild('query', 'jabber:iq:roster');
+        if (query) {
+          const items = query.getChildren('item');
+          if (items && items.length) {
+            console.log('Roster received, contacts:', items.length);
+          }
+        }
+      }
+
+      // Skip non-message stanzas
+      if (!stanza.is('message')) return;
+
+      const body = stanza.getChildText('body');
+      if (!body) return;
+
+      const from = stanza.attrs.from;
+      const type = stanza.attrs.type;
+
+      // Handle personal messages
+      if (type === 'chat' || type === 'normal' || !type) {
+        console.log(`Personal message response from ${from}: ${body}`);
+      }
+      // Handle group chat messages
+      else if (type === 'groupchat') {
+        // Skip our own messages
+        if (from.includes(`/${nickname}`)) return;
+
+        // Skip historical messages
+        const delay = stanza.getChild('delay');
+        if (delay) return;
+
+        console.log(`Group chat message from ${from}: ${body}`);
+      }
+    });
+
+    // Send a personal message
+    async function sendPersonalMessage({ text }) {
+      console.log(`Sending personal message to ${xmppConfig.botJid}...`);
+
+      // Send with more complete attributes
+      const message = xml(
+        'message',
+        {
+          type: 'chat',
+          to: xmppConfig.botJid,
+          from: clientFullJid,
+          id: generateUUID()
+        },
+        xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
+        xml('body', {}, text)
+      );
+
+      await xmpp.send(message);
+      console.log('Personal message text sent:', text);
+    }
+
+    // Join group chat and send a message with mention
+    async function joinGroupChat() {
+      const roomJid = `${xmppConfig.groupChatRoom}@${xmppConfig.conferenceServer}`;
+
+      console.log(`Joining group chat ${roomJid} as ${nickname}...`);
+
+      // Join room with no history
+      const presence = xml(
+        'presence',
+        { to: `${roomJid}/${nickname}` },
+        xml('x', { xmlns: 'http://jabber.org/protocol/muc' },
+          xml('history', { maxstanzas: '0', maxchars: '0' })
+        )
+      );
+
+      await xmpp.send(presence);
+      console.log('Joined group chat');
+
+      // Wait to ensure we're joined properly
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Send message with mention
+      await sendGroupChatMessage({ roomJid, text: xmppConfig.message });
+
+      // Wait for responses then disconnect
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
+      // xmpp.stop().catch(console.error);
+    }
+
+    // Send a message with a mention to the group chat
+    async function sendGroupChatMessage({ roomJid, text }) {
+      console.log(`Sending message with proper mention format...`);
+
+      const messageText = `@${xmppConfig.botNickname} ${text}`;
+
+      const message = xml(
+        'message',
+        {
+          type: 'groupchat',
+          to: roomJid,
+          id: generateUUID(),
+          'xml:lang': 'en'
+        },
+        xml('body', {}, messageText),
+        xml('reference', {
+          xmlns: 'urn:xmpp:reference:0',
+          type: 'mention',
+          begin: '0',
+          end: xmppConfig.botNickname.length + 1,
+          uri: `xmpp:${xmppConfig.botNickname}@${xmppConfig.conferenceServer}/${xmppConfig.botNickname}`
+        })
+      );
+
+      await xmpp.send(message);
+      console.log('Message with mention sent:', messageText);
+    }
+
+    // Generate a random UUID
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    if (xmppConfig.enable) {
+      // Start the client
+      xmpp.start().catch(console.error);
+    }
+
+  }, [credentials])
 
   // useEffect(() => {
   //   if (converseRoot && credentials) {
@@ -528,15 +545,29 @@ export default function Map () {
           <Controls />
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
-          <Panel position="top-right">top-right</Panel>
+          <Panel position="top-right">
+            <Button basic size='mini'>Chat</Button>
+            <Button basic size='mini'>Groupchat</Button>
+            <br />
+            <Input iconPosition='left' size='mini' placeholder='jid | user | mention'>
+              <Icon name='at' />
+              <input />
+            </Input>
+            <br />
+            <Input placeholder='room...' size='mini' />
+            <br />
+            <Input placeholder='prompt...' size='mini' />
+          </Panel>
         </ReactFlow>
       </div>
 
+      {/*
       <div>
         { credentials && (
           <div ref={ (ref) => setConverseRoot(ref) } />
         )}
       </div>
+      */}
     </>
   )
 }
