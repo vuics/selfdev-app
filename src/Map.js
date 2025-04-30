@@ -30,6 +30,8 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   MarkerType,
+  NodeResizer,
+  NodeResizeControl,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -40,7 +42,7 @@ import conf from './conf'
 import { generateUUID } from './helper'
 
 
-function NoteNode({ id, data, isConnectable }) {
+function NoteNode({ id, data, isConnectable, selected }) {
   const { setNodes } = useReactFlow();
   const [text, setText] = useState(data.text || '');
 
@@ -57,7 +59,7 @@ function NoteNode({ id, data, isConnectable }) {
   };
 
   return (
-    <Card style={{ width: '15em' }}>
+    <Card style={{ width: '100%' }}>
       <Card.Content header={data.header} />
       <Card.Content>
         <TextareaAutosize
@@ -66,7 +68,7 @@ function NoteNode({ id, data, isConnectable }) {
           className="nodrag"
           minRows={1}
           maxRows={12}
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: '100%' }}
           useCacheForDOMMeasurements
         />
       </Card.Content>
@@ -76,17 +78,21 @@ function NoteNode({ id, data, isConnectable }) {
         id="a"
         isConnectable={isConnectable}
       />
+      <NodeResizer
+        color="#ff0071"
+        isVisible={selected}
+        minWidth={100}
+        minHeight={30}
+      />
     </Card>
   );
 }
 
-function ResponseNode({ data, isConnectable }) {
-  // const [ response, setResponse ] = useState(data.response || '')
-  // const [ loading, setLoading ] = useState()
-  console.log('ResponseNode data:', data)
+const ResponseNode = memo(({ data, isConnectable, selected }) => {
+  // console.log('ResponseNode data:', data)
 
   return (
-    <Card style={{ width: '15em' }}>
+    <Card style={{ width: '100%' }}>
       <Handle
         type="target"
         position={Position.Top}
@@ -104,9 +110,15 @@ function ResponseNode({ data, isConnectable }) {
         id="a"
         isConnectable={isConnectable}
       />
+      <NodeResizer
+        color="#ff0071"
+        isVisible={selected}
+        minWidth={100}
+        minHeight={30}
+      />
     </Card>
   );
-}
+})
 
 function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }) {
   const { setEdges } = useReactFlow();
