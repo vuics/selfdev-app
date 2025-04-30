@@ -6,7 +6,6 @@ import {
   Container,
   Loader,
   Message,
-  // Segment,
   Button,
   Input,
   Icon,
@@ -21,7 +20,6 @@ import {
   addEdge,
   Panel,
   SelectionMode,
-  // Handle, Position, NodeToolbar,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -42,7 +40,6 @@ const panOnDrag = [1, 2];
 export default function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
-  // const [ converseRoot, setConverseRoot ] = useState(null)
   const [ credentials, setCredentials ] = useState(null)
   const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   const [ room, setRoom ] = useState('matrix')
@@ -148,12 +145,9 @@ export default function Map () {
       const from = stanza.attrs.from;
       const type = stanza.attrs.type;
 
-      // Handle personal messages
       if (type === 'chat' || type === 'normal' || !type) {
         console.log(`Personal message response from ${from}: ${body}`);
-      }
-      // Handle group chat messages
-      else if (type === 'groupchat') {
+      } else if (type === 'groupchat') {
         // Skip our own messages
         if (from.includes(`/${credentials.user}`)) return;
 
@@ -187,6 +181,9 @@ export default function Map () {
   }
 
   async function joinRoom({ roomJid }) {
+    //
+    // TODO: remember joined rooms and do not join if joined
+    //
     console.log(`Joining group chat ${roomJid} as ${credentials.user}...`);
     const presence = xml(
       'presence',
@@ -224,207 +221,6 @@ export default function Map () {
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
 
-  // useEffect(() => {
-  //   if (converseRoot && credentials) {
-  //     console.log('converseRoot:', converseRoot)
-  //     window.addEventListener("converse-loaded", async (event) => {
-  //       const { converse } = event.detail;
-  //       console.log('converse:', converse)
-  //       try {
-  //         // converse.plugins.add('synthetic-ui-plugin', {
-  //         //   initialize: function () {
-  //         //     this._converse.api.listen.on('callButtonClicked', function(data) {
-  //         //       console.log('callButtonClicked data:', data)
-  //         //     });
-
-  //         //     this._converse.api.listen.on('message', function (data) {
-  //         //       console.log('converse api message> data:', data)
-  //         //       if (data && data.stanza) {
-  //         //         console.log('data.attrs:', data.attrs)
-  //         //         const { body } = data.attrs
-  //         //         if (!body) {
-  //         //           return
-  //         //         }
-  //         //       }
-  //         //     });
-  //         //   },
-  //         // });
-
-  //         converse.plugins.add("messaging-plugin", {
-  //           initialize() {
-  //             const { Strophe, $msg } = converse.env;
-
-  //             // const messageText = 'Hello World! Whare are you from? Give a short one phrase answer.';
-  //             // const messageText = 'How do you use phone line? Give a short one phrase answer.';
-  //             // const messageText = 'In what relationship are you with architect? Give a short one phrase answer.';
-  //             const messageText = 'In what relationship are you with the oracle? Give a short one phrase answer.';
-
-  //             const sendToRecipient = true
-  //             const recipientJID = 'morpheus@selfdev-prosody.dev.local';
-
-  //             const sendToRoom = true
-  //             const roomJID = 'matrix@conference.selfdev-prosody.dev.local';
-  //             const recipientNick = 'morpheus';
-  //             const recipientMention = `@${recipientNick}`
-  //             const groupMessageText = `${recipientMention} ${messageText}`
-  //             console.log('recipientMention:', recipientMention, ', length:', recipientMention.length)
-
-  //             this._converse.once('connected', () => {
-  //               if (sendToRecipient) {
-  //                 this._converse.api.send(
-  //                   $msg({
-  //                     to: recipientJID,
-  //                     type: 'chat'
-  //                   }).c('body').t(messageText)
-  //                 );
-  //               }
-
-  //               if (sendToRoom) {
-  //                 const stanza = $msg({
-  //                   to: roomJID,
-  //                   type: 'groupchat',
-  //                   // id: this._converse.connection.getUniqueId()
-  //                 })
-  //                 .c('body').t(groupMessageText).up()
-  //                 .c('reference', {
-  //                   xmlns: 'urn:xmpp:reference:0',
-  //                   type: 'mention',
-  //                   begin: 0,
-  //                   end: recipientMention.length,
-  //                   uri: `xmpp:${recipientJID}/${recipientNick}`
-  //                 });
-  //                 this._converse.api.send(stanza);
-  //               }
-
-  //               // this._converse.api.rooms.open(roomJID, {
-  //               //   nick: 'artem_nickname',   // e.g., 'artem'
-  //               //   auto_join: true
-  //               // }).then(room => {
-  //               //   room.sendMessage(messageText);
-  //               // });
-
-  //               // const chatbox = this._converse.api.chats.open(recipientJID, { auto_focus: true });
-  //               // chatbox.then(chat => {
-  //               //   chat.messages.create({
-  //               //     // msgid: this._converse.env.crypto.randomUUID?.() || Date.now().toString(),
-  //               //     msgid: 'msg-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000),
-  //               //     // message: messageText,
-  //               //     body: messageText,
-  //               //     direction: 'outgoing', // 'incoming' for received messages
-  //               //     time: new Date(),
-  //               //     type: 'chat'
-  //               //   });
-  //               //   chat.sendMessage(messageText);
-  //               // });
-  //             });
-
-  //             this._converse.api.listen.on('message', (data) => {
-  //               console.log('converse api message> data:', data)
-  //               if (data && data.stanza) {
-  //                 console.log('data.attrs:', data.attrs)
-  //                 const { body, type, from } = data.attrs
-  //                 console.log('body:', body, ', type:', type, ', from:', from)
-  //                 if (body && type === 'chat' && from === recipientJID) {
-  //                   console.log(`Received response from ${from}: ${body}`);
-  //                   // You can add custom logic here, such as responding or triggering other actions
-  //                 }
-  //                 if (body && type === 'groupchat' && from.startsWith(roomJID)) {
-  //                   console.log(`Received message from room: ${from}, text: ${body}`);
-  //                 }
-  //               }
-  //             });
-  //           }
-  //         });
-
-  //         const converseOptions = {
-  //           root: converseRoot,
-
-  //           loglevel: 'info',
-  //           // loglevel: 'debug',
-
-  //           bosh_service_url: conf.xmpp.boshServiceUrl,
-  //           discover_connection_methods: conf.xmpp.discoverConnectionMethods,
-  //           websocket_url: conf.xmpp.websocketUrl,
-  //           auto_reconnect: true,
-  //           stanza_timeout: 300000, // 5m
-  //           keepalive: true,
-
-  //           authentication: 'login',
-  //           // reuse_scram_keys: true, // what if credentials updated on server?
-  //           jid: `${credentials.user}@${conf.xmpp.host}`,
-  //           password: credentials.password,
-  //           auto_login: true,
-  //           allow_logout: false,
-  //           clear_cache_on_logout: true,
-
-  //           view_mode: 'overlayed',
-
-  //           i18n: 'en',
-  //           show_controlbox_by_default: true,
-  //           show_client_info: false,
-  //           sticky_controlbox: false, // control box will not be closeable
-  //           allow_registration: false,
-  //           allow_url_history_change: false,
-  //           allow_adhoc_commands: false,
-  //           allow_bookmarks: true,
-  //           allow_non_roster_messaging: true,
-  //           theme: 'concord',
-  //           dark_theme: 'concord', // drakula',
-  //           play_sounds: false,
-  //           allow_message_corrections: false,
-  //           allow_message_retraction: 'own',
-  //           hide_offline_users: false,
-  //           clear_messages_on_reconnection: false,
-  //           visible_toolbar_buttons: {
-  //             // call: true,  // TODO: enable and attach to Jitsi Meet
-  //             spoiler: true,
-  //             emoji: true,
-  //             toggle_occupants: true
-  //           },
-
-  //           auto_join_on_invite: true,
-  //           auto_subscribe: true,
-  //           domain_placeholder: conf.xmpp.host,
-  //           default_domain: conf.xmpp.host,
-  //           // locked_domain: conf.xmpp.host,
-  //           muc_domain: conf.xmpp.mucHost,
-  //           // locked_muc_domain: 'hidden',
-  //           muc_nickname_from_jid: true,
-  //           auto_join_rooms: [
-  //             // { jid: `all@${conf.xmpp.mucHost}`, minimized: false },
-  //           ],
-  //           auto_list_rooms: true,
-  //           auto_register_muc_nickname: 'unregister',
-  //           // muc_respect_autojoin: false,
-  //           // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
-
-  //           // Status
-  //           idle_presence_timeout: 300, // 5m
-  //           csi_waiting_time: 600, // 10m
-  //           auto_away: 3600,  // 1h
-  //           auto_xa: 24*3600, // 24h
-
-  //           whitelisted_plugins: [
-  //             "messaging-plugin",
-  //           ],
-
-  //           allow_non_roster_messaging: true,
-  //         }
-
-  //         // console.log('converseOptions:', converseOptions)
-  //         converse.initialize(converseOptions)
-  //       } catch (err) {
-  //         console.error('converse.initialize error:', err)
-  //         setResponseError('Error initializing converse.')
-  //       } finally {
-  //         setLoading(false)
-  //       }
-  //     });
-  //   }
-  // }, [converseRoot, credentials])
-
-
-  // console.log('panels:', panels)
   return (
     <>
       { credentials && (
@@ -499,14 +295,6 @@ export default function Map () {
           </Panel>
         </ReactFlow>
       </div>
-
-      {/*
-      <div>
-        { credentials && (
-          <div ref={ (ref) => setConverseRoot(ref) } />
-        )}
-      </div>
-      */}
     </>
   )
 }
