@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-// import { has } from 'lodash'
+import { has } from 'lodash'
 import { Helmet } from "react-helmet"
 import axios from 'axios'
 import {
@@ -37,7 +37,7 @@ import { generateUUID } from './helper'
 
 
 function NoteNode({ id, data, isConnectable }) {
-  const { getNodes, setNodes } = useReactFlow();
+  const { setNodes } = useReactFlow();
   const [note, setNote] = useState(data.note || '');
 
   const handleNoteChange = (e) => {
@@ -77,8 +77,8 @@ function NoteNode({ id, data, isConnectable }) {
 }
 
 function ResponseNode({ data, isConnectable }) {
-  const [ response, setResponse ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
-  const [ loading, setLoading ] = useState(true)
+  // const [ response, setResponse ] = useState(data.response || '')
+  // const [ loading, setLoading ] = useState()
   console.log('ResponseNode data:', data)
 
   return (
@@ -91,8 +91,8 @@ function ResponseNode({ data, isConnectable }) {
       />
       <Card.Content header={data.header} />
       <Card.Content>
-        <Loader active={loading} inline='centered' />
-        {data.sourceNote}
+        <Loader active={!has(data, 'response')} inline='centered' />
+        {data.response}
         {/*
         {response}
 
@@ -126,7 +126,7 @@ const nodeTypes = {
 const initialNodes = [ {
   id: '0',
   type: 'NoteNode',
-  data: { header: 'Node 0', note: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
+  data: { header: 'Note 0', note: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
   position: { x: 0, y: 50 },
 } ];
 
@@ -237,6 +237,19 @@ function Map () {
 
       if (type === 'chat' || type === 'normal' || !type) {
         console.log(`Personal message response from ${from}: ${body}`);
+        setNodes(nodes => {
+          const updated = [...nodes];
+          for (const [i, node] of updated.entries()) {
+            console.log('setNodes i:', i, ', node:', node)
+            if (node.type === 'ResponseNode' && !node.data?.response) {
+              updated[i] = { ...node, data: { ...node.data, response: body } };
+              console.log('updated[i]:', updated[i])
+              break;
+            }
+          }
+          return updated;
+        });
+
       } else if (type === 'groupchat') {
         // Skip our own messages
         if (from.includes(`/${credentials.user}`)) return;
@@ -252,8 +265,9 @@ function Map () {
     xmpp.start().catch(console.error);
   }, [credentials])
 
-  async function sendPersonalMessage({ recipient, prompt }) {
-    if (!recipient || !prompt) {
+  const sendPersonalMessage = async ({ credentials, recipient, prompt }) => {
+    console.log('sendPersonalMessage credentials:', credentials, ', recipient:', recipient, ', prompt:', prompt)
+    if (!recipient || !prompt || !credentials) {
       return
     }
     const to = recipient.includes("@") ? recipient : `${recipient}@${conf.xmpp.host}`
@@ -270,7 +284,7 @@ function Map () {
     console.log('Personal message sent, prompt:', prompt, ', to:', to);
   }
 
-  async function joinRoom({ roomJid }) {
+  const joinRoom = async ({ roomJid }) => {
     //
     // TODO: remember joined rooms and do not join if joined
     //
@@ -287,7 +301,7 @@ function Map () {
     // await new Promise(resolve => setTimeout(resolve, 2000));
   }
 
-  async function sendRoomMessage({ room, recipient, prompt }) {
+  const sendRoomMessage = async ({ room, recipient, prompt }) => {
     const roomJid = room.includes("@") ? room: `${room}@${conf.xmpp.mucHost}`
     await joinRoom({ roomJid })
     const nickname = recipient.split('@')[0];
@@ -304,6 +318,7 @@ function Map () {
         type: 'mention',
         begin: '0',
         end: nickname.length + 1,
+        // FIXME should it be? try! uri: `xmpp:${roomJid}/${nickname}`
         uri: `xmpp:${nickname}@${conf.xmpp.mucHost}/${nickname}`
       })
     );
@@ -325,7 +340,7 @@ function Map () {
   //   [setEdges],
   // );
 
-  const onConnectEnd = useCallback((event, connectionState) => {
+  const onConnectEnd = useCallback(async (event, connectionState) => {
     console.log('onConnectEnd connectionState:', connectionState)
     // when a connection is dropped on the pane it's not valid
     if (!connectionState.isValid) {
@@ -343,8 +358,10 @@ function Map () {
       setEdges((eds) =>
         eds.concat({ id, source: connectionState.fromNode.id, target: id }),
       );
+
+      await sendPersonalMessage({ credentials, recipient, prompt: connectionState.fromNode.data.note });
     }
-  }, [screenToFlowPosition],);
+  }, [screenToFlowPosition, credentials, recipient]);
 
 
   return (
