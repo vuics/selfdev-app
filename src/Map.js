@@ -10,6 +10,8 @@ import {
   Input,
   Icon,
   Card,
+  Grid,
+  Dropdown,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -44,33 +46,64 @@ import { generateUUID } from './helper'
 
 function NoteNode({ id, data, isConnectable, selected }) {
   const { setNodes } = useReactFlow();
-  const [text, setText] = useState(data.text || '');
-
-  const handleTextChange = (e) => {
-    const newText = e.target.value;
-    setText(newText);
-
-    // Update the text in the React Flow global state
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, text: newText } } : node
-      )
-    );
-  };
 
   return (
-    <Card style={{ width: '100%' }}>
+    <Card style={{ width: '100%', maxWidth: '400px' }}>
+      {/*
       <Card.Content header={data.header} />
+      */}
       <Card.Content>
-        <TextareaAutosize
-          value={text}
-          onChange={handleTextChange}
-          className="nodrag"
-          minRows={1}
-          maxRows={12}
-          style={{ width: '100%', height: '100%' }}
-          useCacheForDOMMeasurements
-        />
+        <Card.Header>
+          <Dropdown item simple position='right'
+            icon={
+             <Icon name='cog' color='grey' />
+            }>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: { ...node.data, editable: !data.editable } } : node
+                    )
+                  );
+                }}
+              >
+                <Icon name='edit' />
+                Edit
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  alert('Delete me!')
+                }}
+              >
+                <Icon name='delete' />
+                Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          {data.header}
+        </Card.Header>
+      </Card.Content>
+      <Card.Content>
+        { data.editable && (
+          <TextareaAutosize
+            value={data.text}
+            onChange={(e) => {
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.id === id ? { ...node, data: { ...node.data, text: e.target.value } } : node
+                )
+              );
+            }}
+            className="nodrag"
+            minRows={1}
+            maxRows={12}
+            style={{ width: '100%', height: '100%' }}
+            useCacheForDOMMeasurements
+          />
+        ) || (
+          <div>{data.text}</div>
+        )}
       </Card.Content>
       <Handle
         type="source"
@@ -92,7 +125,7 @@ const ResponseNode = memo(({ data, isConnectable, selected }) => {
   // console.log('ResponseNode data:', data)
 
   return (
-    <Card style={{ width: '100%' }}>
+    <Card style={{ width: '100%', maxWidth: '400px' }}>
       <Handle
         type="target"
         position={Position.Top}
@@ -176,7 +209,11 @@ const edgeTypes = {
 const initialNodes = [ {
   id: '0',
   type: 'NoteNode',
-  data: { header: 'Note 0', text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
+  data: {
+    header: 'Note 0',
+    text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.',
+    editable: true,
+  },
   position: { x: 0, y: 50 },
 } ];
 
@@ -399,7 +436,11 @@ function Map () {
         origin: [0.5, 0.0],
         type: "ResponseNode",
       };
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => {
+        return nds.map((node) =>
+          node.id === connectionState.fromNode.id ? { ...node, data: { ...node.data, editable: false } } : node
+        ).concat(newNode)
+      });
       setEdges((eds) =>
         eds.concat({
           id: `${connectionState.fromNode.id}->${id}`,
