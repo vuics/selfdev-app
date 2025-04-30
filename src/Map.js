@@ -10,10 +10,6 @@ import {
   // Button,
   // Icon,
 } from 'semantic-ui-react'
-
-import Menubar from './components/Menubar'
-import conf from './conf'
-
 import {
   ReactFlow,
   MiniMap,
@@ -26,8 +22,12 @@ import {
   SelectionMode,
   Handle, Position, NodeToolbar,
 } from '@xyflow/react';
-
 import '@xyflow/react/dist/style.css';
+
+import { client, xml } from '@xmpp/client'
+
+import Menubar from './components/Menubar'
+import conf from './conf'
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -35,6 +35,223 @@ const initialNodes = [
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 const panOnDrag = [1, 2];
+
+
+// Configuration
+const config = {
+  jid: 'art@selfdev-prosody.dev.local',
+  password: '123',
+  server: 'selfdev-prosody.dev.local',
+  conferenceServer: 'conference.selfdev-prosody.dev.local',
+  // botJid: 'assist@selfdev-prosody.dev.local', // For testing with yourself
+  // botNickname: 'assist',
+  // groupChatRoom: 'testroom',
+  botJid: 'morpheus@selfdev-prosody.dev.local', // For testing with yourself
+  botNickname: 'morpheus',
+  groupChatRoom: 'matrix',
+  // message: 'Tell me a new random joke. And print a random number at the end.',
+  message: 'Tell me a what city would you live in? And print a random number at the end. Give a short and concise one sentence answer.',
+  enablePersonalMessage: true, // Set to true to try personal messaging
+  enableGroupChat: true, // Set to true to send group chat messages
+};
+
+// Initialize XMPP client
+const xmpp = client({
+  // service: `xmpp://${config.server}:5222`,
+  // service: process.env.REACT_APP_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
+  service: conf.xmpp.websocketUrl,
+  domain: config.server,
+  username: config.jid.split('@')[0],
+  password: config.password,
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
+// Track state
+let nickname = null;
+let clientFullJid = null; // Store the full JID including resource
+
+// Handle online event
+xmpp.on('online', async (jid) => {
+  console.log(`Connected as ${jid.toString()}`);
+  nickname = config.jid.split('@')[0];
+  clientFullJid = jid.toString(); // Store the full JID
+
+  // Get roster (contact list)
+  await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
+    xml('query', { xmlns: 'jabber:iq:roster' })
+  ));
+  console.log('Requested roster');
+
+  // Send initial presence to let the server know we're online
+  xmpp.send(xml('presence'));
+  console.log('Sent initial presence');
+
+  // Optionally try personal message
+  if (config.enablePersonalMessage) {
+    // Wait a moment for roster and presence to be processed
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await sendPersonalMessage();
+
+    // If we're only doing personal messaging, wait longer
+    if (!config.enableGroupChat) {
+      await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
+      xmpp.stop().catch(console.error);
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+  }
+
+  // Join group chat and continue if enabled
+  if (config.enableGroupChat) {
+    await joinGroupChat();
+  }
+});
+
+// Handle incoming stanzas
+xmpp.on('stanza', (stanza) => {
+  // For debugging specific stanzas
+  // console.log('Got stanza:', stanza.toString());
+
+  // Handle roster responses
+  if (stanza.is('iq') && stanza.attrs.type === 'result') {
+    const query = stanza.getChild('query', 'jabber:iq:roster');
+    if (query) {
+      const items = query.getChildren('item');
+      if (items && items.length) {
+        console.log('Roster received, contacts:', items.length);
+      }
+    }
+  }
+
+  // Skip non-message stanzas
+  if (!stanza.is('message')) return;
+
+  const body = stanza.getChildText('body');
+  if (!body) return;
+
+  const from = stanza.attrs.from;
+  const type = stanza.attrs.type;
+
+  // Handle personal messages
+  if (type === 'chat' || type === 'normal' || !type) {
+    console.log(`Personal message response from ${from}: ${body}`);
+  }
+  // Handle group chat messages
+  else if (type === 'groupchat') {
+    // Skip our own messages
+    if (from.includes(`/${nickname}`)) return;
+
+    // Skip historical messages
+    const delay = stanza.getChild('delay');
+    if (delay) return;
+
+    console.log(`Group chat message from ${from}: ${body}`);
+  }
+});
+
+// Handle errors
+xmpp.on('error', (err) => {
+  console.error('XMPP error:', err);
+});
+
+// Handle disconnection
+xmpp.on('close', () => {
+  console.log('Connection closed');
+});
+
+// Send a personal message
+async function sendPersonalMessage() {
+  console.log(`Sending personal message to ${config.botJid}...`);
+
+  // Send with more complete attributes
+  const message = xml(
+    'message',
+    {
+      type: 'chat',
+      to: config.botJid,
+      from: clientFullJid,
+      id: generateUUID()
+    },
+    xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
+    xml('body', {}, config.message)
+  );
+
+  await xmpp.send(message);
+  console.log('Personal message sent:', config.message);
+}
+
+// Join group chat and send a message with mention
+async function joinGroupChat() {
+  const roomJid = `${config.groupChatRoom}@${config.conferenceServer}`;
+
+  console.log(`Joining group chat ${roomJid} as ${nickname}...`);
+
+  // Join room with no history
+  const presence = xml(
+    'presence',
+    { to: `${roomJid}/${nickname}` },
+    xml('x', { xmlns: 'http://jabber.org/protocol/muc' },
+      xml('history', { maxstanzas: '0', maxchars: '0' })
+    )
+  );
+
+  await xmpp.send(presence);
+  console.log('Joined group chat');
+
+  // Wait to ensure we're joined properly
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Send message with mention
+  await sendGroupChatMessage(roomJid);
+
+  // Wait for responses then disconnect
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  xmpp.stop().catch(console.error);
+}
+
+// Send a message with a mention to the group chat
+async function sendGroupChatMessage(roomJid) {
+  console.log(`Sending message with proper mention format...`);
+
+  const messageText = `@${config.botNickname} ${config.message}`;
+
+  const message = xml(
+    'message',
+    {
+      type: 'groupchat',
+      to: roomJid,
+      id: generateUUID(),
+      'xml:lang': 'en'
+    },
+    xml('body', {}, messageText),
+    xml('reference', {
+      xmlns: 'urn:xmpp:reference:0',
+      type: 'mention',
+      begin: '0',
+      end: config.botNickname.length + 1,
+      uri: `xmpp:${config.botNickname}@${config.conferenceServer}/${config.botNickname}`
+    })
+  );
+
+  await xmpp.send(message);
+  console.log('Message with mention sent:', messageText);
+}
+
+// Generate a random UUID
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Start the client
+xmpp.start().catch(console.error);
+
+
+
 
 
 export default function Map () {
@@ -70,204 +287,204 @@ export default function Map () {
     fetchCredentials()
   }, [])
 
-  useEffect(() => {
-    if (converseRoot && credentials) {
-      console.log('converseRoot:', converseRoot)
-      window.addEventListener("converse-loaded", async (event) => {
-        const { converse } = event.detail;
-        console.log('converse:', converse)
-        try {
-          // converse.plugins.add('synthetic-ui-plugin', {
-          //   initialize: function () {
-          //     this._converse.api.listen.on('callButtonClicked', function(data) {
-          //       console.log('callButtonClicked data:', data)
-          //     });
+  // useEffect(() => {
+  //   if (converseRoot && credentials) {
+  //     console.log('converseRoot:', converseRoot)
+  //     window.addEventListener("converse-loaded", async (event) => {
+  //       const { converse } = event.detail;
+  //       console.log('converse:', converse)
+  //       try {
+  //         // converse.plugins.add('synthetic-ui-plugin', {
+  //         //   initialize: function () {
+  //         //     this._converse.api.listen.on('callButtonClicked', function(data) {
+  //         //       console.log('callButtonClicked data:', data)
+  //         //     });
 
-          //     this._converse.api.listen.on('message', function (data) {
-          //       console.log('converse api message> data:', data)
-          //       if (data && data.stanza) {
-          //         console.log('data.attrs:', data.attrs)
-          //         const { body } = data.attrs
-          //         if (!body) {
-          //           return
-          //         }
-          //       }
-          //     });
-          //   },
-          // });
+  //         //     this._converse.api.listen.on('message', function (data) {
+  //         //       console.log('converse api message> data:', data)
+  //         //       if (data && data.stanza) {
+  //         //         console.log('data.attrs:', data.attrs)
+  //         //         const { body } = data.attrs
+  //         //         if (!body) {
+  //         //           return
+  //         //         }
+  //         //       }
+  //         //     });
+  //         //   },
+  //         // });
 
-          converse.plugins.add("messaging-plugin", {
-            initialize() {
-              const { Strophe, $msg } = converse.env;
+  //         converse.plugins.add("messaging-plugin", {
+  //           initialize() {
+  //             const { Strophe, $msg } = converse.env;
 
-              // const messageText = 'Hello World! Whare are you from? Give a short one phrase answer.';
-              // const messageText = 'How do you use phone line? Give a short one phrase answer.';
-              // const messageText = 'In what relationship are you with architect? Give a short one phrase answer.';
-              const messageText = 'In what relationship are you with the oracle? Give a short one phrase answer.';
+  //             // const messageText = 'Hello World! Whare are you from? Give a short one phrase answer.';
+  //             // const messageText = 'How do you use phone line? Give a short one phrase answer.';
+  //             // const messageText = 'In what relationship are you with architect? Give a short one phrase answer.';
+  //             const messageText = 'In what relationship are you with the oracle? Give a short one phrase answer.';
 
-              const sendToRecipient = true
-              const recipientJID = 'morpheus@selfdev-prosody.dev.local';
+  //             const sendToRecipient = true
+  //             const recipientJID = 'morpheus@selfdev-prosody.dev.local';
 
-              const sendToRoom = true
-              const roomJID = 'matrix@conference.selfdev-prosody.dev.local';
-              const recipientNick = 'morpheus';
-              const recipientMention = `@${recipientNick}`
-              const groupMessageText = `${recipientMention} ${messageText}`
-              console.log('recipientMention:', recipientMention, ', length:', recipientMention.length)
+  //             const sendToRoom = true
+  //             const roomJID = 'matrix@conference.selfdev-prosody.dev.local';
+  //             const recipientNick = 'morpheus';
+  //             const recipientMention = `@${recipientNick}`
+  //             const groupMessageText = `${recipientMention} ${messageText}`
+  //             console.log('recipientMention:', recipientMention, ', length:', recipientMention.length)
 
-              this._converse.once('connected', () => {
-                if (sendToRecipient) {
-                  this._converse.api.send(
-                    $msg({
-                      to: recipientJID,
-                      type: 'chat'
-                    }).c('body').t(messageText)
-                  );
-                }
+  //             this._converse.once('connected', () => {
+  //               if (sendToRecipient) {
+  //                 this._converse.api.send(
+  //                   $msg({
+  //                     to: recipientJID,
+  //                     type: 'chat'
+  //                   }).c('body').t(messageText)
+  //                 );
+  //               }
 
-                if (sendToRoom) {
-                  const stanza = $msg({
-                    to: roomJID,
-                    type: 'groupchat',
-                    // id: this._converse.connection.getUniqueId()
-                  })
-                  .c('body').t(groupMessageText).up()
-                  .c('reference', {
-                    xmlns: 'urn:xmpp:reference:0',
-                    type: 'mention',
-                    begin: 0,
-                    end: recipientMention.length,
-                    uri: `xmpp:${recipientJID}/${recipientNick}`
-                  });
-                  this._converse.api.send(stanza);
-                }
+  //               if (sendToRoom) {
+  //                 const stanza = $msg({
+  //                   to: roomJID,
+  //                   type: 'groupchat',
+  //                   // id: this._converse.connection.getUniqueId()
+  //                 })
+  //                 .c('body').t(groupMessageText).up()
+  //                 .c('reference', {
+  //                   xmlns: 'urn:xmpp:reference:0',
+  //                   type: 'mention',
+  //                   begin: 0,
+  //                   end: recipientMention.length,
+  //                   uri: `xmpp:${recipientJID}/${recipientNick}`
+  //                 });
+  //                 this._converse.api.send(stanza);
+  //               }
 
-                // this._converse.api.rooms.open(roomJID, {
-                //   nick: 'artem_nickname',   // e.g., 'artem'
-                //   auto_join: true
-                // }).then(room => {
-                //   room.sendMessage(messageText);
-                // });
+  //               // this._converse.api.rooms.open(roomJID, {
+  //               //   nick: 'artem_nickname',   // e.g., 'artem'
+  //               //   auto_join: true
+  //               // }).then(room => {
+  //               //   room.sendMessage(messageText);
+  //               // });
 
-                // const chatbox = this._converse.api.chats.open(recipientJID, { auto_focus: true });
-                // chatbox.then(chat => {
-                //   chat.messages.create({
-                //     // msgid: this._converse.env.crypto.randomUUID?.() || Date.now().toString(),
-                //     msgid: 'msg-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000),
-                //     // message: messageText,
-                //     body: messageText,
-                //     direction: 'outgoing', // 'incoming' for received messages
-                //     time: new Date(),
-                //     type: 'chat'
-                //   });
-                //   chat.sendMessage(messageText);
-                // });
-              });
+  //               // const chatbox = this._converse.api.chats.open(recipientJID, { auto_focus: true });
+  //               // chatbox.then(chat => {
+  //               //   chat.messages.create({
+  //               //     // msgid: this._converse.env.crypto.randomUUID?.() || Date.now().toString(),
+  //               //     msgid: 'msg-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000),
+  //               //     // message: messageText,
+  //               //     body: messageText,
+  //               //     direction: 'outgoing', // 'incoming' for received messages
+  //               //     time: new Date(),
+  //               //     type: 'chat'
+  //               //   });
+  //               //   chat.sendMessage(messageText);
+  //               // });
+  //             });
 
-              this._converse.api.listen.on('message', (data) => {
-                console.log('converse api message> data:', data)
-                if (data && data.stanza) {
-                  console.log('data.attrs:', data.attrs)
-                  const { body, type, from } = data.attrs
-                  console.log('body:', body, ', type:', type, ', from:', from)
-                  if (body && type === 'chat' && from === recipientJID) {
-                    console.log(`Received response from ${from}: ${body}`);
-                    // You can add custom logic here, such as responding or triggering other actions
-                  }
-                  if (body && type === 'groupchat' && from.startsWith(roomJID)) {
-                    console.log(`Received message from room: ${from}, text: ${body}`);
-                  }
-                }
-              });
-            }
-          });
+  //             this._converse.api.listen.on('message', (data) => {
+  //               console.log('converse api message> data:', data)
+  //               if (data && data.stanza) {
+  //                 console.log('data.attrs:', data.attrs)
+  //                 const { body, type, from } = data.attrs
+  //                 console.log('body:', body, ', type:', type, ', from:', from)
+  //                 if (body && type === 'chat' && from === recipientJID) {
+  //                   console.log(`Received response from ${from}: ${body}`);
+  //                   // You can add custom logic here, such as responding or triggering other actions
+  //                 }
+  //                 if (body && type === 'groupchat' && from.startsWith(roomJID)) {
+  //                   console.log(`Received message from room: ${from}, text: ${body}`);
+  //                 }
+  //               }
+  //             });
+  //           }
+  //         });
 
-          const converseOptions = {
-            root: converseRoot,
+  //         const converseOptions = {
+  //           root: converseRoot,
 
-            loglevel: 'info',
-            // loglevel: 'debug',
+  //           loglevel: 'info',
+  //           // loglevel: 'debug',
 
-            bosh_service_url: conf.xmpp.boshServiceUrl,
-            discover_connection_methods: conf.xmpp.discoverConnectionMethods,
-            websocket_url: conf.xmpp.websocketUrl,
-            auto_reconnect: true,
-            stanza_timeout: 300000, // 5m
-            keepalive: true,
+  //           bosh_service_url: conf.xmpp.boshServiceUrl,
+  //           discover_connection_methods: conf.xmpp.discoverConnectionMethods,
+  //           websocket_url: conf.xmpp.websocketUrl,
+  //           auto_reconnect: true,
+  //           stanza_timeout: 300000, // 5m
+  //           keepalive: true,
 
-            authentication: 'login',
-            // reuse_scram_keys: true, // what if credentials updated on server?
-            jid: `${credentials.user}@${conf.xmpp.host}`,
-            password: credentials.password,
-            auto_login: true,
-            allow_logout: false,
-            clear_cache_on_logout: true,
+  //           authentication: 'login',
+  //           // reuse_scram_keys: true, // what if credentials updated on server?
+  //           jid: `${credentials.user}@${conf.xmpp.host}`,
+  //           password: credentials.password,
+  //           auto_login: true,
+  //           allow_logout: false,
+  //           clear_cache_on_logout: true,
 
-            view_mode: 'overlayed',
+  //           view_mode: 'overlayed',
 
-            i18n: 'en',
-            show_controlbox_by_default: true,
-            show_client_info: false,
-            sticky_controlbox: false, // control box will not be closeable
-            allow_registration: false,
-            allow_url_history_change: false,
-            allow_adhoc_commands: false,
-            allow_bookmarks: true,
-            allow_non_roster_messaging: true,
-            theme: 'concord',
-            dark_theme: 'concord', // drakula',
-            play_sounds: false,
-            allow_message_corrections: false,
-            allow_message_retraction: 'own',
-            hide_offline_users: false,
-            clear_messages_on_reconnection: false,
-            visible_toolbar_buttons: {
-              // call: true,  // TODO: enable and attach to Jitsi Meet
-              spoiler: true,
-              emoji: true,
-              toggle_occupants: true
-            },
+  //           i18n: 'en',
+  //           show_controlbox_by_default: true,
+  //           show_client_info: false,
+  //           sticky_controlbox: false, // control box will not be closeable
+  //           allow_registration: false,
+  //           allow_url_history_change: false,
+  //           allow_adhoc_commands: false,
+  //           allow_bookmarks: true,
+  //           allow_non_roster_messaging: true,
+  //           theme: 'concord',
+  //           dark_theme: 'concord', // drakula',
+  //           play_sounds: false,
+  //           allow_message_corrections: false,
+  //           allow_message_retraction: 'own',
+  //           hide_offline_users: false,
+  //           clear_messages_on_reconnection: false,
+  //           visible_toolbar_buttons: {
+  //             // call: true,  // TODO: enable and attach to Jitsi Meet
+  //             spoiler: true,
+  //             emoji: true,
+  //             toggle_occupants: true
+  //           },
 
-            auto_join_on_invite: true,
-            auto_subscribe: true,
-            domain_placeholder: conf.xmpp.host,
-            default_domain: conf.xmpp.host,
-            // locked_domain: conf.xmpp.host,
-            muc_domain: conf.xmpp.mucHost,
-            // locked_muc_domain: 'hidden',
-            muc_nickname_from_jid: true,
-            auto_join_rooms: [
-              // { jid: `all@${conf.xmpp.mucHost}`, minimized: false },
-            ],
-            auto_list_rooms: true,
-            auto_register_muc_nickname: 'unregister',
-            // muc_respect_autojoin: false,
-            // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
+  //           auto_join_on_invite: true,
+  //           auto_subscribe: true,
+  //           domain_placeholder: conf.xmpp.host,
+  //           default_domain: conf.xmpp.host,
+  //           // locked_domain: conf.xmpp.host,
+  //           muc_domain: conf.xmpp.mucHost,
+  //           // locked_muc_domain: 'hidden',
+  //           muc_nickname_from_jid: true,
+  //           auto_join_rooms: [
+  //             // { jid: `all@${conf.xmpp.mucHost}`, minimized: false },
+  //           ],
+  //           auto_list_rooms: true,
+  //           auto_register_muc_nickname: 'unregister',
+  //           // muc_respect_autojoin: false,
+  //           // auto_join_private_chats: [`alice@${conf.xmpp.host}`, `bob@${conf.xmpp.host}`],
 
-            // Status
-            idle_presence_timeout: 300, // 5m
-            csi_waiting_time: 600, // 10m
-            auto_away: 3600,  // 1h
-            auto_xa: 24*3600, // 24h
+  //           // Status
+  //           idle_presence_timeout: 300, // 5m
+  //           csi_waiting_time: 600, // 10m
+  //           auto_away: 3600,  // 1h
+  //           auto_xa: 24*3600, // 24h
 
-            whitelisted_plugins: [
-              "messaging-plugin",
-            ],
+  //           whitelisted_plugins: [
+  //             "messaging-plugin",
+  //           ],
 
-            allow_non_roster_messaging: true,
-          }
+  //           allow_non_roster_messaging: true,
+  //         }
 
-          // console.log('converseOptions:', converseOptions)
-          converse.initialize(converseOptions)
-        } catch (err) {
-          console.error('converse.initialize error:', err)
-          setResponseError('Error initializing converse.')
-        } finally {
-          setLoading(false)
-        }
-      });
-    }
-  }, [converseRoot, credentials])
+  //         // console.log('converseOptions:', converseOptions)
+  //         converse.initialize(converseOptions)
+  //       } catch (err) {
+  //         console.error('converse.initialize error:', err)
+  //         setResponseError('Error initializing converse.')
+  //       } finally {
+  //         setLoading(false)
+  //       }
+  //     });
+  //   }
+  // }, [converseRoot, credentials])
 
 
   // console.log('panels:', panels)
