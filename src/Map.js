@@ -9,7 +9,9 @@ import {
   Button,
   Input,
   Icon,
+  Card,
 } from 'semantic-ui-react'
+import TextareaAutosize from "react-textarea-autosize";
 import {
   ReactFlow,
   MiniMap,
@@ -32,17 +34,45 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { generateUUID } from './helper'
 
-// const initialNodes = [
-//   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-//   { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-// ];
-// const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
-// const panOnDrag = [1, 2];
+import { Handle, Position } from '@xyflow/react';
+
+function PromptNode({ data, isConnectable }) {
+  const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+
+  return (
+    <Card style={{ width: '15em' }}>
+      <Card.Content header='Prompt' />
+      <Card.Content>
+        <TextareaAutosize
+          defaultValue="Just a single line..."
+          minRows={1}
+          maxRows={12}
+          className="nodrag"
+          value={prompt}
+          onChange={e => setPrompt(e.target.value)}
+          style={{ width: '100%' }}
+          useCacheForDOMMeasurements
+        />
+      </Card.Content>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="a"
+        isConnectable={isConnectable}
+      />
+    </Card>
+  );
+}
+
+const nodeTypes = {
+  promptNode: PromptNode,
+};
 
 const initialNodes = [
   {
     id: '0',
-    type: 'input',
+    // type: 'input',
+    type: 'promptNode',
     data: { label: 'Node' },
     position: { x: 0, y: 50 },
   },
@@ -243,32 +273,27 @@ function Map () {
   //   [setEdges],
   // );
 
-  const onConnectEnd = useCallback(
-    (event, connectionState) => {
-      // when a connection is dropped on the pane it's not valid
-      if (!connectionState.isValid) {
-        // we need to remove the wrapper bounds, in order to get the correct position
-        const id = getId();
-        const { clientX, clientY } =
-          'changedTouches' in event ? event.changedTouches[0] : event;
-        const newNode = {
-          id,
-          position: screenToFlowPosition({
-            x: clientX,
-            y: clientY,
-          }),
-          data: { label: `Node ${id}` },
-          origin: [0.5, 0.0],
-        };
- 
-        setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) =>
-          eds.concat({ id, source: connectionState.fromNode.id, target: id }),
-        );
-      }
-    },
-    [screenToFlowPosition],
-  );
+  const onConnectEnd = useCallback((event, connectionState) => {
+    // when a connection is dropped on the pane it's not valid
+    if (!connectionState.isValid) {
+      // we need to remove the wrapper bounds, in order to get the correct position
+      const id = getId();
+      const { clientX, clientY } =
+        'changedTouches' in event ? event.changedTouches[0] : event;
+      const newNode = {
+        id,
+        position: screenToFlowPosition({ x: clientX, y: clientY, }),
+        data: { label: `Node ${id}` },
+        origin: [0.5, 0.0],
+        type: "nodeStatusIndicatorDemo",
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+      setEdges((eds) =>
+        eds.concat({ id, source: connectionState.fromNode.id, target: id }),
+      );
+    }
+  }, [screenToFlowPosition],);
 
 
   return (
@@ -295,6 +320,7 @@ function Map () {
       >
         <ReactFlow
           style={{ backgroundColor: "#F7F9FB" }}
+          nodeTypes={nodeTypes}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
