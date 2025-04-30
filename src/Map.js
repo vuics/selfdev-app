@@ -38,16 +38,16 @@ import { generateUUID } from './helper'
 
 function NoteNode({ id, data, isConnectable }) {
   const { setNodes } = useReactFlow();
-  const [note, setNote] = useState(data.note || '');
+  const [text, setText] = useState(data.text || '');
 
-  const handleNoteChange = (e) => {
-    const newNote = e.target.value;
-    setNote(newNote);
+  const handleTextChange = (e) => {
+    const newText = e.target.value;
+    setText(newText);
 
-    // Update the note in the React Flow global state
+    // Update the text in the React Flow global state
     setNodes((nodes) =>
       nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, note: newNote } } : node
+        node.id === id ? { ...node, data: { ...node.data, text: newText } } : node
       )
     );
   };
@@ -57,8 +57,8 @@ function NoteNode({ id, data, isConnectable }) {
       <Card.Content header={data.header} />
       <Card.Content>
         <TextareaAutosize
-          value={note}
-          onChange={handleNoteChange}
+          value={text}
+          onChange={handleTextChange}
           className="nodrag"
           minRows={1}
           maxRows={12}
@@ -91,22 +91,8 @@ function ResponseNode({ data, isConnectable }) {
       />
       <Card.Content header={data.header} />
       <Card.Content>
-        <Loader active={!has(data, 'response')} inline='centered' />
-        {data.response}
-        {/*
-        {response}
-
-        <TextareaAutosize
-          defaultValue="Just a single line..."
-          minRows={1}
-          maxRows={12}
-          className="nodrag"
-          value={response}
-          onChange={e => setResponse(e.target.value)}
-          style={{ width: '100%' }}
-          useCacheForDOMMeasurements
-        />
-        */}
+        <Loader active={!data.text} inline='centered' />
+        {data.text}
       </Card.Content>
       <Handle
         type="source"
@@ -126,7 +112,7 @@ const nodeTypes = {
 const initialNodes = [ {
   id: '0',
   type: 'NoteNode',
-  data: { header: 'Note 0', note: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
+  data: { header: 'Note 0', text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.' },
   position: { x: 0, y: 50 },
 } ];
 
@@ -241,8 +227,8 @@ function Map () {
           const updated = [...nodes];
           for (const [i, node] of updated.entries()) {
             console.log('setNodes i:', i, ', node:', node)
-            if (node.type === 'ResponseNode' && !node.data?.response) {
-              updated[i] = { ...node, data: { ...node.data, response: body } };
+            if (node.type === 'ResponseNode' && !node.data.text) {
+              updated[i] = { ...node, data: { ...node.data, text: body } };
               console.log('updated[i]:', updated[i])
               break;
             }
@@ -328,17 +314,12 @@ function Map () {
 
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  // const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [],
   );
-  // const onConnect = useCallback(
-  //   (params) => setEdges((eds) => addEdge(params, eds)),
-  //   [setEdges],
-  // );
 
   const onConnectEnd = useCallback(async (event, connectionState) => {
     console.log('onConnectEnd connectionState:', connectionState)
@@ -350,7 +331,7 @@ function Map () {
       const newNode = {
         id,
         position: screenToFlowPosition({ x: clientX, y: clientY, }),
-        data: { header: `Response ${id}`, sourceNote: connectionState.fromNode.data.note },
+        data: { header: `Response ${id}`, text: '' },
         origin: [0.5, 0.0],
         type: "ResponseNode",
       };
@@ -359,7 +340,7 @@ function Map () {
         eds.concat({ id, source: connectionState.fromNode.id, target: id }),
       );
 
-      await sendPersonalMessage({ credentials, recipient, prompt: connectionState.fromNode.data.note });
+      await sendPersonalMessage({ credentials, recipient, prompt: connectionState.fromNode.data.text });
     }
   }, [screenToFlowPosition, credentials, recipient]);
 
