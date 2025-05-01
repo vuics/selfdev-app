@@ -43,14 +43,17 @@ import conf from './conf'
 import { generateUUID } from './helper'
 
 
-function NoteNode({ id, data, isConnectable, selected }) {
+const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { setNodes } = useReactFlow();
 
   return (
     <Card style={{ width: '100%', maxWidth: '400px' }}>
-      {/*
-      <Card.Content header={data.header} />
-      */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="a"
+        isConnectable={isConnectable}
+      />
       <Card.Content>
         <Card.Header>
           <Dropdown item simple position='right'
@@ -68,11 +71,11 @@ function NoteNode({ id, data, isConnectable, selected }) {
                 }}
               >
                 <Icon name='edit' />
-                Edit
+                { data.editable ? 'View' : 'Edit' }
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
-                  alert('Delete me!')
+                  setNodes((nodes) => nodes.filter((n) => n.id !== id));
                 }}
               >
                 <Icon name='delete' />
@@ -84,6 +87,8 @@ function NoteNode({ id, data, isConnectable, selected }) {
         </Card.Header>
       </Card.Content>
       <Card.Content>
+        <Loader active={!data.text} inline='centered' />
+        { !data.text && (<br/>) }
         { data.editable && (
           <TextareaAutosize
             value={data.text}
@@ -103,38 +108,6 @@ function NoteNode({ id, data, isConnectable, selected }) {
         ) || (
           <div>{data.text}</div>
         )}
-      </Card.Content>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="a"
-        isConnectable={isConnectable}
-      />
-      <NodeResizer
-        color="#ff0071"
-        isVisible={selected}
-        minWidth={100}
-        minHeight={30}
-      />
-    </Card>
-  );
-}
-
-const ResponseNode = memo(({ data, isConnectable, selected }) => {
-  // console.log('ResponseNode data:', data)
-
-  return (
-    <Card style={{ width: '100%', maxWidth: '400px' }}>
-      <Handle
-        type="target"
-        position={Position.Top}
-        id="a"
-        isConnectable={isConnectable}
-      />
-      <Card.Content header={data.header} />
-      <Card.Content>
-        <Loader active={!data.text} inline='centered' />
-        {data.text}
       </Card.Content>
       <Handle
         type="source"
@@ -198,7 +171,6 @@ function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }
 
 const nodeTypes = {
   NoteNode: NoteNode,
-  ResponseNode: ResponseNode,
 };
 
 const edgeTypes = {
@@ -219,8 +191,6 @@ const initialNodes = [ {
 let id = 1;
 const getId = () => `${id++}`;
 const nodeOrigin = [0.5, 0];
-
-
 
 
 
@@ -341,7 +311,7 @@ function Map () {
           const updated = [...nodes];
           for (const [i, node] of updated.entries()) {
             console.log('setNodes i:', i, ', node:', node)
-            if (node.type === 'ResponseNode' && !node.data.text) {
+            if (node.type === 'NoteNode' && !node.data.text) {
               updated[i] = { ...node, data: { ...node.data, text: body } };
               console.log('updated[i]:', updated[i])
               break;
@@ -453,7 +423,7 @@ function Map () {
         position: screenToFlowPosition({ x: clientX, y: clientY, }),
         data: { header: `Response ${id}`, text: '' },
         origin: [0.5, 0.0],
-        type: "ResponseNode",
+        type: "NoteNode",
       };
       setNodes((nds) => {
         return nds.map((node) =>
