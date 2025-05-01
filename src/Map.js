@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from 'react'
-import { isEmpty, compact, head, sample, times, snakeCase } from 'lodash'
+// import { isEmpty, compact, head, sample, times, snakeCase } from 'lodash'
 import axios from 'axios'
 import {
   Container,
-  Header,
+  // Header,
   Loader,
   Message,
   Button,
   Input,
   Icon,
   Card,
-  Grid,
+  // Grid,
   Dropdown,
+  Label,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -45,6 +46,7 @@ import { generateUUID } from './helper'
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { setNodes } = useReactFlow();
+  const [ newUname, setNewUname ] = useState(data.uname)
 
   return (
     <Card style={{ width: '100%', maxWidth: '400px' }}>
@@ -58,20 +60,20 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         <Card.Header>
           <Dropdown item simple position='right'
             icon={
-             <Icon name='cog' color='grey' />
+             <Icon name='ellipsis vertical' color='grey' />
             }>
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={() => {
                   setNodes((nodes) =>
                     nodes.map((node) =>
-                      node.id === id ? { ...node, data: { ...node.data, editable: !data.editable } } : node
+                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
                     )
                   );
                 }}
               >
                 <Icon name='edit' />
-                { data.editable ? 'View' : 'Edit' }
+                { data.editing ? 'View' : 'Edit' }
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
@@ -83,13 +85,57 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          {data.header}
+          { !data.renaming? (
+            <Button
+              size='mini'
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, renaming: !data.renaming} } : node
+                  )
+                );
+              }}
+            >
+              <Icon name='map pin' />{data.uname}
+            </Button>
+          ) : (
+            <Input
+              size='mini'
+              iconPosition='left'
+              placeholder='Unique name...'
+              value={newUname}
+              onChange={(e) => setNewUname(e.target.value)}
+              className="nodrag"
+            >
+              <Icon name='map pin' />
+              <input
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setNodes((nodes) => {
+                      const isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
+                      if (isDuplicate) { alert('The name is not unique'); return nodes; }
+                      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
+                    });
+                  }
+                }}
+              />
+            </Input>
+          ) }
         </Card.Header>
       </Card.Content>
       <Card.Content>
-        <Loader active={!data.text} inline='centered' />
-        { !data.text && (<br/>) }
-        { data.editable && (
+        <Loader active={data.waitRecipient} inline='centered' />
+        { data.waitRecipient && (
+          <>
+            <br />
+            Waiting for a reply from:{' '}
+            <Button compact size='mini'>
+              <Icon name='at' />{data.waitRecipient}
+            </Button>
+          </>
+        ) }
+
+        { data.editing ? (
           <TextareaAutosize
             value={data.text}
             onChange={(e) => {
@@ -99,15 +145,36 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 )
               );
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                e.preventDefault();
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                  )
+                )
+              }
+            }}
             className="nodrag"
             minRows={1}
-            maxRows={12}
+            // maxRows={12}
             style={{ width: '100%', height: '100%' }}
             useCacheForDOMMeasurements
           />
-        ) || (
-          <div>{data.text}</div>
-        )}
+        ) : (
+          <div
+            onClick={() => {
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                )
+              );
+            }}
+            style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
+          >
+            {data.text}
+          </div>
+        ) }
       </Card.Content>
       <Handle
         type="source"
@@ -125,7 +192,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
-function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }) {
+const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }) => {
   const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
@@ -153,6 +220,7 @@ function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }
               window.alert(`${data.recipient} has been clicked!`);
             }}
           >
+            <Icon name='at' />
             {data.recipient}
           </Button>
           <Button compact size='mini'
@@ -167,7 +235,7 @@ function RequestEdge({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }
       </EdgeLabelRenderer>
     </>
   );
-}
+})
 
 const nodeTypes = {
   NoteNode: NoteNode,
@@ -177,21 +245,23 @@ const edgeTypes = {
   RequestEdge: RequestEdge,
 };
 
+let id = 0;
+const getNodeId = () => `${id++}`;
+const getUname = (id) => `Note_${id}`
+
+const initialId = getNodeId()
 const initialNodes = [ {
-  id: '0',
+  id: initialId,
   type: 'NoteNode',
   data: {
-    header: 'Note 0',
+    uname: getUname(initialId),
     text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.',
-    editable: true,
+    editing: true,
+    renaming: false,
   },
   position: { x: 0, y: 50 },
 } ];
-
-let id = 1;
-const getId = () => `${id++}`;
-const nodeOrigin = [0.5, 0];
-
+// const nodeOrigin = [0.5, 0.5];
 
 
 function Map () {
@@ -199,8 +269,8 @@ function Map () {
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
-  const [ room, setRoom ] = useState('matrix')
-  const [ recipient, setRecipient ] = useState('')
+  // const [ room, setRoom ] = useState('matrix')
+  const [ recipient, setRecipient ] = useState('morpheus')  // FIXME: select none
   const [ roster, setRoster ] = useState([])
   const xmppRef = useRef(null);
 
@@ -310,9 +380,9 @@ function Map () {
         setNodes(nodes => {
           const updated = [...nodes];
           for (const [i, node] of updated.entries()) {
-            console.log('setNodes i:', i, ', node:', node)
-            if (node.type === 'NoteNode' && !node.data.text) {
-              updated[i] = { ...node, data: { ...node.data, text: body } };
+            // console.log('setNodes i:', i, ', node:', node)
+            if (node.type === 'NoteNode' && node.data.waitRecipient === from.split('@')[0]) {
+              updated[i] = { ...node, data: { ...node.data, text: body, waitRecipient: undefined } };
               console.log('updated[i]:', updated[i])
               break;
             }
@@ -404,6 +474,25 @@ function Map () {
     [],
   );
 
+  const addNote = useCallback(() => {
+    const id = getNodeId()
+    const newNode = {
+      id,
+      position: {
+        x: (Math.random() - 0.5) * 400,
+        y: (Math.random() - 0.5) * 400,
+      },
+      data: {
+        uname: getUname(id),
+        text: 'Edit me',
+        editing: true,
+        renaming: false,
+      },
+      type: "NoteNode",
+    };
+    setNodes((nds) => nds.concat(newNode));
+  }, [setNodes]);
+
   const onConnectEnd = useCallback(async (event, connectionState) => {
     console.log('onConnectEnd connectionState:', connectionState)
     // when a connection is dropped on the pane it's not valid
@@ -416,18 +505,24 @@ function Map () {
       }
 
       // we need to remove the wrapper bounds, in order to get the correct position
-      const id = getId();
+      const id = getNodeId();
       const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
       const newNode = {
         id,
         position: screenToFlowPosition({ x: clientX, y: clientY, }),
-        data: { header: `Response ${id}`, text: '' },
-        origin: [0.5, 0.0],
+        data: {
+          uname: getUname(id),
+          text: '',
+          editing: false,
+          renaming: false,
+          waitRecipient: recipient,
+        },
+        // origin: [0.5, 0.0],
         type: "NoteNode",
       };
       setNodes((nds) => {
         return nds.map((node) =>
-          node.id === connectionState.fromNode.id ? { ...node, data: { ...node.data, editable: false } } : node
+          node.id === connectionState.fromNode.id ? { ...node, data: { ...node.data, editing: false } } : node
         ).concat(newNode)
       });
       setEdges((eds) =>
@@ -480,7 +575,7 @@ function Map () {
           onConnectEnd={onConnectEnd}
           fitView
           fitViewOptions={{ padding: 2 }}
-          nodeOrigin={nodeOrigin}
+          // nodeOrigin={nodeOrigin}
 
           panOnScroll={true}
           selectionOnDrag={true}
@@ -504,6 +599,9 @@ function Map () {
               onChange={(e, { value }) => setRecipient(value)}
               loading={roster.length === 0}
             />
+            <br />
+            <Button onClick={addNote} >Add Note</Button>
+            <br />
             {/*
             <Input
               iconPosition='left' placeholder='room...' size='mini'
@@ -521,7 +619,6 @@ function Map () {
               onChange={e => setPrompt(e.target.value)}
             ><Icon name='edit outline' /><input /></Input>
             */}
-            <br />
             <br />
           </Panel>
         </ReactFlow>
