@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from 'react'
-import { has } from 'lodash'
-import { Helmet } from "react-helmet"
+import { isEmpty, compact, head, sample, times, snakeCase } from 'lodash'
 import axios from 'axios'
 import {
   Container,
+  Header,
   Loader,
   Message,
   Button,
@@ -33,7 +33,6 @@ import {
   getBezierPath,
   MarkerType,
   NodeResizer,
-  NodeResizeControl,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -222,13 +221,17 @@ const getId = () => `${id++}`;
 const nodeOrigin = [0.5, 0];
 
 
+
+
+
 function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
-  const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+  // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   const [ room, setRoom ] = useState('matrix')
-  const [ recipient, setRecipient ] = useState('morpheus')
+  const [ recipient, setRecipient ] = useState('')
+  const [ roster, setRoster ] = useState([])
   const xmppRef = useRef(null);
 
   useEffect(() =>{
@@ -309,6 +312,16 @@ function Map () {
           const items = query.getChildren('item');
           if (items && items.length) {
             console.log('Roster received, contacts:', items.length, ', items:', items);
+            setRoster(items.map(({ attrs }) => { return {
+              jid: attrs.jid,
+              name: attrs.jid.split('@')[0],
+              key: attrs.jid,
+              // value: attrs.jid,
+              value: attrs.jid.split('@')[0],
+              // text: attrs.name,
+              text: attrs.jid.split('@')[0],
+              // text: attrs.jid,
+            }}))
           }
         }
       }
@@ -353,9 +366,8 @@ function Map () {
   }, [credentials])
 
   const sendPersonalMessage = async ({ credentials, recipient, prompt }) => {
-    console.log('sendPersonalMessage credentials:', credentials, ', recipient:', recipient, ', prompt:', prompt)
     if (!recipient || !prompt || !credentials) {
-      return
+      return console.error('Error sending personal message> credentials:', credentials, ', recipient:', recipient, ', prompt:', prompt)
     }
     const to = recipient.includes("@") ? recipient : `${recipient}@${conf.xmpp.host}`
     const message = xml('message', {
@@ -426,6 +438,13 @@ function Map () {
     console.log('onConnectEnd connectionState:', connectionState)
     // when a connection is dropped on the pane it's not valid
     if (!connectionState.isValid) {
+      if (!recipient) {
+        return alert('Please select recipient')
+      }
+      if (!connectionState.fromNode.data.text) {
+        return alert('Please write note / prompt')
+      }
+
       // we need to remove the wrapper bounds, in order to get the correct position
       const id = getId();
       const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
@@ -502,35 +521,37 @@ function Map () {
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
-            <Input
-              iconPosition='left' size='mini' placeholder='jid | user | mention'
+            <Dropdown
+              compact
+              fluid
+              selection
+              clearable
+              multiple={false}
+              search={true}
+              options={roster}
               value={recipient}
-              onChange={e => setRecipient(e.target.value)}
-            ><Icon name='at' /><input /></Input>
-            <br />
+              placeholder="Recipient"
+              onChange={(e, { value }) => setRecipient(value)}
+              loading={roster.length === 0}
+            />
+            {/*
             <Input
               iconPosition='left' placeholder='room...' size='mini'
               value={room}
               onChange={e => setRoom(e.target.value)}
             ><Icon name='group' /><input /></Input>
-            <br />
-            <Input
-              iconPosition='left' placeholder='prompt...' size='mini'
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-            ><Icon name='edit outline' /><input /></Input>
-            <br />
-            <br />
-            <Button basic size='mini'
-              onClick={async () => {
-                await sendPersonalMessage({ recipient, prompt });
-              }}
-            >Chat</Button>
             <Button basic size='mini'
               onClick={async () => {
                 await sendRoomMessage({ room, recipient, prompt });
               }}
             >Groupchat</Button>
+            <Input
+              iconPosition='left' placeholder='prompt...' size='mini'
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+            ><Icon name='edit outline' /><input /></Input>
+            */}
+            <br />
             <br />
           </Panel>
         </ReactFlow>
