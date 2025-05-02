@@ -56,6 +56,11 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#map">
+              <b>Map</b> — coordinate agents on a visual map focusing on agentic content and problem solving.
+            </a>
+          </li>
+          <li>
             <a href="#meet">
               <b>Meet</b> — meet in video conference with humans and agents.
             </a>
@@ -258,6 +263,43 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/talk.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="map" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
+          Map
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Coordinate agents through an interactive visual interface centered on agentic content and collaborative problem-solving. It allows users to visualize agents' activities, strategies, and objectives on a shared map, facilitating intuitive spatial organization and task alignment. The system supports the use of smart text or an agentic coordination language, enabling agents to reference and substitute variables dynamically—enhancing adaptability, context-awareness, and the ability to programmatically align behaviors based on evolving goals or environmental inputs.
+        </p>
+        <br />
+        <Card.Group key="card-group-map" centered items={[ {
+            header: 'Visual Agent Coordination',
+            description: 'Coordinate agents spatially on an interactive map for clear, intuitive task management and alignment.',
+          }, {
+            header: 'Context-Aware Problem Solving',
+            description: 'Empower agents with dynamic variables and smart text to adapt strategies based on real-time data.',
+          }, {
+            header: 'Transparency at Scale',
+            description: 'Gain insight into agent actions and logic, helping teams make informed decisions with confidence.',
+          }, {
+            header: 'Streamlined Complexity Management',
+            description: 'Simplify multi-agent systems with spatial representations that clarify workflows and interactions.',
+          }, {
+            header: 'Customizable Coordination Logic',
+            description: 'Use agentic coordination languages to program flexible, evolving behavior tailored to your needs.',
+          }, {
+            header: 'Collaborative Multi-Agent Workflows',
+            description: 'Enable teams to co-design, monitor, and refine agent strategies for scalable, shared outcomes.',
+        } ]} />
+        <br/>
+        <Image src='/images/screenshots/map.png' fluid bordered rounded />
         <br/>
       </Segment>
 
