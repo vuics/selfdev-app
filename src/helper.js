@@ -30,3 +30,10 @@ export function generateUUID() {
     return v.toString(16);
   });
 }
+
+export function parseRegexString(input) {
+  const match = input.match(/^\/(.*)\/([a-z]*)$/i);
+  if (!match) throw new Error("Invalid regex format");
+  const [, pattern, flags] = match;
+  return { pattern, flags };
+}

@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback, memo } from 'react'
+import React, {
+  useState, useRef, useEffect, useCallback, memo, createContext, useContext,
+} from 'react'
 // import { isEmpty, compact, head, sample, times, snakeCase } from 'lodash'
 import axios from 'axios'
 import {
@@ -12,7 +14,7 @@ import {
   Card,
   // Grid,
   Dropdown,
-  Label,
+  // Label,
   Accordion,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
@@ -37,12 +39,15 @@ import {
   NodeResizer,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-
 import { client, xml } from '@xmpp/client'
+import safeRegex from "safe-regex";
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { generateUUID } from './helper'
+import { generateUUID, parseRegexString } from './helper'
+
+const MapContext = createContext({});
+const useMapContext = () => useContext(MapContext);
 
 const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
 const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
@@ -80,14 +85,14 @@ const ExpandingVariable = memo(({ key, part, allNodes }) => {
         <Icon name={active ? 'triangle down' : 'triangle right'} />
         {uname}
         {' '}{' '}{' '}{' '}
-          <Icon
-            color='grey'
-            name='external alternate'
-            onClick={(e => {
-              e.stopPropagation();
-              fitView({ nodes: foundNodes });
-            })}
-          />
+        <Icon
+          color='grey'
+          name='linkify'
+          onClick={(e => {
+            e.stopPropagation();
+            fitView({ nodes: foundNodes });
+          })}
+        />
       </Accordion.Title>
       <Accordion.Content active={active}>
         <p>
@@ -102,6 +107,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const allNodes = getNodes()
+  const { presenceMap } = useMapContext();
 
   const smartText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
@@ -191,13 +197,14 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         </Card.Header>
       </Card.Content>
       <Card.Content>
-        <Loader active={data.waitRecipient} inline='centered' />
+        <Loader active={data.waitRecipient} inline='centered' size='mini' />
         { data.waitRecipient && (
           <>
             <br />
             Waiting for a reply from:{' '}
             <Button compact size='mini'>
-              <Icon name='at' />{data.waitRecipient}
+              <Icon name='user' color={ presenceMap[data.recipient] ? 'green' : 'red' }/>
+              {data.waitRecipient}
             </Button>
           </>
         ) }
@@ -267,6 +274,7 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
     targetX,
     targetY,
   });
+  const { presenceMap } = useMapContext();
 
   return (
     <>
@@ -287,8 +295,21 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
               window.alert(`${data.recipient} has been clicked!`);
             }}
           >
-            <Icon name='at' />
+            <Icon name='user' color={ presenceMap[data.recipient] ? 'green' : 'red' }/>
             {data.recipient}
+          </Button>
+          <Button
+            compact
+            size='mini'
+            onClick={() => {
+              window.alert(`Condition "${data.condition}" has been ${ data.satisfied ? 'satisfied' : 'unsatisfied'}. The regular expression is ${ data.safe ? 'safe' : 'unsafe' }.`);
+            }}
+          >
+            <Icon
+              color={ data.safe? (data.satisfied ? 'green' : 'red') : 'yellow' }
+              name={ data.safe ? 'usb' : 'warning sign' }
+            />
+            {data.condition}
           </Button>
           <Button compact size='mini'
             onClick={() => {
@@ -324,11 +345,15 @@ function Map () {
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
   const [ recipient, setRecipient ] = useState('morpheus')  // FIXME: select none
+  const [ condition, setCondition ] = useState('')
   const [ roster, setRoster ] = useState([])
+  const [ presenceMap, setPresenceMap ] = useState({});
   const [ title, setTitle ] = useState('example-map')
   const xmppRef = useRef(null);
 
   // console.log('title:', title)
+  // console.log('condition:', condition)
+  // console.log('presenceMap:', presenceMap)
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -401,25 +426,96 @@ function Map () {
     xmpp.on('stanza', (stanza) => {
       // console.log('Got stanza:', stanza.toString());
 
-      // Handle roster responses
+      // // Handle roster responses
+      // if (stanza.is('iq') && stanza.attrs.type === 'result') {
+      //   const query = stanza.getChild('query', 'jabber:iq:roster');
+      //   if (query) {
+      //     const items = query.getChildren('item');
+      //     if (items && items.length) {
+      //       console.log('Roster received, contacts:', items.length, ', items:', items);
+      //       setRoster(items.map(({ attrs }) => {
+      //         const username = attrs.jid.split('@')[0];
+      //         return {
+      //           jid: attrs.jid,
+      //           name: username,
+      //           key: attrs.jid,
+      //           // value: attrs.jid,
+      //           value: username,
+      //           // text: attrs.name,
+      //           text: username,
+      //           // text: attrs.jid,
+      //           // label: { color: 'red', empty: true, circular: true },
+      //           // icon: 'user', color: 'red',
+      //           content: (<><Icon name='user' color='yellow'/>{username}</>),
+      //         }
+      //       }))
+      //     }
+      //   }
+      // } else if (stanza.is('presence')) {
+      //   const from = stanza.attrs.from
+      //   const type = stanza.attrs.type
+      //   // const from = stanza.attrs.from
+      //   const jid = from.split('/')[0] // bob@example.com
+      //   const resource = from.split('/')[1] // phone (optional)
+      //   console.log(`Presence from: ${jid} (${resource})`)
+      //   if (type === 'unavailable') {
+      //     console.log(`${from} is offline`)
+      //   } else {
+      //     console.log(`${from} is online`)
+      //   }
+      // }
+
       if (stanza.is('iq') && stanza.attrs.type === 'result') {
         const query = stanza.getChild('query', 'jabber:iq:roster');
         if (query) {
           const items = query.getChildren('item');
           if (items && items.length) {
-            // console.log('Roster received, contacts:', items.length, ', items:', items);
-            setRoster(items.map(({ attrs }) => { return {
-              jid: attrs.jid,
-              name: attrs.jid.split('@')[0],
-              key: attrs.jid,
-              // value: attrs.jid,
-              value: attrs.jid.split('@')[0],
-              // text: attrs.name,
-              text: attrs.jid.split('@')[0],
-              // text: attrs.jid,
-            }}))
+            const updatedRoster = items.map(({ attrs }) => {
+              const username = attrs.jid.split('@')[0];
+              return {
+                jid: attrs.jid,
+                name: username,
+                key: attrs.jid,
+                value: username,
+                text: username,
+                content: (
+                  <>
+                    <Icon name='user' color={presenceMap[username] ? 'green' : 'grey'} />
+                    {username}
+                  </>
+                ),
+              };
+            });
+            setRoster(updatedRoster);
           }
         }
+      } else if (stanza.is('presence')) {
+        const from = stanza.attrs.from;
+        const type = stanza.attrs.type;
+        // const jid = from.split('/')[0];
+        const username = from.split('@')[0];
+
+        setPresenceMap(prev => {
+          const updated = { ...prev, [username]: type !== 'unavailable' };
+          // Update roster with new presence info
+          setRoster(prevRoster => {
+            console.log('prevRoster:', prevRoster)
+            return prevRoster.map(user => {
+              if (user.name !== username) return user; // No change
+              const isOnline = updated[user.name];
+              return {
+                ...user,
+                content: (
+                  <>
+                    <Icon name='user' color={isOnline ? 'green' : 'grey'} />
+                    {user.name}
+                  </>
+                ),
+              };
+            })
+          });
+          return updated;
+        });
       }
 
       // Skip non-message stanzas
@@ -618,37 +714,6 @@ function Map () {
         return alert('Please write note / prompt')
       }
 
-      // we need to remove the wrapper bounds, in order to get the correct position
-      const id = getNodeId();
-      const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
-      const newNode = {
-        id,
-        position: screenToFlowPosition({ x: clientX, y: clientY, }),
-        data: {
-          uname: getUname(id),
-          text: '',
-          editing: false,
-          renaming: false,
-          waitRecipient: recipient,
-        },
-        // origin: [0.5, 0.0],
-        type: "NoteNode",
-      };
-      setNodes((nodes) =>
-        nodes.map((node) =>
-          node.id === connection.fromNode.id ? { ...node, data: { ...node.data, editing: false } } : node
-        ).concat(newNode)
-      );
-      setEdges((edges) =>
-        edges.concat({
-          id: `${connection.fromNode.id}->${id}`,
-          source: connection.fromNode.id,
-          target: id,
-          type: "RequestEdge",
-          data: { recipient },
-          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
-        }),
-      );
 
       const allNodes = getNodes()
       const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
@@ -674,12 +739,66 @@ function Map () {
       } ).join('\n');
       console.log('smartText:', smartText)
 
-      await sendPersonalMessage({ credentials, recipient, prompt: smartText });
+      let satisfied = true
+      let safe = true
+      if (condition) {
+        const { pattern, flags } = parseRegexString(condition);
+        console.log('pattern:', pattern, ', flags:', flags)
+        safe = safeRegex(pattern)
+        if (safe) {
+          const safeRegex = new RegExp(pattern, flags);
+          satisfied = safeRegex.test(smartText)
+        }
+      }
+      console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+
+      // we need to remove the wrapper bounds, in order to get the correct position
+      const id = getNodeId();
+      const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
+      const newNode = {
+        id,
+        position: screenToFlowPosition({ x: clientX, y: clientY, }),
+        data: {
+          uname: getUname(id),
+          text: '',
+          editing: false,
+          renaming: false,
+          waitRecipient: satisfied ? recipient : undefined,
+        },
+        // origin: [0.5, 0.0],
+        type: "NoteNode",
+      };
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === connection.fromNode.id ? { ...node, data: { ...node.data, editing: false } } : node
+        ).concat(newNode)
+      );
+
+      const newEdge = {
+        id: `${connection.fromNode.id}->${id}`,
+        source: connection.fromNode.id,
+        target: id,
+        type: "RequestEdge",
+        data: {
+          recipient,
+          condition,
+          safe,
+          satisfied,
+        },
+        markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+      }
+      setEdges((edges) =>
+        edges.concat(newEdge),
+      );
+
+      if (satisfied) {
+        await sendPersonalMessage({ credentials, recipient, prompt: smartText });
+      }
     }
-  }, [screenToFlowPosition, credentials, recipient]);
+  }, [screenToFlowPosition, credentials, recipient, condition]);
 
   return (
-    <>
+    <MapContext.Provider value={{ presenceMap }}>
       <Container>
         <Menubar />
       </Container>
@@ -730,8 +849,7 @@ function Map () {
               value={title}
               onChange={e => setTitle(e.target.value)}
             ><Icon name='map' /><input /></Input>
-            <br />
-            <br />
+            <br/> <br/>
             <Button.Group>
               <Button icon onClick={newMap}>
                 <Icon name='file' />
@@ -746,14 +864,18 @@ function Map () {
                 <Icon name='trash alternate' />
               </Button>
             </Button.Group>
-            <br />
-            <br />
-            <br />
+            <br/> <br/> <br/>
             <Dropdown
               compact
               fluid
               selection
               clearable
+              trigger={
+                <span>
+                  <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                  {recipient}
+                </span>
+              }
               multiple={false}
               search={true}
               options={roster}
@@ -762,10 +884,18 @@ function Map () {
               onChange={(e, { value }) => setRecipient(value)}
               loading={roster.length === 0}
             />
-            <br />
-            <Button onClick={addNote} >Add Note</Button>
-            <br />
-            <br />
+            <Input
+              iconPosition='left'
+              placeholder='Condition...'
+              value={condition}
+              onChange={e => setCondition(e.target.value)}
+            ><Icon name='usb' /><input /></Input>
+            <br/> <br/>
+            <Button onClick={addNote} fluid>
+              <Icon name='add' />
+              Add Note
+            </Button>
+            <br/> <br/>
             {/*
             <Input
               iconPosition='left' placeholder='room...' size='mini'
@@ -787,7 +917,7 @@ function Map () {
           </Panel>
         </ReactFlow>
       </div>
-    </>
+    </MapContext.Provider>
   )
 }
 

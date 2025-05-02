@@ -32,6 +32,7 @@
     "rehype-mathjax": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
+    "safe-regex": "^2.1.1",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
     "serve": "^14.2.4",
