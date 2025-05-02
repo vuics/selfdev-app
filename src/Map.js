@@ -44,9 +44,11 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { generateUUID } from './helper'
 
+const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
+const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
+
 const ExpandingVariable = memo(({ key, part, allNodes }) => {
   const { fitView } = useReactFlow();
-  const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
 
   let uname = part
   const match = part.match(unameRegex);
@@ -59,7 +61,7 @@ const ExpandingVariable = memo(({ key, part, allNodes }) => {
   if (foundNodes.length === 1) {
     nodeText = foundNodes[0].data.text
   } else {
-    console.warn('foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+    console.warn('ExpandingVariable> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
     nodeText = '((Not found))'
   }
   const [ active, setActive ] = useState(false)
@@ -99,8 +101,6 @@ const ExpandingVariable = memo(({ key, part, allNodes }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
-
   const allNodes = getNodes()
 
   const smartText = data.text.split(tokenRegex).map((part, i) => {
@@ -521,7 +521,7 @@ function Map () {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, getNodes } = useReactFlow();
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [],
@@ -607,7 +607,31 @@ function Map () {
         }),
       );
 
-      await sendPersonalMessage({ credentials, recipient, prompt: connection.fromNode.data.text });
+      const allNodes = getNodes()
+      const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
+        if (tokenRegex.test(part)) {
+          let uname = part
+          const match = part.match(unameRegex);
+          // console.log('match:', match)
+          if (match) {
+            uname = match[1]
+          }
+          let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+          let nodeText
+          if (foundNodes.length === 1) {
+            nodeText = foundNodes[0].data.text
+          } else {
+            console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+            nodeText = ''
+          }
+          return nodeText
+        } else {
+          return part
+        }
+      } ).join('\n');
+      console.log('smartText:', smartText)
+
+      await sendPersonalMessage({ credentials, recipient, prompt: smartText });
     }
   }, [screenToFlowPosition, credentials, recipient]);
 
