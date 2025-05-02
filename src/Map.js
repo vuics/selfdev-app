@@ -249,20 +249,6 @@ let id = 0;
 const getNodeId = () => `${id++}`;
 const getUname = (id) => `Note_${id}`
 
-const initialId = getNodeId()
-const initialNodes = [ {
-  id: initialId,
-  type: 'NoteNode',
-  data: {
-    uname: getUname(initialId),
-    text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.',
-    editing: true,
-    renaming: false,
-  },
-  position: { x: 0, y: 50 },
-} ];
-// const nodeOrigin = [0.5, 0.5];
-
 
 function Map () {
   const [ loading, setLoading ] = useState(true)
@@ -466,7 +452,7 @@ function Map () {
   }
 
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const onConnect = useCallback(
@@ -484,7 +470,8 @@ function Map () {
       },
       data: {
         uname: getUname(id),
-        text: 'Edit me',
+        // text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.',
+        text: 'Hello World!',
         editing: true,
         renaming: false,
       },
@@ -492,6 +479,10 @@ function Map () {
     };
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
+
+  useEffect(() =>{
+    addNote()
+  }, [])
 
   const onConnectEnd = useCallback(async (event, connectionState) => {
     console.log('onConnectEnd connectionState:', connectionState)
