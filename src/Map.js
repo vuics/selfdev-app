@@ -203,7 +203,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <br />
             Waiting for a reply from:{' '}
             <Button compact size='mini'>
-              <Icon name='user' color={ presenceMap[data.recipient] ? 'green' : 'red' }/>
+              <Icon name='user' color={ presenceMap[data.waitRecipient] ? 'green' : 'red' }/>
               {data.waitRecipient}
             </Button>
           </>
@@ -425,45 +425,6 @@ function Map () {
     // Handle incoming stanzas
     xmpp.on('stanza', (stanza) => {
       // console.log('Got stanza:', stanza.toString());
-
-      // // Handle roster responses
-      // if (stanza.is('iq') && stanza.attrs.type === 'result') {
-      //   const query = stanza.getChild('query', 'jabber:iq:roster');
-      //   if (query) {
-      //     const items = query.getChildren('item');
-      //     if (items && items.length) {
-      //       console.log('Roster received, contacts:', items.length, ', items:', items);
-      //       setRoster(items.map(({ attrs }) => {
-      //         const username = attrs.jid.split('@')[0];
-      //         return {
-      //           jid: attrs.jid,
-      //           name: username,
-      //           key: attrs.jid,
-      //           // value: attrs.jid,
-      //           value: username,
-      //           // text: attrs.name,
-      //           text: username,
-      //           // text: attrs.jid,
-      //           // label: { color: 'red', empty: true, circular: true },
-      //           // icon: 'user', color: 'red',
-      //           content: (<><Icon name='user' color='yellow'/>{username}</>),
-      //         }
-      //       }))
-      //     }
-      //   }
-      // } else if (stanza.is('presence')) {
-      //   const from = stanza.attrs.from
-      //   const type = stanza.attrs.type
-      //   // const from = stanza.attrs.from
-      //   const jid = from.split('/')[0] // bob@example.com
-      //   const resource = from.split('/')[1] // phone (optional)
-      //   console.log(`Presence from: ${jid} (${resource})`)
-      //   if (type === 'unavailable') {
-      //     console.log(`${from} is offline`)
-      //   } else {
-      //     console.log(`${from} is online`)
-      //   }
-      // }
 
       if (stanza.is('iq') && stanza.attrs.type === 'result') {
         const query = stanza.getChild('query', 'jabber:iq:roster');
@@ -693,6 +654,43 @@ function Map () {
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd connection:', connection)
 
+    const allNodes = getNodes()
+    const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
+      if (tokenRegex.test(part)) {
+        let uname = part
+        const match = part.match(unameRegex);
+        // console.log('match:', match)
+        if (match) {
+          uname = match[1]
+        }
+        let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+        let nodeText
+        if (foundNodes.length === 1) {
+          nodeText = foundNodes[0].data.text
+        } else {
+          console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+          nodeText = ''
+        }
+        return nodeText
+      } else {
+        return part
+      }
+    } ).join('\n');
+    console.log('smartText:', smartText)
+
+    let satisfied = true
+    let safe = true
+    if (condition) {
+      const { pattern, flags } = parseRegexString(condition);
+      console.log('pattern:', pattern, ', flags:', flags)
+      safe = safeRegex(pattern)
+      if (safe) {
+        const safeRegex = new RegExp(pattern, flags);
+        satisfied = safeRegex.test(smartText)
+      }
+    }
+    console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+
     // when a connection is dropped on the pane it's not valid
     if (connection.isValid) {
       setNodes((nodes) =>
@@ -701,7 +699,7 @@ function Map () {
             ...node,
             data: {
               ...node.data,
-              text: node.data.text + `\n\[[${connection.fromNode.data.uname}]]`,
+              text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
             }
           } : node
         )
@@ -713,44 +711,6 @@ function Map () {
       if (!connection.fromNode.data.text) {
         return alert('Please write note / prompt')
       }
-
-
-      const allNodes = getNodes()
-      const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
-        if (tokenRegex.test(part)) {
-          let uname = part
-          const match = part.match(unameRegex);
-          // console.log('match:', match)
-          if (match) {
-            uname = match[1]
-          }
-          let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-          let nodeText
-          if (foundNodes.length === 1) {
-            nodeText = foundNodes[0].data.text
-          } else {
-            console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-            nodeText = ''
-          }
-          return nodeText
-        } else {
-          return part
-        }
-      } ).join('\n');
-      console.log('smartText:', smartText)
-
-      let satisfied = true
-      let safe = true
-      if (condition) {
-        const { pattern, flags } = parseRegexString(condition);
-        console.log('pattern:', pattern, ', flags:', flags)
-        safe = safeRegex(pattern)
-        if (safe) {
-          const safeRegex = new RegExp(pattern, flags);
-          satisfied = safeRegex.test(smartText)
-        }
-      }
-      console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
 
       // we need to remove the wrapper bounds, in order to get the correct position
       const id = getNodeId();
