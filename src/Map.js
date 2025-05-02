@@ -325,7 +325,10 @@ function Map () {
   // const [ room, setRoom ] = useState('matrix')
   const [ recipient, setRecipient ] = useState('morpheus')  // FIXME: select none
   const [ roster, setRoster ] = useState([])
+  const [ title, setTitle ] = useState('example-map')
   const xmppRef = useRef(null);
+
+  // console.log('title:', title)
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -404,7 +407,7 @@ function Map () {
         if (query) {
           const items = query.getChildren('item');
           if (items && items.length) {
-            console.log('Roster received, contacts:', items.length, ', items:', items);
+            // console.log('Roster received, contacts:', items.length, ', items:', items);
             setRoster(items.map(({ attrs }) => { return {
               jid: attrs.jid,
               name: attrs.jid.split('@')[0],
@@ -521,11 +524,51 @@ function Map () {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition, getNodes } = useReactFlow();
+  const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
+  const [rfInstance, setRfInstance] = useState(null);
+
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [],
   );
+
+  const saveMap = () => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      console.log('saveMap flow:', flow)
+      localStorage.setItem(title, JSON.stringify(flow));
+      console.log(`Map ${title} saved with flow:`, flow);
+    }
+  }
+
+  const restoreMap = async () => {
+    const flow = JSON.parse(localStorage.getItem(title));
+    if (flow) {
+      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+      setNodes(flow.nodes || []);
+      setEdges(flow.edges || []);
+      setViewport({ x, y, zoom });
+      console.log(`Map ${title} restored with flow:`, flow);
+    } else {
+      alert(`The map ${title} does not exist`)
+    }
+  }
+
+  const newMap = () => {
+    setNodes([]);
+    setEdges([]);
+    setViewport({ x: 0, y: 0, zoom: 1 });
+    addNote()
+    console.log(`New map created.`);
+  }
+
+  const removeMap = () => {
+    localStorage.removeItem(title);
+    setNodes([]);
+    setEdges([]);
+    setViewport({ x: 0, y: 0, zoom: 1 });
+    console.log(`Map ${title} removed.`);
+  }
 
   const addNote = useCallback(() => {
     const id = getNodeId()
@@ -635,7 +678,6 @@ function Map () {
     }
   }, [screenToFlowPosition, credentials, recipient]);
 
-
   return (
     <>
       <Container>
@@ -666,6 +708,7 @@ function Map () {
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
+          onInit={setRfInstance}
           onConnect={onConnect}
           onConnectEnd={onConnectEnd}
           fitView
@@ -681,6 +724,31 @@ function Map () {
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
+            <Input
+              iconPosition='left'
+              placeholder='Title...'
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+            ><Icon name='map' /><input /></Input>
+            <br />
+            <br />
+            <Button.Group>
+              <Button icon onClick={newMap}>
+                <Icon name='file' />
+              </Button>
+              <Button icon onClick={restoreMap}>
+                <Icon name='folder open outline' />
+              </Button>
+              <Button icon onClick={saveMap}>
+                <Icon name='save' />
+              </Button>
+              <Button icon onClick={removeMap}>
+                <Icon name='trash alternate' />
+              </Button>
+            </Button.Group>
+            <br />
+            <br />
+            <br />
             <Dropdown
               compact
               fluid
@@ -696,6 +764,7 @@ function Map () {
             />
             <br />
             <Button onClick={addNote} >Add Note</Button>
+            <br />
             <br />
             {/*
             <Input
