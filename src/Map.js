@@ -13,6 +13,7 @@ import {
   // Grid,
   Dropdown,
   Label,
+  Accordion,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -45,8 +46,84 @@ import { generateUUID } from './helper'
 
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
-  const { setNodes } = useReactFlow();
+  const { getNodes, setNodes } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
+  const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
+  const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
+
+  const allNodes = getNodes()
+
+  // const substitutedText = data.text
+
+  const substitutedText = data.text.split(tokenRegex).map((part, i) => {
+    if (tokenRegex.test(part)) {
+      let uname = part
+      const match = part.match(unameRegex);
+      // console.log('match:', match)
+      if (match) {
+        uname = match[1]
+      }
+      let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+      let nodeText
+      if (foundNodes.length === 1) {
+        nodeText = foundNodes[0].data.text
+      } else {
+        console.warn('foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+        nodeText = '((Not found))'
+      }
+
+      return (
+        <>
+        <Button
+          key={i}
+          size="mini" basic compact
+          onClick={(e => {
+            e.stopPropagation();
+            alert(nodeText);
+          })}
+        >
+          {uname}
+        </Button>
+        </>
+      )
+    } else {
+      return (
+        <span key={i}>{part}</span>
+      )
+    }
+  } );
+
+  // const substitutedText = data.text.split(tokenRegex).map((part, i) =>
+  //   tokenRegex.test(part) ? (
+  //     <>
+  //       <Button
+  //         key={i}
+  //         size="mini" basic compact
+  //         onClick={(e => {
+  //           e.stopPropagation();
+  //           alert(part);
+  //         })}
+  //       >
+  //         {part}
+  //       </Button>
+  //       <Accordion.Title
+  //         active={true}
+  //         index={0}
+  //         onClick={(e => {
+  //           e.stopPropagation();
+  //         })}
+  //       >
+  //         <Icon name='dropdown' />
+  //         What is a dog?
+  //       </Accordion.Title>
+  //       <Accordion.Content active={false}>
+  //         <p>
+  //         </p>
+  //       </Accordion.Content>
+  //     </>
+  //   ) : (
+  //     <span key={i}>{part}</span>
+  //   )
 
   return (
     <Card style={{ width: '100%', maxWidth: '400px' }}>
@@ -172,7 +249,51 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             }}
             style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
           >
+            {/*
             {data.text}
+            */}
+
+            {substitutedText}
+
+            {/*
+            {data.text
+              .split(tokenRegex) // Split on the placeholder pattern
+              .map((part, i) =>
+                tokenRegex.test(part) ? (
+                  <>
+                  <Button
+                    key={i}
+                    size="mini" basic compact
+                    onClick={((e) => {
+                      e.stopPropagation();
+                      alert(part);
+                    })}
+                  >
+                    {part}
+                  </Button>
+                  <Accordion.Title
+                    // active={activeIndex === 0}
+                    active={true}
+                    index={0}
+                    onClick={((e) => {
+                      e.stopPropagation();
+                      // alert(part);
+                    })}
+                  >
+                    <Icon name='dropdown' />
+                    What is a dog?
+                  </Accordion.Title>
+                  <Accordion.Content active={false}>
+                    <p>
+                      
+                    </p>
+                  </Accordion.Content>
+                  </>
+                ) : (
+                  <span key={i}>{part}</span>
+                )
+              )}
+            */}
           </div>
         ) }
       </Card.Content>
@@ -484,14 +605,30 @@ function Map () {
     addNote()
   }, [])
 
-  const onConnectEnd = useCallback(async (event, connectionState) => {
-    console.log('onConnectEnd connectionState:', connectionState)
+  const onConnectEnd = useCallback(async (event, connection) => {
+    console.log('onConnectEnd connection:', connection)
+
     // when a connection is dropped on the pane it's not valid
-    if (!connectionState.isValid) {
+    if (connection.isValid) {
+      // connection.fromNode
+      // connection.toNode
+
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === connection.toNode.id ? {
+            ...node,
+            data: {
+              ...node.data,
+              text: node.data.text + `\n\n\[[${connection.fromNode.data.uname}]]`,
+            }
+          } : node
+        )
+      );
+    } else {
       if (!recipient) {
         return alert('Please select recipient')
       }
-      if (!connectionState.fromNode.data.text) {
+      if (!connection.fromNode.data.text) {
         return alert('Please write note / prompt')
       }
 
@@ -511,15 +648,15 @@ function Map () {
         // origin: [0.5, 0.0],
         type: "NoteNode",
       };
-      setNodes((nds) => {
-        return nds.map((node) =>
-          node.id === connectionState.fromNode.id ? { ...node, data: { ...node.data, editing: false } } : node
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === connection.fromNode.id ? { ...node, data: { ...node.data, editing: false } } : node
         ).concat(newNode)
-      });
-      setEdges((eds) =>
-        eds.concat({
-          id: `${connectionState.fromNode.id}->${id}`,
-          source: connectionState.fromNode.id,
+      );
+      setEdges((edges) =>
+        edges.concat({
+          id: `${connection.fromNode.id}->${id}`,
+          source: connection.fromNode.id,
           target: id,
           type: "RequestEdge",
           data: { recipient },
@@ -527,7 +664,7 @@ function Map () {
         }),
       );
 
-      await sendPersonalMessage({ credentials, recipient, prompt: connectionState.fromNode.data.text });
+      await sendPersonalMessage({ credentials, recipient, prompt: connection.fromNode.data.text });
     }
   }, [screenToFlowPosition, credentials, recipient]);
 
