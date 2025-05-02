@@ -44,47 +44,69 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { generateUUID } from './helper'
 
+const ExpandingVariable = memo(({ key, part, allNodes }) => {
+  const { fitView } = useReactFlow();
+  const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
+
+  let uname = part
+  const match = part.match(unameRegex);
+  // console.log('match:', match)
+  if (match) {
+    uname = match[1]
+  }
+  let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+  let nodeText
+  if (foundNodes.length === 1) {
+    nodeText = foundNodes[0].data.text
+  } else {
+    console.warn('foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+    nodeText = '((Not found))'
+  }
+  const [ active, setActive ] = useState(false)
+
+  return (
+    <Accordion styled>
+      <Accordion.Title
+        styled
+        active={active}
+        index={0}
+        onClick={((e) => {
+          e.stopPropagation();
+          setActive(active => !active)
+        })}
+      >
+        <Icon name={active ? 'triangle down' : 'triangle right'} />
+        {uname}
+        {' '}{' '}{' '}{' '}
+          <Icon
+            color='grey'
+            name='external alternate'
+            onClick={(e => {
+              e.stopPropagation();
+              fitView({ nodes: foundNodes });
+            })}
+          />
+      </Accordion.Title>
+      <Accordion.Content active={active}>
+        <p>
+          {nodeText}
+        </p>
+      </Accordion.Content>
+    </Accordion>
+  )
+})
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
-  const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
 
   const allNodes = getNodes()
 
-  // const substitutedText = data.text
-
-  const substitutedText = data.text.split(tokenRegex).map((part, i) => {
+  const smartText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
-      let uname = part
-      const match = part.match(unameRegex);
-      // console.log('match:', match)
-      if (match) {
-        uname = match[1]
-      }
-      let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-      let nodeText
-      if (foundNodes.length === 1) {
-        nodeText = foundNodes[0].data.text
-      } else {
-        console.warn('foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-        nodeText = '((Not found))'
-      }
-
       return (
-        <>
-        <Button
-          key={i}
-          size="mini" basic compact
-          onClick={(e => {
-            e.stopPropagation();
-            alert(nodeText);
-          })}
-        >
-          {uname}
-        </Button>
-        </>
+        <ExpandingVariable key={i} part={part} allNodes={allNodes} />
       )
     } else {
       return (
@@ -92,38 +114,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       )
     }
   } );
-
-  // const substitutedText = data.text.split(tokenRegex).map((part, i) =>
-  //   tokenRegex.test(part) ? (
-  //     <>
-  //       <Button
-  //         key={i}
-  //         size="mini" basic compact
-  //         onClick={(e => {
-  //           e.stopPropagation();
-  //           alert(part);
-  //         })}
-  //       >
-  //         {part}
-  //       </Button>
-  //       <Accordion.Title
-  //         active={true}
-  //         index={0}
-  //         onClick={(e => {
-  //           e.stopPropagation();
-  //         })}
-  //       >
-  //         <Icon name='dropdown' />
-  //         What is a dog?
-  //       </Accordion.Title>
-  //       <Accordion.Content active={false}>
-  //         <p>
-  //         </p>
-  //       </Accordion.Content>
-  //     </>
-  //   ) : (
-  //     <span key={i}>{part}</span>
-  //   )
 
   return (
     <Card style={{ width: '100%', maxWidth: '400px' }}>
@@ -249,51 +239,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             }}
             style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
           >
-            {/*
-            {data.text}
-            */}
-
-            {substitutedText}
-
-            {/*
-            {data.text
-              .split(tokenRegex) // Split on the placeholder pattern
-              .map((part, i) =>
-                tokenRegex.test(part) ? (
-                  <>
-                  <Button
-                    key={i}
-                    size="mini" basic compact
-                    onClick={((e) => {
-                      e.stopPropagation();
-                      alert(part);
-                    })}
-                  >
-                    {part}
-                  </Button>
-                  <Accordion.Title
-                    // active={activeIndex === 0}
-                    active={true}
-                    index={0}
-                    onClick={((e) => {
-                      e.stopPropagation();
-                      // alert(part);
-                    })}
-                  >
-                    <Icon name='dropdown' />
-                    What is a dog?
-                  </Accordion.Title>
-                  <Accordion.Content active={false}>
-                    <p>
-                      
-                    </p>
-                  </Accordion.Content>
-                  </>
-                ) : (
-                  <span key={i}>{part}</span>
-                )
-              )}
-            */}
+            {smartText}
           </div>
         ) }
       </Card.Content>
@@ -610,16 +556,13 @@ function Map () {
 
     // when a connection is dropped on the pane it's not valid
     if (connection.isValid) {
-      // connection.fromNode
-      // connection.toNode
-
       setNodes((nodes) =>
         nodes.map((node) =>
           node.id === connection.toNode.id ? {
             ...node,
             data: {
               ...node.data,
-              text: node.data.text + `\n\n\[[${connection.fromNode.data.uname}]]`,
+              text: node.data.text + `\n\[[${connection.fromNode.data.uname}]]`,
             }
           } : node
         )
