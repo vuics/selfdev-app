@@ -344,7 +344,7 @@ const getUname = (id) => `Note_${id}`
 
 
 function Map () {
-  const [ maps, setMaps ] = useState([])
+  // const [ maps, setMaps ] = useState([])
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
@@ -682,26 +682,26 @@ function Map () {
   const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
   const [rfInstance, setRfInstance] = useState(null);
 
-  // const onConnect = useCallback(
-  //   (params) => setEdges((eds) => addEdge(params, eds)),
-  //   [],
-  // );
-  const onConnect = useCallback((params) => {
-    const requestEdge = {
-      ...params,
-      id: `${params.source}->${params.target}`,
-      type: 'RequestEdge',
-      data: {
-        recipient: null,
-        condition: condition,
-        safe: null,      // FIXME: get this params from onConnectEnd
-        satisfied: null, // FIXME: get this params from onConnectEnd
-      },
-      markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
-    };
-    console.log('onConnect requestEdge:', requestEdge, ', params:', params)
-    setEdges((eds) => addEdge(requestEdge, eds));
-  }, [condition, setEdges]);
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [],
+  );
+  // const onConnect = useCallback((params) => {
+  //   const requestEdge = {
+  //     ...params,
+  //     id: `${params.source}->${params.target}`,
+  //     type: 'RequestEdge',
+  //     data: {
+  //       recipient: null,
+  //       condition: condition,
+  //       safe: null,      // FIXME: get this params from onConnectEnd
+  //       satisfied: null, // FIXME: get this params from onConnectEnd
+  //     },
+  //     markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+  //   };
+  //   console.log('onConnect requestEdge:', requestEdge, ', params:', params)
+  //   setEdges((eds) => addEdge(requestEdge, eds));
+  // }, [condition, setEdges]);
 
   const saveMap = () => {
     if (rfInstance) {
@@ -768,42 +768,42 @@ function Map () {
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
 
-    const allNodes = getNodes()
-    const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
-      if (tokenRegex.test(part)) {
-        let uname = part
-        const match = part.match(unameRegex);
-        // console.log('match:', match)
-        if (match) {
-          uname = match[1]
-        }
-        let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-        let nodeText
-        if (foundNodes.length === 1) {
-          nodeText = foundNodes[0].data.text
-        } else {
-          console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-          nodeText = ''
-        }
-        return nodeText
-      } else {
-        return part
-      }
-    } ).join('\n');
-    console.log('smartText:', smartText)
+    // const allNodes = getNodes()
+    // const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
+    //   if (tokenRegex.test(part)) {
+    //     let uname = part
+    //     const match = part.match(unameRegex);
+    //     // console.log('match:', match)
+    //     if (match) {
+    //       uname = match[1]
+    //     }
+    //     let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+    //     let nodeText
+    //     if (foundNodes.length === 1) {
+    //       nodeText = foundNodes[0].data.text
+    //     } else {
+    //       console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+    //       nodeText = ''
+    //     }
+    //     return nodeText
+    //   } else {
+    //     return part
+    //   }
+    // } ).join('\n');
+    // console.log('smartText:', smartText)
 
-    let satisfied = true
-    let safe = true
-    if (condition) {
-      const { pattern, flags } = parseRegexString(condition);
-      console.log('pattern:', pattern, ', flags:', flags)
-      safe = safeRegex(pattern)
-      if (safe) {
-        const safeRegex = new RegExp(pattern, flags);
-        satisfied = safeRegex.test(smartText)
-      }
-    }
-    console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+    // let satisfied = true
+    // let safe = true
+    // if (condition) {
+    //   const { pattern, flags } = parseRegexString(condition);
+    //   console.log('pattern:', pattern, ', flags:', flags)
+    //   safe = safeRegex(pattern)
+    //   if (safe) {
+    //     const safeRegex = new RegExp(pattern, flags);
+    //     satisfied = safeRegex.test(smartText)
+    //   }
+    // }
+    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
 
     // when a connection is dropped on the pane it's not valid
     if (connection.isValid) {
@@ -813,7 +813,8 @@ function Map () {
             ...node,
             data: {
               ...node.data,
-              text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
+              // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
+              text: node.data.text + `\n[[${connection.fromNode.data.uname}]]`,
             }
           } : node
         )
@@ -825,6 +826,43 @@ function Map () {
       if (!connection.fromNode.data.text) {
         return alert('Please write note / prompt')
       }
+
+      const allNodes = getNodes()
+      const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
+        if (tokenRegex.test(part)) {
+          let uname = part
+          const match = part.match(unameRegex);
+          // console.log('match:', match)
+          if (match) {
+            uname = match[1]
+          }
+          let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+          let nodeText
+          if (foundNodes.length === 1) {
+            nodeText = foundNodes[0].data.text
+          } else {
+            console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+            nodeText = ''
+          }
+          return nodeText
+        } else {
+          return part
+        }
+      } ).join('\n');
+      console.log('smartText:', smartText)
+
+      let satisfied = true
+      let safe = true
+      if (condition) {
+        const { pattern, flags } = parseRegexString(condition);
+        console.log('pattern:', pattern, ', flags:', flags)
+        safe = safeRegex(pattern)
+        if (safe) {
+          const safeRegex = new RegExp(pattern, flags);
+          satisfied = safeRegex.test(smartText)
+        }
+      }
+      console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
 
       // we need to remove the wrapper bounds, in order to get the correct position
       const id = getNodeId();
