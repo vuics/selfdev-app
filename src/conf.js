@@ -40,6 +40,8 @@ const conf = {
 
   map: {
     enable: bool(process.env.REACT_APP_MAP_ENABLE || false),
+    skip: 0,
+    limit: 100,
   },
 
   meet: {

@@ -344,6 +344,7 @@ const getUname = (id) => `Note_${id}`
 
 
 function Map () {
+  const [ maps, setMaps ] = useState([])
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
@@ -359,6 +360,98 @@ function Map () {
   // console.log('title:', title)
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
+
+  // TODO: develop saving maps in API
+  //
+
+  // const indexMaps = async () => {
+  //   setLoading(true)
+  //   try {
+  //     const res = await axios.get(`${conf.api.url}/map?skip=${conf.map.skip}&limit=${conf.map.limit}`, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       withCredentials: true,
+  //       crossOrigin: { mode: 'cors' },
+  //     })
+  //     console.log('maps index res:', res)
+  //     setMaps(res?.data || [])
+  //   } catch (err) {
+  //     console.error('indexMaps error:', err);
+  //     return setResponseError(err?.response?.data?.message || 'Error getting maps.')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   indexMaps()
+  // }, [])
+
+  // const postMap = async () => {
+  //   setLoading(true)
+  //   try {
+  //     if (!rfInstance) {
+  //       throw new Error('ReactFlow instance is not defined.')
+  //     }
+  //     const flow = rfInstance.toObject();
+  //     const res = await axios.post(`${conf.api.url}/map`, {
+  //       title,
+  //       flow,
+  //     }, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       withCredentials: true,
+  //       crossOrigin: { mode: 'cors' },
+  //     })
+  //     console.log('post map res:', res)
+  //     // setResponseMessage(`Map created successfully`)
+  //     setMaps(maps => [res.data, ...maps])
+  //   } catch (err) {
+  //     console.error('post map error:', err);
+  //     return setResponseError(err.toString() || 'Error posting map.')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  // // const putMap = async ({ map }) => {
+  // const putMap = async ({ mapId }) => {
+  //   setLoading(true)
+  //   try {
+  //     const res = await axios.put(`${conf.api.url}/map/${map._id}`, {
+  //       ...map,
+  //     }, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       withCredentials: true,
+  //       crossOrigin: { mode: 'cors' },
+  //     })
+  //     console.log('map put res:', res)
+  //     // setResponseMessage(`Map updated successfully`)
+  //     setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
+  //   } catch (err) {
+  //     console.error('delete map error:', err);
+  //     return setResponseError(err.toString() || 'Error deleting map.')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  // const deleteMap = async ({ _id }) => {
+  //   setLoading(true)
+  //   try {
+  //     const res = await axios.delete(`${conf.api.url}/map/${_id}`, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       withCredentials: true,
+  //       crossOrigin: { mode: 'cors' },
+  //     })
+  //     console.log('map delete res:', res)
+  //     // setResponseMessage(`Map deleted successfully`)
+  //     setMaps(maps.filter(obj => obj._id !== _id))
+  //   } catch (err) {
+  //     console.error('delete map error:', err);
+  //     return setResponseError(err.toString() || 'Error deleting map.')
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -593,8 +686,6 @@ function Map () {
   //   (params) => setEdges((eds) => addEdge(params, eds)),
   //   [],
   // );
-
-
   const onConnect = useCallback((params) => {
     const requestEdge = {
       ...params,
@@ -611,15 +702,6 @@ function Map () {
     console.log('onConnect requestEdge:', requestEdge, ', params:', params)
     setEdges((eds) => addEdge(requestEdge, eds));
   }, [condition, setEdges]);
-
-  // const onConnect = useCallback(
-  //   // (params) => setEdges((eds) => addEdge(params, eds)),
-  //   (params) => setEdges((eds) => {
-  //     console.log('setEdges eds:', eds, ', params:', params)
-  //     return addEdge(params, eds)
-  //   }),
-  //   [],
-  // );
 
   const saveMap = () => {
     if (rfInstance) {
