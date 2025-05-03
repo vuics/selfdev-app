@@ -292,23 +292,28 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             compact
             size='mini'
             onClick={() => {
-              window.alert(`${data.recipient} has been clicked!`);
+              window.alert(`${data.recipient || 'The user'} has been clicked!`);
             }}
           >
-            <Icon name='user' color={ presenceMap[data.recipient] ? 'green' : 'red' }/>
+            <Icon
+              name={ data.recipient !== null ? 'user' : 'user outline'}
+              color={ data.recipient ? (presenceMap[data.recipient] ? 'green' : 'red' ) : 'grey' }
+            />
             {data.recipient}
           </Button>
           <Button
             compact
             size='mini'
             onClick={() => {
-              window.alert(`Condition "${data.condition}" has been ${ data.satisfied ? 'satisfied' : 'unsatisfied'}. The regular expression is ${ data.safe ? 'safe' : 'unsafe' }.`);
+              window.alert(`Condition "${data.condition}" has been ${ data.satisfied !== null ? (data.satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ data.safe !== null ? (data.safe ? 'safe' : 'unsafe') : 'unknown' }.`);
             }}
           >
-            <Icon
-              color={ data.safe? (data.satisfied ? 'green' : 'red') : 'yellow' }
-              name={ data.safe ? 'usb' : 'warning sign' }
-            />
+            { data.safe !== null && (
+              <Icon
+                color={ data.satisfied ? 'green' : 'red' }
+                name={ data.safe ? 'usb' : 'warning sign' }
+              />
+            )}
             {data.condition}
           </Button>
           <Button compact size='mini'
@@ -584,10 +589,37 @@ function Map () {
   const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
   const [rfInstance, setRfInstance] = useState(null);
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [],
-  );
+  // const onConnect = useCallback(
+  //   (params) => setEdges((eds) => addEdge(params, eds)),
+  //   [],
+  // );
+
+
+  const onConnect = useCallback((params) => {
+    const requestEdge = {
+      ...params,
+      id: `${params.source}->${params.target}`,
+      type: 'RequestEdge',
+      data: {
+        recipient: null,
+        condition: condition,
+        safe: null,      // FIXME: get this params from onConnectEnd
+        satisfied: null, // FIXME: get this params from onConnectEnd
+      },
+      markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+    };
+    console.log('onConnect requestEdge:', requestEdge, ', params:', params)
+    setEdges((eds) => addEdge(requestEdge, eds));
+  }, [condition, setEdges]);
+
+  // const onConnect = useCallback(
+  //   // (params) => setEdges((eds) => addEdge(params, eds)),
+  //   (params) => setEdges((eds) => {
+  //     console.log('setEdges eds:', eds, ', params:', params)
+  //     return addEdge(params, eds)
+  //   }),
+  //   [],
+  // );
 
   const saveMap = () => {
     if (rfInstance) {
@@ -652,7 +684,7 @@ function Map () {
   }, [])
 
   const onConnectEnd = useCallback(async (event, connection) => {
-    console.log('onConnectEnd connection:', connection)
+    console.log('onConnectEnd event:', event, ', connection:', connection)
 
     const allNodes = getNodes()
     const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
