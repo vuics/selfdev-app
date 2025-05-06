@@ -41,6 +41,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
 import safeRegex from "safe-regex";
+import { faker } from '@faker-js/faker'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -344,7 +345,6 @@ const getUname = (id) => `Note_${id}`
 
 
 function Map () {
-  // const [ maps, setMaps ] = useState([])
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
@@ -354,104 +354,122 @@ function Map () {
   const [ condition, setCondition ] = useState('')
   const [ roster, setRoster ] = useState([])
   const [ presenceMap, setPresenceMap ] = useState({});
+  const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
+  const [ renaming, setRenaming ] = useState(false)
+  const [ mapId, setMapId ] = useState('')
+  // const [ map, setMap ] = useState({})
   const xmppRef = useRef(null);
 
   // console.log('title:', title)
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
 
+  function getMap(mapId) {
+    return maps.filter(({ _id }) => _id === mapId)[0]
+  }
+
   // TODO: develop saving maps in API
   //
 
-  // const indexMaps = async () => {
-  //   setLoading(true)
-  //   try {
-  //     const res = await axios.get(`${conf.api.url}/map?skip=${conf.map.skip}&limit=${conf.map.limit}`, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //       crossOrigin: { mode: 'cors' },
-  //     })
-  //     console.log('maps index res:', res)
-  //     setMaps(res?.data || [])
-  //   } catch (err) {
-  //     console.error('indexMaps error:', err);
-  //     return setResponseError(err?.response?.data?.message || 'Error getting maps.')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const indexMaps = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get(`${conf.api.url}/map?skip=${conf.map.skip}&limit=${conf.map.limit}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('maps index res:', res)
+      setMaps(res?.data || [])
+    } catch (err) {
+      console.error('indexMaps error:', err);
+      return setResponseError(err?.response?.data?.message || 'Error getting maps.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  // useEffect(() => {
-  //   indexMaps()
-  // }, [])
+  useEffect(() => {
+    indexMaps()
+  }, [])
 
-  // const postMap = async () => {
-  //   setLoading(true)
-  //   try {
-  //     if (!rfInstance) {
-  //       throw new Error('ReactFlow instance is not defined.')
-  //     }
-  //     const flow = rfInstance.toObject();
-  //     const res = await axios.post(`${conf.api.url}/map`, {
-  //       title,
-  //       flow,
-  //     }, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //       crossOrigin: { mode: 'cors' },
-  //     })
-  //     console.log('post map res:', res)
-  //     // setResponseMessage(`Map created successfully`)
-  //     setMaps(maps => [res.data, ...maps])
-  //   } catch (err) {
-  //     console.error('post map error:', err);
-  //     return setResponseError(err.toString() || 'Error posting map.')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const postMap = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.post(`${conf.api.url}/map`, {
+        title: `Untitled: (${faker.commerce.productName()})`,
+        flow: {
+          nodes: [],
+          edges: [],
+          viewport: { x: 0, y: 0, zoom: 1 },
+        },
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('post map res:', res)
+      // setResponseMessage(`Map created successfully`)
+      setMaps(maps => [res.data, ...maps])
+      setMapId(() => res.data._id)
+      setTitle(() => res.data.title)
+    } catch (err) {
+      console.error('post map error:', err);
+      return setResponseError(err.toString() || 'Error posting map.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  // // const putMap = async ({ map }) => {
-  // const putMap = async ({ mapId }) => {
-  //   setLoading(true)
-  //   try {
-  //     const res = await axios.put(`${conf.api.url}/map/${map._id}`, {
-  //       ...map,
-  //     }, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //       crossOrigin: { mode: 'cors' },
-  //     })
-  //     console.log('map put res:', res)
-  //     // setResponseMessage(`Map updated successfully`)
-  //     setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
-  //   } catch (err) {
-  //     console.error('delete map error:', err);
-  //     return setResponseError(err.toString() || 'Error deleting map.')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const putMap = async () => {
+    setLoading(true)
+    try {
+      if (!rfInstance) {
+        throw new Error('ReactFlow instance is not defined.')
+      }
+      const flow = rfInstance.toObject();
+      const res = await axios.put(`${conf.api.url}/map/${mapId}`, {
+        ...getMap(mapId),
+        title,
+        flow,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('map put res:', res)
+      // setResponseMessage(`Map updated successfully`)
+      setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
+    } catch (err) {
+      console.error('delete map error:', err);
+      return setResponseError(err.toString() || 'Error deleting map.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  // const deleteMap = async ({ _id }) => {
-  //   setLoading(true)
-  //   try {
-  //     const res = await axios.delete(`${conf.api.url}/map/${_id}`, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //       crossOrigin: { mode: 'cors' },
-  //     })
-  //     console.log('map delete res:', res)
-  //     // setResponseMessage(`Map deleted successfully`)
-  //     setMaps(maps.filter(obj => obj._id !== _id))
-  //   } catch (err) {
-  //     console.error('delete map error:', err);
-  //     return setResponseError(err.toString() || 'Error deleting map.')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const deleteMap = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.delete(`${conf.api.url}/map/${mapId}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('map delete res:', res)
+      // setResponseMessage(`Map deleted successfully`)
+      const newMaps = maps.filter(obj => obj._id !== mapId)
+      setMaps(newMaps)
+      setMapId(() => newMaps[0]._id || '')
+      setTitle(() => newMaps[0].title || '')
+    } catch (err) {
+      console.error('delete map error:', err);
+      return setResponseError(err.toString() || 'Error deleting map.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -558,7 +576,7 @@ function Map () {
           const updated = { ...prev, [username]: type !== 'unavailable' };
           // Update roster with new presence info
           setRoster(prevRoster => {
-            console.log('prevRoster:', prevRoster)
+            // console.log('prevRoster:', prevRoster)
             return prevRoster.map(user => {
               if (user.name !== username) return user; // No change
               const isOnline = updated[user.name];
@@ -703,44 +721,6 @@ function Map () {
   //   setEdges((eds) => addEdge(requestEdge, eds));
   // }, [condition, setEdges]);
 
-  const saveMap = () => {
-    if (rfInstance) {
-      const flow = rfInstance.toObject();
-      console.log('saveMap flow:', flow)
-      localStorage.setItem(title, JSON.stringify(flow));
-      console.log(`Map ${title} saved with flow:`, flow);
-    }
-  }
-
-  const restoreMap = async () => {
-    const flow = JSON.parse(localStorage.getItem(title));
-    if (flow) {
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      setViewport({ x, y, zoom });
-      console.log(`Map ${title} restored with flow:`, flow);
-    } else {
-      alert(`The map ${title} does not exist`)
-    }
-  }
-
-  const newMap = () => {
-    setNodes([]);
-    setEdges([]);
-    setViewport({ x: 0, y: 0, zoom: 1 });
-    addNote()
-    console.log(`New map created.`);
-  }
-
-  const removeMap = () => {
-    localStorage.removeItem(title);
-    setNodes([]);
-    setEdges([]);
-    setViewport({ x: 0, y: 0, zoom: 1 });
-    console.log(`Map ${title} removed.`);
-  }
-
   const addNote = useCallback(() => {
     const id = getNodeId()
     const newNode = {
@@ -761,9 +741,9 @@ function Map () {
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
 
-  useEffect(() =>{
-    addNote()
-  }, [])
+  // useEffect(() =>{
+  //   addNote()
+  // }, [])
 
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
@@ -915,6 +895,108 @@ function Map () {
         <Menubar />
       </Container>
 
+      <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
+        {/*
+        <Dropdown
+          style={{ marginRight: '1em' }}
+          // compact
+          // fluid
+          selection
+          // clearable
+          // trigger={
+          //   <span>
+          //     {recipient}
+          //   </span>
+          // }
+          multiple={false}
+          search={true}
+          searchInput={{ type: 'string' }}
+          options={maps}
+          value={recipient}
+          placeholder="Map Title"
+          onChange={(e, { value }) => setRecipient(value)}
+          loading={roster.length === 0}
+        />
+        */}
+
+        <Button.Group>
+          <Button icon onClick={postMap}>
+            <Icon name='file' />
+          </Button>
+          <Button icon onClick={putMap}>
+            <Icon name='save' />
+          </Button>
+          <Button icon onClick={deleteMap}>
+            <Icon name='trash alternate' />
+          </Button>
+          <Button icon onClick={() => {}}>
+            <Icon name='download' />
+          </Button>
+          <Button icon onClick={() => {}}>
+            <Icon name='upload' />
+          </Button>
+          <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
+            <Icon name='text cursor' />
+          </Button>
+        </Button.Group>
+
+        {' '}
+        {' '}
+        { renaming && (
+          <>
+            <Input
+              iconPosition='left'
+              placeholder='Title...'
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+            ><Icon name='map' /><input /></Input>
+            <Button.Group>
+              <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
+                <Icon name='check' />
+              </Button>
+              <Button.Or />
+              <Button icon
+                onClick={() => {
+                  setRenaming(renaming => !renaming)
+                  setTitle(getMap(mapId).title)
+                }}
+              >
+                <Icon name='cancel' />
+              </Button>
+            </Button.Group>
+          </>
+        )}
+        { !renaming && (
+          <>
+          <Icon name='folder open outline' />
+          <Dropdown text={title} icon='caret down'>
+            <Dropdown.Menu>
+              <Input icon='search' iconPosition='left' className='search' />
+              <Dropdown.Header icon='map' content='Maps:' />
+              <Dropdown.Menu scrolling>
+                {maps.map(({ _id, title }) => (
+                  <Dropdown.Item
+                    key={_id} value={_id} text={title}
+                    active={_id === mapId}
+                    onClick={(e, { value }) => {
+                      setMapId(value)
+                      const map = getMap(value)
+                      setTitle(map?.title)
+                      const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
+                      setNodes(map.flow.nodes || []);
+                      setEdges(map.flow.edges || []);
+                      setViewport({ x, y, zoom });
+                      console.log(`Map ${map?.title} loaded with flow:`, map.flow);
+                    } }
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown.Menu>
+          </Dropdown>
+          </>
+        )}
+      </div>
+
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
@@ -955,28 +1037,6 @@ function Map () {
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
-            <Input
-              iconPosition='left'
-              placeholder='Title...'
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-            ><Icon name='map' /><input /></Input>
-            <br/> <br/>
-            <Button.Group>
-              <Button icon onClick={newMap}>
-                <Icon name='file' />
-              </Button>
-              <Button icon onClick={restoreMap}>
-                <Icon name='folder open outline' />
-              </Button>
-              <Button icon onClick={saveMap}>
-                <Icon name='save' />
-              </Button>
-              <Button icon onClick={removeMap}>
-                <Icon name='trash alternate' />
-              </Button>
-            </Button.Group>
-            <br/> <br/> <br/>
             <Dropdown
               compact
               fluid
