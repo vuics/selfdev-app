@@ -129,6 +129,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         position={Position.Top}
         id="a"
         isConnectable={isConnectable}
+        style={{ width: '1em', height: '0.75em', background: '#bbb' }}
       />
       <Card.Content>
         <Card.Header>
@@ -255,6 +256,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         position={Position.Bottom}
         id="a"
         isConnectable={isConnectable}
+        style={{ width: '1em', height: '0.75em', background: '#aaa' }}
       />
       <NodeResizer
         color="#ff0071"
