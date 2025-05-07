@@ -216,66 +216,8 @@ export default function Talk () {
                 // console.log('Bare buddy JID is', data.model.get('jid'));
               });
 
-              // NOTE: The Synthetic UI depends on the system components
-              //
-              // Hive agent:
-              // {
-              //   "name": "synthetic-ui-executor",
-              //   "description": "Triggers actions to synthesize UI elements by sending commands: /show docs, /show flow, /show hive, /hide flow, /hide all",
-              //   "joinRooms": [
-              //     "synthetic-ui"
-              //   ],
-              //   "loaders": [],
-              //   "webhook": {
-              //     "method": "POST",
-              //     "route": "/synthetic-ui-webhook",
-              //     "payload": {
-              //       "prompt": ""
-              //     },
-              //     "parseJson": true,
-              //     "promptKey": "prompt"
-              //   }
-              // }
-              //
-              // Node workflow:
-              //
-              //   Node-RED http in "Receive Webhook": POST /synthetic-ui-webhook
-              //   Node-RED http out "Send HTTP Response"
-              //   Node-RED function "Process Data": On Message:
-              //
-              // const prompt = msg.payload.prompt
-              // msg.payload = ""
-              // const arr = (str) => str ? str.split(',') : []
-              // const components = arr('chat,meet,hive,flow,node,code,build,open,note,sell,train,docs')
-              // if (prompt.includes('/hide all')) {
-              //     msg.payload += "[[synthetic-ui:hide('all')]]"
-              // } else {
-              //     for (const component of components) {
-              //         if (prompt.includes(`/hide ${component}`)) {
-              //             msg.payload += `[[synthetic-ui:hide('${component}')]]`
-              //         } else if (prompt.includes(`/show ${component}`)) {
-              //             msg.payload += `[[synthetic-ui:show('${component}')]]`
-              //         }
-              //     }
-              // }
-              // return msg;
-              //
-              //
-              // NOTE: Alternatively, you can create a Chat agent:
-              //
-              // {
-              //   "name": "synthetic-ui",
-              //   "description": "Synthetic-UI command translator.",
-              //   "systemMessage": "You are a synthetic UI executor. The users will pass you commands to show the UI component or hide it. Your role is to translate user commands to commands that synthetic ui will understand.\nIf you receive a command `/hide all`, you output: `[[synthetic-ui:hide('all')]]` without back ticks.\nWhen you receive a command `/hide ${component}`, you output: `[[synthetic-ui:hide('${component}')]]`.\nWhen you receive a command `/show ${component}`, you output: `[[synthetic-ui:show('${component}')]]`.\n\nExamples of components are: chat,meet,hive,flow,node,code,build,open,note,sell,train,docs and others.\n\nOutput only a command for synthetic ui and do not output anything else.\n",
-              //   "joinRooms": [
-              //     "synthetic-ui"
-              //   ],
-              //   "model": {
-              //     "provider": "openai",
-              //     "name": "gpt-4o-mini"
-              //   },
-              //   "loaders": []
-              // }
+              // NOTE: The Synthetic UI depends on the system components.
+              //       See: ../synthetic-ui.md
               //
               this._converse.api.listen.on('message', function (data) {
                 console.log('converse api message> data:', data)
