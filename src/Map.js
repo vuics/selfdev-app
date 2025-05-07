@@ -45,7 +45,7 @@ import { faker } from '@faker-js/faker'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { generateUUID, parseRegexString } from './helper'
+import { generateUUID, parseRegexString, sleep } from './helper'
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
@@ -234,7 +234,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             minRows={1}
             // maxRows={12}
             style={{ width: '100%', height: '100%' }}
-            useCacheForDOMMeasurements
           />
         ) : (
           <div
@@ -358,19 +357,25 @@ function Map () {
   const [ title, setTitle ] = useState('example-map')
   const [ renaming, setRenaming ] = useState(false)
   const [ mapId, setMapId ] = useState('')
-  // const [ map, setMap ] = useState({})
+  const [ opener, setOpener ] = useState(false)
+  const [ openerSearch, setOpenerSearch ] = useState('')
+  const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
+
+  const reactFlowWrapper = useRef(null);
+  const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
+  const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
+  const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
+  const [ rfInstance, setRfInstance ] = useState(null);
 
   // console.log('title:', title)
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
+  console.log('openerSearch:', openerSearch)
 
   function getMap(mapId) {
     return maps.filter(({ _id }) => _id === mapId)[0]
   }
-
-  // TODO: develop saving maps in API
-  //
 
   const indexMaps = async () => {
     setLoading(true)
@@ -382,6 +387,11 @@ function Map () {
       })
       console.log('maps index res:', res)
       setMaps(res?.data || [])
+      setMapId(res?.data[0]?._id)
+      setTitle(res?.data[0]?.title)
+      setNodes(res?.data[0]?.flow.nodes);
+      setEdges(res?.data[0]?.flow.edges);
+      setViewport(res?.data[0]?.flow.viewport);
     } catch (err) {
       console.error('indexMaps error:', err);
       return setResponseError(err?.response?.data?.message || 'Error getting maps.')
@@ -412,8 +422,12 @@ function Map () {
       console.log('post map res:', res)
       // setResponseMessage(`Map created successfully`)
       setMaps(maps => [res.data, ...maps])
-      setMapId(() => res.data._id)
-      setTitle(() => res.data.title)
+      setMapId(res.data._id)
+      setTitle(res.data.title)
+      setNodes(res.data.flow.nodes);
+      setEdges(res.data.flow.edges);
+      setViewport(res.data.flow.viewport);
+      console.log('mapId:', res.data._id)
     } catch (err) {
       console.error('post map error:', err);
       return setResponseError(err.toString() || 'Error posting map.')
@@ -425,14 +439,18 @@ function Map () {
   const putMap = async () => {
     setLoading(true)
     try {
+      if (!mapId) {
+        return await postMap()
+      }
       if (!rfInstance) {
         throw new Error('ReactFlow instance is not defined.')
       }
       const flow = rfInstance.toObject();
+      console.log('put mapId:', mapId)
       const res = await axios.put(`${conf.api.url}/map/${mapId}`, {
         ...getMap(mapId),
-        title,
-        flow,
+        title: title,
+        flow: flow,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -442,8 +460,8 @@ function Map () {
       // setResponseMessage(`Map updated successfully`)
       setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
     } catch (err) {
-      console.error('delete map error:', err);
-      return setResponseError(err.toString() || 'Error deleting map.')
+      console.error('put map error:', err);
+      return setResponseError(err.toString() || 'Error putting map.')
     } finally {
       setLoading(false)
     }
@@ -461,8 +479,15 @@ function Map () {
       // setResponseMessage(`Map deleted successfully`)
       const newMaps = maps.filter(obj => obj._id !== mapId)
       setMaps(newMaps)
-      setMapId(() => newMaps[0]._id || '')
-      setTitle(() => newMaps[0].title || '')
+      if (newMaps.length > 0) {
+        setMapId(newMaps[0]._id)
+        setTitle(newMaps[0].title)
+        setNodes(newMaps[0].flow.nodes);
+        setEdges(newMaps[0].flow.edges);
+        setViewport(newMaps[0].flow.viewport);
+      } else {
+        await postMap()
+      }
     } catch (err) {
       console.error('delete map error:', err);
       return setResponseError(err.toString() || 'Error deleting map.')
@@ -470,6 +495,71 @@ function Map () {
       setLoading(false)
     }
   }
+
+  const downloadMap = () => {
+    setLoading(true)
+    try {
+      if (!rfInstance) {
+        throw new Error('ReactFlow instance is not defined.')
+      }
+      const flow = rfInstance.toObject();
+      const data = {
+        title,
+        flow,
+      }
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${title}.azone.json`;
+      link.click();
+      URL.revokeObjectURL(url); // Clean up
+    } catch (err) {
+      console.error('download map error:', err);
+      return setResponseError(err.toString() || 'Error downloading map.')
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadMap = (event) => {
+    setLoading(true)
+    try {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            await postMap()
+            const parsedMap = JSON.parse(e.target.result);
+            setTitle(parsedMap?.title)
+            const { x = 0, y = 0, zoom = 1 } = parsedMap.flow.viewport;
+            setNodes(parsedMap.flow.nodes || []);
+            setEdges(parsedMap.flow.edges || []);
+            setViewport({ x, y, zoom });
+            console.log(`Map ${parsedMap?.title} loaded with flow:`, parsedMap.flow);
+            // console.log('mapId:', mapId)
+            // await putMap()
+          } catch (err) {
+            alert('Invalid JSON file.');
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        alert('Please upload a valid JSON file.');
+      }
+    } catch (err) {
+      console.error('delete map error:', err);
+      return setResponseError(err.toString() || 'Error downloading map.')
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadMapInit = () => {
+    fileInputRef.current.click(); // triggers hidden input
+  };
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -693,12 +783,6 @@ function Map () {
     await xmppRef.current.send(message);
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
-
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
-  const [rfInstance, setRfInstance] = useState(null);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -929,19 +1013,25 @@ function Map () {
           <Button icon onClick={deleteMap}>
             <Icon name='trash alternate' />
           </Button>
-          <Button icon onClick={() => {}}>
+          <Button icon onClick={downloadMap}>
             <Icon name='download' />
           </Button>
-          <Button icon onClick={() => {}}>
-            <Icon name='upload' />
+          <Button icon onClick={uploadMapInit}>
+            <Icon name="upload" />
+            <input
+              type="file"
+              accept="application/json"
+              ref={fileInputRef}
+              onChange={uploadMap}
+              style={{ display: 'none' }} // hide input
+            />
           </Button>
           <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
             <Icon name='text cursor' />
           </Button>
         </Button.Group>
 
-        {' '}
-        {' '}
+        <span style={{ marginLeft: '1em' }} />
         { renaming && (
           <>
             <Input
@@ -969,27 +1059,34 @@ function Map () {
         { !renaming && (
           <>
           <Icon name='folder open outline' />
-          <Dropdown text={title} icon='caret down'>
+          <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
             <Dropdown.Menu>
-              <Input icon='search' iconPosition='left' className='search' />
+              <Input
+                icon='search' iconPosition='left' className='search'
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => setOpenerSearch(e.target.value)}
+              />
               <Dropdown.Header icon='map' content='Maps:' />
               <Dropdown.Menu scrolling>
-                {maps.map(({ _id, title }) => (
-                  <Dropdown.Item
-                    key={_id} value={_id} text={title}
-                    active={_id === mapId}
-                    onClick={(e, { value }) => {
-                      setMapId(value)
-                      const map = getMap(value)
-                      setTitle(map?.title)
-                      const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
-                      setNodes(map.flow.nodes || []);
-                      setEdges(map.flow.edges || []);
-                      setViewport({ x, y, zoom });
-                      console.log(`Map ${map?.title} loaded with flow:`, map.flow);
-                    } }
-                  />
-                ))}
+                {maps
+                  .filter(({ title }) => title.includes(openerSearch))
+                  .map(({ _id, title }) => (
+                    <Dropdown.Item
+                      key={_id} value={_id} text={title}
+                      active={_id === mapId}
+                      onClick={(e, { value }) => {
+                        setMapId(value)
+                        const map = getMap(value)
+                        setTitle(map?.title)
+                        const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
+                        setNodes(map.flow.nodes || []);
+                        setEdges(map.flow.edges || []);
+                        setViewport({ x, y, zoom });
+                        console.log(`Map ${map?.title} loaded with flow:`, map.flow);
+                      } }
+                    />
+                  ))
+                }
               </Dropdown.Menu>
             </Dropdown.Menu>
           </Dropdown>

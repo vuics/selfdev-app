@@ -37,3 +37,6 @@ export function parseRegexString(input) {
   const [, pattern, flags] = match;
   return { pattern, flags };
 }
+
+export function sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
+
