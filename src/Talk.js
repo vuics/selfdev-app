@@ -260,6 +260,23 @@ export default function Talk () {
               // }
               // return msg;
               //
+              //
+              // NOTE: Alternatively, you can create a Chat agent:
+              //
+              // {
+              //   "name": "synthetic-ui",
+              //   "description": "Synthetic-UI command translator.",
+              //   "systemMessage": "You are a synthetic UI executor. The users will pass you commands to show the UI component or hide it. Your role is to translate user commands to commands that synthetic ui will understand.\nIf you receive a command `/hide all`, you output: `[[synthetic-ui:hide('all')]]` without back ticks.\nWhen you receive a command `/hide ${component}`, you output: `[[synthetic-ui:hide('${component}')]]`.\nWhen you receive a command `/show ${component}`, you output: `[[synthetic-ui:show('${component}')]]`.\n\nExamples of components are: chat,meet,hive,flow,node,code,build,open,note,sell,train,docs and others.\n\nOutput only a command for synthetic ui and do not output anything else.\n",
+              //   "joinRooms": [
+              //     "synthetic-ui"
+              //   ],
+              //   "model": {
+              //     "provider": "openai",
+              //     "name": "gpt-4o-mini"
+              //   },
+              //   "loaders": []
+              // }
+              //
               this._converse.api.listen.on('message', function (data) {
                 console.log('converse api message> data:', data)
                 if (data && data.stanza) {
