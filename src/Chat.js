@@ -152,7 +152,7 @@ const Chat = () => {
           <List.Item key={index}>
             <List.Icon name={ response ? 'server' : 'user' } size='big' />
             <List.Content>
-              <List.Header as='a'>{ response ? 'AZ1' : `${name}` || '<USER>' }
+              <List.Header as='a'>{ response ? 'Selfdev' : `${name}` || '<USER>' }
               </List.Header>
               <List.Description>
                 { markdown ?

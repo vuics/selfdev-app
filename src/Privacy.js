@@ -9,21 +9,21 @@ import conf from './conf'
 const privacyMarkdown = `
 # Privacy Policy
 
-AZ1 is a platform that provides self-developing AI. We respect your privacy and we are committed to protecting your personal data. This privacy policy explains how we collect, use, and share your personal data when you use AZ1.
+Selfdev is a platform that provides self-developing AI. We respect your privacy and we are committed to protecting your personal data. This privacy policy explains how we collect, use, and share your personal data when you use Selfdev.
 
 ## What personal data do we collect?
 
-We collect the following personal data from you when you use AZ1:
+We collect the following personal data from you when you use Selfdev:
 
 * Your name and email address.
 * Your IP address.
 * The information you provide when you create an account, such as your username and password.
-* The information you provide when you use AZ1, such as the questions you ask and the answers you receive.
+* The information you provide when you use Selfdev, such as the questions you ask and the answers you receive.
 * The information you provide when you contact us for support, such as your contact information and the nature of your inquiry.
 
 ## How do we use your personal data?
 
-We use your personal data to provide you with the services you have requested, such as access to AZ1, support chat, and analysis of your data. We also use your personal data to improve our product and to send you marketing communications.
+We use your personal data to provide you with the services you have requested, such as access to Selfdev, support chat, and analysis of your data. We also use your personal data to improve our product and to send you marketing communications.
 
 ## Who do we share your personal data with?
 
@@ -39,7 +39,7 @@ You have the right to access, correct, or delete your personal data. You can als
 
 ## Changes to this privacy policy
 
-We may modify these privacy policy at any time without notice. Your continued use of AZ1 after any modification constitutes your acceptance of the modified privacy policy.
+We may modify these privacy policy at any time without notice. Your continued use of Selfdev after any modification constitutes your acceptance of the modified privacy policy.
 
 ## Contact us
 

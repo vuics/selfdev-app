@@ -21,7 +21,7 @@ const Product = () => (
     <Container>
       <Segment padded textAlign="center" inverted color='blue'>
         <Header as="h1">
-          AZ1.ai
+          Selfdev
         </Header>
       </Segment>
     </Container>
@@ -35,7 +35,7 @@ const Product = () => (
         <Image src='/images/logo192.png' centered />
         <br />
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          AZ1.ai is a distributed Agent-as-a-Service platform that empowers forward-thinking teams to automate operations and accelerate execution saving time and money. Build and run intelligent agentic workflows with any API, model, or database — effortlessly.
+          Selfdev is a distributed Agent-as-a-Service platform that empowers forward-thinking teams to automate operations and accelerate execution saving time and money. Build and run intelligent agentic workflows with any API, model, or database — effortlessly.
         </p>
         <p style={{ fontSize: '1.3em', textAlign: 'center' }}>
           Seamlessly connect agents and humans across all channels — web, mobile, desktop, video calls, virtual reality, command line, social media and messangers, and even phone lines and sms.
@@ -1125,7 +1125,7 @@ const Product = () => (
           <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Build a bridge between AZ1.ai and social networks and messangers such as WhatsApp, Slack, Discord, Telegram, Microsoft Teams, VK, XMPP, Twitch, IRC, MatterMost, Matrix, RocketChat, Keybase, NextCloud, Mumble, Gitter, Ssh-chat, Zulip, and more with REST API.
+          Build a bridge between Selfdev and social networks and messangers such as WhatsApp, Slack, Discord, Telegram, Microsoft Teams, VK, XMPP, Twitch, IRC, MatterMost, Matrix, RocketChat, Keybase, NextCloud, Mumble, Gitter, Ssh-chat, Zulip, and more with REST API.
         </p>
         <p style={{ fontSize: '1em', textAlign: 'center' }}>
           Also, Discourse, Facebook Messanger, Minecraft, Reddit, MatterAMXX, Vintage Storey, Ultima Online Emulator, Teamspeak.
@@ -1133,13 +1133,13 @@ const Product = () => (
         <br/>
         <Card.Group key="card-group-bridge" centered items={[ {
           header: 'Unified Communication Across Platforms',
-          description: 'Connect AZ1.ai with messaging apps like WhatsApp, Slack, Discord, and more, enabling seamless cross-platform communication without leaving preferred environments.',
+          description: 'Connect Selfdev with messaging apps like WhatsApp, Slack, Discord, and more, enabling seamless cross-platform communication without leaving preferred environments.',
         }, {
           header: 'Maximized Reach and Engagement',
           description: 'Reach users on the platforms they already use, increasing accessibility and engagement across social networks and chat applications.',
         }, {
           header: 'Automation and AI Anywhere',
-          description: 'Deploy AZ1.ai’s intelligent agents and automation features into existing messaging ecosystems to enhance productivity and responsiveness.',
+          description: 'Deploy Selfdev’s intelligent agents and automation features into existing messaging ecosystems to enhance productivity and responsiveness.',
         }, {
           header: 'Custom Workflows Through REST API',
           description: 'Use the flexible REST API to build tailored workflows, bots, and integrations suited to your organization’s unique needs and services.',

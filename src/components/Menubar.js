@@ -20,7 +20,7 @@ const Menubar = () => {
       <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
         <Image alt="logo" src='/images/logo192.png' height='32px' />
         {'\u00A0'}
-        <span style={{color: 'grey'}}>AZ1</span>
+        <span style={{color: 'grey'}}>Selfdev</span>
       </Menu.Item>
       { conf.chat.enable && (
         <Menu.Item onClick={() => navigate('/chat')} active={pathname==='/chat'}>

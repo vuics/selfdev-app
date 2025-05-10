@@ -23,6 +23,7 @@ const Team = () => (
         </Header>
         <br/>
         <Card.Group centered>
+          {/*
           <Card>
             <Image src='/images/team/hal-casteel.jpg' wrapped />
             <Card.Content>
@@ -45,6 +46,7 @@ const Team = () => (
               </a>
             </Card.Content>
           </Card>
+          */}
           <Card>
             <Image src='/images/team/artem-arakcheev.jpg' wrapped />
             <Card.Content>
@@ -52,7 +54,10 @@ const Team = () => (
                 Artem Arakcheev, PhD, DBA
               </Card.Header>
               <Card.Meta>
+                {/*
                 Co-founder, CTO, co-CEO
+                */}
+                Founder
               </Card.Meta>
               <Card.Description>
                 Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.
@@ -67,6 +72,7 @@ const Team = () => (
               </a>
             </Card.Content>
           </Card>
+          {/*
           <Card>
             <Image src='/images/team/will-mckinley.jpg' wrapped />
             <Card.Content>
@@ -89,6 +95,7 @@ const Team = () => (
               </a>
             </Card.Content>
           </Card>
+          */}
         </Card.Group>
       </Segment>
     </Container>

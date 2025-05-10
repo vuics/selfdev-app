@@ -61,7 +61,7 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
                 color: 'rgb(35,68,123)',
               }}
             >
-              Supercharge Your Productivity with AZ1
+              Supercharge Your Productivity with Selfdev
             </Header>
             <Header
               as='h3'
@@ -357,7 +357,7 @@ const HomepageLayout = () => {
             Our mission is to enable measurable growth, amplify human potential, and empower sustainable, high-impact businesses.
           </p>
           <p style={{ fontSize: '2em'}}>
-            AZ1 imagines a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive.
+            Selfdev imagines a future where work and entrepreneurship are shaped by advanced technology, allowing human potential to flourish and business innovation to thrive.
           </p>
           <p style={{ fontSize: '2em', fontWeight: 'bold' }}>
             The future is now.
@@ -408,7 +408,7 @@ const HomepageLayout = () => {
           <Header as="h2" dividing>
             Join Us in Shaping the Future of Work
           </Header>
-          <p>Are you ready to amplify your potential, drive innovation, and foster sustainable growth? Join us at AZ1.AI and discover a new realm of collaboration where AI enhances human capability.</p>
+          <p>Are you ready to amplify your potential, drive innovation, and foster sustainable growth? Join us at Selfdev.AI and discover a new realm of collaboration where AI enhances human capability.</p>
           <Button
             style={{
               marginTop: '1em',
