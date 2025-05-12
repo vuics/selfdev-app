@@ -42,16 +42,18 @@ import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
 import safeRegex from "safe-regex";
 import { faker } from '@faker-js/faker'
+import { v4 as uuidv4 } from 'uuid'
+import { nanoid } from 'nanoid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { generateUUID, parseRegexString, sleep } from './helper'
+import { parseRegexString, sleep } from './helper'
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
 
-const tokenRegex = /(\[\[[A-Za-z0-9_]+\]\])/g;
-const unameRegex = /\[\[([A-Za-z0-9_]+)\]\]/;
+const tokenRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
+const unameRegex = /\[\[([A-Za-z0-9_-]+)\]\]/;
 
 const ExpandingVariable = memo(({ key, part, allNodes }) => {
   const { fitView } = useReactFlow();
@@ -340,8 +342,7 @@ const edgeTypes = {
   RequestEdge: RequestEdge,
 };
 
-let id = 0;
-const getNodeId = () => `${id++}`;
+const getNodeId = () => nanoid(9)
 const getUname = (id) => `Note_${id}`
 
 
@@ -735,7 +736,7 @@ function Map () {
         type: 'chat',
         to,
         from: credentials.jid,
-        id: generateUUID()
+        id: uuidv4()
       },
       xml('active', { xmlns: 'http://jabber.org/protocol/chatstates' }),
       xml('body', {}, prompt)
@@ -769,7 +770,7 @@ function Map () {
     const message = xml('message', {
         type: 'groupchat',
         to: roomJid,
-        id: generateUUID(),
+        id: uuidv4(),
         'xml:lang': 'en',
       },
       xml('body', {}, body),
