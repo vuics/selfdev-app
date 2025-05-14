@@ -47,8 +47,8 @@ import { nanoid } from 'nanoid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { parseRegexString, sleep, useWindowDimensions } from './helper.js'
-import { QCMarkdown } from './components/Text'
+import { parseRegexString, useWindowDimensions } from './helper.js'
+import { MarkdownMermaid } from './components/Text'
 
 
 const MapContext = createContext({});
@@ -129,14 +129,38 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         <ExpandingVariable key={i} part={part} allNodes={allNodes} />
       )
     } else {
-      return (
-        <span key={i}>{part}</span>
-      )
       // return (
-      //   <QCMarkdown key={i}>{part}</QCMarkdown>
+      //   <span key={i}>{part}</span>
       // )
+      return (
+        <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
+      )
     }
   } );
+
+  // Remove the resizeObserver error
+  // useEffect(() => {
+  //   const errorHandler = (e: any) => {
+  //     if (
+  //       e.message.includes(
+  //         "ResizeObserver loop completed with undelivered notifications" ||
+  //           "ResizeObserver loop limit exceeded"
+  //       )
+  //     ) {
+  //       const resizeObserverErr = document.getElementById(
+  //         "webpack-dev-server-client-overlay"
+  //       );
+  //       if (resizeObserverErr) {
+  //         resizeObserverErr.style.display = "none";
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener("error", errorHandler);
+
+  //   return () => {
+  //     window.removeEventListener("error", errorHandler);
+  //   };
+  // }, []);
 
   return (
     <Card

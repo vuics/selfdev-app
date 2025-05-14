@@ -1,4 +1,4 @@
-// import React, { useEffect, useRef } from 'react'
+import React, { useEffect, memo } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -8,7 +8,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coy as hlStyle } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { okaidia as hlStyleDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 // import { coyWithoutShadows as hlStyle } from 'react-syntax-highlighter/dist/esm/styles/prism'
-// import mermaid from 'mermaid'
+import mermaid from 'mermaid'
 
 export const TextAuto = (props) => {
   return <TextareaAutosize rows={1} {...props} />
@@ -63,44 +63,44 @@ export const QCMarkdown = ({ children, dark }) => (
   />
 )
 
-// const Mermaid = ({ chart }) => {
-//   useEffect(() => {
-//     mermaid.initialize({ startOnLoad: true });
-//     mermaid.contentLoaded();
-//   }, [chart]);
+const Mermaid = memo(({ chart }) => {
+  useEffect(() => {
+    mermaid.initialize({ startOnLoad: true });
+    mermaid.contentLoaded();
+  }, [chart]);
 
-//   return (
-//     <div className="mermaid">
-//       {chart}
-//     </div>
-//   );
-// };
+  return (
+    <pre className="mermaid">
+      {chart}
+    </pre>
+  );
+});
 
-// export const MarkdownMermaid = ({ children, dark }) => {
-//   const baseComponents = dark ? MarkdownHighlighterDark : MarkdownHighlighter;
+export const MarkdownMermaid = memo(({ children, dark }) => {
+  const baseComponents = dark ? MarkdownHighlighterDark : MarkdownHighlighter;
 
-//   const mergedComponents = {
-//     ...baseComponents,
-//     code({ className, children }) {
-//       const match = /language-(\w+)/.exec(className || '');
-//       if (match && match[1] === 'mermaid') {
-//         return <Mermaid chart={children} />;
-//       }
-//       return (
-//         <pre>
-//           <code className={className}>{children}</code>
-//         </pre>
-//       );
-//     },
-//   };
+  const mergedComponents = {
+    ...baseComponents,
+    code({ className, children }) {
+      const match = /language-(\w+)/.exec(className || '');
+      if (match && match[1] === 'mermaid') {
+        return <Mermaid chart={children} />;
+      }
+      return (
+        <pre>
+          <code className={className}>{children}</code>
+        </pre>
+      );
+    },
+  };
 
-//   return (
-//     <ReactMarkdown
-//       remarkPlugins={[remarkGfm, remarkMath]}
-//       rehypePlugins={[rehypeMathjax]}
-//       components={mergedComponents}
-//     >
-//       {children}
-//     </ReactMarkdown>
-//   );
-// };
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeMathjax]}
+      components={mergedComponents}
+    >
+      {children}
+    </ReactMarkdown>
+  );
+});
