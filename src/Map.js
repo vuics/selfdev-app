@@ -47,7 +47,7 @@ import { nanoid } from 'nanoid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { parseRegexString, sleep, getWindowDimensions } from './helper'
+import { parseRegexString, sleep, useWindowDimensions } from './helper.js'
 import { QCMarkdown } from './components/Text'
 
 
@@ -349,6 +349,7 @@ const getUname = (id) => `Note_${id}`
 
 
 function Map () {
+  const { height, width } = useWindowDimensions();
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
@@ -811,11 +812,10 @@ function Map () {
   // }, [condition, setEdges]);
 
   const addNote = useCallback(() => {
-    const { width, height } = getWindowDimensions()
     const id = getNodeId()
     const newNode = {
       id,
-      position: screenToFlowPosition({ x: width - 400, y: height/2, }),
+      position: screenToFlowPosition({ x: width*3/4, y: height/3, }),
       data: {
         uname: getUname(id),
         text: '',
@@ -1110,7 +1110,7 @@ function Map () {
 
       <div
         className="wrapper" ref={reactFlowWrapper}
-        style={{ width: '100vw', height: '100vh' }}
+        style={{ width: width, height: height - conf.iframe.topOffset - conf.iframe.bottomOffset }}
       >
         <ReactFlow
           style={{ backgroundColor: "#F7F9FB" }}
