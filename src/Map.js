@@ -127,7 +127,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   } );
 
   return (
-    <Card style={{ width: '100%', maxWidth: '400px' }}>
+    <Card style={{ width: '100%', maxWidth: '600px' }}>
       <Handle
         type="target"
         position={Position.Top}
@@ -238,7 +238,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             className="nodrag"
             minRows={1}
             // maxRows={12}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '570px' }}
           />
         ) : (
           <div
