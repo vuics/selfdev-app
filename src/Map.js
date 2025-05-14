@@ -59,6 +59,32 @@ const useMapContext = () => useContext(MapContext);
 const tokenRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
 const unameRegex = /\[\[([A-Za-z0-9_-]+)\]\]/;
 
+function buildSmartText({ text, getNodes }) {
+  const allNodes = getNodes()
+  const smartText = text.split(tokenRegex).map((part, i) => {
+    if (tokenRegex.test(part)) {
+      let uname = part
+      const match = part.match(unameRegex);
+      // console.log('match:', match)
+      if (match) {
+        uname = match[1]
+      }
+      let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+      let nodeText
+      if (foundNodes.length === 1) {
+        nodeText = foundNodes[0].data.text
+      } else {
+        console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+        nodeText = ''
+      }
+      return nodeText
+    } else {
+      return part
+    }
+  } ).join('\n');
+  return smartText
+}
+
 const ExpandingVariable = memo(({ key, part, allNodes }) => {
   const { fitView } = useReactFlow();
 
@@ -125,7 +151,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     )
   }
 
-  const smartText = data.text.split(tokenRegex).map((part, i) => {
+  const interactiveText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
       return (
         <ExpandingVariable key={i} part={part} allNodes={allNodes} />
@@ -289,7 +315,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             }}
             style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
           >
-            {smartText}
+            {interactiveText}
           </div>
         ) }
       </Card.Content>
@@ -313,7 +339,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 })
 
 const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd, source, target }) => {
-  const { setEdges, setNodes } = useReactFlow();
+  const { setEdges, setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
     sourceY,
@@ -351,7 +377,9 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
               // TODO:
               // if (satisfied) {
               // }
-              await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: nodesData[0].data.text});
+              const smartText = buildSmartText({ text: nodesData[0].data.text, getNodes })
+              console.log('smartText:', smartText)
+              await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: smartText });
 
             }}
           >
@@ -897,49 +925,8 @@ function Map () {
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
 
-  // useEffect(() =>{
-  //   addNote()
-  // }, [])
-
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
-
-    // const allNodes = getNodes()
-    // const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
-    //   if (tokenRegex.test(part)) {
-    //     let uname = part
-    //     const match = part.match(unameRegex);
-    //     // console.log('match:', match)
-    //     if (match) {
-    //       uname = match[1]
-    //     }
-    //     let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-    //     let nodeText
-    //     if (foundNodes.length === 1) {
-    //       nodeText = foundNodes[0].data.text
-    //     } else {
-    //       console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-    //       nodeText = ''
-    //     }
-    //     return nodeText
-    //   } else {
-    //     return part
-    //   }
-    // } ).join('\n');
-    // console.log('smartText:', smartText)
-
-    // let satisfied = true
-    // let safe = true
-    // if (condition) {
-    //   const { pattern, flags } = parseRegexString(condition);
-    //   console.log('pattern:', pattern, ', flags:', flags)
-    //   safe = safeRegex(pattern)
-    //   if (safe) {
-    //     const safeRegex = new RegExp(pattern, flags);
-    //     satisfied = safeRegex.test(smartText)
-    //   }
-    // }
-    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
 
     // when a connection is dropped on the pane it's not valid
     if (connection.isValid) {
@@ -963,28 +950,7 @@ function Map () {
         return alert('Please write note / prompt')
       }
 
-      const allNodes = getNodes()
-      const smartText = connection.fromNode.data.text.split(tokenRegex).map((part, i) => {
-        if (tokenRegex.test(part)) {
-          let uname = part
-          const match = part.match(unameRegex);
-          // console.log('match:', match)
-          if (match) {
-            uname = match[1]
-          }
-          let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-          let nodeText
-          if (foundNodes.length === 1) {
-            nodeText = foundNodes[0].data.text
-          } else {
-            console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-            nodeText = ''
-          }
-          return nodeText
-        } else {
-          return part
-        }
-      } ).join('\n');
+      const smartText = buildSmartText({ text: connection.fromNode.data.text, getNodes })
       console.log('smartText:', smartText)
 
       let satisfied = true
@@ -1013,7 +979,6 @@ function Map () {
           renaming: false,
           waitRecipient: satisfied ? recipient : undefined,
         },
-        // origin: [0.5, 0.0],
         type: "NoteNode",
       };
       setNodes((nodes) =>
