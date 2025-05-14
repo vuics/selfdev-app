@@ -113,6 +113,15 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const [ newUname, setNewUname ] = useState(data.uname)
   const allNodes = getNodes()
   const { presenceMap } = useMapContext();
+  const [ text, setText ] = useState(data.text)
+
+  const applyText = (text) => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, text, editing: !data.editing } } : node
+      )
+    )
+  }
 
   const smartText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
@@ -216,30 +225,32 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         ) }
 
         { data.editing ? (
-          <TextareaAutosize
-            value={data.text}
-            onChange={(e) => {
-              setNodes((nodes) =>
-                nodes.map((node) =>
-                  node.id === id ? { ...node, data: { ...node.data, text: e.target.value } } : node
-                )
-              );
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-                e.preventDefault();
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                  )
-                )
-              }
-            }}
-            className="nodrag"
-            minRows={1}
-            // maxRows={12}
-            style={{ width: '570px' }}
-          />
+          <>
+            <TextareaAutosize
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                  e.preventDefault();
+                  applyText(text)
+                }
+              }}
+              className="nodrag"
+              minRows={1}
+              // maxRows={12}
+              style={{ width: '570px', height: '100%' }}
+            />
+            <Button
+              compact positive floated='right'
+              icon labelPosition='right'
+              onClick={() => applyText(text)}
+            >
+              <Icon name='check' />
+              Apply
+            </Button>
+          </>
         ) : (
           <div
             onClick={() => {
