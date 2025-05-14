@@ -37,6 +37,7 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   MarkerType,
+  useNodesData,
   // NodeResizer,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -311,8 +312,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
-const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd }) => {
-  const { setEdges } = useReactFlow();
+const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd, source, target }) => {
+  const { setEdges, setNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
     sourceY,
@@ -320,6 +321,9 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
     targetY,
   });
   const { presenceMap } = useMapContext();
+  const nodesData = useNodesData([source, target])
+  const { credentials, sendPersonalMessage } = useMapContext();
+  console.log('nodesData:', nodesData)
 
   return (
     <>
@@ -336,8 +340,19 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
           <Button
             compact
             size='mini'
-            onClick={() => {
-              window.alert(`${data.recipient || 'The user'} has been clicked!`);
+            onClick={async () => {
+              console.log('source:', source, ', target:', target)
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.id === nodesData[1].id ? { ...node, data: { ...node.data, waitRecipient: data.recipient, text: '' } } : node
+                )
+              )
+
+              // TODO:
+              // if (satisfied) {
+              // }
+              await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: nodesData[0].data.text});
+
             }}
           >
             <Icon
@@ -1031,7 +1046,7 @@ function Map () {
   }, [screenToFlowPosition, credentials, recipient, condition]);
 
   return (
-    <MapContext.Provider value={{ presenceMap }}>
+    <MapContext.Provider value={{ presenceMap, credentials, sendPersonalMessage }}>
       <Container>
         <Menubar />
       </Container>
