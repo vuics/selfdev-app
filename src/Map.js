@@ -374,30 +374,19 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
   });
   const { presenceMap } = useMapContext();
   const nodesData = useNodesData([source, target])
-  const { credentials, sendPersonalMessage, reordering, setEdges } = useMapContext();
+  const { credentials, recipient, sendPersonalMessage, reordering, setEdges } = useMapContext();
 
   // console.log('nodesData:', nodesData)
 
   const moveEdge = useCallback(({ step }) => {
-    // console.log('----------')
-    // console.log('current edge id:', id)
     setEdges((edges) => {
-      // const edges = getEdges()
-      // console.log('edges:', edges)
       const index = edges.findIndex(edge => edge.id === id);
-      // console.log('index:', index)
       if (index === -1) return edges; // Edge not found
-
       const newIndex = index + step
-      // console.log('newIndex:', newIndex)
       if (newIndex < 0 || newIndex >= edges.length) return edges; // Out of bounds
-
       const updatedEdges = [...edges];
-      // console.log('updatedEdges:', updatedEdges)
       const [movedEdge] = updatedEdges.splice(index, 1); // Remove the edge
-      // console.log('movedEdge:', movedEdge)
       updatedEdges.splice(newIndex, 0, movedEdge); // Insert at new position
-      // console.log('updatedEdges:', updatedEdges)
 
       let sequence = 1
       return updatedEdges.map((edge, i) => ({
@@ -489,14 +478,46 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             {data.condition}
           </Button>
 
+          {/*
           <Button compact size='mini'
             onClick={() => {
               // Below, it deletes the edge
-              setEdges((es) => es.filter((e) => e.id !== id));
             }}
           >
             <Icon name='trash' />
           </Button>
+          */}
+
+          <Button compact size='mini'>
+            <Dropdown item simple position='right'
+              icon={
+               <Icon name='ellipsis vertical' color='grey' />
+              }>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((edges) =>
+                      edges.map((edge) =>
+                        edge.id=== id ? { ...edge, data: { ...edge.data, recipient } } : edge
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='edit' />
+                  Set recipient
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((es) => es.filter((e) => e.id !== id));
+                  }}
+                >
+                  <Icon name='delete' />
+                  Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Button>
+
         </Button.Group>
       </EdgeLabelRenderer>
     </>
@@ -1199,7 +1220,9 @@ function Map () {
   // }, [edges]);
 
   return (
-    <MapContext.Provider value={{ presenceMap, credentials, sendPersonalMessage, reordering, setEdges }}>
+    <MapContext.Provider value={{
+      presenceMap, credentials, recipient, sendPersonalMessage, reordering, setEdges
+    }}>
       <Container>
         <Menubar />
       </Container>
