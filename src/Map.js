@@ -130,13 +130,22 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       )
     } else {
       return (
-        <QCMarkdown key={i}>{part}</QCMarkdown>
+        <span key={i}>{part}</span>
       )
+      // return (
+      //   <QCMarkdown key={i}>{part}</QCMarkdown>
+      // )
     }
   } );
 
   return (
-    <Card style={{ width: '100%', maxWidth: '600px' }}>
+    <Card
+      style={{
+        width: '100%', maxWidth: '600px',
+        borderStyle: selected ? 'solid' : undefined,
+        borderColor: selected ? 'violet' : undefined
+      }}
+    >
       <Handle
         type="target"
         position={Position.Top}
@@ -273,12 +282,14 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         isConnectable={isConnectable}
         style={{ width: '1em', height: '0.75em', background: '#aaa' }}
       />
+      {/*
       <NodeResizer
         color="#ff0071"
         isVisible={selected}
         minWidth={100}
         minHeight={30}
       />
+      */}
     </Card>
   );
 })
