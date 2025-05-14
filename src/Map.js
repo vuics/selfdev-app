@@ -36,7 +36,7 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   MarkerType,
-  NodeResizer,
+  // NodeResizer,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
@@ -138,29 +138,21 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   } );
 
-  // Remove the resizeObserver error
-  // useEffect(() => {
-  //   const errorHandler = (e: any) => {
-  //     if (
-  //       e.message.includes(
-  //         "ResizeObserver loop completed with undelivered notifications" ||
-  //           "ResizeObserver loop limit exceeded"
-  //       )
-  //     ) {
-  //       const resizeObserverErr = document.getElementById(
-  //         "webpack-dev-server-client-overlay"
-  //       );
-  //       if (resizeObserverErr) {
-  //         resizeObserverErr.style.display = "none";
-  //       }
-  //     }
-  //   };
-  //   window.addEventListener("error", errorHandler);
-
-  //   return () => {
-  //     window.removeEventListener("error", errorHandler);
-  //   };
-  // }, []);
+  // NOTE: Remove the resizeObserver error
+  useEffect(() => {
+    const errorHandler = (e: any) => {
+      if (e.message.includes("ResizeObserver loop completed with undelivered notifications" || "ResizeObserver loop limit exceeded")) {
+        const resizeObserverErr = document.getElementById("webpack-dev-server-client-overlay");
+        if (resizeObserverErr) {
+          resizeObserverErr.style.display = "none";
+        }
+      }
+    };
+    window.addEventListener("error", errorHandler);
+    return () => {
+      window.removeEventListener("error", errorHandler);
+    };
+  }, []);
 
   return (
     <Card
@@ -504,6 +496,7 @@ function Map () {
         title: title,
         flow: flow,
       }, {
+        // timeout: 10000,
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
         crossOrigin: { mode: 'cors' },
