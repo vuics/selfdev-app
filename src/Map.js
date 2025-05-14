@@ -16,6 +16,7 @@ import {
   Dropdown,
   // Label,
   Accordion,
+  Checkbox,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -403,6 +404,7 @@ function Map () {
   const [ mapId, setMapId ] = useState('')
   const [ opener, setOpener ] = useState(false)
   const [ openerSearch, setOpenerSearch ] = useState('')
+  const [ autosave, setAutosave ] = useState(true)
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
@@ -415,11 +417,11 @@ function Map () {
   // console.log('title:', title)
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
-  console.log('openerSearch:', openerSearch)
+  // console.log('openerSearch:', openerSearch)
 
-  function getMap(mapId) {
+  const getMap = useCallback((mapId) => {
     return maps.filter(({ _id }) => _id === mapId)[0]
-  }
+  }, [maps])
 
   const indexMaps = async () => {
     setLoading(true)
@@ -480,8 +482,10 @@ function Map () {
     }
   }
 
-  const putMap = async () => {
-    setLoading(true)
+  const putMap = useCallback(async ({ loader = true } = {}) => {
+    if (loader) {
+      setLoading(true)
+    }
     try {
       if (!mapId) {
         return await postMap()
@@ -508,9 +512,11 @@ function Map () {
       console.error('put map error:', err);
       return setResponseError(err.toString() || 'Error putting map.')
     } finally {
-      setLoading(false)
+      if (loader) {
+        setLoading(false)
+      }
     }
-  }
+  }, [mapId, setLoading, setResponseError, maps, setMaps, getMap, rfInstance, postMap, title])
 
   const deleteMap = async () => {
     setLoading(true)
@@ -605,6 +611,16 @@ function Map () {
   const uploadMapInit = () => {
     fileInputRef.current.click(); // triggers hidden input
   };
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (autosave) {
+         console.log("Autosave");
+         await putMap({ loader: false })
+      }
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [autosave, putMap]);
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -1071,6 +1087,13 @@ function Map () {
             <Icon name='text cursor' />
           </Button>
         </Button.Group>
+        {' '}{' '}
+        <Checkbox
+          label='Autosave'
+          onChange={(e, data) => setAutosave(data.checked)}
+          checked={autosave}
+        />
+        {' '}{' '}
 
         <span style={{ marginLeft: '1em' }} />
         { renaming && (
@@ -1134,7 +1157,6 @@ function Map () {
           </>
         )}
       </div>
-
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
