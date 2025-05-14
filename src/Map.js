@@ -49,7 +49,7 @@ import { nanoid } from 'nanoid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { parseRegexString, useWindowDimensions } from './helper.js'
+import { parseRegexString, useWindowDimensions, sleep } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
 
 
@@ -374,7 +374,8 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
   const { presenceMap } = useMapContext();
   const nodesData = useNodesData([source, target])
   const { credentials, sendPersonalMessage } = useMapContext();
-  console.log('nodesData:', nodesData)
+
+  // console.log('nodesData:', nodesData)
 
   return (
     <>
@@ -388,6 +389,11 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             pointerEvents: 'all',
           }}
         >
+          { data.sequence && (
+            <Button color={ data.expecting ? 'yellow' : 'green' }>
+              [{data.sequence}]:{' '}
+            </Button>
+          )}
           <Button
             compact
             size='mini'
@@ -405,7 +411,6 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
               const smartText = buildSmartText({ text: nodesData[0].data.text, getNodes })
               console.log('smartText:', smartText)
               await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: smartText });
-
             }}
           >
             <Icon
@@ -476,10 +481,17 @@ function Map () {
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
+  const [ playing, setPlaying ] = useState(false)
+  const [ pausing, setPausing ] = useState(false)
+  const playingRef = useRef(false)
+  const pausingRef = useRef(false)
+  playingRef.current = playing
+  pausingRef.current = pausing
+
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
   const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-  const { screenToFlowPosition, getNodes, setViewport } = useReactFlow();
+  const { screenToFlowPosition, getNodes, getEdges, setViewport } = useReactFlow();
   const [ rfInstance, setRfInstance ] = useState(null);
 
   // console.log('title:', title)
@@ -1035,6 +1047,80 @@ function Map () {
     }
   }, [screenToFlowPosition, credentials, recipient, condition]);
 
+
+  const playMap = useCallback(async () => {
+    console.log('playMap')
+    setPlaying(true)
+    setPausing(false)
+    let sequence = 1
+    setEdges((edges) =>
+      edges.map((edge) =>
+        edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } } : edge
+      )
+    );
+    const edges = getEdges()
+    // console.log('edges:', edges)
+
+    for (let edge of edges) {
+      if (edge.type === 'RequestEdge') {
+        // console.log('edge:', edge)
+        // console.log('edge.source:', edge.source, ', edge.target:', edge.target)
+        const nodes = getNodes()
+        // console.log('nodes:', nodes)
+        const sourceNode = nodes.find(node => node.id === edge.source)
+        const targetNode = nodes.find(node => node.id === edge.target)
+        // console.log('sourceNode:', sourceNode)
+        // console.log('targetNode:', targetNode)
+
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === edge.target ? { ...node, data: { ...node.data, waitRecipient: edge.data.recipient, text: '' } } : node
+          )
+        )
+        const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+        console.log('smartText:', smartText)
+        await sendPersonalMessage({ credentials, recipient: edge.data.recipient, prompt: smartText });
+
+        while (playingRef.current) {
+          await sleep(1000)
+          console.log('targetNode.waitRecipient:', targetNode.waitRecipient)
+          if (!targetNode.waitRecipient) {
+            setEdges((edges1) =>
+              edges1.map((edge1) =>
+                edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
+              )
+            );
+            break
+          }
+        }
+        if (!playingRef.current) {
+          break
+        }
+        while (pausingRef.current) {
+          await sleep(1000)
+        }
+      }
+    }
+
+    stopMap()
+    // setPlaying(false)
+    // setPausing(false)
+  })
+
+  const pauseMap = useCallback(() => {
+    setPausing(pausing => !pausing)
+    console.log('pauseMap')
+  })
+
+  const stopMap = useCallback(() => {
+    setPlaying(false)
+    setPausing(false)
+    console.log('stopMap')
+    setEdges((edges) =>
+      edges.map((edge) => { return { ...edge, data: { ...edge.data, sequence: undefined, expecting: undefined } } } )
+    );
+  })
+
   return (
     <MapContext.Provider value={{ presenceMap, credentials, sendPersonalMessage }}>
       <Container>
@@ -1161,20 +1247,29 @@ function Map () {
           </Dropdown>
           </>
         )}
-        {/*
         {' '}
         <Button.Group>
-          <Button icon basic onClick={() => {}}>
-            <Icon name='play' color='green' />
-          </Button>
-          <Button icon basic onClick={() => {}}>
-            <Icon name='pause' color='yellow' />
-          </Button>
-          <Button icon basic onClick={() => {}}>
-            <Icon name='stop' color='red' />
-          </Button>
+          {playing ? (
+            <>
+              {pausing ? (
+                <Button icon basic onClick={pauseMap}>
+                  <Icon name='play' color='yellow' />
+                </Button>
+              ) : (
+                <Button icon basic onClick={pauseMap}>
+                  <Icon name='pause' color='yellow' />
+                </Button>
+              )}
+              <Button icon basic onClick={stopMap}>
+                <Icon name='stop' color='red' />
+              </Button>
+            </>
+          ) : (
+            <Button icon basic onClick={playMap}>
+              <Icon name='play' color='green' />
+            </Button>
+          )}
         </Button.Group>
-        */}
       </div>
       <Loader active={loading} inline='centered' />
       { responseError &&
