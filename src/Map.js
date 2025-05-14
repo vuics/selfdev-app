@@ -48,6 +48,8 @@ import { nanoid } from 'nanoid'
 import Menubar from './components/Menubar'
 import conf from './conf'
 import { parseRegexString, sleep } from './helper'
+import { QCMarkdown } from './components/Text'
+
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
@@ -119,7 +121,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       )
     } else {
       return (
-        <span key={i}>{part}</span>
+        <QCMarkdown key={i}>{part}</QCMarkdown>
       )
     }
   } );
