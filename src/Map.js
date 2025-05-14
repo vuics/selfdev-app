@@ -238,7 +238,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         </Card.Header>
       </Card.Content>
       <Card.Content>
-        <Loader active={data.waitRecipient} inline='centered' size='mini' />
+        <Loader active={!!data.waitRecipient} inline='centered' size='mini' />
         { data.waitRecipient && (
           <>
             <br />
