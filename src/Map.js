@@ -47,7 +47,7 @@ import { nanoid } from 'nanoid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { parseRegexString, sleep } from './helper'
+import { parseRegexString, sleep, getWindowDimensions } from './helper'
 import { QCMarkdown } from './components/Text'
 
 
@@ -811,17 +811,14 @@ function Map () {
   // }, [condition, setEdges]);
 
   const addNote = useCallback(() => {
+    const { width, height } = getWindowDimensions()
     const id = getNodeId()
     const newNode = {
       id,
-      position: {
-        x: (Math.random() - 0.5) * 400,
-        y: (Math.random() - 0.5) * 400,
-      },
+      position: screenToFlowPosition({ x: width - 400, y: height/2, }),
       data: {
         uname: getUname(id),
-        // text: 'Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.',
-        text: 'Hello World!',
+        text: '',
         editing: true,
         renaming: false,
       },
