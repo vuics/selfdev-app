@@ -151,6 +151,15 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     )
   }
 
+  const cancelText = () => {
+    setText(data.text)
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+      )
+    )
+  }
+
   const interactiveText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
       return (
@@ -289,20 +298,36 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   e.preventDefault();
                   applyText(text)
                 }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  cancelText()
+                }
               }}
               className="nodrag"
               minRows={1}
               // maxRows={12}
               style={{ width: '570px', height: '100%' }}
             />
-            <Button
-              compact positive floated='right'
-              icon labelPosition='right'
-              onClick={() => applyText(text)}
-            >
-              <Icon name='check' />
-              Apply
-            </Button>
+            <Button.Group floated='right'>
+              <Button
+                compact negative
+                icon labelPosition='left'
+                onClick={cancelText}
+              >
+                <Icon name='cancel' />
+                Cancel
+              </Button>
+              <Button.Or />
+              <Button
+                compact positive
+                icon labelPosition='right'
+                onClick={() => applyText(text)}
+              >
+                <Icon name='check' />
+                Apply
+              </Button>
+            </Button.Group>
+
           </>
         ) : (
           <div
@@ -606,7 +631,7 @@ function Map () {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${title}.azone.json`;
+      link.download = `${title}.sd.json`;
       link.click();
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
@@ -1136,6 +1161,20 @@ function Map () {
           </Dropdown>
           </>
         )}
+        {/*
+        {' '}
+        <Button.Group>
+          <Button icon basic onClick={() => {}}>
+            <Icon name='play' color='green' />
+          </Button>
+          <Button icon basic onClick={() => {}}>
+            <Icon name='pause' color='yellow' />
+          </Button>
+          <Button icon basic onClick={() => {}}>
+            <Icon name='stop' color='red' />
+          </Button>
+        </Button.Group>
+        */}
       </div>
       <Loader active={loading} inline='centered' />
       { responseError &&
