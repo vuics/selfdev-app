@@ -364,7 +364,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 })
 
 const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd, source, target }) => {
-  const { setEdges, setNodes, getNodes } = useReactFlow();
+  // const { setEdges, setNodes, getNodes } = useReactFlow();
+  const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
     sourceY,
@@ -373,27 +374,80 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
   });
   const { presenceMap } = useMapContext();
   const nodesData = useNodesData([source, target])
-  const { credentials, sendPersonalMessage } = useMapContext();
+  const { credentials, sendPersonalMessage, reordering, setEdges } = useMapContext();
 
   // console.log('nodesData:', nodesData)
+
+  const moveEdge = useCallback(({ step }) => {
+    // console.log('----------')
+    // console.log('current edge id:', id)
+    setEdges((edges) => {
+      // const edges = getEdges()
+      // console.log('edges:', edges)
+      const index = edges.findIndex(edge => edge.id === id);
+      // console.log('index:', index)
+      if (index === -1) return edges; // Edge not found
+
+      const newIndex = index + step
+      // console.log('newIndex:', newIndex)
+      if (newIndex < 0 || newIndex >= edges.length) return edges; // Out of bounds
+
+      const updatedEdges = [...edges];
+      // console.log('updatedEdges:', updatedEdges)
+      const [movedEdge] = updatedEdges.splice(index, 1); // Remove the edge
+      // console.log('movedEdge:', movedEdge)
+      updatedEdges.splice(newIndex, 0, movedEdge); // Insert at new position
+      // console.log('updatedEdges:', updatedEdges)
+
+      let sequence = 1
+      return updatedEdges.map((edge, i) => ({
+        ...edge,
+        data: {
+          ...edge.data,
+          sequence: edge.type === 'RequestEdge' ? sequence++ : undefined,
+        }
+      }));
+    });
+  }, [setEdges])
 
   return (
     <>
       <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
       <EdgeLabelRenderer>
         <Button.Group icon compact size='mini'
-          className="nodrag nopan"
+          className='nodrag nopan'
           style={{
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             pointerEvents: 'all',
           }}
         >
+          { reordering && (
+            <Button compact size='mini'
+              onClick={() => {
+                moveEdge({ step: 1 })
+                // moveEdge({ edgeId: id, step: 1 })
+              }}
+            >
+              <Icon name='caret up' />
+            </Button>
+          )}
           { data.sequence && (
-            <Button color={ data.expecting ? 'yellow' : 'green' }>
+            <Button color={ data.expecting ? 'yellow' : (reordering ? 'blue' : 'green') }>
               [{data.sequence}]:{' '}
             </Button>
           )}
+          { reordering && (
+            <Button compact size='mini'
+              onClick={() => {
+                moveEdge({ step: -1 })
+                // moveEdge({ edgeId: id, step: -1 })
+              }}
+            >
+              <Icon name='caret down' />
+            </Button>
+          )}
+
           <Button
             compact
             size='mini'
@@ -434,6 +488,7 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             )}
             {data.condition}
           </Button>
+
           <Button compact size='mini'
             onClick={() => {
               // Below, it deletes the edge
@@ -478,6 +533,7 @@ function Map () {
   const [ opener, setOpener ] = useState(false)
   const [ openerSearch, setOpenerSearch ] = useState('')
   const [ autosave, setAutosave ] = useState(true)
+  const [ reordering, setReordering ] = useState(false)
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
@@ -1028,7 +1084,7 @@ function Map () {
         id: `${connection.fromNode.id}->${id}`,
         source: connection.fromNode.id,
         target: id,
-        type: "RequestEdge",
+        type: 'RequestEdge',
         data: {
           recipient,
           condition,
@@ -1052,6 +1108,7 @@ function Map () {
     console.log('playMap')
     setPlaying(true)
     setPausing(false)
+    setReordering(false)
     let sequence = 1
     setEdges((edges) =>
       edges.map((edge) =>
@@ -1083,8 +1140,10 @@ function Map () {
 
         while (playingRef.current) {
           await sleep(1000)
-          console.log('targetNode.waitRecipient:', targetNode.waitRecipient)
-          if (!targetNode.waitRecipient) {
+          const nodes1 = getNodes()
+          const targetNode1 = nodes1.find(node1 => node1.id === edge.target)
+          // console.log('targetNode1.data.waitRecipient:', targetNode.data.waitRecipient)
+          if (targetNode1.data.waitRecipient === undefined) {
             setEdges((edges1) =>
               edges1.map((edge1) =>
                 edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
@@ -1109,20 +1168,38 @@ function Map () {
 
   const pauseMap = useCallback(() => {
     setPausing(pausing => !pausing)
+    setReordering(false)
     console.log('pauseMap')
   })
 
   const stopMap = useCallback(() => {
     setPlaying(false)
     setPausing(false)
+    setReordering(false)
     console.log('stopMap')
     setEdges((edges) =>
       edges.map((edge) => { return { ...edge, data: { ...edge.data, sequence: undefined, expecting: undefined } } } )
     );
   })
 
+  const orderEdges = useCallback(() => {
+    setReordering(reordering => {
+      let sequence = 1
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } } : edge
+        )
+      );
+      return !reordering
+    })
+  }, [setEdges])
+
+  // useEffect(() => {
+  //   console.log('Current edges state:', edges);
+  // }, [edges]);
+
   return (
-    <MapContext.Provider value={{ presenceMap, credentials, sendPersonalMessage }}>
+    <MapContext.Provider value={{ presenceMap, credentials, sendPersonalMessage, reordering, setEdges }}>
       <Container>
         <Menubar />
       </Container>
@@ -1269,6 +1346,12 @@ function Map () {
               <Icon name='play' color='green' />
             </Button>
           )}
+        </Button.Group>
+        {' '}
+        <Button.Group>
+          <Button icon basic onClick={orderEdges}>
+            <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
+          </Button>
         </Button.Group>
       </div>
       <Loader active={loading} inline='centered' />
