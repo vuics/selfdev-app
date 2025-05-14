@@ -374,7 +374,10 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
   });
   const { presenceMap } = useMapContext();
   const nodesData = useNodesData([source, target])
-  const { credentials, recipient, sendPersonalMessage, reordering, setEdges } = useMapContext();
+  const {
+    credentials, recipient, sendPersonalMessage,
+    condition, reordering, setEdges
+  } = useMapContext();
 
   // console.log('nodesData:', nodesData)
 
@@ -503,8 +506,20 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
                     );
                   }}
                 >
-                  <Icon name='edit' />
+                  <Icon name='user plus' />
                   Set recipient
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((edges) =>
+                      edges.map((edge) =>
+                        edge.id=== id ? { ...edge, data: { ...edge.data, condition } } : edge
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='usb' />
+                  Set condition
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1221,7 +1236,8 @@ function Map () {
 
   return (
     <MapContext.Provider value={{
-      presenceMap, credentials, recipient, sendPersonalMessage, reordering, setEdges
+      presenceMap, credentials, recipient, sendPersonalMessage,
+      condition, reordering, setEdges
     }}>
       <Container>
         <Menubar />
@@ -1278,13 +1294,13 @@ function Map () {
             <Icon name='text cursor' />
           </Button>
         </Button.Group>
-        {' '}{' '}
+        {' '}
         <Checkbox
           label='Autosave'
           onChange={(e, data) => setAutosave(data.checked)}
           checked={autosave}
         />
-        {' '}{' '}
+        {' '}
 
         <span style={{ marginLeft: '1em' }} />
         { renaming && (
@@ -1295,6 +1311,7 @@ function Map () {
               value={title}
               onChange={e => setTitle(e.target.value)}
             ><Icon name='map' /><input /></Input>
+            {' '}
             <Button.Group>
               <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
                 <Icon name='check' />
@@ -1311,6 +1328,7 @@ function Map () {
             </Button.Group>
           </>
         )}
+        {' '}
         { !renaming && (
           <>
           <Icon name='folder open outline' />
@@ -1369,13 +1387,11 @@ function Map () {
               <Icon name='play' color='green' />
             </Button>
           )}
-        </Button.Group>
-        {' '}
-        <Button.Group>
           <Button icon basic onClick={orderEdges}>
             <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
           </Button>
         </Button.Group>
+        {' '}
       </div>
       <Loader active={loading} inline='centered' />
       { responseError &&
