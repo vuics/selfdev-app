@@ -47,14 +47,16 @@ const Product = () => (
         <ol style={{ textAlign: 'left', fontSize: '1.4em', lineHeight: '1.5' }}>
           <li>
             <a href="#chat">
-              <b>Chat</b> — communicate to agents and agentic teams.
+              <b>Chat</b> — communicate to people and virtual agents through private channels and group chats.
             </a>
           </li>
+          {/*
           <li>
             <a href="#talk">
-              <b>Talk</b> — include humans, agents and human-agentic collaborative teams to your workflows.
+              <b>Talk</b> — communicate to agents and agentic teams.
             </a>
           </li>
+          */}
           <li>
             <a href="#map">
               <b>Map</b> — coordinate agents on a visual map focusing on agentic content and problem solving.
@@ -202,47 +204,10 @@ const Product = () => (
           <br />
         </Header>
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Chat with agents and agentic teams. Interact with agents through the Synthetic UI on all-in-one platform.
-        </p>
-        <br />
-        <Card.Group key="card-group-chat" centered items={[ {
-            header: 'Hyper-Personalized Experiences',
-            description: 'Customers get UI elements (dashboards, forms, graphs, documents) tailored in real time to their specific needs and context, eliminating the friction of rigid interfaces.',
-          }, {
-            header: 'Intelligent Automation & Agentic Assistance',
-            description: 'Users interact with AI agents that work proactively, automating tasks, surfacing insights, and adapting to their goals without manual setup.',
-          }, {
-            header: 'All-in-One Platform',
-            description: 'A self-developing, self-selling, and self-funding ecosystem means minimal effort on the customer’s part to maintain or scale the system.',
-          }, {
-            header: 'Effortless Integration',
-            description: 'The agents work inside the customer’s existing tools (e.g., Salesforce), ensuring a seamless experience without switching platforms.',
-          }, {
-            header: 'Continuous Optimization',
-            description: 'The system evolves dynamically, ensuring that customers always have the most effective and relevant UI for their needs.',
-          }, {
-            header: '',
-            description: '',
-          } ]} />
-        <br/>
-        <Image src='/images/screenshots/chat.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="talk" dividing>
-          <a href="#toc">
-            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          </a>
-          Talk
-          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
-          <br />
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Include humans, agents and human-agentic collaborative teams to your workflows. Bridge human expertise with AI intelligence, making workflows smarter and more effective.
         </p>
         <br />
-        <Card.Group key="card-group-talk" centered items={[ {
+        <Card.Group key="card-group-chat" centered items={[ {
             header: 'Seamless Human-Agent Collaboration',
             description: 'Effortlessly integrate AI agents and humans in chats to enhance teamwork and decision-making.',
           }, {
@@ -262,9 +227,48 @@ const Product = () => (
             description: 'Customize chat interactions to fit your team’s needs, enhancing efficiency across projects.',
           } ]} />
         <br/>
+        <Image src='/images/screenshots/chat.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      {/*
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h2' textAlign='center' id="talk" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
+          Talk
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          Chat with agents and agentic teams. Interact with agents through the Synthetic UI on all-in-one platform.
+        </p>
+        <br />
+        <Card.Group key="card-group-talk" centered items={[ {
+            header: 'Hyper-Personalized Experiences',
+            description: 'Customers get UI elements (dashboards, forms, graphs, documents) tailored in real time to their specific needs and context, eliminating the friction of rigid interfaces.',
+          }, {
+            header: 'Intelligent Automation & Agentic Assistance',
+            description: 'Users interact with AI agents that work proactively, automating tasks, surfacing insights, and adapting to their goals without manual setup.',
+          }, {
+            header: 'All-in-One Platform',
+            description: 'A self-developing, self-selling, and self-funding ecosystem means minimal effort on the customer’s part to maintain or scale the system.',
+          }, {
+            header: 'Effortless Integration',
+            description: 'The agents work inside the customer’s existing tools (e.g., Salesforce), ensuring a seamless experience without switching platforms.',
+          }, {
+            header: 'Continuous Optimization',
+            description: 'The system evolves dynamically, ensuring that customers always have the most effective and relevant UI for their needs.',
+          }, {
+            header: '',
+            description: '',
+          } ]} />
+        <br/>
         <Image src='/images/screenshots/talk.png' fluid bordered rounded />
         <br/>
       </Segment>
+      */}
 
       <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
         <Header as='h2' textAlign='center' id="map" dividing>
