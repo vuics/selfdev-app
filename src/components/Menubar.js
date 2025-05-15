@@ -22,6 +22,12 @@ const Menubar = () => {
         {'\u00A0'}
         <span style={{color: 'grey'}}>Selfdev</span>
       </Menu.Item>
+      { conf.hive.enable && (
+        <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>
+          <Icon name='cubes' />
+          Hive
+        </Menu.Item>
+      ) }
       { conf.chat.enable && (
         <Menu.Item onClick={() => navigate('/chat')} active={pathname==='/chat'}>
           <Icon name='chat' />
@@ -44,12 +50,6 @@ const Menubar = () => {
         <Menu.Item onClick={() => navigate('/meet')} active={pathname==='/meet'}>
           <Icon name='video' />
           Meet
-        </Menu.Item>
-      ) }
-      { conf.hive.enable && (
-        <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>
-          <Icon name='cubes' />
-          Hive
         </Menu.Item>
       ) }
       { conf.flow.enable && (
