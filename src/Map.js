@@ -85,6 +85,22 @@ function buildSmartText({ text, getNodes }) {
   return smartText
 }
 
+function checkCondition({ condition, text }) {
+  let satisfied = true
+  let safe = true
+  if (condition) {
+    const { pattern, flags } = parseRegexString(condition);
+    console.log('pattern:', pattern, ', flags:', flags)
+    safe = safeRegex(pattern)
+    if (safe) {
+      const safeRegex = new RegExp(pattern, flags);
+      satisfied = safeRegex.test(text)
+    }
+  }
+  console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+  return [ satisfied, safe ]
+}
+
 const ExpandingVariable = memo(({ key, part, allNodes }) => {
   const { fitView } = useReactFlow();
 
@@ -363,7 +379,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
-const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, markerEnd, source, target }) => {
+const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target }) => {
   // const { setEdges, setNodes, getNodes } = useReactFlow();
   const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
@@ -373,13 +389,15 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
     targetY,
   });
   const { presenceMap } = useMapContext();
-  const nodesData = useNodesData([source, target])
+  // const nodesData = useNodesData([source, target])
+  const [ sourceNode, targetNode ] = useNodesData([source, target])
+  console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
+
   const {
     credentials, recipient, sendPersonalMessage,
     condition, reordering, setEdges
   } = useMapContext();
 
-  // console.log('nodesData:', nodesData)
 
   const moveEdge = useCallback(({ step }) => {
     setEdges((edges) => {
@@ -415,12 +433,7 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
           }}
         >
           { reordering && (
-            <Button compact size='mini'
-              onClick={() => {
-                moveEdge({ step: 1 })
-                // moveEdge({ edgeId: id, step: 1 })
-              }}
-            >
+            <Button compact size='mini' onClick={() => { moveEdge({ step: 1 }) }} >
               <Icon name='caret up' />
             </Button>
           )}
@@ -430,12 +443,7 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             </Button>
           )}
           { reordering && (
-            <Button compact size='mini'
-              onClick={() => {
-                moveEdge({ step: -1 })
-                // moveEdge({ edgeId: id, step: -1 })
-              }}
-            >
+            <Button compact size='mini' onClick={() => { moveEdge({ step: -1 }) }} >
               <Icon name='caret down' />
             </Button>
           )}
@@ -445,18 +453,30 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             size='mini'
             onClick={async () => {
               console.log('source:', source, ', target:', target)
+
+              const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+              // console.log('smartText:', smartText)
+              const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
+              // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+
               setNodes((nodes) =>
                 nodes.map((node) =>
-                  node.id === nodesData[1].id ? { ...node, data: { ...node.data, waitRecipient: data.recipient, text: '' } } : node
+                  node.id === targetNode.id ? { ...node, data: { ...node.data,
+                    waitRecipient: satisfied ? data.recipient : undefined, text: '' }
+                  } : node
+                )
+              )
+              setEdges((edges) =>
+                edges.map((edge) =>
+                  edge.id=== id ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
                 )
               )
 
-              // TODO:
-              // if (satisfied) {
-              // }
-              const smartText = buildSmartText({ text: nodesData[0].data.text, getNodes })
-              console.log('smartText:', smartText)
-              await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: smartText });
+              // const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+              // console.log('smartText:', smartText)
+              if (satisfied) {
+                await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: smartText });
+              }
             }}
           >
             <Icon
@@ -469,7 +489,14 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             compact
             size='mini'
             onClick={() => {
-              window.alert(`Condition "${data.condition}" has been ${ data.satisfied !== null ? (data.satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ data.safe !== null ? (data.safe ? 'safe' : 'unsafe') : 'unknown' }.`);
+              const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+              const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
+              setEdges((edges) =>
+                edges.map((edge) =>
+                  edge.id=== id ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
+                )
+              )
+              window.alert(`Condition "${data.condition}" has been ${ satisfied !== null ? (satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ safe !== null ? (safe ? 'safe' : 'unsafe') : 'unknown' }.`);
             }}
           >
             { data.safe !== null && (
@@ -480,16 +507,6 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
             )}
             {data.condition}
           </Button>
-
-          {/*
-          <Button compact size='mini'
-            onClick={() => {
-              // Below, it deletes the edge
-            }}
-          >
-            <Icon name='trash' />
-          </Button>
-          */}
 
           <Button compact size='mini'>
             <Dropdown item simple position='right'
@@ -511,11 +528,15 @@ const RequestEdge = memo(({ id, sourceX, sourceY, targetX, targetY, data, marker
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
+                    const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+                    // console.log('smartText:', smartText)
+                    const [ satisfied, safe ] = checkCondition({ condition, text: smartText })
+                    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
                     setEdges((edges) =>
                       edges.map((edge) =>
-                        edge.id=== id ? { ...edge, data: { ...edge.data, condition } } : edge
+                        edge.id=== id ? { ...edge, data: { ...edge.data, condition, satisfied, safe } } : edge
                       )
-                    );
+                    )
                   }}
                 >
                   <Icon name='usb' />
@@ -1082,17 +1103,7 @@ function Map () {
       const smartText = buildSmartText({ text: connection.fromNode.data.text, getNodes })
       console.log('smartText:', smartText)
 
-      let satisfied = true
-      let safe = true
-      if (condition) {
-        const { pattern, flags } = parseRegexString(condition);
-        console.log('pattern:', pattern, ', flags:', flags)
-        safe = safeRegex(pattern)
-        if (safe) {
-          const safeRegex = new RegExp(pattern, flags);
-          satisfied = safeRegex.test(smartText)
-        }
-      }
+      const [ satisfied, safe ] = checkCondition({ condition, text: smartText })
       console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
 
       // we need to remove the wrapper bounds, in order to get the correct position
@@ -1197,9 +1208,9 @@ function Map () {
       }
     }
 
-    stopMap()
-    // setPlaying(false)
-    // setPausing(false)
+    // stopMap()
+    setPlaying(false)
+    setPausing(false)
   })
 
   const pauseMap = useCallback(() => {
