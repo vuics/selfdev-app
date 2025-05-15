@@ -462,7 +462,7 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
               setNodes((nodes) =>
                 nodes.map((node) =>
                   node.id === targetNode.id ? { ...node, data: { ...node.data,
-                    waitRecipient: satisfied ? data.recipient : undefined, text: '' }
+                    waitRecipient: (smartText && satisfied) ? data.recipient : undefined, text: '' }
                   } : node
                 )
               )
@@ -474,7 +474,7 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
 
               // const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
               // console.log('smartText:', smartText)
-              if (satisfied) {
+              if (smartText && satisfied) {
                 await sendPersonalMessage({ credentials, recipient: data.recipient, prompt: smartText });
               }
             }}
@@ -1096,9 +1096,9 @@ function Map () {
       if (!recipient) {
         return alert('Please select recipient')
       }
-      if (!connection.fromNode.data.text) {
-        return alert('Please write note / prompt')
-      }
+      // if (!connection.fromNode.data.text) {
+      //   return alert('Please write note / prompt')
+      // }
 
       const smartText = buildSmartText({ text: connection.fromNode.data.text, getNodes })
       console.log('smartText:', smartText)
@@ -1117,7 +1117,7 @@ function Map () {
           text: '',
           editing: false,
           renaming: false,
-          waitRecipient: satisfied ? recipient : undefined,
+          waitRecipient: (smartText && satisfied) ? recipient : undefined,
         },
         type: "NoteNode",
       };
@@ -1144,7 +1144,7 @@ function Map () {
         edges.concat(newEdge),
       );
 
-      if (satisfied) {
+      if (smartText && satisfied) {
         await sendPersonalMessage({ credentials, recipient, prompt: smartText });
       }
     }
@@ -1176,14 +1176,25 @@ function Map () {
         // console.log('sourceNode:', sourceNode)
         // console.log('targetNode:', targetNode)
 
+        const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+        // console.log('smartText:', smartText)
+        const [ satisfied, safe ] = checkCondition({ condition: edge.data.condition, text: smartText })
+        // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
+
         setNodes((nodes) =>
           nodes.map((node) =>
-            node.id === edge.target ? { ...node, data: { ...node.data, waitRecipient: edge.data.recipient, text: '' } } : node
+            node.id === edge.target ? { ...node, data: { ...node.data, waitRecipient: (smartText && satisfied) ? edge.data.recipient : undefined, text: '' } } : node
           )
         )
-        const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
-        console.log('smartText:', smartText)
-        await sendPersonalMessage({ credentials, recipient: edge.data.recipient, prompt: smartText });
+        setEdges((edges1) =>
+          edges1.map((edge1) =>
+            edge1.id=== edge.id ? { ...edge1, data: { ...edge1.data, satisfied, safe } } : edge1
+          )
+        )
+
+        if (smartText && satisfied) {
+          await sendPersonalMessage({ credentials, recipient: edge.data.recipient, prompt: smartText });
+        }
 
         while (playingRef.current) {
           await sleep(1000)
