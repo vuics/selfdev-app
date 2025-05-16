@@ -418,7 +418,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
-const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target }) => {
+const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target, style }) => {
   // const { setEdges, setNodes, getNodes } = useReactFlow();
   const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
@@ -461,7 +461,7 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style}/>
       <EdgeLabelRenderer>
         <Button.Group icon compact size='mini'
           className='nodrag nopan'
@@ -581,7 +581,7 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
   );
 })
 
-const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target }) => {
+const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target, style }) => {
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
     sourceY,
@@ -595,7 +595,7 @@ const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marke
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style}/>
       <EdgeLabelRenderer>
         <Button.Group icon compact size='mini'
           className='nodrag nopan'
@@ -1176,6 +1176,7 @@ function Map () {
       },
       markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
       animated: true,
+      style: { stroke: backgroundColor },
     };
     console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
@@ -1256,6 +1257,7 @@ function Map () {
           condition,
         },
         markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+        style: { stroke: backgroundColor },
       }
       setEdges((edges) =>
         edges.concat(newEdge),
@@ -1543,6 +1545,11 @@ function Map () {
                 node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
               )
             )
+            setEdges((edges) =>
+              edges.map((edge) =>
+                edge.selected ? { ...edge, style: { ...edge.style, stroke: e.target.value } } : edge
+              )
+            );
           } }
           value={backgroundColor}
         />
