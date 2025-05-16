@@ -131,6 +131,18 @@ async function playEdge ({
   }
 }
 
+function unlinkEdge({ edge, getNodes, setNodes }) {
+  const nodes = getNodes()
+  const sourceNode = nodes.find(node => node.id === edge.source)
+  setNodes((nodes) =>
+    nodes.map((node) =>
+      node.id === edge.target ? { ...node, data: { ...node.data,
+        text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '') }
+      } : node
+    )
+  )
+}
+
 const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor }) => {
   const { fitView } = useReactFlow();
 
@@ -610,7 +622,7 @@ const VariableEdge = memo(({
   });
 
   const {
-    setEdges
+    setEdges, getNodes, setNodes,
   } = useMapContext();
 
   return (
@@ -639,6 +651,19 @@ const VariableEdge = memo(({
                <Icon name='ellipsis vertical' color='grey' />
               }>
               <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((es) => es.filter((e) => {
+                      if (e.id === id) {
+                        unlinkEdge({ edge: e, getNodes, setNodes })
+                      }
+                      return e.id !== id
+                    }));
+                  }}
+                >
+                  <Icon name='unlinkify' />
+                  Unlink
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
                     setEdges((es) => es.filter((e) => e.id !== id));
@@ -1221,14 +1246,7 @@ function Map () {
   const onEdgesDelete = (deletedEdges) => {
     console.log('Deleted edges:', deletedEdges);
     deletedEdges.forEach((edge) => {
-      const sourceNode = nodes.find(node => node.id === edge.source)
-      setNodes((nodes) =>
-        nodes.map((node) =>
-          node.id === edge.target ? { ...node, data: { ...node.data,
-            text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '') }
-          } : node
-        )
-      )
+      unlinkEdge({ edge, getNodes, setNodes })
     });
   };
 
@@ -1426,7 +1444,7 @@ function Map () {
   return (
     <MapContext.Provider value={{
       presenceMap, credentials, recipient, sendPersonalMessage,
-      condition, reordering, setEdges,
+      condition, reordering, setEdges, getNodes, setNodes,
     }}>
       <Container>
         <Menubar />
