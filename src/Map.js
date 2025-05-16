@@ -104,8 +104,8 @@ function checkCondition({ condition, text }) {
   return [ satisfied, safe ]
 }
 
-async function playRequestEdge ({
-  text, condition, getNodes, setNodes, setEdges,
+async function playEdge ({
+  text, condition, getNodes, setNodes, getEdges, setEdges,
   sendPersonalMessage, credentials, recipient,
   edgeId, targetId,
 }) {
@@ -116,8 +116,13 @@ async function playRequestEdge ({
 
   setNodes((nodes) =>
     nodes.map((node) =>
-      node.id === targetId ? { ...node, data: { ...node.data,
-        waitRecipient: (smartText && satisfied) ? recipient : undefined, text: '' }
+      node.id === targetId ? {
+        ...node,
+        data: {
+          ...node.data,
+          waitRecipient: (smartText && satisfied) ? recipient : undefined,
+          text: recipient ? '' : ((smartText && satisfied) ? node.data.text : ''),
+        }
       } : node
     )
   )
@@ -128,7 +133,24 @@ async function playRequestEdge ({
   )
 
   if (smartText && satisfied) {
-    await sendPersonalMessage({ credentials, recipient: recipient, prompt: smartText });
+    if (recipient) {
+      await sendPersonalMessage({ credentials, recipient: recipient, prompt: smartText });
+    } else {
+      const edges = getEdges()
+      const edge = edges.find(edge => edge.id === edgeId)
+      const nodes = getNodes()
+      const sourceNode = nodes.find(node => node.id === edge.source)
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === edge.target) {
+            if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
+              return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, } }
+            }
+          }
+          return node
+        })
+      );
+    }
   }
 }
 
@@ -542,12 +564,7 @@ const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
 
       let sequence = 1
       return updatedEdges.map((edge, i) => ({
-        ...edge,
-        data: {
-          ...edge.data,
-          // sequence: edge.type === 'RequestEdge' ? sequence++ : undefined,
-          sequence: sequence++
-        }
+        ...edge, data: { ...edge.data, sequence: sequence++ }
       }));
     });
   }, [id, setEdges])
@@ -592,7 +609,7 @@ const RequestEdge = memo(({
 
   const {
     credentials, recipient, sendPersonalMessage,
-    condition, reordering, orderEdges, setEdges,
+    condition, reordering, orderEdges, setEdges, getEdges,
   } = useMapContext();
 
   return (
@@ -628,16 +645,16 @@ const RequestEdge = memo(({
             size='mini'
             onClick={async () => {
               console.log('source:', source, ', target:', target)
-              await playRequestEdge({
+              await playEdge({
                 text: sourceNode.data.text, condition: data.condition,
-                getNodes, setNodes, setEdges, sendPersonalMessage,
+                getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
                 credentials, recipient: data.recipient,
                 edgeId: id, targetId: targetNode.id,
               })
             }}
           >
             <Icon
-              name={ data.recipient !== null ? 'user' : 'user outline'}
+              name={ data.recipient ? 'user' : 'sync'}
               color={ data.recipient ? (presenceMap[data.recipient] ? 'green' : 'red' ) : 'grey' }
             />
             {data.recipient}
@@ -711,6 +728,18 @@ const RequestEdge = memo(({
                   <Icon name='usb' />
                   Set condition
                 </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((edges) =>
+                      edges.map((edge) =>
+                        edge.id=== id ? { ...edge, data: { ...edge.data, condition: '' } } : edge
+                      )
+                    )
+                  }}
+                >
+                  <Icon name='eraser' />
+                  Unset condition
+                </Dropdown.Item>
                 <Dropdown.Item onClick={orderEdges}>
                   <Icon name='sort' />
                   Reorder
@@ -752,6 +781,7 @@ const nodeTypes = {
 
 const edgeTypes = {
   RequestEdge: RequestEdge,
+  VariableEdge: RequestEdge, // NOTE: Deprecated but for compatibility
 };
 
 const getNodeId = () => nanoid(9)
@@ -1271,28 +1301,6 @@ function Map () {
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
 
-  // const onConnect = useCallback(
-  //   (params) => setEdges((eds) => addEdge(params, eds)),
-  //   [],
-  // );
-  //
-  // const onConnect = useCallback((params) => {
-  //   const requestEdge = {
-  //     ...params,
-  //     id: `${params.source}->${params.target}`,
-  //     type: 'RequestEdge',
-  //     data: {
-  //       recipient: null,
-  //       condition: condition,
-  //       // safe: null,      // FIXME: get this params from onConnectEnd
-  //       // satisfied: null, // FIXME: get this params from onConnectEnd
-  //     },
-  //     markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
-  //   };
-  //   console.log('onConnect requestEdge:', requestEdge, ', params:', params)
-  //   setEdges((eds) => addEdge(requestEdge, eds));
-  // }, [condition, setEdges]);
-
   const onConnect = useCallback((params) => {
     const variableEdge = {
       ...params,
@@ -1351,8 +1359,7 @@ function Map () {
             ...node,
             data: {
               ...node.data,
-              // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
-              text: node.data.text + `\n[[${connection.fromNode.data.uname}]]`,
+              text: node.data.text + `[[${connection.fromNode.data.uname}]]`,
             }
           } : node
         )
@@ -1361,9 +1368,6 @@ function Map () {
       if (!recipient) {
         return alert('Please select recipient')
       }
-      // if (!connection.fromNode.data.text) {
-      //   return alert('Please write note / prompt')
-      // }
 
       const id = getNodeId();
       const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
@@ -1403,14 +1407,14 @@ function Map () {
         edges.concat(newEdge),
       );
 
-      await playRequestEdge({
+      await playEdge({
         text: connection.fromNode.data.text, condition,
-        getNodes, setNodes, setEdges, sendPersonalMessage,
+        getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
         credentials, recipient,
         edgeId, targetId: id,
       })
     }
-  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, setEdges, color, backgroundColor, stroke]);
+  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke]);
 
 
   const playMap = useCallback(async () => {
@@ -1429,64 +1433,43 @@ function Map () {
     // console.log('edges:', edges)
 
     for (let edge of edges) {
-      if (edge.type === 'RequestEdge') {
-        await sleep(100) // NOTE: this sleep is need in case if the VariableEdge just updated the NoteNode
+      await sleep(100) // NOTE: this sleep is needed in case the variable just got updated the note which is source of this calcualted
 
-        // console.log('edge:', edge)
-        // console.log('edge.source:', edge.source, ', edge.target:', edge.target)
-        const nodes = getNodes()
-        // console.log('nodes:', nodes)
-        const sourceNode = nodes.find(node => node.id === edge.source)
-        // const targetNode = nodes.find(node => node.id === edge.target)
-        // console.log('sourceNode:', sourceNode)
-        // console.log('targetNode:', targetNode)
+      // console.log('edge:', edge)
+      // console.log('edge.source:', edge.source, ', edge.target:', edge.target)
+      const nodes = getNodes()
+      // console.log('nodes:', nodes)
+      const sourceNode = nodes.find(node => node.id === edge.source)
+      // const targetNode = nodes.find(node => node.id === edge.target)
+      // console.log('sourceNode:', sourceNode)
+      // console.log('targetNode:', targetNode)
 
-        await playRequestEdge({
-          text: sourceNode.data.text, condition: edge.data.condition,
-          getNodes, setNodes, setEdges, sendPersonalMessage,
-          credentials, recipient: edge.data.recipient,
-          edgeId: edge.id, targetId: edge.target,
-        })
+      await playEdge({
+        text: sourceNode.data.text, condition: edge.data.condition,
+        getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
+        credentials, recipient: edge.data.recipient,
+        edgeId: edge.id, targetId: edge.target,
+      })
 
-        while (playingRef.current) {
-          await sleep(1000)
-          const nodes1 = getNodes()
-          // console.log('nodes1:', nodes1)
-          // console.log('edge.target:', edge.target)
-          const targetNode1 = nodes1.find(node1 => node1.id === edge.target)
-          // console.log('targetNode1:', targetNode1)
-          if (!targetNode1) {
-            break
-          }
-          // console.log('targetNode1.data.waitRecipient:', targetNode1.data.waitRecipient)
-          if (targetNode1.data.waitRecipient === undefined) {
-            setEdges((edges1) =>
-              edges1.map((edge1) =>
-                edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined, cursor: undefined } } : edge1
-              )
-            );
-            break
-          }
+      while (playingRef.current) {
+        await sleep(1000)
+        const nodes1 = getNodes()
+        // console.log('nodes1:', nodes1)
+        // console.log('edge.target:', edge.target)
+        const targetNode1 = nodes1.find(node1 => node1.id === edge.target)
+        // console.log('targetNode1:', targetNode1)
+        if (!targetNode1) {
+          break
         }
-      // } else if (edge.type === 'VariableEdge') {
-      //   const nodes = getNodes()
-      //   const sourceNode = nodes.find(node => node.id === edge.source)
-      //   setNodes((nodes) =>
-      //     nodes.map((node) => {
-      //       if (node.id === edge.target) {
-      //         if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
-      //           return { ...node, data: { ...node.data, text: node.data.text + `\n[[${sourceNode.data.uname}]]`, } }
-      //               // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
-      //         }
-      //       }
-      //       return node
-      //     })
-      //   );
-      //   setEdges((edges1) =>
-      //     edges1.map((edge1) =>
-      //       edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
-      //     )
-      //   );
+        // console.log('targetNode1.data.waitRecipient:', targetNode1.data.waitRecipient)
+        if (targetNode1.data.waitRecipient === undefined) {
+          setEdges((edges1) =>
+            edges1.map((edge1) =>
+              edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined, cursor: undefined } } : edge1
+            )
+          );
+          break
+        }
       }
 
       if (!playingRef.current) {
@@ -1546,7 +1529,7 @@ function Map () {
   return (
     <MapContext.Provider value={{
       presenceMap, credentials, recipient, sendPersonalMessage,
-      condition, reordering, setEdges, getNodes, setNodes,
+      condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges
     }}>
       <Container>
