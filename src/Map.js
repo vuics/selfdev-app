@@ -675,13 +675,25 @@ const RequestEdge = memo(({
                   onClick={() => {
                     setEdges((edges) =>
                       edges.map((edge) =>
-                        edge.id=== id ? { ...edge, data: { ...edge.data, recipient } } : edge
+                        edge.id=== id ? { ...edge, data: { ...edge.data, recipient }, animated: undefined } : edge
                       )
                     );
                   }}
                 >
                   <Icon name='user plus' />
                   Set recipient
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((edges) =>
+                      edges.map((edge) =>
+                        edge.id=== id ? { ...edge, data: { ...edge.data, recipient: undefined }, animated: true } : edge
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='remove user' />
+                  Unset recipient
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -699,77 +711,6 @@ const RequestEdge = memo(({
                   <Icon name='usb' />
                   Set condition
                 </Dropdown.Item>
-                <Dropdown.Item onClick={orderEdges}>
-                  <Icon name='sort' />
-                  Reorder
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setEdges((es) => es.filter((e) => e.id !== id));
-                  }}
-                >
-                  <Icon name='delete' />
-                  Delete
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Button>
-
-        </Button.Group>
-      </EdgeLabelRenderer>
-    </>
-  );
-})
-
-const VariableEdge = memo(({
-  id, data, source, target, style, selected,
-  sourceX, sourceY, targetX, targetY, markerEnd,
-}) => {
-  const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-  });
-
-  const {
-    setEdges, getNodes, setNodes, reordering, orderEdges,
-  } = useMapContext();
-
-  return (
-    <>
-      <BaseEdge
-        id={id} path={edgePath}
-        markerEnd={markerEnd}
-        style={{
-          ...style,
-          stroke: data.stroke,
-          strokeWidth: selected ? 3 : 1,
-        }}
-      />
-      <EdgeLabelRenderer>
-        <Button.Group icon compact size='mini'
-          className='nodrag nopan'
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            pointerEvents: 'all',
-          }}
-        >
-          <OrderControl
-            id={id}
-            expecting={data.expecting}
-            sequence={data.sequence}
-            cursor={data.cursor}
-            reordering={reordering}
-          />
-
-          <Button compact size='mini'>
-            <Dropdown item simple position='right'
-              icon={
-               <Icon name='ellipsis vertical' color='grey' />
-              }>
-              <Dropdown.Menu>
                 <Dropdown.Item onClick={orderEdges}>
                   <Icon name='sort' />
                   Reorder
@@ -798,6 +739,7 @@ const VariableEdge = memo(({
               </Dropdown.Menu>
             </Dropdown>
           </Button>
+
         </Button.Group>
       </EdgeLabelRenderer>
     </>
@@ -810,7 +752,6 @@ const nodeTypes = {
 
 const edgeTypes = {
   RequestEdge: RequestEdge,
-  VariableEdge: VariableEdge,
 };
 
 const getNodeId = () => nanoid(9)
@@ -1356,8 +1297,9 @@ function Map () {
     const variableEdge = {
       ...params,
       id: `${params.source}->${params.target}`,
-      type: 'VariableEdge',
+      type: 'RequestEdge',
       data: {
+        condition,
         stroke,
       },
       markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: stroke },
@@ -1365,7 +1307,7 @@ function Map () {
     };
     // console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
-  }, [setEdges, stroke]);
+  }, [setEdges, condition, stroke]);
 
   // const onReconnect = useCallback(
   //   (oldEdge, newConnection) =>
@@ -1526,25 +1468,25 @@ function Map () {
             break
           }
         }
-      } else if (edge.type === 'VariableEdge') {
-        const nodes = getNodes()
-        const sourceNode = nodes.find(node => node.id === edge.source)
-        setNodes((nodes) =>
-          nodes.map((node) => {
-            if (node.id === edge.target) {
-              if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
-                return { ...node, data: { ...node.data, text: node.data.text + `\n[[${sourceNode.data.uname}]]`, } }
-                    // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
-              }
-            }
-            return node
-          })
-        );
-        setEdges((edges1) =>
-          edges1.map((edge1) =>
-            edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
-          )
-        );
+      // } else if (edge.type === 'VariableEdge') {
+      //   const nodes = getNodes()
+      //   const sourceNode = nodes.find(node => node.id === edge.source)
+      //   setNodes((nodes) =>
+      //     nodes.map((node) => {
+      //       if (node.id === edge.target) {
+      //         if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
+      //           return { ...node, data: { ...node.data, text: node.data.text + `\n[[${sourceNode.data.uname}]]`, } }
+      //               // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
+      //         }
+      //       }
+      //       return node
+      //     })
+      //   );
+      //   setEdges((edges1) =>
+      //     edges1.map((edge1) =>
+      //       edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
+      //     )
+      //   );
       }
 
       if (!playingRef.current) {
