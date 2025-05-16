@@ -17,6 +17,7 @@ import {
   // Label,
   Accordion,
   Checkbox,
+  Modal,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -845,6 +846,12 @@ const getLayoutedElements = (nodes, edges, options) => {
 const defaultColor = '#000000'
 const defaultBackgroundColor = '#ffffff'
 const defaultStroke = '#999999'
+const hiddenConfirm = {
+  open: false,
+  header: 'Confirm',
+  message: 'Are you sure?',
+  func: () => {},
+}
 
 function Map () {
   const { height, width } = useWindowDimensions();
@@ -868,6 +875,7 @@ function Map () {
   const [ color, setColor ] = useState(defaultColor)
   const [ backgroundColor, setBackgroundColor ] = useState(defaultBackgroundColor)
   const [ stroke, setStroke ] = useState(defaultStroke)
+  const [ confirm, setConfirm ] = useState(hiddenConfirm)
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
@@ -1603,30 +1611,27 @@ function Map () {
         <Menubar />
       </Container>
 
-      <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
-        {/*
-        <Dropdown
-          style={{ marginRight: '1em' }}
-          // compact
-          // fluid
-          selection
-          // clearable
-          // trigger={
-          //   <span>
-          //     {recipient}
-          //   </span>
-          // }
-          multiple={false}
-          search={true}
-          searchInput={{ type: 'string' }}
-          options={maps}
-          value={recipient}
-          placeholder="Map Title"
-          onChange={(e, { value }) => setRecipient(value)}
-          loading={roster.length === 0}
-        />
-        */}
+      <Modal
+        closeIcon
+        open={confirm.open}
+        onClose={() => setConfirm(hiddenConfirm)}
+      >
+        <Modal.Header>{confirm.header}</Modal.Header>
+        <Modal.Content>{confirm.message}</Modal.Content>
+        <Modal.Actions>
+          <Button negative onClick={() => setConfirm(hiddenConfirm)}>
+            Cancel
+          </Button>
+          <Button positive onClick={() => {
+            setConfirm(hiddenConfirm)
+            confirm.func()
+          }}>
+            Delete
+          </Button>
+        </Modal.Actions>
+      </Modal>
 
+      <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
         <Button.Group>
           <Button icon onClick={postMap}>
             <Icon name='file' />
@@ -1637,7 +1642,14 @@ function Map () {
           <Button icon onClick={() => postMap({ duplicate: true })}>
             <Icon name='clone' />
           </Button>
-          <Button icon onClick={deleteMap}>
+          <Button icon onClick={() => {
+            setConfirm({
+              open: true,
+              header: 'Confirm Map Delete',
+              message: 'Are you sure you want to delete your map?',
+              func: deleteMap,
+            })
+          } }>
             <Icon name='trash alternate' />
           </Button>
           <Button icon onClick={downloadMap}>
@@ -1657,12 +1669,6 @@ function Map () {
             <Icon name='text cursor' />
           </Button>
         </Button.Group>
-        {' '}
-        <Checkbox
-          label='Autosave'
-          onChange={(e, data) => setAutosave(data.checked)}
-          checked={autosave}
-        />
         {' '}
 
         <span style={{ marginLeft: '1em' }} />
@@ -1728,6 +1734,14 @@ function Map () {
           </Dropdown>
           </>
         )}
+
+        {' '}
+        <Checkbox
+          label='Autosave'
+          onChange={(e, data) => setAutosave(data.checked)}
+          checked={autosave}
+        />
+
         {' '}
         <Button.Group>
           <Button icon basic onClick={() => onLayout('TB')}>
