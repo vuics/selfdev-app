@@ -185,9 +185,14 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const allNodes = getNodes()
   const { presenceMap } = useMapContext();
   const [ text, setText ] = useState(data.text)
+  const allNodes = getNodes()
+  // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
+
+  useEffect(() => {
+    setText(data.text);
+  }, [data.text]);
 
   const applyText = (text) => {
     setNodes((nodes) =>
@@ -461,17 +466,13 @@ const RequestEdge = memo(({
         }
       }));
     });
-  }, [setEdges])
+  }, [id, setEdges])
 
   return (
     <>
       <BaseEdge
         id={id} path={edgePath}
         markerEnd={markerEnd}
-        // markerEnd={{
-        //   // ...markerEnd,
-        //   // color: data.stroke,
-        // }}
         style={{
           ...style,
           stroke: data.stroke,
@@ -1425,7 +1426,7 @@ function Map () {
   return (
     <MapContext.Provider value={{
       presenceMap, credentials, recipient, sendPersonalMessage,
-      condition, reordering, setEdges
+      condition, reordering, setEdges,
     }}>
       <Container>
         <Menubar />
