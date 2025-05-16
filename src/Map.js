@@ -1,23 +1,22 @@
 import React, {
   useState, useRef, useEffect, useCallback, memo, createContext, useContext,
 } from 'react'
-// import { isEmpty, compact, head, sample, times, snakeCase } from 'lodash'
 import axios from 'axios'
 import {
   Container,
-  // Header,
   Loader,
   Message,
   Button,
   Input,
   Icon,
   Card,
-  // Grid,
   Dropdown,
-  // Label,
   Accordion,
   Checkbox,
   Modal,
+  // Header,
+  // Grid,
+  // Label,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -596,7 +595,6 @@ const RequestEdge = memo(({
   id, data, source, target, style, selected,
   sourceX, sourceY, targetX, targetY, markerEnd,
 }) => {
-  // const { setEdges, setNodes, getNodes } = useReactFlow();
   const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
@@ -605,7 +603,6 @@ const RequestEdge = memo(({
     targetY,
   });
   const { presenceMap } = useMapContext();
-  // const nodesData = useNodesData([source, target])
   const [ sourceNode, targetNode ] = useNodesData([source, target])
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
@@ -942,7 +939,7 @@ function Map () {
     } finally {
       setLoading(false)
     }
-  }, [rfInstance, title, setLoading, getMap, mapId, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
+  }, [rfInstance, title, setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
 
   const putMap = useCallback(async ({ loader = true } = {}) => {
     if (loader) {
@@ -1322,7 +1319,7 @@ function Map () {
     };
     // console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
-    await sleep(100)
+    await sleep(100) // NOTE: the sleep is needed to update edges before playing them
 
     const nodes = getNodes()
     const sourceNode = nodes.find(node => node.id === params.source)
@@ -1523,7 +1520,6 @@ function Map () {
       let sequence = 1
       setEdges((edges) =>
         edges.map((edge) => {
-          // edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } } : edge
           return { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } }
         })
       );
