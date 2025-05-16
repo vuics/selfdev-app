@@ -570,12 +570,60 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
   );
 })
 
+const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target }) => {
+  const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+  });
+
+  const {
+    setEdges
+  } = useMapContext();
+
+  return (
+    <>
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <EdgeLabelRenderer>
+        <Button.Group icon compact size='mini'
+          className='nodrag nopan'
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            pointerEvents: 'all',
+          }}
+        >
+          <Button compact size='mini'>
+            <Dropdown item simple position='right'
+              icon={
+               <Icon name='ellipsis vertical' color='grey' />
+              }>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    setEdges((es) => es.filter((e) => e.id !== id));
+                  }}
+                >
+                  <Icon name='delete' />
+                  Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Button>
+        </Button.Group>
+      </EdgeLabelRenderer>
+    </>
+  );
+})
+
 const nodeTypes = {
   NoteNode: NoteNode,
 };
 
 const edgeTypes = {
   RequestEdge: RequestEdge,
+  VariableEdge: VariableEdge,
 };
 
 const getNodeId = () => nanoid(9)
@@ -1048,10 +1096,11 @@ function Map () {
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [],
-  );
+  // const onConnect = useCallback(
+  //   (params) => setEdges((eds) => addEdge(params, eds)),
+  //   [],
+  // );
+  //
   // const onConnect = useCallback((params) => {
   //   const requestEdge = {
   //     ...params,
@@ -1068,6 +1117,20 @@ function Map () {
   //   console.log('onConnect requestEdge:', requestEdge, ', params:', params)
   //   setEdges((eds) => addEdge(requestEdge, eds));
   // }, [condition, setEdges]);
+
+  const onConnect = useCallback((params) => {
+    const variableEdge = {
+      ...params,
+      id: `${params.source}->${params.target}`,
+      type: 'VariableEdge',
+      data: {
+      },
+      markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+      animated: true,
+    };
+    console.log('onConnect variableEdge:', variableEdge, ', params:', params)
+    setEdges((eds) => addEdge(variableEdge, eds));
+  }, [condition, setEdges]);
 
   const addNote = useCallback(() => {
     const id = getNodeId()
