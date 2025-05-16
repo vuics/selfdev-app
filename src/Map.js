@@ -701,12 +701,16 @@ function Map () {
     indexMaps()
   }, [indexMaps])
 
-  const postMap = useCallback(async () => {
+  const postMap = useCallback(async ({ duplicate = false } = {}) => {
     setLoading(true)
     try {
+      if (!rfInstance) {
+        throw new Error('ReactFlow instance is not defined.')
+      }
+      const flow = rfInstance.toObject();
       const res = await axios.post(`${conf.api.url}/map`, {
-        title: `Untitled: (${faker.commerce.productName()})`,
-        flow: {
+        title: `${duplicate ? title : 'Untitled'}: (${faker.commerce.productName()})`,
+        flow: duplicate ? flow : {
           nodes: [],
           edges: [],
           viewport: { x: 0, y: 0, zoom: 1 },
@@ -731,7 +735,7 @@ function Map () {
     } finally {
       setLoading(false)
     }
-  }, [setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
+  }, [rfInstance, title, setLoading, getMap, mapId, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
 
   const putMap = useCallback(async ({ loader = true } = {}) => {
     if (loader) {
@@ -1349,6 +1353,9 @@ function Map () {
           </Button>
           <Button icon onClick={putMap}>
             <Icon name='save' />
+          </Button>
+          <Button icon onClick={() => postMap({ duplicate: true })}>
+            <Icon name='copy' />
           </Button>
           <Button icon onClick={deleteMap}>
             <Icon name='trash alternate' />
