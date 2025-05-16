@@ -285,6 +285,16 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   } );
 
+  const copyText = useCallback(async () => {
+    try {
+      const smartText = buildSmartText({ text, getNodes })
+      await navigator.clipboard.writeText(smartText)
+      // alert('Text copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  }, [text, getNodes])
+
   // NOTE: Remove the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -325,6 +335,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
              <Icon name='ellipsis vertical' color='grey' />
             }>
             <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={copyText}
+              >
+                <Icon name='copy' />
+                Copy
+              </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
                   setNodes((nodes) =>
