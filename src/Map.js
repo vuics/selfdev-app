@@ -1049,8 +1049,6 @@ function Map () {
             setEdges(parsedMap.flow.edges || []);
             setViewport({ x, y, zoom });
             console.log(`Map ${parsedMap?.title} loaded with flow:`, parsedMap.flow);
-            // console.log('mapId:', mapId)
-            // await putMap()
           } catch (err) {
             alert('Invalid JSON file.');
           }
@@ -1179,7 +1177,6 @@ function Map () {
       } else if (stanza.is('presence')) {
         const from = stanza.attrs.from;
         const type = stanza.attrs.type;
-        // const jid = from.split('/')[0];
         const username = from.split('@')[0];
 
         setPresenceMap(prev => {
@@ -1439,7 +1436,6 @@ function Map () {
     let sequence = 1
     setEdges((edges) =>
       edges.map((edge) => {
-        // edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } } : edge
         return { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true, cursor: undefined } }
       })
     );
@@ -1494,7 +1490,6 @@ function Map () {
       }
     }
 
-    // stopMap()
     setPlaying(false)
     setPausing(false)
   }, [setPlaying, setPausing, setReordering, setEdges, credentials, getNodes, setNodes, getEdges])
