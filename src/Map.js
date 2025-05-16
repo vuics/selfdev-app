@@ -195,7 +195,7 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
 })
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
-  const { getNodes, setNodes } = useReactFlow();
+  const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const { presenceMap } = useMapContext();
   const [ text, setText ] = useState(data.text)
@@ -236,10 +236,24 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   }
 
   const applyNewUname = () => {
+    let isDuplicate = false
     setNodes((nodes) => {
-      const isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
+      isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
       if (isDuplicate) { alert('The name is not unique'); return nodes; }
-      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
+      const updatedNodes = nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
+
+      getEdges().forEach((edge) => {
+        if(edge.source === id) {
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.id === edge.target ? { ...node, data: { ...node.data,
+                text: node.data.text.replace(`[[${data.uname}]]`, `[[${newUname}]]`) }
+              } : node
+            )
+          )
+        }
+      });
+      return updatedNodes
     });
   }
 
