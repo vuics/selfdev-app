@@ -38,6 +38,7 @@ import {
   getBezierPath,
   MarkerType,
   useNodesData,
+  // reconnectEdge,
   // NodeResizer,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -433,7 +434,7 @@ const RequestEdge = memo(({
   const { presenceMap } = useMapContext();
   // const nodesData = useNodesData([source, target])
   const [ sourceNode, targetNode ] = useNodesData([source, target])
-  console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
+  // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
   const {
     credentials, recipient, sendPersonalMessage,
@@ -1210,6 +1211,26 @@ function Map () {
     setEdges((eds) => addEdge(variableEdge, eds));
   }, [setEdges, stroke]);
 
+  // const onReconnect = useCallback(
+  //   (oldEdge, newConnection) =>
+  //     setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
+  //   [],
+  // );
+
+  const onEdgesDelete = (deletedEdges) => {
+    console.log('Deleted edges:', deletedEdges);
+    deletedEdges.forEach((edge) => {
+      const sourceNode = nodes.find(node => node.id === edge.source)
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === edge.target ? { ...node, data: { ...node.data,
+            text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '') }
+          } : node
+        )
+      )
+    });
+  };
+
   const addNote = useCallback(() => {
     const id = getNodeId()
     const newNode = {
@@ -1645,11 +1666,13 @@ function Map () {
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          onEdgesDelete={onEdgesDelete}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           onInit={setRfInstance}
           onConnect={onConnect}
           onConnectEnd={onConnectEnd}
+          // onReconnect={onReconnect}
           fitView
           fitViewOptions={{ padding: 2 }}
           // nodeOrigin={nodeOrigin}
