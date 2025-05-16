@@ -1509,8 +1509,8 @@ function Map () {
 
           panOnScroll={true}
           selectionOnDrag={true}
-          // panOnDrag={panOnDrag}
           selectionMode={SelectionMode.Partial}
+          panOnDrag={[1, 2]}
         >
           <Controls />
           <MiniMap pannable zoomable position='top-left' />
