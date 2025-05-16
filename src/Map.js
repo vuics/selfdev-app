@@ -203,10 +203,14 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
 
   useEffect(() => {
+    setNewUname(data.uname);
+  }, [data.uname]);
+
+  useEffect(() => {
     setText(data.text);
   }, [data.text]);
 
-  const applyText = (text) => {
+  const applyText = () => {
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, text, editing: !data.editing } } : node
@@ -221,6 +225,29 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
       )
     )
+  }
+
+  const renameUname = () => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, renaming: !data.renaming} } : node
+      )
+    );
+  }
+
+  const applyNewUname = () => {
+    setNodes((nodes) => {
+      const isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
+      if (isDuplicate) { alert('The name is not unique'); return nodes; }
+      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
+    });
+  }
+
+  const cancelNewUname = () => {
+    setNodes((nodes) => {
+      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, renaming: false } } : node);
+    });
+    setNewUname(data.uname);
   }
 
   const interactiveText = data.text.split(tokenRegex).map((part, i) => {
@@ -295,6 +322,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 { data.editing ? 'View' : 'Edit' }
               </Dropdown.Item>
               <Dropdown.Item
+                onClick={renameUname}
+              >
+                <Icon name='i cursor' />
+                Rename
+              </Dropdown.Item>
+              <Dropdown.Item
                 onClick={() => {
                   setNodes((nodes) => nodes.filter((n) => n.id !== id));
                 }}
@@ -307,17 +340,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           { !data.renaming? (
             <Button
               size='mini'
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, renaming: !data.renaming} } : node
-                  )
-                );
-              }}
+              onClick={renameUname}
             >
               <Icon name='map pin' />{data.uname}
             </Button>
           ) : (
+            <>
             <Input
               size='mini'
               iconPosition='left'
@@ -330,15 +358,25 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <input
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    setNodes((nodes) => {
-                      const isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
-                      if (isDuplicate) { alert('The name is not unique'); return nodes; }
-                      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
-                    });
+                    applyNewUname()
+                  }
+                  if (e.key === 'Escape') {
+                    cancelNewUname()
                   }
                 }}
               />
             </Input>
+            {' '}
+            <Button.Group>
+              <Button icon positive onClick={applyNewUname} >
+                <Icon name='check' />
+              </Button>
+              <Button.Or />
+              <Button icon onClick={cancelNewUname} >
+                <Icon name='cancel' />
+              </Button>
+            </Button.Group>
+            </>
           ) }
         </Card.Header>
       </Card.Content>
@@ -383,21 +421,21 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             />
             <Button.Group floated='right'>
               <Button
-                compact negative
+                compact positive
                 icon labelPosition='left'
+                onClick={applyText}
+              >
+                <Icon name='check' />
+                Apply
+              </Button>
+              <Button.Or />
+              <Button
+                compact
+                icon labelPosition='right'
                 onClick={cancelText}
               >
                 <Icon name='cancel' />
                 Cancel
-              </Button>
-              <Button.Or />
-              <Button
-                compact positive
-                icon labelPosition='right'
-                onClick={() => applyText(text)}
-              >
-                <Icon name='check' />
-                Apply
               </Button>
             </Button.Group>
 
