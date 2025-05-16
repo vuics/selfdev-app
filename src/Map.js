@@ -1432,7 +1432,7 @@ function Map () {
     setEdges((edges) =>
       edges.map((edge) => {
         // edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } } : edge
-        return { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } }
+        return { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true, cursor: undefined } }
       })
     );
     const edges = getEdges()
