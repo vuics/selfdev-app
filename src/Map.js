@@ -210,37 +210,39 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     setText(data.text);
   }, [data.text]);
 
-  const applyText = () => {
+  const applyText = useCallback(() => {
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, text, editing: !data.editing } } : node
       )
     )
-  }
+  }, [setNodes, data.editing, text, id])
 
-  const cancelText = () => {
+  const cancelText = useCallback(() => {
     setText(data.text)
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
       )
     )
-  }
+  }, [setText, setNodes, data.editing, data.text, id])
 
-  const renameUname = () => {
+  const renameUname = useCallback(() => {
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, renaming: !data.renaming} } : node
       )
     );
-  }
+  }, [setNodes, data.renaming, id])
 
-  const applyNewUname = () => {
+  const applyNewUname = useCallback(() => {
     let isDuplicate = false
     setNodes((nodes) => {
       isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
       if (isDuplicate) { alert('The name is not unique'); return nodes; }
-      const updatedNodes = nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node);
+      const updatedNodes = nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node
+      );
 
       getEdges().forEach((edge) => {
         if(edge.source === id) {
@@ -255,14 +257,14 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       });
       return updatedNodes
     });
-  }
+  }, [setNodes, getEdges, data.uname, newUname, id])
 
-  const cancelNewUname = () => {
+  const cancelNewUname = useCallback(() => {
     setNodes((nodes) => {
       return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, renaming: false } } : node);
     });
     setNewUname(data.uname);
-  }
+  }, [setNodes, data.uname, id, setNewUname])
 
   const interactiveText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
