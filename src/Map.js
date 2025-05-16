@@ -553,7 +553,7 @@ const RequestEdge = memo(({
 
   const {
     credentials, recipient, sendPersonalMessage,
-    condition, reordering, setEdges
+    condition, reordering, orderEdges, setEdges,
   } = useMapContext();
 
   return (
@@ -660,6 +660,10 @@ const RequestEdge = memo(({
                   <Icon name='usb' />
                   Set condition
                 </Dropdown.Item>
+                <Dropdown.Item onClick={orderEdges}>
+                  <Icon name='sort' />
+                  Reorder
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
                     setEdges((es) => es.filter((e) => e.id !== id));
@@ -690,7 +694,7 @@ const VariableEdge = memo(({
   });
 
   const {
-    setEdges, getNodes, setNodes, reordering
+    setEdges, getNodes, setNodes, reordering, orderEdges,
   } = useMapContext();
 
   return (
@@ -727,6 +731,10 @@ const VariableEdge = memo(({
                <Icon name='ellipsis vertical' color='grey' />
               }>
               <Dropdown.Menu>
+                <Dropdown.Item onClick={orderEdges}>
+                  <Icon name='sort' />
+                  Reorder
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
                     setEdges((es) => es.filter((e) => {
@@ -1551,6 +1559,7 @@ function Map () {
     <MapContext.Provider value={{
       presenceMap, credentials, recipient, sendPersonalMessage,
       condition, reordering, setEdges, getNodes, setNodes,
+      orderEdges
     }}>
       <Container>
         <Menubar />
