@@ -121,7 +121,7 @@ async function playEdge ({
         data: {
           ...node.data,
           waitRecipient: (smartText && satisfied) ? recipient : undefined,
-          text: recipient ? '' : ((smartText && satisfied) ? node.data.text : ''),
+          text: recipient ? '' : node.data.text,
         }
       } : node
     )
@@ -132,25 +132,27 @@ async function playEdge ({
     )
   )
 
-  if (smartText && satisfied) {
-    if (recipient) {
-      await sendPersonalMessage({ credentials, recipient: recipient, prompt: smartText });
-    } else {
-      const edges = getEdges()
-      const edge = edges.find(edge => edge.id === edgeId)
-      const nodes = getNodes()
-      const sourceNode = nodes.find(node => node.id === edge.source)
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === edge.target) {
+  if (recipient) {
+    await sendPersonalMessage({ credentials, recipient: recipient, prompt: smartText });
+  } else {
+    const edges = getEdges()
+    const edge = edges.find(edge => edge.id === edgeId)
+    const nodes = getNodes()
+    const sourceNode = nodes.find(node => node.id === edge.source)
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id === edge.target) {
+          if (smartText && satisfied) {
             if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
               return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, } }
             }
+          } else {
+            unlinkEdge({ edge, getNodes, setNodes })
           }
-          return node
-        })
-      );
-    }
+        }
+        return node
+      })
+    );
   }
 }
 
@@ -730,9 +732,13 @@ const RequestEdge = memo(({
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
+                    const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+                    // console.log('smartText:', smartText)
+                    const [ satisfied, safe ] = checkCondition({ condition: '', text: smartText })
+                    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
                     setEdges((edges) =>
                       edges.map((edge) =>
-                        edge.id=== id ? { ...edge, data: { ...edge.data, condition: '' } } : edge
+                        edge.id=== id ? { ...edge, data: { ...edge.data, condition: '', satisfied, safe } } : edge
                       )
                     )
                   }}
