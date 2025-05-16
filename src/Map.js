@@ -334,7 +334,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   }, [setNodes, id])
 
-  // NOTE: Remove the resizeObserver error
+  // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
       if (e.message.includes("ResizeObserver loop completed with undelivered notifications" || "ResizeObserver loop limit exceeded")) {
@@ -1307,10 +1307,11 @@ function Map () {
     console.log('Message with mention sent, body:', body, ', roomJid:', roomJid);
   }
 
-  const onConnect = useCallback((params) => {
+  const onConnect = useCallback(async (params) => {
+    const edgeId = `${params.source}->${params.target}`
     const variableEdge = {
       ...params,
-      id: `${params.source}->${params.target}`,
+      id: edgeId,
       type: 'RequestEdge',
       data: {
         condition,
@@ -1321,7 +1322,17 @@ function Map () {
     };
     // console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
-  }, [setEdges, condition, stroke]);
+    await sleep(100)
+
+    const nodes = getNodes()
+    const sourceNode = nodes.find(node => node.id === params.source)
+    await playEdge({
+      text: sourceNode.data.text, condition,
+      getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
+      credentials, recipient: undefined,
+      edgeId, targetId: params.target,
+    })
+  }, [setEdges, condition, stroke, credentials, getNodes, setNodes, getEdges ]);
 
   // const onReconnect = useCallback(
   //   (oldEdge, newConnection) =>
