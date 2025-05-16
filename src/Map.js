@@ -669,6 +669,7 @@ const getLayoutedElements = (nodes, edges, options) => {
 
 const defaultColor = '#000000'
 const defaultBackgroundColor = '#ffffff'
+const defaultStroke = '#999999'
 
 function Map () {
   const { height, width } = useWindowDimensions();
@@ -689,8 +690,9 @@ function Map () {
   const [ openerSearch, setOpenerSearch ] = useState('')
   const [ autosave, setAutosave ] = useState(true)
   const [ reordering, setReordering ] = useState(false)
-  const [ color, setColor ] = useState(defaultColor);
+  const [ color, setColor ] = useState(defaultColor)
   const [ backgroundColor, setBackgroundColor ] = useState(defaultBackgroundColor)
+  const [ stroke, setStroke ] = useState(defaultStroke)
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
@@ -1176,11 +1178,11 @@ function Map () {
       },
       markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
       animated: true,
-      style: { stroke: backgroundColor },
+      style: { stroke },
     };
     console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
-  }, [condition, setEdges]);
+  }, [condition, setEdges, stroke]);
 
   const addNote = useCallback(() => {
     const id = getNodeId()
@@ -1257,7 +1259,7 @@ function Map () {
           condition,
         },
         markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
-        style: { stroke: backgroundColor },
+        style: { stroke },
       }
       setEdges((edges) =>
         edges.concat(newEdge),
@@ -1270,7 +1272,7 @@ function Map () {
         edgeId, targetId: id,
       })
     }
-  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, setEdges, color, backgroundColor]);
+  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, setEdges, color, backgroundColor, stroke]);
 
 
   const playMap = useCallback(async () => {
@@ -1545,13 +1547,23 @@ function Map () {
                 node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
               )
             )
+          } }
+          value={backgroundColor}
+        />
+        {' '}
+        <Icon name='snowflake outline' color='grey' onClick={() => setStroke(defaultStroke)} />
+        <input
+          className="nodrag"
+          type="color"
+          onChange={(e) => {
+            setStroke(e.target.value)
             setEdges((edges) =>
               edges.map((edge) =>
                 edge.selected ? { ...edge, style: { ...edge.style, stroke: e.target.value } } : edge
               )
             );
           } }
-          value={backgroundColor}
+          value={stroke}
         />
 
         {' '}
