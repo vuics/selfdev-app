@@ -626,7 +626,7 @@ function Map () {
     return maps.filter(({ _id }) => _id === mapId)[0]
   }, [maps])
 
-  const indexMaps = async () => {
+  const indexMaps = useCallback(async () => {
     setLoading(true)
     try {
       const res = await axios.get(`${conf.api.url}/map?skip=${conf.map.skip}&limit=${conf.map.limit}`, {
@@ -647,13 +647,13 @@ function Map () {
     } finally {
       setLoading(false)
     }
-  }
+  }, [setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
 
   useEffect(() => {
     indexMaps()
-  }, [])
+  }, [indexMaps])
 
-  const postMap = async () => {
+  const postMap = useCallback(async () => {
     setLoading(true)
     try {
       const res = await axios.post(`${conf.api.url}/map`, {
@@ -683,7 +683,7 @@ function Map () {
     } finally {
       setLoading(false)
     }
-  }
+  }, [setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
 
   const putMap = useCallback(async ({ loader = true } = {}) => {
     if (loader) {
@@ -1083,7 +1083,7 @@ function Map () {
       type: "NoteNode",
     };
     setNodes((nds) => nds.concat(newNode));
-  }, [setNodes]);
+  }, [setNodes, width, height, screenToFlowPosition]);
 
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
@@ -1176,7 +1176,7 @@ function Map () {
         const nodes = getNodes()
         // console.log('nodes:', nodes)
         const sourceNode = nodes.find(node => node.id === edge.source)
-        const targetNode = nodes.find(node => node.id === edge.target)
+        // const targetNode = nodes.find(node => node.id === edge.target)
         // console.log('sourceNode:', sourceNode)
         // console.log('targetNode:', targetNode)
 
@@ -1213,13 +1213,13 @@ function Map () {
     // stopMap()
     setPlaying(false)
     setPausing(false)
-  })
+  }, [setPlaying, setPausing, setReordering, setEdges, credentials, getNodes, setNodes, getEdges])
 
   const pauseMap = useCallback(() => {
     setPausing(pausing => !pausing)
     setReordering(false)
     console.log('pauseMap')
-  })
+  }, [setPausing, setReordering])
 
   const stopMap = useCallback(() => {
     setPlaying(false)
@@ -1229,7 +1229,7 @@ function Map () {
     setEdges((edges) =>
       edges.map((edge) => { return { ...edge, data: { ...edge.data, sequence: undefined, expecting: undefined } } } )
     );
-  })
+  }, [setPlaying, setPausing, setReordering, setEdges])
 
   const orderEdges = useCallback(() => {
     setReordering(reordering => {
