@@ -1567,7 +1567,13 @@ function Map () {
         </Button.Group>
 
         {' '}
-        <Icon name='font' color='grey' onClick={() => setColor(defaultColor)} />
+        <Icon name='font' color='grey' onClick={() => {
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.selected ? { ...node, data: { ...node.data, color } } : node
+            )
+          )
+        }} />
         <input
           className="nodrag"
           type="color"
@@ -1583,7 +1589,13 @@ function Map () {
           value={color}
         />
         {' '}
-        <Icon name='paint brush' color='grey' onClick={() => setBackgroundColor(defaultBackgroundColor)} />
+        <Icon name='paint brush' color='grey' onClick={() => {
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
+            )
+          )
+        }} />
         <input
           className="nodrag"
           type="color"
@@ -1598,7 +1610,13 @@ function Map () {
           value={backgroundColor}
         />
         {' '}
-        <Icon name='snowflake outline' color='grey' onClick={() => setStroke(defaultStroke)} />
+        <Icon name='linkify' color='grey' onClick={() => {
+          setEdges((edges) =>
+            edges.map((edge) =>
+              edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+            )
+          );
+        }} />
         <input
           className="nodrag"
           type="color"
@@ -1612,6 +1630,12 @@ function Map () {
           } }
           value={stroke}
         />
+        {' '}
+        <Icon name='history' color='grey' onClick={() => {
+          setColor(defaultColor)
+          setBackgroundColor(defaultBackgroundColor)
+          setStroke(defaultStroke)
+        }} />
 
         {' '}
         <Button.Group>
