@@ -103,7 +103,7 @@ function checkCondition({ condition, text }) {
   return [ satisfied, safe ]
 }
 
-async function playEdge ({
+async function playRequestEdge ({
   text, condition, getNodes, setNodes, setEdges,
   sendPersonalMessage, credentials, recipient,
   edgeId, targetId,
@@ -122,7 +122,7 @@ async function playEdge ({
   )
   setEdges((edges) =>
     edges.map((edge) =>
-      edge.id === edgeId ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
+      edge.id === edgeId ? { ...edge, data: { ...edge.data, satisfied, safe, cursor: true } } : edge
     )
   )
 
@@ -488,6 +488,52 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
+const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
+  const { setEdges } = useMapContext();
+
+  const moveEdge = useCallback(({ step }) => {
+    setEdges((edges) => {
+      const index = edges.findIndex(edge => edge.id === id);
+      if (index === -1) return edges; // Edge not found
+      const newIndex = index + step
+      if (newIndex < 0 || newIndex >= edges.length) return edges; // Out of bounds
+      const updatedEdges = [...edges];
+      const [movedEdge] = updatedEdges.splice(index, 1); // Remove the edge
+      updatedEdges.splice(newIndex, 0, movedEdge); // Insert at new position
+
+      let sequence = 1
+      return updatedEdges.map((edge, i) => ({
+        ...edge,
+        data: {
+          ...edge.data,
+          // sequence: edge.type === 'RequestEdge' ? sequence++ : undefined,
+          sequence: sequence++
+        }
+      }));
+    });
+  }, [id, setEdges])
+
+  return (
+    <>
+    { reordering && (
+      <Button compact size='mini' onClick={() => { moveEdge({ step: 1 }) }} >
+        <Icon name='caret up' />
+      </Button>
+    )}
+    { sequence && (
+      <Button color={ cursor ? 'olive' : (expecting ? 'yellow' : (reordering ? 'blue' : 'green')) }>
+        [{sequence}]:{' '}
+      </Button>
+    )}
+    { reordering && (
+      <Button compact size='mini' onClick={() => { moveEdge({ step: -1 }) }} >
+        <Icon name='caret down' />
+      </Button>
+    )}
+    </>
+  )
+})
+
 const RequestEdge = memo(({
   id, data, source, target, style, selected,
   sourceX, sourceY, targetX, targetY, markerEnd,
@@ -510,28 +556,6 @@ const RequestEdge = memo(({
     condition, reordering, setEdges
   } = useMapContext();
 
-
-  const moveEdge = useCallback(({ step }) => {
-    setEdges((edges) => {
-      const index = edges.findIndex(edge => edge.id === id);
-      if (index === -1) return edges; // Edge not found
-      const newIndex = index + step
-      if (newIndex < 0 || newIndex >= edges.length) return edges; // Out of bounds
-      const updatedEdges = [...edges];
-      const [movedEdge] = updatedEdges.splice(index, 1); // Remove the edge
-      updatedEdges.splice(newIndex, 0, movedEdge); // Insert at new position
-
-      let sequence = 1
-      return updatedEdges.map((edge, i) => ({
-        ...edge,
-        data: {
-          ...edge.data,
-          sequence: edge.type === 'RequestEdge' ? sequence++ : undefined,
-        }
-      }));
-    });
-  }, [id, setEdges])
-
   return (
     <>
       <BaseEdge
@@ -552,28 +576,20 @@ const RequestEdge = memo(({
             pointerEvents: 'all',
           }}
         >
-          { reordering && (
-            <Button compact size='mini' onClick={() => { moveEdge({ step: 1 }) }} >
-              <Icon name='caret up' />
-            </Button>
-          )}
-          { data.sequence && (
-            <Button color={ data.expecting ? 'yellow' : (reordering ? 'blue' : 'green') }>
-              [{data.sequence}]:{' '}
-            </Button>
-          )}
-          { reordering && (
-            <Button compact size='mini' onClick={() => { moveEdge({ step: -1 }) }} >
-              <Icon name='caret down' />
-            </Button>
-          )}
+          <OrderControl
+            id={id}
+            expecting={data.expecting}
+            sequence={data.sequence}
+            cursor={data.cursor}
+            reordering={reordering}
+          />
 
           <Button
             compact
             size='mini'
             onClick={async () => {
               console.log('source:', source, ', target:', target)
-              await playEdge({
+              await playRequestEdge({
                 text: sourceNode.data.text, condition: data.condition,
                 getNodes, setNodes, setEdges, sendPersonalMessage,
                 credentials, recipient: data.recipient,
@@ -674,7 +690,7 @@ const VariableEdge = memo(({
   });
 
   const {
-    setEdges, getNodes, setNodes,
+    setEdges, getNodes, setNodes, reordering
   } = useMapContext();
 
   return (
@@ -697,6 +713,14 @@ const VariableEdge = memo(({
             pointerEvents: 'all',
           }}
         >
+          <OrderControl
+            id={id}
+            expecting={data.expecting}
+            sequence={data.sequence}
+            cursor={data.cursor}
+            reordering={reordering}
+          />
+
           <Button compact size='mini'>
             <Dropdown item simple position='right'
               icon={
@@ -1383,7 +1407,7 @@ function Map () {
         edges.concat(newEdge),
       );
 
-      await playEdge({
+      await playRequestEdge({
         text: connection.fromNode.data.text, condition,
         getNodes, setNodes, setEdges, sendPersonalMessage,
         credentials, recipient,
@@ -1400,15 +1424,18 @@ function Map () {
     setReordering(false)
     let sequence = 1
     setEdges((edges) =>
-      edges.map((edge) =>
-        edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } } : edge
-      )
+      edges.map((edge) => {
+        // edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } } : edge
+        return { ...edge, data: { ...edge.data, sequence: sequence++, expecting: true } }
+      })
     );
     const edges = getEdges()
     // console.log('edges:', edges)
 
     for (let edge of edges) {
       if (edge.type === 'RequestEdge') {
+        await sleep(100) // NOTE: this sleep is need in case if the VariableEdge just updated the NoteNode
+
         // console.log('edge:', edge)
         // console.log('edge.source:', edge.source, ', edge.target:', edge.target)
         const nodes = getNodes()
@@ -1418,7 +1445,7 @@ function Map () {
         // console.log('sourceNode:', sourceNode)
         // console.log('targetNode:', targetNode)
 
-        await playEdge({
+        await playRequestEdge({
           text: sourceNode.data.text, condition: edge.data.condition,
           getNodes, setNodes, setEdges, sendPersonalMessage,
           credentials, recipient: edge.data.recipient,
@@ -1428,23 +1455,49 @@ function Map () {
         while (playingRef.current) {
           await sleep(1000)
           const nodes1 = getNodes()
+          // console.log('nodes1:', nodes1)
+          // console.log('edge.target:', edge.target)
           const targetNode1 = nodes1.find(node1 => node1.id === edge.target)
-          // console.log('targetNode1.data.waitRecipient:', targetNode.data.waitRecipient)
+          // console.log('targetNode1:', targetNode1)
+          if (!targetNode1) {
+            break
+          }
+          // console.log('targetNode1.data.waitRecipient:', targetNode1.data.waitRecipient)
           if (targetNode1.data.waitRecipient === undefined) {
             setEdges((edges1) =>
               edges1.map((edge1) =>
-                edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
+                edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined, cursor: undefined } } : edge1
               )
             );
             break
           }
         }
-        if (!playingRef.current) {
-          break
-        }
-        while (pausingRef.current) {
-          await sleep(1000)
-        }
+      } else if (edge.type === 'VariableEdge') {
+        const nodes = getNodes()
+        const sourceNode = nodes.find(node => node.id === edge.source)
+        setNodes((nodes) =>
+          nodes.map((node) => {
+            if (node.id === edge.target) {
+              if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
+                return { ...node, data: { ...node.data, text: node.data.text + `\n[[${sourceNode.data.uname}]]`, } }
+                    // text: node.data.text + (satisfied ? `\n[[${connection.fromNode.data.uname}]]` : ''),
+              }
+            }
+            return node
+          })
+        );
+        setEdges((edges1) =>
+          edges1.map((edge1) =>
+            edge1.id === edge.id ? { ...edge1, data: { ...edge1.data, expecting: undefined } } : edge1
+          )
+        );
+      }
+
+      if (!playingRef.current) {
+        break
+      }
+      while (pausingRef.current) {
+        await sleep(1000)
       }
     }
 
@@ -1473,9 +1526,10 @@ function Map () {
     setReordering(reordering => {
       let sequence = 1
       setEdges((edges) =>
-        edges.map((edge) =>
-          edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } } : edge
-        )
+        edges.map((edge) => {
+          // edge.type === 'RequestEdge' ? { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } } : edge
+          return { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } }
+        })
       );
       return !reordering
     })
