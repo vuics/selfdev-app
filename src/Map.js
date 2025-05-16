@@ -130,7 +130,7 @@ async function playEdge ({
   }
 }
 
-const ExpandingVariable = memo(({ key, part, allNodes }) => {
+const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor }) => {
   const { fitView } = useReactFlow();
 
   let uname = part
@@ -150,7 +150,7 @@ const ExpandingVariable = memo(({ key, part, allNodes }) => {
   const [ active, setActive ] = useState(false)
 
   return (
-    <Accordion styled>
+    <Accordion styled style={{ color, backgroundColor, }} >
       <Accordion.Title
         styled
         active={active}
@@ -208,7 +208,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const interactiveText = data.text.split(tokenRegex).map((part, i) => {
     if (tokenRegex.test(part)) {
       return (
-        <ExpandingVariable key={i} part={part} allNodes={allNodes} />
+        <ExpandingVariable
+          key={i} part={part} allNodes={allNodes}
+          color={data.color}
+          backgroundColor={data.backgroundColor}
+        />
       )
     } else {
       // return (
@@ -241,7 +245,9 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       style={{
         width: '100%', maxWidth: '600px',
         borderStyle: selected ? 'solid' : undefined,
-        borderColor: selected ? 'violet' : undefined
+        borderColor: selected ? 'violet' : undefined,
+        backgroundColor: data.backgroundColor,
+        color: data.color,
       }}
     >
       <Handle
@@ -351,7 +357,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               className="nodrag"
               minRows={1}
               // maxRows={12}
-              style={{ width: '570px', height: '100%' }}
+              style={{
+                width: '570px', height: '100%',
+                color: data.color || '',
+                backgroundColor: data.backgroundColor || '',
+              }}
             />
             <Button.Group floated='right'>
               <Button
@@ -657,6 +667,8 @@ const getLayoutedElements = (nodes, edges, options) => {
   };
 };
 
+const defaultColor = '#000000'
+const defaultBackgroundColor = '#ffffff'
 
 function Map () {
   const { height, width } = useWindowDimensions();
@@ -677,6 +689,8 @@ function Map () {
   const [ openerSearch, setOpenerSearch ] = useState('')
   const [ autosave, setAutosave ] = useState(true)
   const [ reordering, setReordering ] = useState(false)
+  const [ color, setColor ] = useState(defaultColor);
+  const [ backgroundColor, setBackgroundColor ] = useState(defaultBackgroundColor)
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
@@ -699,6 +713,7 @@ function Map () {
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
   // console.log('openerSearch:', openerSearch)
+  // console.log('color:', color, 'backgroundColor:', backgroundColor)
 
   const getMap = useCallback((mapId) => {
     return maps.filter(({ _id }) => _id === mapId)[0]
@@ -1176,11 +1191,13 @@ function Map () {
         text: '',
         editing: true,
         renaming: false,
+        color,
+        backgroundColor,
       },
-      type: "NoteNode",
+      type: 'NoteNode',
     };
     setNodes((nds) => nds.concat(newNode));
-  }, [setNodes, width, height, screenToFlowPosition]);
+  }, [setNodes, width, height, screenToFlowPosition, color, backgroundColor]);
 
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
@@ -1217,8 +1234,10 @@ function Map () {
           text: '',
           editing: false,
           renaming: false,
+          color,
+          backgroundColor,
         },
-        type: "NoteNode",
+        type: 'NoteNode',
       };
       setNodes((nodes) =>
         nodes.map((node) =>
@@ -1249,7 +1268,7 @@ function Map () {
         edgeId, targetId: id,
       })
     }
-  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, setEdges]);
+  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, setEdges, color, backgroundColor]);
 
 
   const playMap = useCallback(async () => {
@@ -1495,6 +1514,39 @@ function Map () {
             <Icon name='list layout' />
           </Button>
         </Button.Group>
+
+        {' '}
+        <Icon name='font' color='grey' onClick={() => setColor(defaultColor)} />
+        <input
+          className="nodrag"
+          type="color"
+          onChange={(e) => {
+            console.log('color:', e.target.value)
+            setColor(e.target.value)
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
+              )
+            )
+          } }
+          value={color}
+        />
+        {' '}
+        <Icon name='paint brush' color='grey' onClick={() => setBackgroundColor(defaultBackgroundColor)} />
+        <input
+          className="nodrag"
+          type="color"
+          onChange={(e) => {
+            setBackgroundColor(e.target.value)
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
+              )
+            )
+          } }
+          value={backgroundColor}
+        />
+
         {' '}
         <Button.Group>
           <Button icon basic onClick={orderEdges}>
@@ -1524,6 +1576,7 @@ function Map () {
             </Button>
           )}
         </Button.Group>
+
       </div>
       <Loader active={loading} inline='centered' />
       { responseError &&
