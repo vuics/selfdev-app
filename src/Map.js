@@ -295,6 +295,20 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   }, [text, getNodes])
 
+  const pasteText = useCallback(async () => {
+    try {
+      const pastedText = await navigator.clipboard.readText()
+      // console.log('pastedText:', pastedText)
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === id ? { ...node, data: { ...node.data, text: pastedText } } : node
+        )
+      )
+    } catch (err) {
+      console.error('Paste failed:', err);
+    }
+  }, [setNodes, id])
+
   // NOTE: Remove the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -340,6 +354,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               >
                 <Icon name='copy' />
                 Copy
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={pasteText}
+              >
+                <Icon name='paste' />
+                Paste
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => {
@@ -435,7 +455,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
                   e.preventDefault();
-                  applyText(text)
+                  applyText()
                 }
                 if (e.key === 'Escape') {
                   e.preventDefault();
