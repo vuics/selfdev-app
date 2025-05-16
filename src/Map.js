@@ -418,7 +418,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
-const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target, style }) => {
+const RequestEdge = memo(({
+  id, data, source, target, style, selected,
+  sourceX, sourceY, targetX, targetY, markerEnd,
+}) => {
   // const { setEdges, setNodes, getNodes } = useReactFlow();
   const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
@@ -461,7 +464,19 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style}/>
+      <BaseEdge
+        id={id} path={edgePath}
+        markerEnd={markerEnd}
+        // markerEnd={{
+        //   // ...markerEnd,
+        //   // color: data.stroke,
+        // }}
+        style={{
+          ...style,
+          stroke: data.stroke,
+          strokeWidth: selected ? 3 : 1,
+        }}
+      />
       <EdgeLabelRenderer>
         <Button.Group icon compact size='mini'
           className='nodrag nopan'
@@ -581,7 +596,10 @@ const RequestEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marker
   );
 })
 
-const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, markerEnd, source, target, style }) => {
+const VariableEdge = memo(({
+  id, data, source, target, style, selected,
+  sourceX, sourceY, targetX, targetY, markerEnd,
+}) => {
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
     sourceY,
@@ -595,7 +613,15 @@ const VariableEdge = memo(({ id, data, sourceX, sourceY, targetX, targetY, marke
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style}/>
+      <BaseEdge
+        id={id} path={edgePath}
+        markerEnd={markerEnd}
+        style={{
+          ...style,
+          stroke: data.stroke,
+          strokeWidth: selected ? 3 : 1,
+        }}
+      />
       <EdgeLabelRenderer>
         <Button.Group icon compact size='mini'
           className='nodrag nopan'
@@ -1175,14 +1201,14 @@ function Map () {
       id: `${params.source}->${params.target}`,
       type: 'VariableEdge',
       data: {
+        stroke,
       },
-      markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
+      markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: stroke },
       animated: true,
-      style: { stroke },
     };
-    console.log('onConnect variableEdge:', variableEdge, ', params:', params)
+    // console.log('onConnect variableEdge:', variableEdge, ', params:', params)
     setEdges((eds) => addEdge(variableEdge, eds));
-  }, [condition, setEdges, stroke]);
+  }, [setEdges, stroke]);
 
   const addNote = useCallback(() => {
     const id = getNodeId()
@@ -1257,9 +1283,9 @@ function Map () {
         data: {
           recipient,
           condition,
+          stroke,
         },
-        markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, },
-        style: { stroke },
+        markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20, color: stroke },
       }
       setEdges((edges) =>
         edges.concat(newEdge),
@@ -1559,7 +1585,7 @@ function Map () {
             setStroke(e.target.value)
             setEdges((edges) =>
               edges.map((edge) =>
-                edge.selected ? { ...edge, style: { ...edge.style, stroke: e.target.value } } : edge
+                edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
               )
             );
           } }
