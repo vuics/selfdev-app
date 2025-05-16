@@ -46,6 +46,7 @@ import safeRegex from "safe-regex";
 import { faker } from '@faker-js/faker'
 import { v4 as uuidv4 } from 'uuid'
 import { nanoid } from 'nanoid'
+import Dagre from '@dagrejs/dagre';
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -630,6 +631,33 @@ const getNodeId = () => nanoid(9)
 const getUname = (id) => `Note_${id}`
 
 
+const getLayoutedElements = (nodes, edges, options) => {
+  const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+  g.setGraph({ rankdir: options.direction });
+  edges.forEach((edge) => g.setEdge(edge.source, edge.target));
+  nodes.forEach((node) =>
+    g.setNode(node.id, {
+      ...node,
+      width: node.measured?.width ?? 0,
+      height: node.measured?.height ?? 0,
+    }),
+  );
+  Dagre.layout(g);
+
+  return {
+    nodes: nodes.map((node) => {
+      const position = g.node(node.id);
+      // We are shifting the dagre node position (anchor=center center) to the top left
+      // so it matches the React Flow node anchor point (top left).
+      const x = position.x - (node.measured?.width ?? 0) / 2;
+      const y = position.y - (node.measured?.height ?? 0) / 2;
+      return { ...node, position: { x, y } };
+    }),
+    edges,
+  };
+};
+
+
 function Map () {
   const { height, width } = useWindowDimensions();
   const [ loading, setLoading ] = useState(true)
@@ -662,7 +690,9 @@ function Map () {
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
   const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
-  const { screenToFlowPosition, getNodes, getEdges, setViewport } = useReactFlow();
+  const {
+    screenToFlowPosition, getNodes, getEdges, setViewport, fitView
+  } = useReactFlow();
   const [ rfInstance, setRfInstance ] = useState(null);
 
   // console.log('title:', title)
@@ -1314,6 +1344,14 @@ function Map () {
   //   console.log('Current edges state:', edges);
   // }, [edges]);
 
+  const onLayout = useCallback((direction) => {
+    console.log(nodes);
+    const layouted = getLayoutedElements(nodes, edges, { direction });
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+    fitView();
+  }, [nodes, edges, setNodes, setEdges, fitView]);
+
   return (
     <MapContext.Provider value={{
       presenceMap, credentials, recipient, sendPersonalMessage,
@@ -1355,7 +1393,7 @@ function Map () {
             <Icon name='save' />
           </Button>
           <Button icon onClick={() => postMap({ duplicate: true })}>
-            <Icon name='copy' />
+            <Icon name='clone' />
           </Button>
           <Button icon onClick={deleteMap}>
             <Icon name='trash alternate' />
@@ -1450,6 +1488,21 @@ function Map () {
         )}
         {' '}
         <Button.Group>
+          <Button icon basic onClick={() => onLayout('TB')}>
+            <Icon name='grid layout' />
+          </Button>
+          <Button icon basic onClick={() => onLayout('LR')}>
+            <Icon name='list layout' />
+          </Button>
+        </Button.Group>
+        {' '}
+        <Button.Group>
+          <Button icon basic onClick={orderEdges}>
+            <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
+          </Button>
+        </Button.Group>
+        {' '}
+        <Button.Group>
           {playing ? (
             <>
               {pausing ? (
@@ -1470,11 +1523,7 @@ function Map () {
               <Icon name='play' color='green' />
             </Button>
           )}
-          <Button icon basic onClick={orderEdges}>
-            <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
-          </Button>
         </Button.Group>
-        {' '}
       </div>
       <Loader active={loading} inline='centered' />
       { responseError &&
@@ -1543,7 +1592,7 @@ function Map () {
             ><Icon name='usb' /><input /></Input>
             <br/> <br/>
             <Button onClick={addNote} fluid>
-              <Icon name='add' />
+              <Icon name='sticky note outline' />
               Add Note
             </Button>
             <br/> <br/>
