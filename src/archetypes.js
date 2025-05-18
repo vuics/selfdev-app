@@ -362,9 +362,10 @@ const archetypes = {
           type: 'object',
           properties: {
             // provider: { type: 'string' },
-            // instance: { type: 'string' },
             backend: { type: 'string' },
+            minNumQubits: { type: 'number' },
             language: { type: 'string' },
+            optimizationLevel: { type: 'number' },
             draw: {
               type: 'object',
               properties: {
@@ -384,13 +385,14 @@ const archetypes = {
         joinRooms: [ 'quantum' ],
         qiskit: {
           // provider: 'ibm',
-          // instance: 'ibm-q/open/main',
-          backend: 'ibm_torino',  // ibm_torino, ibm_brisbane, ibm_sherbrooke
+          backend: 'fake_almaden_v2',  // least_busy, fake_almaden_v2, ibm_torino, ibm_brisbane, ibm_sherbrooke
+          minNumQubits: 127,  // only for least_busy backend
           language: 'qasm2',  // qasm2, qasm3
+          optimizationLevel: 1,
           draw: {
             enable: true,
-            output: 'text',
-            style: 'str',
+            output: 'text',   // text, mpl
+            style: 'str',     // only for text output
           },
         },
       }
