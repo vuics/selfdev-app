@@ -789,6 +789,7 @@ const edgeTypes = {
 
 const getNodeId = () => nanoid(9)
 const getUname = (id) => `Note_${id}`
+const getUgroup = (id) => `Group_${id}`
 
 
 const getLayoutedElements = (nodes, edges, options) => {
@@ -1359,6 +1360,54 @@ function Map () {
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes, width, height, screenToFlowPosition, color, backgroundColor]);
 
+  const groupSelected = useCallback(() => {
+    let selectedCount = 0
+    let x = undefined
+    let y = undefined
+    let x1 = 600
+    let y1 = 600
+    for (let node of getNodes()) {
+      if (node.selected) {
+        selectedCount += 1
+        if (x === undefined || y === undefined) {
+          x = node.position.x
+          y = node.position.y
+          x1 = x + 600
+          y1 = y + 600
+        } else {
+          x = Math.min(x, node.position.x)
+          y = Math.min(y, node.position.y)
+        }
+        x1 = Math.max(x1, node.position.x + (node.style?.width || 600))
+        y1 = Math.max(y1, node.position.y + (node.style?.height || 600))
+      }
+    }
+    const id = getNodeId()
+    const newNode = {
+      id,
+      position: selectedCount > 0 ? { x, y } : screenToFlowPosition({ x: width*3/4, y: height/3, }),
+      data: {
+        uname: getUgroup(id),
+        // text: '',
+        // editing: true,
+        // renaming: false, // TODO: implement renaming
+        // color,           // TODO: add color
+        // backgroundColor, // TODO: add backgroundColor
+      },
+      style: {
+        width: x1 - x,
+        height: y1 - y,
+      },
+      type: 'group',
+    };
+    setNodes((nodes) => {
+      nodes.unshift(newNode)
+      return nodes.map((node) =>
+        node.selected ? { ...node, parentId: id, extent: 'parent' } : node
+      )
+    })
+  }, [setNodes, getNodes, width, height, screenToFlowPosition, color, backgroundColor]);
+
   const onConnectEnd = useCallback(async (event, connection) => {
     console.log('onConnectEnd event:', event, ', connection:', connection)
 
@@ -1858,6 +1907,11 @@ function Map () {
             <Button onClick={addNote} fluid>
               <Icon name='sticky note outline' />
               Add Note
+            </Button>
+            <br/>
+            <Button onClick={groupSelected} fluid>
+              <Icon name='object group outline' />
+              Group Selected
             </Button>
             <br/> <br/>
             {/*
