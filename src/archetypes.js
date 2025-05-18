@@ -343,6 +343,59 @@ const archetypes = {
       }
     }
   },
+
+  'quantum-v1.0': {
+    key: 'quantum-v1.0',
+    value: 'quantum-v1.0',
+    icon: 'react',
+    text: 'Quantum v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        qiskit: {
+          type: 'object',
+          properties: {
+            // provider: { type: 'string' },
+            // instance: { type: 'string' },
+            backend: { type: 'string' },
+            language: { type: 'string' },
+            draw: {
+              type: 'object',
+              properties: {
+                enable: { type: 'boolean' },
+                output: { type: 'string' },
+                style: { type: 'string' },
+              },
+            },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'quantum' ],
+        qiskit: {
+          // provider: 'ibm',
+          // instance: 'ibm-q/open/main',
+          backend: 'ibm_torino',  // ibm_torino, ibm_brisbane, ibm_sherbrooke
+          language: 'qasm2',  // qasm2, qasm3
+          draw: {
+            enable: true,
+            output: 'text',
+            style: 'str',
+          },
+        },
+      }
+    }
+  },
 }
 
 export default archetypes

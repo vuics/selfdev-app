@@ -185,6 +185,11 @@ const Product = () => (
             </a>
           </li>
           <li>
+            <a href="#quantum">
+              <b>Quantum Computing</b> — perform quantum computing on simulators and real quantum hardware.
+            </a>
+          </li>
+          <li>
             <a href="#docs">
               <b>Docs</b> — learn, build, and succeed with clear and actionable guidance.
             </a>
@@ -1230,6 +1235,43 @@ const Product = () => (
         } ]} />
         <br/>
         <Image src='/images/screenshots/vr.png' fluid bordered rounded />
+        <br/>
+      </Segment>
+
+      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
+        <Header as='h1' textAlign='center' id="quantum" dividing>
+          <a href="#toc">
+            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+          </a>
+            Quantum Computing
+          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
+          <br />
+        </Header>
+        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
+          The Quantum Computing agents empowers users to execute quantum algorithms on both simulators and real quantum hardware from providers like IBM. It supports code generation and seamless conversion between various quantum programming languages and libraries, including OpenQASM, Qiskit, Cirq, Q#, and more. Users can explore and receive expert-level insights into a wide range of quantum topics such as hardware, software, algorithms, error correction, communication, sensing, entrepreneurship, and research. An agentic AI system enhances this capability by autonomously designing, testing, and optimizing quantum algorithms, translating between quantum languages, refining circuits, benchmarking performance, and troubleshooting errors.
+        </p>
+        <br/>
+          <Card.Group key="card-group-quantum" centered items={[ {
+            header: 'Access to Cutting-Edge Technology',
+            description: 'Run quantum algorithms on real quantum hardware and advanced simulators with ease, unlocking the full potential of next-generation computing.',
+          }, {
+            header: 'Cross-Platform Compatibility',
+            description: 'Convert quantum code across major languages and libraries like Qiskit, Cirq, Q#, and more—enhancing interoperability and collaboration.',
+          }, {
+            header: 'Accelerated Development',
+            description: 'Agentic AI tools streamline the design, testing, and optimization of quantum algorithms, drastically reducing development time.',
+          }, {
+            header: 'Scalable Simulation',
+            description: 'Simulate circuits with tens to thousands of qubits using web-based or cloud simulators, empowering experimentation beyond hardware limits.',
+          }, {
+            header: 'Expert-Level Guidance',
+            description: 'Get detailed answers and insights on hardware, algorithms, error correction, and more—supporting both learning and professional research.',
+          }, {
+            header: 'Innovation Support',
+            description: 'Enable rapid prototyping, code discovery, and literature exploration for researchers and startups driving the future of quantum computing.',
+          } ]} />
+        <br/>
+        <Image src='/images/screenshots/quantum.png' fluid bordered rounded />
         <br/>
       </Segment>
 
