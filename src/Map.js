@@ -1661,6 +1661,15 @@ function Map () {
               placeholder='Title...'
               value={title}
               onChange={e => setTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setRenaming(renaming => !renaming)
+                }
+                if (e.key === 'Escape') {
+                  setRenaming(renaming => !renaming)
+                  setTitle(getMap(mapId).title)
+                }
+              }}
             ><Icon name='map' /><input /></Input>
             {' '}
             <Button.Group>
