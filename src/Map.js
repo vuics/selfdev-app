@@ -639,12 +639,12 @@ const GroupNode = memo(({ id, data, style, selected }) => {
       <Card.Header
         style={{
           padding: '0.5em 1em 0.5em 1em',
-          backgroundColor: hexToRgba({ hexColor: data.backgroundColor, alpha: 0.3 }),
+          backgroundColor: hexToRgba({ hexColor: data.backgroundColor, alpha: selected ? 1 : 0.3 }),
         }}
       >
         <Dropdown item simple position='right'
           icon={
-           <Icon name='ellipsis vertical' color='grey' />
+           <Icon size='large' name='ellipsis vertical' color='grey' />
           }>
           <Dropdown.Menu>
             <Dropdown.Item
