@@ -766,8 +766,8 @@ const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
   return (
     <>
     { reordering && (
-      <Button compact size='mini' onClick={() => { moveEdge({ step: 1 }) }} >
-        <Icon name='caret up' />
+      <Button compact size='mini' onClick={() => { moveEdge({ step: -1 }) }} >
+        <Icon name='caret down' />
       </Button>
     )}
     { sequence && (
@@ -776,8 +776,8 @@ const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
       </Button>
     )}
     { reordering && (
-      <Button compact size='mini' onClick={() => { moveEdge({ step: -1 }) }} >
-        <Icon name='caret down' />
+      <Button compact size='mini' onClick={() => { moveEdge({ step: 1 }) }} >
+        <Icon name='caret up' />
       </Button>
     )}
     </>
@@ -2131,16 +2131,10 @@ function Map () {
           setStroke(defaultStroke)
         }} />
 
-        {' '}
+        {' '} {' '}
         <Button.Group>
           <Button icon basic onClick={orderEdges}>
             <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
-          </Button>
-        </Button.Group>
-        {' '}
-        <Button.Group>
-          <Button icon basic onClick={stepMap}>
-            <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
           </Button>
           {playing ? (
             <>
@@ -2153,9 +2147,6 @@ function Map () {
                   <Icon name='pause' color='yellow' />
                 </Button>
               )}
-              <Button icon basic onClick={stopMap}>
-                <Icon name='stop' color='red' />
-              </Button>
             </>
           ) : (
             <>
@@ -2164,6 +2155,12 @@ function Map () {
               </Button>
             </>
           )}
+          <Button icon basic onClick={stepMap}>
+            <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
+          </Button>
+          <Button icon basic onClick={stopMap} disabled={!playing}>
+            <Icon name='stop' color='red' disabled={!playing} />
+          </Button>
         </Button.Group>
 
       </div>
