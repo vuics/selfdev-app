@@ -1054,10 +1054,13 @@ function Map () {
   const xmppRef = useRef(null);
 
   const [ playing, setPlaying ] = useState(false)
+  const [ stepping, setStepping ] = useState(false)
   const [ pausing, setPausing ] = useState(false)
-  const playingRef = useRef(false)
-  const pausingRef = useRef(false)
+  const playingRef = useRef(playing)
+  const steppingRef = useRef(stepping)
+  const pausingRef = useRef(pausing)
   playingRef.current = playing
+  steppingRef.current = stepping
   pausingRef.current = pausing
 
   const reactFlowWrapper = useRef(null);
@@ -1676,10 +1679,12 @@ function Map () {
   }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke]);
 
 
-  const playMap = useCallback(async () => {
+  const playMap = useCallback(async ({ step = false } = {}) => {
     console.log('playMap')
     setPlaying(true)
-    setPausing(false)
+    if (!step) {
+      setPausing(false)
+    }
     setReordering(false)
 
     const groupNodes = getNodes().filter(nd => nd.type === 'group')
@@ -1824,6 +1829,12 @@ function Map () {
       if (!edgeIndexUpdated) {
         edgeIndex++
       }
+      if (steppingRef.current) {
+        setStepping(false)
+        steppingRef.current = false
+        setPausing(true)
+        pausingRef.current = true
+      }
 
       if (!playingRef.current) {
         break
@@ -1834,8 +1845,19 @@ function Map () {
     }
 
     setPlaying(false)
+    setStepping(false)
     setPausing(false)
   }, [setPlaying, setPausing, setReordering, setEdges, credentials, getNodes, setNodes, getEdges])
+
+  const stepMap = useCallback(() => {
+    setStepping(true)
+    setPausing(pausing => !pausing)
+    setReordering(false)
+    console.log('stepMap')
+    if (!playing) {
+      playMap({ step: true })
+    }
+  }, [ playing, playMap, setPausing, setReordering ])
 
   const pauseMap = useCallback(() => {
     setPausing(pausing => !pausing)
@@ -1845,6 +1867,7 @@ function Map () {
 
   const stopMap = useCallback(() => {
     setPlaying(false)
+    setStepping(false)
     setPausing(false)
     setReordering(false)
     console.log('stopMap')
@@ -2116,6 +2139,9 @@ function Map () {
         </Button.Group>
         {' '}
         <Button.Group>
+          <Button icon basic onClick={stepMap}>
+            <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
+          </Button>
           {playing ? (
             <>
               {pausing ? (
@@ -2132,9 +2158,11 @@ function Map () {
               </Button>
             </>
           ) : (
-            <Button icon basic onClick={playMap}>
-              <Icon name='play' color='green' />
-            </Button>
+            <>
+              <Button icon basic onClick={playMap}>
+                <Icon name='play' color='green' />
+              </Button>
+            </>
           )}
         </Button.Group>
 
