@@ -853,28 +853,31 @@ const RequestEdge = memo(({
             />
             {data.recipient}
           </Button>
-          <Button
-            compact
-            size='mini'
-            onClick={() => {
-              const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
-              const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
-              setEdges((edges) =>
-                edges.map((edge) =>
-                  edge.id=== id ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
+
+          { data.condition && (
+            <Button
+              compact
+              size='mini'
+              onClick={() => {
+                const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
+                const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
+                setEdges((edges) =>
+                  edges.map((edge) =>
+                    edge.id=== id ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
+                  )
                 )
-              )
-              window.alert(`Condition "${data.condition}" has been ${ satisfied !== null ? (satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ safe !== null ? (safe ? 'safe' : 'unsafe') : 'unknown' }.`);
-            }}
-          >
-            { data.safe !== null && (
-              <Icon
-                color={ data.satisfied ? 'green' : 'red' }
-                name={ data.safe ? 'usb' : 'warning sign' }
-              />
-            )}
-            {data.condition}
-          </Button>
+                window.alert(`Condition "${data.condition}" has been ${ satisfied !== null ? (satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ safe !== null ? (safe ? 'safe' : 'unsafe') : 'unknown' }.`);
+              }}
+            >
+              { data.safe !== null && (
+                <Icon
+                  color={ data.satisfied ? 'green' : 'red' }
+                  name={ data.safe ? 'usb' : 'warning sign' }
+                />
+              )}
+              {data.condition}
+            </Button>
+          )}
 
           <Button compact size='mini'>
             <Dropdown item simple position='right'
