@@ -657,7 +657,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
               onClick={toggleAnd}
             >
               <Icon name='tasks' />
-              Toggle Operator:{' '}
+              Toggle Loop Exit Operator:{' '}
               { data.and ? 'OR' : 'AND' }
             </Dropdown.Item>
             <Dropdown.Item
@@ -720,7 +720,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
           basic
           onClick={toggleAnd}
         >
-          <Icon name='tasks' />{data.and ? 'AND (&&)' : 'OR (||)' }
+          <Icon name='tasks' />{data.and ? 'AND' : 'OR' }
         </Button>
         {/*
         <Loader active={true} inline='centered' size='mini' />
@@ -2214,7 +2214,7 @@ function Map () {
             <br/>
             <Button onClick={groupSelected} fluid>
               <Icon name='object group' />
-              Group Selected
+              Loop Selected
             </Button>
             <br/> <br/>
             {/*
