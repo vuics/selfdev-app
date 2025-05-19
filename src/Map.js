@@ -39,7 +39,7 @@ import {
   MarkerType,
   useNodesData,
   // reconnectEdge,
-  // NodeResizer,
+  NodeResizer,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
@@ -51,9 +51,8 @@ import Dagre from '@dagrejs/dagre';
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { parseRegexString, useWindowDimensions, sleep } from './helper.js'
+import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
-
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
@@ -418,7 +417,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               size='mini'
               onClick={renameUname}
             >
-              <Icon name='map pin' />{data.uname}
+              <Icon name='pin' />{data.uname}
             </Button>
           ) : (
             <>
@@ -430,7 +429,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               onChange={(e) => setNewUname(e.target.value)}
               className="nodrag"
             >
-              <Icon name='map pin' />
+              <Icon name='pin' />
               <input
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -550,6 +549,196 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   );
 })
 
+const GroupNode = memo(({ id, data, style, selected }) => {
+  const { setNodes, getEdges } = useReactFlow();
+  const [ newUname, setNewUname ] = useState(data.uname)
+  // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
+
+  useEffect(() => {
+    setNewUname(data.uname);
+  }, [data.uname]);
+
+  const renameUname = useCallback(() => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, renaming: !data.renaming} } : node
+      )
+    );
+  }, [setNodes, data.renaming, id])
+
+  const applyNewUname = useCallback(() => {
+    let isDuplicate = false
+    setNodes((nodes) => {
+      isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
+      if (isDuplicate) { alert('The name is not unique'); return nodes; }
+      const updatedNodes = nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node
+      );
+
+      getEdges().forEach((edge) => {
+        if(edge.source === id) {
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.id === edge.target ? { ...node, data: { ...node.data,
+                text: node.data.text.replace(`[[${data.uname}]]`, `[[${newUname}]]`) }
+              } : node
+            )
+          )
+        }
+      });
+      return updatedNodes
+    });
+  }, [setNodes, getEdges, data.uname, newUname, id])
+
+  const cancelNewUname = useCallback(() => {
+    setNodes((nodes) => {
+      return nodes.map((node) => node.id === id ? { ...node, data: { ...node.data, renaming: false } } : node);
+    });
+    setNewUname(data.uname);
+  }, [setNodes, data.uname, id, setNewUname])
+
+  const toggleAnd = useCallback(() => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, and: !node.data.and } } : node
+      )
+    )
+  }, [setNodes, id])
+
+  // NOTE: The code hides the resizeObserver error
+  // useEffect(() => {
+  //   const errorHandler = (e: any) => {
+  //     if (e.message.includes("ResizeObserver loop completed with undelivered notifications" || "ResizeObserver loop limit exceeded")) {
+  //       const resizeObserverErr = document.getElementById("webpack-dev-server-client-overlay");
+  //       if (resizeObserverErr) {
+  //         resizeObserverErr.style.display = "none";
+  //       }
+  //     }
+  //   };
+  //   window.addEventListener("error", errorHandler);
+  //   return () => {
+  //     window.removeEventListener("error", errorHandler);
+  //   };
+  // }, []);
+
+  // console.log('group style:', style)
+  return (
+    <Card
+      style={{
+        ...style,
+        width: '100%',
+        height: '100%',
+        borderStyle: selected ? 'solid' : undefined,
+        borderColor: selected ? 'violet' : undefined,
+        backgroundColor: hexToRgba({ hexColor: data.backgroundColor, alpha: 0.03 }),
+        color: data.color,
+        // pointerEvents: 'none',
+        // zIndex: '1',
+      }}
+    >
+      <Card.Header
+        style={{
+          padding: '0.5em 1em 0.5em 1em',
+          backgroundColor: hexToRgba({ hexColor: data.backgroundColor, alpha: 0.3 }),
+        }}
+      >
+        <Dropdown item simple position='right'
+          icon={
+           <Icon name='ellipsis vertical' color='grey' />
+          }>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={renameUname}
+            >
+              <Icon name='i cursor' />
+              Rename
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={toggleAnd}
+            >
+              <Icon name='tasks' />
+              Toggle Operator:{' '}
+              { data.and ? 'OR' : 'AND' }
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) => nodes.filter((n) => n.id !== id));
+              }}
+            >
+              <Icon name='delete' />
+              Delete
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        { !data.renaming? (
+          <Button
+            basic
+            onClick={renameUname}
+          >
+            <Icon name='object group outline' />{data.uname}
+          </Button>
+        ) : (
+          <>
+          <Input
+            size='large'
+            iconPosition='left'
+            placeholder='Unique name...'
+            value={newUname}
+            onChange={(e) => setNewUname(e.target.value)}
+            className="nodrag"
+          >
+            <Icon name='object group outline' />
+            <input
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  applyNewUname()
+                }
+                if (e.key === 'Escape') {
+                  cancelNewUname()
+                }
+              }}
+            />
+          </Input>
+          {' '}
+          <Button.Group>
+            <Button icon positive onClick={applyNewUname} >
+              <Icon name='check' />
+            </Button>
+            <Button.Or />
+            <Button icon onClick={cancelNewUname} >
+              <Icon name='cancel' />
+            </Button>
+          </Button.Group>
+          </>
+        ) }
+        {' '}
+        <Button
+          basic
+          onClick={toggleAnd}
+        >
+          <Icon name='tasks' />{data.and ? 'AND (&&)' : 'OR (||)' }
+        </Button>
+        {/*
+        <Loader active={true} inline='centered' size='mini' />
+        */}
+      </Card.Header>
+      <Card.Content
+        style={{
+          backgroundColor: hexToRgba({ hexColor: data.backgroundColor, alpha: 0.03 }),
+        }}
+        className='nodrag nopan'
+      >
+      </Card.Content>
+      <NodeResizer
+        color="#ff0071"
+        isVisible={selected}
+        // minWidth={100}
+        // minHeight={30}
+      />
+    </Card>
+  );
+})
+
 const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
   const { setEdges } = useMapContext();
 
@@ -620,6 +809,8 @@ const RequestEdge = memo(({
           ...style,
           stroke: data.stroke,
           strokeWidth: selected ? 3 : 1,
+          // pointerEvents: 'auto',
+          // zIndex: '9999',
         }}
       />
       <EdgeLabelRenderer>
@@ -780,6 +971,7 @@ const RequestEdge = memo(({
 
 const nodeTypes = {
   NoteNode: NoteNode,
+  group: GroupNode,
 };
 
 const edgeTypes = {
@@ -789,7 +981,7 @@ const edgeTypes = {
 
 const getNodeId = () => nanoid(9)
 const getUname = (id) => `Note_${id}`
-const getUgroup = (id) => `Group_${id}`
+const getUgroup = (id) => `Loop_${id}`
 
 
 const getLayoutedElements = (nodes, edges, options) => {
@@ -1388,15 +1580,14 @@ function Map () {
       position: selectedCount > 0 ? { x, y } : screenToFlowPosition({ x: width*3/4, y: height/3, }),
       data: {
         uname: getUgroup(id),
-        // text: '',
-        // editing: true,
-        // renaming: false, // TODO: implement renaming
-        // color,           // TODO: add color
-        // backgroundColor, // TODO: add backgroundColor
+        renaming: false,
+        color,
+        backgroundColor,
+        and: false,
       },
       style: {
-        width: x1 - x,
-        height: y1 - y,
+        width: x1 - (x || 0),
+        height: y1 - (y || 0),
       },
       type: 'group',
     };
@@ -1492,16 +1683,13 @@ function Map () {
       groupElements.push({
         parentId,
         childNodeIds,
-
+        and: groupNode.data.and,
         // init loop variables but do not participate in a loop
         initEdgeIds: getEdges().filter(ed => !childNodeIds.includes(ed.source) && childNodeIds.includes(ed.target)).map(ed => ed.id),
-
         // repeats continuously unil one of the exit edges conditinos get satisfied starting with the first edge in array
         innerEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source) && childNodeIds.includes(ed.target)).map(ed => ed.id),
-
         // allow exit loop if one of the edge's conditions get satisfied
         exitEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source) && !childNodeIds.includes(ed.target)).map(ed => ed.id),
-
         // loop through all inner and exit edges
         loopEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source)).map(ed => ed.id),
       })
@@ -1591,14 +1779,17 @@ function Map () {
           const exitEdgesSatisfied = getEdges().filter(eg => loop.groupElement.exitEdgeIds.includes(eg.id)).map(eg => eg.data.satisfied)
           console.log('exitEdgesSatisfied:', exitEdgesSatisfied)
           let exitLoop = false
-          if (!exitEdgesSatisfied.includes(false)) {
-            // AND loop exit
-            exitLoop = true
+          if (loop.groupElement.and) {
+            if (!exitEdgesSatisfied.includes(false)) {
+              // AND loop exit
+              exitLoop = true
+            }
+          } else {
+            if (exitEdgesSatisfied.includes(true)) {
+              // OR loop exit
+              exitLoop = true
+            }
           }
-          // if (exitEdgesSatisfied.includes(true)) {
-          //   // OR loop exit
-          //   exitLoop = true
-          // }
 
           if (exitLoop) {
             console.log('exit loop')
@@ -2003,7 +2194,7 @@ function Map () {
             />
             <Input
               iconPosition='left'
-              placeholder='Condition...'
+              placeholder='/RegExp/ Condition...'
               value={condition}
               onChange={e => setCondition(e.target.value)}
             ><Icon name='usb' /><input /></Input>
@@ -2014,7 +2205,7 @@ function Map () {
             </Button>
             <br/>
             <Button onClick={groupSelected} fluid>
-              <Icon name='object group outline' />
+              <Icon name='object group' />
               Group Selected
             </Button>
             <br/> <br/>

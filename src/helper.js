@@ -23,14 +23,6 @@ export function useWindowDimensions() {
   return windowDimensions;
 }
 
-// Generate a random UUID
-export function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c === 'x' ? r : ((r & 0x3) | 0x8);
-    return v.toString(16);
-  });
-}
-
 export function parseRegexString(input) {
   const match = input.match(/^\/(.*)\/([a-z]*)$/i);
   if (!match) throw new Error("Invalid regex format");
@@ -39,4 +31,11 @@ export function parseRegexString(input) {
 }
 
 export function sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
+
+export function hexToRgba({ hexColor = '#ffffff', alpha = 1} = {}) {
+  const match = hexColor.replace('#', '').match(/.{1,2}/g);
+  if (!match) return hexColor;
+  const [r, g, b] = match.map(x => parseInt(x, 16));
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
