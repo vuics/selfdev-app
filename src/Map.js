@@ -186,8 +186,9 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
   const [ active, setActive ] = useState(false)
 
   return (
-    <Accordion styled style={{ color, backgroundColor, }} >
+    <Accordion fluid styled style={{ color, backgroundColor, }} >
       <Accordion.Title
+        style={{ color, backgroundColor }}
         styled
         active={active}
         index={0}
@@ -351,7 +352,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   return (
     <Card
       style={{
-        width: '100%', maxWidth: '600px',
+        width: '100%',
+        height: '100%',
         borderStyle: selected ? 'solid' : undefined,
         borderColor: selected ? 'violet' : undefined,
         backgroundColor: data.backgroundColor,
@@ -365,96 +367,98 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         isConnectable={isConnectable}
         style={{ width: '1em', height: '0.75em', background: '#bbb' }}
       />
-      <Card.Content>
-        <Card.Header>
-          <Dropdown item simple position='right'
-            icon={
-             <Icon name='ellipsis vertical' color='grey' />
-            }>
-            <Dropdown.Menu>
-              <Dropdown.Item
-                onClick={copyText}
-              >
-                <Icon name='copy' />
-                Copy
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={pasteText}
-              >
-                <Icon name='paste' />
-                Paste
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => {
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                    )
-                  );
-                }}
-              >
-                <Icon name='edit' />
-                { data.editing ? 'View' : 'Edit' }
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={renameUname}
-              >
-                <Icon name='i cursor' />
-                Rename
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => {
-                  setNodes((nodes) => nodes.filter((n) => n.id !== id));
-                }}
-              >
-                <Icon name='delete' />
-                Delete
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          { !data.renaming? (
-            <Button
-              size='mini'
+      <Card.Header
+        style={{
+          padding: '0.5em 1em 0.5em 1em',
+        }}
+      >
+        <Dropdown item simple position='right'
+          icon={
+            <Icon size='large' name='ellipsis vertical' color='grey' />
+          }>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={copyText}
+            >
+              <Icon name='copy' />
+              Copy
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={pasteText}
+            >
+              <Icon name='paste' />
+              Paste
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                  )
+                );
+              }}
+            >
+              <Icon name='edit' />
+              { data.editing ? 'View' : 'Edit' }
+            </Dropdown.Item>
+            <Dropdown.Item
               onClick={renameUname}
             >
-              <Icon name='pin' />{data.uname}
-            </Button>
-          ) : (
-            <>
-            <Input
-              size='mini'
-              iconPosition='left'
-              placeholder='Unique name...'
-              value={newUname}
-              onChange={(e) => setNewUname(e.target.value)}
-              className="nodrag"
+              <Icon name='i cursor' />
+              Rename
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) => nodes.filter((n) => n.id !== id));
+              }}
             >
-              <Icon name='pin' />
-              <input
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    applyNewUname()
-                  }
-                  if (e.key === 'Escape') {
-                    cancelNewUname()
-                  }
-                }}
-              />
-            </Input>
-            {' '}
-            <Button.Group>
-              <Button icon positive onClick={applyNewUname} >
-                <Icon name='check' />
-              </Button>
-              <Button.Or />
-              <Button icon onClick={cancelNewUname} >
-                <Icon name='cancel' />
-              </Button>
-            </Button.Group>
-            </>
-          ) }
-        </Card.Header>
-      </Card.Content>
+              <Icon name='delete' />
+              Delete
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        { !data.renaming? (
+          <Button
+            size='mini'
+            onClick={renameUname}
+          >
+            <Icon name='pin' />{data.uname}
+          </Button>
+        ) : (
+          <>
+          <Input
+            size='large'
+            iconPosition='left'
+            placeholder='Unique name...'
+            value={newUname}
+            onChange={(e) => setNewUname(e.target.value)}
+            className="nodrag"
+          >
+            <Icon name='pin' />
+            <input
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  applyNewUname()
+                }
+                if (e.key === 'Escape') {
+                  cancelNewUname()
+                }
+              }}
+            />
+          </Input>
+          {' '}
+          <Button.Group>
+            <Button icon positive onClick={applyNewUname} >
+              <Icon name='check' />
+            </Button>
+            <Button.Or />
+            <Button icon onClick={cancelNewUname} >
+              <Icon name='cancel' />
+            </Button>
+          </Button.Group>
+          </>
+        ) }
+      </Card.Header>
       <Card.Content>
         <Loader active={!!data.waitRecipient} inline='centered' size='mini' />
         { data.waitRecipient && (
@@ -486,10 +490,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 }
               }}
               className="nodrag"
-              minRows={1}
+              minRows={6}
               // maxRows={12}
               style={{
-                width: '570px', height: '100%',
+                width: '100%',
+                height: '100%',
                 color: data.color || '',
                 backgroundColor: data.backgroundColor || '',
               }}
@@ -537,14 +542,21 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         isConnectable={isConnectable}
         style={{ width: '1em', height: '0.75em', background: '#aaa' }}
       />
-      {/*
       <NodeResizer
         color="#ff0071"
         isVisible={selected}
         minWidth={100}
         minHeight={30}
+        onResizeEnd={() => {
+          console.log('onResizeEnd')
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              // Make the proper sizing. Allow dynamic change of heigth.
+              node.id === id ? { ...node, height: undefined } : node
+            )
+          )
+        }}
       />
-      */}
     </Card>
   );
 })
@@ -644,7 +656,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
       >
         <Dropdown item simple position='right'
           icon={
-           <Icon size='large' name='ellipsis vertical' color='grey' />
+            <Icon size='large' name='ellipsis vertical' color='grey' />
           }>
           <Dropdown.Menu>
             <Dropdown.Item
@@ -1417,19 +1429,20 @@ function Map () {
 
       if (type === 'chat' || type === 'normal' || !type) {
         console.log(`Personal message response from ${from}: ${body}`);
-        setNodes(nodes => {
-          const updated = [...nodes];
-          for (const [i, node] of updated.entries()) {
-            // console.log('setNodes i:', i, ', node:', node)
-            if (node.type === 'NoteNode' && node.data.waitRecipient === from.split('@')[0]) {
-              updated[i] = { ...node, data: { ...node.data, text: body, waitRecipient: undefined } };
-              console.log('updated[i]:', updated[i])
-              break;
-            }
-          }
-          return updated;
-        });
-
+        const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('@')[0])
+        if (updateNode) {
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.id === updateNode.id ? {
+                ...node,
+                data: { ...node.data, text: body, waitRecipient: undefined, },
+                // Make the proper sizing. Allow dynamic change of heigth.
+                width: 600,
+                height: undefined,
+              } : node
+            )
+          );
+        }
       } else if (type === 'groupchat') {
         // Skip our own messages
         if (from.includes(`/${credentials.user}`)) return;
@@ -1549,6 +1562,7 @@ function Map () {
     const id = getNodeId()
     const newNode = {
       id,
+      type: 'NoteNode',
       position: screenToFlowPosition({ x: width*3/4, y: height/3, }),
       data: {
         uname: getUname(id),
@@ -1558,7 +1572,9 @@ function Map () {
         color,
         backgroundColor,
       },
-      type: 'NoteNode',
+      // Make the proper sizing. Allow dynamic change of heigth.
+      width: 600,
+      height: undefined,
     };
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes, width, height, screenToFlowPosition, color, backgroundColor]);
