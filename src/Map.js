@@ -662,7 +662,11 @@ const GroupNode = memo(({ id, data, style, selected }) => {
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                setNodes((nodes) => nodes.filter((n) => n.id !== id));
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.parentId === id ? { ...node, parentId: undefined, extent: undefined, } : node
+                  ).filter((n) => n.id !== id)
+                )
               }}
             >
               <Icon name='delete' />
@@ -1061,6 +1065,7 @@ function Map () {
   } = useReactFlow();
   const [ rfInstance, setRfInstance ] = useState(null);
 
+  // console.log('nodes:', nodes)
   // console.log('title:', title)
   // console.log('condition:', condition)
   // console.log('presenceMap:', presenceMap)
