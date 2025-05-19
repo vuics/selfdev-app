@@ -1482,6 +1482,33 @@ function Map () {
     setPlaying(true)
     setPausing(false)
     setReordering(false)
+
+    const groupNodes = getNodes().filter(nd => nd.type === 'group')
+    const groupElements = []
+    console.log('groupNodes:', groupNodes)
+    for (let groupNode of groupNodes) {
+      const parentId = groupNode.id
+      const childNodeIds = getNodes().filter(nd => nd.parentId === groupNode.id).map(nd => nd.id)
+      groupElements.push({
+        parentId,
+        childNodeIds,
+
+        // init loop variables but do not participate in a loop
+        initEdgeIds: getEdges().filter(ed => !childNodeIds.includes(ed.source) && childNodeIds.includes(ed.target)).map(ed => ed.id),
+
+        // repeats continuously unil one of the exit edges conditinos get satisfied starting with the first edge in array
+        innerEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source) && childNodeIds.includes(ed.target)).map(ed => ed.id),
+
+        // allow exit loop if one of the edge's conditions get satisfied
+        exitEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source) && !childNodeIds.includes(ed.target)).map(ed => ed.id),
+
+        // loop through all inner and exit edges
+        loopEdgeIds: getEdges().filter(ed => childNodeIds.includes(ed.source)).map(ed => ed.id),
+      })
+    }
+    console.log('groupElements:', groupElements)
+
+
     let sequence = 1
     setEdges((edges) =>
       edges.map((edge) => {
@@ -1491,8 +1518,19 @@ function Map () {
     const edges = getEdges()
     // console.log('edges:', edges)
 
-    for (let edge of edges) {
-      await sleep(100) // NOTE: this sleep is needed in case the variable just got updated the note which is source of this calcualted
+
+    const inactiveLoop = {
+      active: false,
+      fromEdgeId: '',
+      fromEdgeIndex: null,
+      groupElement: null,
+      remainingEdgeIds: [],
+    }
+    let loop = Object.assign({}, inactiveLoop)
+    let edgeIndex = 0;
+    while(edgeIndex < edges.length) {
+      const edge = edges[edgeIndex]
+      await sleep(100)  // NOTE: this sleep is needed in case the variable just got updated the note which is source of this calcualted
 
       // console.log('edge:', edge)
       // console.log('edge.source:', edge.source, ', edge.target:', edge.target)
@@ -1529,6 +1567,63 @@ function Map () {
           );
           break
         }
+      }
+
+      if (!loop.active) {
+        for (const groupElement of groupElements) {
+          if (groupElement.innerEdgeIds.includes(edge.id)) {
+            loop.active = true
+            loop.fromEdgeId = edge.id
+            loop.fromEdgeIndex = edgeIndex
+            loop.groupElement = groupElement
+            loop.remainingEdgeIds = loop.groupElement.loopEdgeIds
+            console.log('loop:', loop)
+          }
+        }
+      }
+
+      let edgeIndexUpdated = false
+      if (loop.active) {
+        loop.remainingEdgeIds = loop.remainingEdgeIds.filter(eid => eid !== edge.id)
+        console.log('loop.remainingEdgeIds:', loop.remainingEdgeIds)
+        if (loop.remainingEdgeIds.length === 0) {
+          // eslint-disable-next-line no-loop-func
+          const exitEdgesSatisfied = getEdges().filter(eg => loop.groupElement.exitEdgeIds.includes(eg.id)).map(eg => eg.data.satisfied)
+          console.log('exitEdgesSatisfied:', exitEdgesSatisfied)
+          let exitLoop = false
+          if (!exitEdgesSatisfied.includes(false)) {
+            // AND loop exit
+            exitLoop = true
+          }
+          // if (exitEdgesSatisfied.includes(true)) {
+          //   // OR loop exit
+          //   exitLoop = true
+          // }
+
+          if (exitLoop) {
+            console.log('exit loop')
+            loop = Object.assign({}, inactiveLoop)
+          } else{
+            console.log('restart loop')
+            edgeIndex = loop.fromEdgeIndex
+            edgeIndexUpdated = true
+            loop.remainingEdgeIds = loop.groupElement.loopEdgeIds
+
+            // eslint-disable-next-line no-loop-func
+            setEdges((edges) =>
+              edges.map((edge) => {
+                return {
+                  ...edge,
+                  data: loop.remainingEdgeIds.includes(edge.id) ? { ...edge.data, expecting: true, cursor: undefined } : edge.data
+                }
+              })
+            );
+          }
+        }
+      }
+
+      if (!edgeIndexUpdated) {
+        edgeIndex++
       }
 
       if (!playingRef.current) {
