@@ -38,8 +38,8 @@ import {
   getBezierPath,
   MarkerType,
   useNodesData,
-  // reconnectEdge,
   NodeResizer,
+  // reconnectEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
