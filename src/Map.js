@@ -1897,7 +1897,7 @@ function Map () {
       let sequence = 1
       setEdges((edges) =>
         edges.map((edge) => {
-          return { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined } }
+          return { ...edge, data: { ...edge.data, sequence: !reordering ? sequence++ : undefined, cursor: undefined } }
         })
       );
       return !reordering
