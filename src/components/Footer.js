@@ -17,7 +17,7 @@ const Footer = () => {
               <Header inverted as='h4' content='About' />
               <List link inverted>
                 <List.Item as='a'>
-                  <a href='mailto:admin@az1.ai'>
+                  <a href='mailto:admin@vuics.com'>
                     Contact Us
                   </a>
                 </List.Item>
@@ -38,6 +38,11 @@ const Footer = () => {
                     Team
                   </a>
                 </List.Item>
+                <List.Item as='a'>
+                  <a href='/product'>
+                    Product Features
+                  </a>
+                </List.Item>
               </List>
             </Grid.Column>
             <Grid.Column width={7}>
@@ -49,7 +54,7 @@ const Footer = () => {
                 </List.Item>
                 <List.Item as='a'>
                   <p>
-                    © 2024-2025 az1.ai. All rights reserved.
+                    © 2024-2025 Vuics.com. All rights reserved.
                   </p>
                 </List.Item>
               </List>

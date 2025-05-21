@@ -141,7 +141,7 @@ const archetypes = {
           enable: false,
           kind: "web",
           urls: [
-            // "https://web.az1.ai",
+            // "https://web.selfdev.vuics.com",
             // "https://en.wikipedia.org/wiki/Agent-based_model",
           ],
         }, {

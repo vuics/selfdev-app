@@ -5,7 +5,7 @@ const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 
 const conf = {
   contact: {
-    email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@az1.ai'
+    email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@vuics.com'
   },
 
   api: {
@@ -13,7 +13,7 @@ const conf = {
   },
 
   interestForm: {
-    url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/kXhRqMe8RquB377J6',
+    url: process.env.REACT_APP_INTEREST_FORM_URL || 'https://forms.gle/927RwUdTpSwc6EbE7',
   },
 
   synthetic: {

@@ -5,7 +5,7 @@ The synthetic UI allows to create a user experience uniquely tailored to the use
 
 ## Synthetic UI commands
 
-To use Synthetic UI, open communication app and add `synethetic-ui@xmpp.az1.ai` or `synethetic-ui-executor@xmpp.az1.ai` agent, then you can send the following commands to the agent:
+To use Synthetic UI, open communication app and add `synethetic-ui@xmpp.selfdev.vuics.com` or `synethetic-ui-executor@xmpp.selfdev.vuics.com` agent, then you can send the following commands to the agent:
 
 - `/show flow`, `/hide flow` - building agentic workflows with LLMs, APIs and databases.
 
