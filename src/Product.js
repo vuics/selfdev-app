@@ -1031,7 +1031,22 @@ const Product = () => (
             description: '',
           } ]} />
         <br/>
-        <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
+        <Grid divided='vertically'>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Chats
+              </Header>
+              <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Chat
+              </Header>
+              <Image src='/images/screenshots/mobile1.png' size='medium' centered bordered rounded />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
         <br/>
       </Segment>
 
