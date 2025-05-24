@@ -156,7 +156,7 @@ const Product = () => (
           </li>
           <li>
             <a href="#mobile">
-              <b>Mobile App</b> — communicate with agents on iOS and Android devices.
+              <b>Mobile Apps</b> — communicate with agents on iOS and Android devices with native mobile and web apps.
             </a>
           </li>
           <li>
@@ -1003,7 +1003,7 @@ const Product = () => (
           <a href="#toc">
             <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
           </a>
-          Mobile App
+          Mobile Apps
           <Image src='/images/logo192.png' size='mini' floated='right' fluid />
           <br />
         </Header>
@@ -1035,15 +1035,29 @@ const Product = () => (
           <Grid.Row columns={2}>
             <Grid.Column>
               <Header as='h4' textAlign='center'>
-                Chats
+                Chats in iOS Mobile App
               </Header>
               <Image src='/images/screenshots/mobile.png' size='medium' centered bordered rounded />
             </Grid.Column>
             <Grid.Column>
               <Header as='h4' textAlign='center'>
-                Chat
+                Chat in iOS Mobile App
               </Header>
               <Image src='/images/screenshots/mobile1.png' size='medium' centered bordered rounded />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={2}>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Chats in iOS Safari Web App
+              </Header>
+              <Image src='/images/screenshots/mobile-web.png' size='medium' centered bordered rounded />
+            </Grid.Column>
+            <Grid.Column>
+              <Header as='h4' textAlign='center'>
+                Chat in MacOS Chrome Web App
+              </Header>
+              <Image src='/images/screenshots/mobile-web1.png' size='medium' centered bordered rounded />
             </Grid.Column>
           </Grid.Row>
         </Grid>
