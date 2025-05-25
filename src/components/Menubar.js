@@ -70,18 +70,6 @@ const Menubar = () => {
           Code
         </Menu.Item>
       ) }
-      { conf.build.enable && (
-        <Menu.Item onClick={() => navigate('/build')} active={pathname==='/build'}>
-          <Icon name='magic' />
-          Build
-        </Menu.Item>
-      ) }
-      { conf.open.enable && (
-        <Menu.Item onClick={() => navigate('/open')} active={pathname==='/open'}>
-          <Icon name='lightbulb outline' />
-          Open
-        </Menu.Item>
-      ) }
       { conf.note.enable && (
         <Menu.Item onClick={() => navigate('/note')} active={pathname==='/note'}>
           <Icon name='edit outline' />

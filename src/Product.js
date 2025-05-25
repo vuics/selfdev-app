@@ -97,18 +97,6 @@ const Product = () => (
               <b>Code</b> — program using web IDE and architect and coder agents.
             </a>
           </li>
-          {/*
-          <li>
-            <a href="#build">
-              <b>Build</b> — build and organize agentic teams with visual editor.
-            </a>
-          </li>
-          */}
-          <li>
-            <a href="#open">
-              <b>Open</b> — communicate with deployed open-source and OpenAI models.
-            </a>
-          </li>
           <li>
             <a href="#sell">
               <b>Sell</b> — manage sales and operations with web CRM and ERP apps.
@@ -574,82 +562,6 @@ const Product = () => (
           } ]} />
         <br/>
         <Image src='/images/screenshots/code.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-
-      {/*
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="build" dividing>
-          <a href="#toc">
-            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          </a>
-          Build
-          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
-          <br />
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          Build / orgnize / assemble agentic teams with visual editor. Our architect and coder agents can continue developing your agentic teams with prompts from users.
-        </p>
-        <br/>
-        <Card.Group key="card-group-build" centered items={[ {
-            header: 'Effortless Agentic Team Building',
-            description: 'Customers can easily create, organize, and manage agentic teams using a visual editor, streamlining the setup of AI-driven workflows.',
-          }, {
-            header: 'AI-Assisted Development',
-            description: 'Architect and coder agents actively help refine and expand these teams based on user prompts, ensuring continuous improvement without manual effort.',
-          }, {
-            header: 'Scalability & Adaptability',
-            description: 'The system grows with the customer’s needs, dynamically evolving agentic teams to handle increasingly complex tasks and integrations.',
-          }, {
-            header: 'User-Friendly Customization',
-            description: 'A no-code/low-code visual interface makes it easy to structure and optimize AI-driven teams without requiring deep technical expertise.',
-          }, {
-            header: 'Seamless Automation & Execution',
-            description: 'Once assembled, agentic teams work autonomously, collaborating to execute tasks efficiently and intelligently.',
-          }, {
-            header: '',
-            description: '',
-          } ]} />
-        <br/>
-        <Image src='/images/screenshots/build.png' fluid bordered rounded />
-        <br/>
-      </Segment>
-      */}
-
-      <Segment style={{  margin: '1em 0 1em', padding: '1em 3em 1em' }} placeholder>
-        <Header as='h2' textAlign='center' id="open" dividing>
-          <a href="#toc">
-            <Icon link name='arrow up' size='small' style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
-          </a>
-          Open
-          <Image src='/images/logo192.png' size='mini' floated='right' fluid />
-          <br />
-        </Header>
-        <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
-          A chat to communicate to all deployed open-source (Ollama) models and Open AI models. It can be used for testing and comparison of different LLMs.
-        </p>
-        <br/>
-        <Card.Group key="card-group-open" centered items={[ {
-            header: 'Unified AI Access',
-            description: 'Customers can communicate with both open-source models (Ollama) and OpenAI models in a single chat interface, simplifying AI interaction.',
-          }, {
-            header: 'Seamless Testing & Comparison',
-            description: 'Users can test different large language models (LLMs) side by side, evaluating their performance, accuracy, and suitability for specific tasks.',
-          }, {
-            header: 'Enhanced Flexibility',
-            description: 'The platform allows customers to choose the best model for their needs, whether prioritizing cost, privacy, or specific capabilities.',
-          }, {
-            header: 'Optimized AI Workflows',
-            description: 'By integrating multiple models in one interface, customers can streamline experimentation, research, and deployment without switching tools.',
-          }, {
-            header: 'Data-Driven Decision Making',
-            description: 'Real-time insights into LLM responses help customers refine their AI strategies, improving output quality and efficiency.',
-          }, {
-            header: '',
-            description: '',
-          } ]} />
-        <br/>
-        <Image src='/images/screenshots/open.png' fluid bordered rounded />
         <br/>
       </Segment>
 

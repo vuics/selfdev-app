@@ -24,8 +24,6 @@ import Hive from './Hive'
 import Flow from './Flow'
 import Node from './Node'
 import Code from './Code'
-import Build from './Build'
-import Open from './Open'
 import Note from './Note'
 import Sell from './Sell'
 import Train from './Train'
@@ -94,12 +92,6 @@ const Index = () => {
       )}
       { conf.code.enable && (
         <Route path="/code" element={(<Private> <Code /> </Private>)}/>
-      )}
-      { conf.build.enable && (
-        <Route path="/build" element={(<Private> <Build /> </Private>)}/>
-      )}
-      { conf.open.enable && (
-        <Route path="/open" element={(<Private> <Open /> </Private>)}/>
       )}
       { conf.note.enable && (
         <Route path="/note" element={(<Private> <Note /> </Private>)}/>
