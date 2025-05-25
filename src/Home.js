@@ -328,6 +328,9 @@ const HomepageLayout = () => {
 
   useEffect(() => {
     // Run only once
+    // console.log('conf.api.url:', conf.api.url)
+    // console.log(`Getting ${conf.api.url}/available`)
+
     axios.get(`${conf.api.url}/available`)
       .then((response) => {
         if (response.data.status === 'available') {

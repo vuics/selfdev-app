@@ -10,6 +10,8 @@ const conf = {
 
   api: {
     url: process.env.REACT_APP_API_URL || 'http://localhost:6369/v1',
+    // url: process.env.REACT_APP_API_URL || 'https://api.selfdev.vuics.com/v1',
+    // url: process.env.REACT_APP_API_URL || 'http://localhost:8080/v1',
   },
 
   interestForm: {
@@ -30,16 +32,16 @@ const conf = {
   },
 
   chat: {
-    enable: bool(process.env.REACT_APP_CHAT_ENABLE || false),
+    enable: bool(process.env.REACT_APP_CHAT_ENABLE || true),
   },
 
   talk: {
-    enable: bool(process.env.REACT_APP_TALK_ENABLE || true),
+    enable: bool(process.env.REACT_APP_TALK_ENABLE || false),
     limit: 5,
   },
 
   map: {
-    enable: bool(process.env.REACT_APP_MAP_ENABLE || false),
+    enable: bool(process.env.REACT_APP_MAP_ENABLE || true),
     skip: 0,
     limit: 100,
   },
