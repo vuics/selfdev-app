@@ -14,6 +14,7 @@ import {
   Accordion,
   Checkbox,
   Modal,
+  Popup,
   // Header,
   // Grid,
   // Label,
@@ -1948,41 +1949,56 @@ function Map () {
 
       <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
         <Button.Group>
-          <Button icon onClick={postMap}>
-            <Icon name='file' />
-          </Button>
-          <Button icon onClick={putMap}>
-            <Icon name='save' />
-          </Button>
-          <Button icon onClick={() => postMap({ duplicate: true })}>
-            <Icon name='clone' />
-          </Button>
-          <Button icon onClick={() => {
-            setConfirm({
-              open: true,
-              header: 'Confirm Map Delete',
-              message: 'Are you sure you want to delete your map?',
-              func: deleteMap,
-            })
-          } }>
-            <Icon name='trash alternate' />
-          </Button>
-          <Button icon onClick={downloadMap}>
-            <Icon name='download' />
-          </Button>
-          <Button icon onClick={uploadMapInit}>
-            <Icon name="upload" />
-            <input
-              type="file"
-              accept="application/json"
-              ref={fileInputRef}
-              onChange={uploadMap}
-              style={{ display: 'none' }} // hide input
-            />
-          </Button>
-          <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
-            <Icon name='text cursor' />
-          </Button>
+          <Popup content='Create a new map' trigger={
+            <Button icon onClick={postMap}>
+              <Icon name='file' />
+            </Button>
+          } />
+          <Popup content='Save the map' trigger={
+            <Button icon onClick={putMap}>
+              <Icon name='save' />
+            </Button>
+          } />
+          } />
+          <Popup content='Duplicate the map' trigger={
+            <Button icon onClick={() => postMap({ duplicate: true })}>
+              <Icon name='clone' />
+            </Button>
+          } />
+          <Popup content='Delete the map' trigger={
+            <Button icon onClick={() => {
+              setConfirm({
+                open: true,
+                header: 'Confirm Map Delete',
+                message: 'Are you sure you want to delete your map?',
+                func: deleteMap,
+              })
+            } }>
+              <Icon name='trash alternate' />
+            </Button>
+          } />
+          <Popup content='Download the map' trigger={
+            <Button icon onClick={downloadMap}>
+              <Icon name='download' />
+            </Button>
+          } />
+          <Popup content='Upload the map' trigger={
+            <Button icon onClick={uploadMapInit}>
+              <Icon name="upload" />
+              <input
+                type="file"
+                accept="application/json"
+                ref={fileInputRef}
+                onChange={uploadMap}
+                style={{ display: 'none' }} // hide input
+              />
+            </Button>
+          } />
+          <Popup content='Rename the map' trigger={
+            <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
+              <Icon name='text cursor' />
+            </Button>
+          } />
         </Button.Group>
         {' '}
 
@@ -2025,158 +2041,190 @@ function Map () {
         { !renaming && (
           <>
           <Icon name='folder open outline' />
-          <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
-            <Dropdown.Menu>
-              <Input
-                icon='search' iconPosition='left' className='search'
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) => setOpenerSearch(e.target.value)}
-              />
-              <Dropdown.Header icon='map' content='Maps:' />
-              <Dropdown.Menu scrolling>
-                {maps
-                  .filter(({ title }) => title.includes(openerSearch))
-                  .map(({ _id, title }) => (
-                    <Dropdown.Item
-                      key={_id} value={_id} text={title}
-                      active={_id === mapId}
-                      onClick={(e, { value }) => {
-                        setMapId(value)
-                        const map = getMap(value)
-                        setTitle(map?.title)
-                        const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
-                        setNodes(map.flow.nodes || []);
-                        setEdges(map.flow.edges || []);
-                        setViewport({ x, y, zoom });
-                        console.log(`Map ${map?.title} loaded with flow:`, map.flow);
-                      } }
-                    />
-                  ))
-                }
+          <Popup content='Select a map to open' trigger={
+            <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
+              <Dropdown.Menu>
+                <Input
+                  icon='search' iconPosition='left' className='search'
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => setOpenerSearch(e.target.value)}
+                />
+                <Dropdown.Header icon='map' content='Maps:' />
+                <Dropdown.Menu scrolling>
+                  {maps
+                    .filter(({ title }) => title.includes(openerSearch))
+                    .map(({ _id, title }) => (
+                      <Dropdown.Item
+                        key={_id} value={_id} text={title}
+                        active={_id === mapId}
+                        onClick={(e, { value }) => {
+                          setMapId(value)
+                          const map = getMap(value)
+                          setTitle(map?.title)
+                          const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
+                          setNodes(map.flow.nodes || []);
+                          setEdges(map.flow.edges || []);
+                          setViewport({ x, y, zoom });
+                          console.log(`Map ${map?.title} loaded with flow:`, map.flow);
+                        } }
+                      />
+                    ))
+                  }
+                </Dropdown.Menu>
               </Dropdown.Menu>
-            </Dropdown.Menu>
-          </Dropdown>
+            </Dropdown>
+          } />
           </>
         )}
 
         {' '}
-        <Checkbox
-          label='Autosave'
-          onChange={(e, data) => setAutosave(data.checked)}
-          checked={autosave}
-        />
+        <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+          <Checkbox
+            label='Autosave'
+            onChange={(e, data) => setAutosave(data.checked)}
+            checked={autosave}
+          />
+        } />
 
         {' '}
         <Button.Group>
-          <Button icon basic onClick={() => onLayout('TB')}>
-            <Icon name='grid layout' />
-          </Button>
-          <Button icon basic onClick={() => onLayout('LR')}>
-            <Icon name='list layout' />
-          </Button>
+          <Popup content='Top-to-bottom layout' trigger={
+            <Button icon basic onClick={() => onLayout('TB')}>
+              <Icon name='grid layout' />
+            </Button>
+          } />
+          <Popup content='Left-to-right layout' trigger={
+            <Button icon basic onClick={() => onLayout('LR')}>
+              <Icon name='list layout' />
+            </Button>
+          } />
         </Button.Group>
 
         {' '}
-        <Icon name='font' color='grey' onClick={() => {
-          setNodes((nodes) =>
-            nodes.map((node) =>
-              node.selected ? { ...node, data: { ...node.data, color } } : node
-            )
-          )
-        }} />
-        <input
-          className="nodrag"
-          type="color"
-          onChange={(e) => {
-            console.log('color:', e.target.value)
-            setColor(e.target.value)
+        <Popup content='Apply text color to selected notes' trigger={
+          <Icon name='font' color='grey' onClick={() => {
             setNodes((nodes) =>
               nodes.map((node) =>
-                node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
+                node.selected ? { ...node, data: { ...node.data, color } } : node
               )
             )
-          } }
-          value={color}
-        />
+          }} />
+        } />
+        <Popup content='Select text color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              console.log('color:', e.target.value)
+              setColor(e.target.value)
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
+                )
+              )
+            } }
+            value={color}
+          />
+        } />
         {' '}
-        <Icon name='paint brush' color='grey' onClick={() => {
-          setNodes((nodes) =>
-            nodes.map((node) =>
-              node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
-            )
-          )
-        }} />
-        <input
-          className="nodrag"
-          type="color"
-          onChange={(e) => {
-            setBackgroundColor(e.target.value)
+        <Popup content='Apply background color to selected notes' trigger={
+          <Icon name='paint brush' color='grey' onClick={() => {
             setNodes((nodes) =>
               nodes.map((node) =>
-                node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
+                node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
               )
             )
-          } }
-          value={backgroundColor}
-        />
+          }} />
+        } />
+        <Popup content='Select background color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              setBackgroundColor(e.target.value)
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
+                )
+              )
+            } }
+            value={backgroundColor}
+          />
+        } />
         {' '}
-        <Icon name='linkify' color='grey' onClick={() => {
-          setEdges((edges) =>
-            edges.map((edge) =>
-              edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
-            )
-          );
-        }} />
-        <input
-          className="nodrag"
-          type="color"
-          onChange={(e) => {
-            setStroke(e.target.value)
+        <Popup content='Apply edge color to selected notes' trigger={
+          <Icon name='linkify' color='grey' onClick={() => {
             setEdges((edges) =>
               edges.map((edge) =>
-                edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+                edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
               )
             );
-          } }
-          value={stroke}
-        />
+          }} />
+        } />
+        <Popup content='Select edge color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              setStroke(e.target.value)
+              setEdges((edges) =>
+                edges.map((edge) =>
+                  edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+                )
+              );
+            } }
+            value={stroke}
+          />
+        } />
         {' '}
-        <Icon name='history' color='grey' onClick={() => {
-          setColor(defaultColor)
-          setBackgroundColor(defaultBackgroundColor)
-          setStroke(defaultStroke)
-        }} />
+        <Popup content='Select text, background and edge colors by default' trigger={
+          <Icon name='history' color='grey' onClick={() => {
+            setColor(defaultColor)
+            setBackgroundColor(defaultBackgroundColor)
+            setStroke(defaultStroke)
+          }} />
+        } />
 
         {' '} {' '}
         <Button.Group>
-          <Button icon basic onClick={orderEdges}>
-            <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
-          </Button>
+          <Popup content='Reorder edges' trigger={
+            <Button icon basic onClick={orderEdges}>
+              <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
+            </Button>
+          } />
           {playing ? (
             <>
               {pausing ? (
-                <Button icon basic onClick={pauseMap}>
-                  <Icon name='play' color='yellow' />
-                </Button>
+                <Popup content='Resume running the map' trigger={
+                  <Button icon basic onClick={pauseMap}>
+                    <Icon name='play' color='yellow' />
+                  </Button>
+                } />
               ) : (
-                <Button icon basic onClick={pauseMap}>
-                  <Icon name='pause' color='yellow' />
-                </Button>
+                <Popup content='Pause running the map' trigger={
+                  <Button icon basic onClick={pauseMap}>
+                    <Icon name='pause' color='yellow' />
+                  </Button>
+                } />
               )}
             </>
           ) : (
-            <>
+            <Popup content='Run the map' trigger={
               <Button icon basic onClick={playMap}>
                 <Icon name='play' color='green' />
               </Button>
-            </>
+            } />
           )}
-          <Button icon basic onClick={stepMap}>
-            <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
-          </Button>
-          <Button icon basic onClick={stopMap} disabled={!playing}>
-            <Icon name='stop' color='red' disabled={!playing} />
-          </Button>
+          <Popup content='Step forward' trigger={
+            <Button icon basic onClick={stepMap}>
+              <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
+            </Button>
+          } />
+          <Popup content='Stop running the map' trigger={
+            <Button icon basic onClick={stopMap} disabled={!playing}>
+              <Icon name='stop' color='red' disabled={!playing} />
+            </Button>
+          } />
         </Button.Group>
 
       </div>
@@ -2222,25 +2270,27 @@ function Map () {
           <MiniMap pannable zoomable position='top-left' />
           <Background variant="dots" gap={12} size={1} />
           <Panel position="top-right">
-            <Dropdown
-              compact
-              fluid
-              selection
-              clearable
-              trigger={
-                <span>
-                  <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
-                  {recipient}
-                </span>
-              }
-              multiple={false}
-              search={true}
-              options={roster}
-              value={recipient}
-              placeholder="Recipient"
-              onChange={(e, { value }) => setRecipient(value)}
-              loading={roster.length === 0}
-            />
+            <Popup content='Select recipient' trigger={
+              <Dropdown
+                compact
+                fluid
+                selection
+                clearable
+                trigger={
+                  <span>
+                    <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                    {recipient}
+                  </span>
+                }
+                multiple={false}
+                search={true}
+                options={roster}
+                value={recipient}
+                placeholder="Recipient"
+                onChange={(e, { value }) => setRecipient(value)}
+                loading={roster.length === 0}
+              />
+            } />
             <Input
               iconPosition='left'
               placeholder='/RegExp/ Condition...'
