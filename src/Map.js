@@ -66,29 +66,35 @@ const variableOrCommentRegex = /(\[\[[A-Za-z0-9_-]+\]\])|(\[\/\*\[[A-Za-z0-9_-]+
 
 function buildSmartText({ text, getNodes }) {
   const allNodes = getNodes()
-  const smartText = text.split(variableOrCommentRegex).map((part, i) => {
-    if (variableRegex.test(part)) {
-      let uname = part
-      const match = part.match(unameRegex);
-      // console.log('match:', match)
-      if (match) {
-        uname = match[1]
-      }
-      let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-      let nodeText
-      if (foundNodes.length === 1) {
-        nodeText = foundNodes[0].data.text
+  let parts = ''
+  let smartText = ''
+  do {
+    parts = text.split(variableOrCommentRegex)
+    smartText = parts.map((part, i) => {
+      if (variableRegex.test(part)) {
+        let uname = part
+        const match = part.match(unameRegex);
+        // console.log('match:', match)
+        if (match) {
+          uname = match[1]
+        }
+        let foundNodes = allNodes.filter((n) => n.data.uname === uname);
+        let nodeText
+        if (foundNodes.length === 1) {
+          nodeText = foundNodes[0].data.text
+        } else {
+          console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+          nodeText = ''
+        }
+        return nodeText
+      } if (commentRegex.test(part)) {
+        return ''
       } else {
-        console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-        nodeText = ''
+        return part
       }
-      return nodeText
-    } if (commentRegex.test(part)) {
-      return ''
-    } else {
-      return part
-    }
-  } ).join('\n');
+    } ).join('\n');
+    text = smartText
+  } while (parts.length > 1)
   return smartText
 }
 
@@ -299,7 +305,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           setNodes((nodes) =>
             nodes.map((node) =>
               node.id === edge.target ? { ...node, data: { ...node.data,
-                text: node.data.text.replace(`[[${data.uname}]]`, `[[${newUname}]]`) }
+                text: node.data.text.replace(`[[${data.uname}]]`, `[[${newUname}]]`).replace(`[/*[${data.uname}]*/]`, `[/*[${newUname}]*/]`) }
               } : node
             )
           )
@@ -612,18 +618,6 @@ const GroupNode = memo(({ id, data, style, selected }) => {
       const updatedNodes = nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node
       );
-
-      getEdges().forEach((edge) => {
-        if(edge.source === id) {
-          setNodes((nodes) =>
-            nodes.map((node) =>
-              node.id === edge.target ? { ...node, data: { ...node.data,
-                text: node.data.text.replace(`[[${data.uname}]]`, `[[${newUname}]]`) }
-              } : node
-            )
-          )
-        }
-      });
       return updatedNodes
     });
   }, [setNodes, getEdges, data.uname, newUname, id])
