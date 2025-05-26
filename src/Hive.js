@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { JsonEditor } from 'json-edit-react'
 import axios from 'axios'
 import {
@@ -15,6 +15,7 @@ import {
   Dropdown,
   List,
   Label,
+  Popup,
 } from 'semantic-ui-react'
 import Ajv from 'ajv'
 
@@ -27,15 +28,14 @@ const ajv = new Ajv()
 const Hive = () => {
   const [ agents, setAgents ] = useState([])
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
-
   const [ archetype, setArchetype ] = useState(defaultArchetype.value)
   const [ options, setOptions ] = useState(() => defaultArchetype.defaultOptions())
-
   const [ responseError, setResponseError ] = useState('')
   const [ validationError, setValidationError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
   const [ adding, setAdding ] = useState(false)
   const [ loading, setLoading ] = useState(true)
+  const fileInputRef = useRef(null);
 
   const indexAgents = async () => {
     setLoading(true)
@@ -65,13 +65,13 @@ const Hive = () => {
     indexAgents()
   }, [])
 
-  const postAgent = async () => {
+  const postAgent = async ({ agent = null } = {}) => {
     setLoading(true)
     try {
       const res = await axios.post(`${conf.api.url}/agent`, {
         deployed: false,
-        archetype,
-        options,
+        archetype: agent ? agent.archetype : archetype,
+        options: agent ? agent.options : options,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -132,6 +132,60 @@ const Hive = () => {
     }
   }
 
+  const downloadAgents = () => {
+    setLoading(true)
+    try {
+      const jsonString = JSON.stringify(agents, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const firstName = localStorage.getItem('user.firstName')
+      const lastName = localStorage.getItem('user.lastName')
+      link.download = `${firstName}${lastName}.sda.json`;
+      link.click();
+      URL.revokeObjectURL(url); // Clean up
+    } catch (err) {
+      console.error('download agents error:', err);
+      return setResponseError(err.toString() || 'Error downloading agents.')
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadAgents = async (event) => {
+    setLoading(true)
+    try {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            const parsedAgents = JSON.parse(e.target.result);
+            for (const agent of parsedAgents) {
+              await postAgent({ agent })
+            }
+            console.log('Agents loaded:', parsedAgents);
+          } catch (err) {
+            alert('Invalid JSON file.');
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        alert('Please upload a valid JSON file.');
+      }
+    } catch (err) {
+      console.error('upload agents error:', err);
+      return setResponseError(err.toString() || 'Error uploading map.')
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadAgentsInit = () => {
+    fileInputRef.current.click(); // triggers hidden input
+  };
+
   return (
     <Container>
       <Menubar />
@@ -169,6 +223,7 @@ const Hive = () => {
       }
 
       { !adding && (
+        <div>
         <Button size='large' onClick={() => setAdding(!adding) }>
           <Icon.Group size='large'>
             <Icon name='spy' />
@@ -176,7 +231,30 @@ const Hive = () => {
           </Icon.Group>
           {' '}Add Agent{' '}
         </Button>
+        <Button.Group floated='right'>
+          <Popup content='Download agents' trigger={
+            <Button icon onClick={downloadAgents}>
+              <Icon name='download' />
+              Download
+            </Button>
+          } />
+          <Popup content='Upload agents' trigger={
+            <Button icon onClick={uploadAgentsInit}>
+              <Icon name="upload" />
+              <input
+                type="file"
+                accept="application/json"
+                ref={fileInputRef}
+                onChange={uploadAgents}
+                style={{ display: 'none' }} // hide input
+              />
+              Upload
+            </Button>
+          } />
+        </Button.Group>
+       </div>
       )}
+      <br/>
 
       { adding && (
         <Segment stacked>

@@ -1297,7 +1297,7 @@ function Map () {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${title}.sd.json`;
+      link.download = `${title}.sdm.json`;
       link.click();
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
@@ -1333,8 +1333,8 @@ function Map () {
         alert('Please upload a valid JSON file.');
       }
     } catch (err) {
-      console.error('delete map error:', err);
-      return setResponseError(err.toString() || 'Error downloading map.')
+      console.error('upload map error:', err);
+      return setResponseError(err.toString() || 'Error uploading map.')
     } finally {
       setLoading(false)
     }
