@@ -1514,7 +1514,7 @@ function Map () {
 
   const sendPersonalMessage = async ({ credentials, recipient, prompt }) => {
     if (!recipient || !prompt || !credentials) {
-      return console.error('Error sending personal message> credentials:', credentials, ', recipient:', recipient, ', prompt:', prompt)
+      return console.error('Error sending personal message to recipient:', recipient, ', prompt:', prompt)
     }
     const to = recipient.includes("@") ? recipient : `${recipient}@${conf.xmpp.host}`
     const message = xml('message', {
