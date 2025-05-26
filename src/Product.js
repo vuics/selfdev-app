@@ -169,7 +169,7 @@ const Product = () => (
           </li>
           <li>
             <a href="#vr">
-              <b>VR / AR</b> — talk to agents in virtual reality or agumented reality.
+              <b>VR / AR</b> — talk to agents in virtual reality or augmented reality.
             </a>
           </li>
           <li>
