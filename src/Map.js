@@ -68,7 +68,12 @@ function buildSmartText({ text, getNodes }) {
   const allNodes = getNodes()
   let parts = ''
   let smartText = ''
+  const startTime = Date.now()
   do {
+    if (Date.now() - startTime > 5000) {
+      console.warn('buildSmartText> Loop timed out after 5 seconds.');
+      break;
+    }
     parts = text.split(variableOrCommentRegex)
     smartText = parts.map((part, i) => {
       if (variableRegex.test(part)) {
@@ -83,7 +88,7 @@ function buildSmartText({ text, getNodes }) {
         if (foundNodes.length === 1) {
           nodeText = foundNodes[0].data.text
         } else {
-          console.warn('smartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
+          console.warn('buildSmartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
           nodeText = ''
         }
         return nodeText
