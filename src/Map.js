@@ -1066,18 +1066,13 @@ function Map () {
   const [ credentials, setCredentials ] = useState(null)
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
-  const [ recipient, setRecipient ] = useState('morpheus')  // FIXME: select none
-  const [ recipientSearch, setRecipientSearch ] = useState('')
-  const [ condition, setCondition ] = useState('')
   const [ roster, setRoster ] = useState([])
   const [ presenceMap, setPresenceMap ] = useState({});
   const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
   const [ renaming, setRenaming ] = useState(false)
-  const [ mapId, setMapId ] = useState('')
   const [ opener, setOpener ] = useState(false)
   const [ openerSearch, setOpenerSearch ] = useState('')
-  const [ autosave, setAutosave ] = useState(true)
   const [ reordering, setReordering ] = useState(false)
   const [ color, setColor ] = useState(defaultColor)
   const [ backgroundColor, setBackgroundColor ] = useState(defaultBackgroundColor)
@@ -1104,6 +1099,37 @@ function Map () {
   } = useReactFlow();
   const [ rfInstance, setRfInstance ] = useState(null);
 
+  const [ recipientSearch, setRecipientSearch ] = useState('')
+  const [ recipient, setRecipient ] = useState(() => {
+    return localStorage.getItem('map.recipient') || ''
+  })
+  useEffect(() => {
+    localStorage.setItem('map.recipient', recipient);
+  }, [recipient]);
+
+  const [ condition, setCondition ] = useState(() => {
+    return localStorage.getItem('map.condition') || ''
+  })
+  useEffect(() => {
+    localStorage.setItem('map.condition', condition);
+  }, [condition]);
+
+  const [ mapId, setMapId ] = useState(() => {
+    return localStorage.getItem('map.mapId') || ''
+  })
+  useEffect(() => {
+    localStorage.setItem('map.mapId', mapId);
+  }, [mapId]);
+
+  const [ autosave, setAutosave ] = useState(() => {
+    const saved = localStorage.getItem('map.autosave') || false
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.autosave', autosave.toString());
+  }, [autosave]);
+
+  // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
   // console.log('title:', title)
   // console.log('condition:', condition)
@@ -1125,11 +1151,18 @@ function Map () {
       })
       console.log('maps index res:', res)
       setMaps(res?.data || [])
-      setMapId(res?.data[0]?._id)
-      setTitle(res?.data[0]?.title)
-      setNodes(res?.data[0]?.flow.nodes);
-      setEdges(res?.data[0]?.flow.edges);
-      setViewport(res?.data[0]?.flow.viewport);
+      if (res?.data?.length >= 1) {
+        let index = 0
+        if (mapId) {
+          index = res?.data.findIndex(map => map._id === mapId)
+          if (index < 0) { index = 0 }
+        }
+        setMapId(res?.data[index]?._id)
+        setTitle(res?.data[index]?.title)
+        setNodes(res?.data[index]?.flow.nodes);
+        setEdges(res?.data[index]?.flow.edges);
+        setViewport(res?.data[index]?.flow.viewport);
+      }
     } catch (err) {
       console.error('indexMaps error:', err);
       return setResponseError(err?.response?.data?.message || 'Error getting maps.')
