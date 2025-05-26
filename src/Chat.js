@@ -531,7 +531,12 @@ export default function Talk () {
         <Menubar />
       </Container>
 
-      <Loader active={loading} inline='centered' />
+      { loading && (
+        <>
+          <br/>
+          <Loader active={loading} inline='centered' />
+        </>
+      )}
       { responseError &&
         <Message
           negative
