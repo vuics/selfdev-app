@@ -2303,17 +2303,12 @@ function Map () {
               value={condition}
               onChange={e => setCondition(e.target.value)}
             ><Icon name='usb' /><input /></Input>
-            <br/> <br/>
-            <Button onClick={addNote} fluid>
-              <Icon name='sticky note outline' />
-              Add Note
-            </Button>
             <br/>
-            <Button onClick={groupSelected} fluid>
-              <Icon name='object group' />
-              Loop Selected
-            </Button>
-            <br/> <br/>
+            <Button.Group vertical labeled icon fluid compact>
+              <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
+              <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
+            </Button.Group>
+            <br/>
             {/*
             <Input
               iconPosition='left' placeholder='room...' size='mini'
