@@ -1048,6 +1048,7 @@ function Map () {
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
   const [ recipient, setRecipient ] = useState('morpheus')  // FIXME: select none
+  const [ recipientSearch, setRecipientSearch ] = useState('')
   const [ condition, setCondition ] = useState('')
   const [ roster, setRoster ] = useState([])
   const [ presenceMap, setPresenceMap ] = useState({});
@@ -2276,18 +2277,23 @@ function Map () {
                 fluid
                 selection
                 clearable
+                onSearchChange={(e, { value }) => setRecipientSearch(value)}
                 trigger={
-                  <span>
-                    <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
-                    {recipient}
-                  </span>
+                  <>
+                  { !recipientSearch && (
+                    <span>
+                      <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                      {recipient}
+                    </span>
+                  )}
+                  </>
                 }
                 multiple={false}
                 search={true}
                 options={roster}
                 value={recipient}
                 placeholder="Recipient"
-                onChange={(e, { value }) => setRecipient(value)}
+                onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
                 loading={roster.length === 0}
               />
             } />
