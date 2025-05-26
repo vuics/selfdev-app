@@ -58,13 +58,16 @@ import { MarkdownMermaid } from './components/Text'
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
 
-const tokenRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
+const variableRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
 const unameRegex = /\[\[([A-Za-z0-9_-]+)\]\]/;
+const commentRegex = /(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
+const ucommentRegex = /\[\/\*\[([A-Za-z0-9_-]+)\]\*\/\]/;
+const variableOrCommentRegex = /(\[\[[A-Za-z0-9_-]+\]\])|(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
 
 function buildSmartText({ text, getNodes }) {
   const allNodes = getNodes()
-  const smartText = text.split(tokenRegex).map((part, i) => {
-    if (tokenRegex.test(part)) {
+  const smartText = text.split(variableOrCommentRegex).map((part, i) => {
+    if (variableRegex.test(part)) {
       let uname = part
       const match = part.match(unameRegex);
       // console.log('match:', match)
@@ -80,6 +83,8 @@ function buildSmartText({ text, getNodes }) {
         nodeText = ''
       }
       return nodeText
+    } if (commentRegex.test(part)) {
+      return ''
     } else {
       return part
     }
@@ -142,11 +147,15 @@ async function playEdge ({
       nodes.map((node) => {
         if (node.id === edge.target) {
           if (smartText && satisfied) {
-            if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`)) {
+            if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`) &&
+                !node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
               return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, } }
+            } else if (node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
+              return { ...node, data: { ...node.data, text: node.data.text.replace(`[/*[${sourceNode.data.uname}]*/]`, `[[${sourceNode.data.uname}]]`) } }
             }
           } else {
-            unlinkEdge({ edge, getNodes, setNodes })
+            // unlinkEdge({ edge, getNodes, setNodes })
+            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`) } }
           }
         }
         return node
@@ -161,7 +170,7 @@ function unlinkEdge({ edge, getNodes, setNodes }) {
   setNodes((nodes) =>
     nodes.map((node) =>
       node.id === edge.target ? { ...node, data: { ...node.data,
-        text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '') }
+        text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '').replace(`[/*[${sourceNode.data.uname}]*/]`, '') }
       } : node
     )
   )
@@ -169,27 +178,41 @@ function unlinkEdge({ edge, getNodes, setNodes }) {
 
 const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor }) => {
   const { fitView } = useReactFlow();
+  const [ active, setActive ] = useState(false)
 
   let uname = part
-  const match = part.match(unameRegex);
+  let ucomment = ''
+  let foundNodes = []
+  let nodeText
+  let match = part.match(unameRegex);
   // console.log('match:', match)
   if (match) {
     uname = match[1]
+  } else {
+    match = part.match(ucommentRegex);
+    if (match) {
+      uname = match[1]
+      ucomment = match[1]
+    }
   }
-  let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-  let nodeText
+
+  foundNodes = allNodes.filter((n) => n.data.uname === uname);
   if (foundNodes.length === 1) {
     nodeText = foundNodes[0].data.text
   } else {
     console.warn('ExpandingVariable> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
     nodeText = '((Not found))'
   }
-  const [ active, setActive ] = useState(false)
 
   return (
-    <Accordion fluid styled style={{ color, backgroundColor, }} >
+    <Accordion fluid styled style={{
+      color,
+      backgroundColor,
+    }} >
       <Accordion.Title
-        style={{ color, backgroundColor }}
+        style={{
+          color: !ucomment ? color : hexToRgba({ hexColor: color, alpha: 0.5 }),
+        }}
         styled
         active={active}
         index={0}
@@ -198,7 +221,7 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
           setActive(active => !active)
         })}
       >
-        <Icon name={active ? 'triangle down' : 'triangle right'} />
+        <Icon name={!!ucomment ? 'eye slash outline' : (active ? 'triangle down' : 'triangle right')} />
         {uname}
         {' '}{' '}{' '}{' '}
         <Icon
@@ -210,11 +233,13 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
           })}
         />
       </Accordion.Title>
-      <Accordion.Content active={active}>
-        <p>
-          {nodeText}
-        </p>
-      </Accordion.Content>
+      { !ucomment && (
+        <Accordion.Content active={active}>
+          <p>
+            {nodeText}
+          </p>
+        </Accordion.Content>
+      )}
     </Accordion>
   )
 })
@@ -291,8 +316,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     setNewUname(data.uname);
   }, [setNodes, data.uname, id, setNewUname])
 
-  const interactiveText = data.text.split(tokenRegex).map((part, i) => {
-    if (tokenRegex.test(part)) {
+  const interactiveText = data.text.split(variableOrCommentRegex).map((part, i) => {
+    if (variableOrCommentRegex.test(part)) {
       return (
         <ExpandingVariable
           key={i} part={part} allNodes={allNodes}
