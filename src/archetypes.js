@@ -422,6 +422,7 @@ const archetypes = {
           properties: {
             driver: { type: 'string' },
             namespace: { type: 'string' },
+            verbose: { type: 'number', enum: [0, 1, 2] },
             commands: {
               type: 'object',
               properties: {
@@ -449,9 +450,10 @@ const archetypes = {
         storage: {
           driver: 'mongodb',
           namespace: 'default',
+          verbose: 1,
           commands: {
             list: "^//LIST$",
-            get: "^//GET\\s+(?P<key>\\S+)$",
+            get: "^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$",
             set: "^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$",
             delete: "^//DELETE\\s+(?P<key>\\S+)$",
           },
