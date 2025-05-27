@@ -1,9 +1,10 @@
 import React, { useEffect, memo } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeMathjax from 'rehype-mathjax'
+import rehypeRaw from 'rehype-raw'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coy as hlStyle } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { okaidia as hlStyleDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -96,8 +97,9 @@ export const MarkdownMermaid = memo(({ children, dark }) => {
 
   return (
     <ReactMarkdown
+      urlTransform={(value) => value}  // FIXME: this is not safe but allows to render inline base64 images
       remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeMathjax]}
+      rehypePlugins={[rehypeMathjax, rehypeRaw]}
       components={mergedComponents}
     >
       {children}
