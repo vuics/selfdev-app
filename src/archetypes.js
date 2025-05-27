@@ -42,7 +42,7 @@ const archetypes = {
   'rag-v1.0': {
     key: 'rag-v1.0',
     value: 'rag-v1.0',
-    icon: 'sitemap',
+    icon: 'archive',
     text: 'RAG v1.0',
     schema: {
       type: 'object',
@@ -393,6 +393,67 @@ const archetypes = {
             enable: true,
             output: 'text',   // text, mpl
             style: 'str',     // only for text output
+          },
+        },
+      }
+    }
+  },
+
+  'storage-v1.0': {
+    key: 'storage-v1.0',
+    value: 'storage-v1.0',
+    icon: 'hdd',
+    text: 'Storage v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+
+        // TODO:
+        // env: { },
+
+        storage: {
+          type: 'object',
+          properties: {
+            driver: { type: 'string' },
+            namespace: { type: 'string' },
+            commands: {
+              type: 'object',
+              properties: {
+                list: { type: 'string' },
+                get: { type: 'string' },
+                set: { type: 'string' },
+                delete: { type: 'string' },
+              },
+            },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'storage' ],
+
+        // TODO:
+        // env: {
+        //   'ENV_VAR': 'VALUE',
+        // },
+
+        storage: {
+          driver: 'mongodb',
+          namespace: 'default',
+          commands: {
+            list: "^//LIST$",
+            get: "^//GET\\s+(?P<key>\\S+)$",
+            set: "^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$",
+            delete: "^//DELETE\\s+(?P<key>\\S+)$",
           },
         },
       }
