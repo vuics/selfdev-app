@@ -461,6 +461,65 @@ const archetypes = {
       }
     }
   },
+
+  'code-v1.0': {
+    key: 'code-v1.0',
+    value: 'code-v1.0',
+    icon: 'code',
+    text: 'Code v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+
+        // TODO:
+        // env: { },
+
+        code: {
+          type: 'object',
+          properties: {
+            kernel: { type: 'string' },
+            commands: {
+              type: 'object',
+              properties: {
+                start: { type: 'string' },
+                restart: { type: 'string' },
+                reconnect: { type: 'string' },
+                shutdown: { type: 'string' },
+              },
+            },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'code' ],
+
+        // TODO:
+        // env: {
+        //   'ENV_VAR': 'VALUE',
+        // },
+
+        code: {
+          kernel: 'python3',
+          commands: {
+            start: "^//START$",
+            restart: "^//RESTART$",
+            reconnect: "^//RECONNECT$",
+            shutdown: "^//SHUTDOWN$",
+          },
+        },
+      }
+    }
+  },
 }
 
 export default archetypes
