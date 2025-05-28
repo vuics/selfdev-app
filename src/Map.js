@@ -281,6 +281,267 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
   )
 })
 
+const DiffEditor = memo(({ text, setText, stash, setStash }) => {
+  return (<>
+    <CodeMirrorMerge
+      orientation='a-b'
+      revertControls='b-to-a'
+      highlightChanges={true}
+      gutter={true}
+      // theme='light' // 'dark'
+      theme={atomone}
+      readOnly={false}
+      editable={true}
+      destroyRerender={false}
+    >
+      <CodeMirrorMerge.Original
+        value={text}
+        onChange={setText}
+        extensions={[
+          EditorView.editable.of(true),
+          EditorState.readOnly.of(false)
+        ]}
+      />
+      <CodeMirrorMerge.Modified
+        value={stash}
+        onChange={setStash}
+        extensions={[
+          // EditorView.editable.of(false),
+          // EditorState.readOnly.of(true)
+          EditorView.editable.of(true),
+          EditorState.readOnly.of(false)
+        ]}
+      />
+    </CodeMirrorMerge>
+  </>)
+})
+
+const CodeEditor = memo(({ text, setText, roster }) => {
+  return (<>
+    <CodeMirror
+      value={text}
+      onChange={setText}
+      basicSetup={{
+        syntaxHighlighting: true,
+        highlightActiveLine: false,
+
+        lineNumbers: true,
+        foldGutter: true,
+        autocompletion: true,
+        closeBrackets: true,
+        bracketMatching: true,
+        indentOnInput: true,
+        highlightSpecialChars: true,
+        history: true,
+        drawSelection: true,
+        allowMultipleSelections: true,
+        rectangularSelection: true,
+        highlightSelectionMatches: true,
+        dropCursor: true,
+        crosshairCursor: true,
+        closeBracketsKeymap: true,
+        defaultKeymap: true,
+        searchKeymap: true,
+        historyKeymap: true,
+        foldKeymap: true,
+        completionKeymap: true,
+        lintKeymap: true,
+      }}
+      theme={atomone}
+      extensions={[
+        // javascript({ jsx: true }),
+        loadLanguage('python'),
+        // markdown({ base: markdownLanguage, codeLanguages: languages })
+        mentions(roster.map(({ name }) => { return { label: `@name` }})),
+        // vim(),
+      ]}
+      className="nodrag nopan"
+    />
+    {/*
+    <CodeEditor
+      value={text}
+      onValueChange={code => setText(code)}
+      highlight={code => highlight(code, languages.py)}
+      padding={10}
+      style={{
+        fontFamily: '"Fira code", "Fira Mono", monospace',
+        fontSize: 12,
+      }}
+      className="nodrag nopan"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+          e.preventDefault();
+          applyText()
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          cancelText()
+        }
+      }}
+    />
+    */}
+  </>)
+})
+
+const CodeViewer = memo(({ text, data, id, setNodes }) => {
+  return (<>
+    <CodeMirror
+      value={text}
+      // onChange={setText}
+      editable={false}
+      readOnly={true}
+      basicSetup={{
+        syntaxHighlighting: true,
+        highlightActiveLine: false,
+
+        lineNumbers: false,
+        foldGutter: false,
+        autocompletion: false,
+        closeBrackets: false,
+        bracketMatching: false,
+        indentOnInput: false,
+        highlightSpecialChars: false,
+        history: false,
+        drawSelection: false,
+        allowMultipleSelections: false,
+        rectangularSelection: false,
+        highlightSelectionMatches: false,
+        dropCursor: false,
+        crosshairCursor: false,
+        closeBracketsKeymap: false,
+        defaultKeymap: false,
+        searchKeymap: false,
+        historyKeymap: false,
+        foldKeymap: false,
+        completionKeymap: false,
+        lintKeymap: false,
+      }}
+      theme={quietlight}
+      onClick={() => {
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+          )
+        );
+      }}
+      // height="200px"
+      // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
+      extensions={[
+        markdown({ base: markdownLanguage, codeLanguages: languages })
+      ]}
+      className="nodrag nopan"
+    />
+    {/*
+    <CodeEditor
+      value={text}
+      onValueChange={code => setText(code)}
+      highlight={code => highlight(code, languages.py)}
+      padding={10}
+      style={{
+        fontFamily: '"Fira code", "Fira Mono", monospace',
+        fontSize: 12,
+      }}
+      className="nodrag nopan"
+      onClick={() => {
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+          )
+        );
+      }}
+    />
+    */}
+  </>)
+})
+
+const NoteEditor = memo(({ text, setText, applyText, cancelText, data }) => {
+  return (
+    <TextareaAutosize
+      value={text}
+      onChange={(e) => {
+        setText(e.target.value)
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+          e.preventDefault();
+          applyText()
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          cancelText()
+        }
+      }}
+      className="nodrag"
+      minRows={6}
+      // maxRows={12}
+      style={{
+        width: '100%',
+        height: '100%',
+        color: data.color || '',
+        backgroundColor: data.backgroundColor || '',
+      }}
+    />
+  )
+})
+
+const ApplyOrCancel = memo(({ applyText, cancelText }) => {
+  return (
+    <Button.Group floated='right'>
+      <Button
+        compact positive
+        icon labelPosition='left'
+        onClick={applyText}
+      >
+        <Icon name='check' />
+        Apply
+      </Button>
+      <Button.Or />
+      <Button
+        compact
+        icon labelPosition='right'
+        onClick={cancelText}
+      >
+        <Icon name='cancel' />
+        Cancel
+      </Button>
+    </Button.Group>
+  )
+})
+
+const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
+  return (<>
+    <div
+      onClick={() => {
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+          )
+        );
+      }}
+      style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
+    >
+      {data.text.split(variableOrCommentRegex).map((part, i) => {
+        if (variableOrCommentRegex.test(part)) {
+          return (
+            <ExpandingVariable
+              key={i} part={part} allNodes={allNodes}
+              color={data.color}
+              backgroundColor={data.backgroundColor}
+            />
+          )
+        } else {
+          // return (
+          //   <span key={i}>{part}</span>
+          // )
+          return (
+            <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
+          )
+        }
+      })};
+    </div>
+  </>)
+})
+
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
@@ -361,25 +622,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     setNewUname(data.uname);
   }, [setNodes, data.uname, id, setNewUname])
 
-  const interactiveText = data.text.split(variableOrCommentRegex).map((part, i) => {
-    if (variableOrCommentRegex.test(part)) {
-      return (
-        <ExpandingVariable
-          key={i} part={part} allNodes={allNodes}
-          color={data.color}
-          backgroundColor={data.backgroundColor}
-        />
-      )
-    } else {
-      // return (
-      //   <span key={i}>{part}</span>
-      // )
-      return (
-        <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
-      )
-    }
-  } );
-
   const copyText = useCallback(async () => {
     try {
       const smartText = buildSmartText({ text, getNodes })
@@ -419,30 +661,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       window.removeEventListener("error", errorHandler);
     };
   }, []);
-
-  const ApplyOrCancel = useCallback(() => {
-    return (
-      <Button.Group floated='right'>
-        <Button
-          compact positive
-          icon labelPosition='left'
-          onClick={applyText}
-        >
-          <Icon name='check' />
-          Apply
-        </Button>
-        <Button.Or />
-        <Button
-          compact
-          icon labelPosition='right'
-          onClick={cancelText}
-        >
-          <Icon name='cancel' />
-          Cancel
-        </Button>
-      </Button.Group>
-    )
-  }, [applyText, cancelText])
 
   return (
     <Card
@@ -536,7 +754,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name='calendar plus' />
-              Stash text/code
+              Stash content
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -548,7 +766,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name='calendar minus' />
-              Restore from stash
+              Restore content from stash
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -615,235 +833,34 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { data.diffing ? (
-          <>
-          <CodeMirrorMerge
-            orientation='a-b'
-            revertControls='b-to-a'
-            highlightChanges={true}
-            gutter={true}
-            // theme='light' // 'dark'
-            theme={atomone}
-            readOnly={false}
-            editable={true}
-            destroyRerender={false}
-          >
-            <CodeMirrorMerge.Original
-              value={text}
-              onChange={setText}
-              extensions={[
-                EditorView.editable.of(true),
-                EditorState.readOnly.of(false)
-              ]}
-            />
-            <CodeMirrorMerge.Modified
-              value={stash}
-              onChange={setStash}
-              extensions={[
-                // EditorView.editable.of(false),
-                // EditorState.readOnly.of(true)
-                EditorView.editable.of(true),
-                EditorState.readOnly.of(false)
-              ]}
-            />
-          </CodeMirrorMerge>
+        { data.diffing ? (<>
+          <DiffEditor text={text} setText={setText} stash={stash} setStash={setStash} />
           <br/>
-          <ApplyOrCancel />
-          </>
-        ) : (
-          <>
-          { data.editing ? (
-            <>
-            { data.code ? (
-              <>
-              <CodeMirror
-                value={text}
-                onChange={setText}
-                basicSetup={{
-                  syntaxHighlighting: true,
-                  highlightActiveLine: false,
-
-                  lineNumbers: true,
-                  foldGutter: true,
-                  autocompletion: true,
-                  closeBrackets: true,
-                  bracketMatching: true,
-                  indentOnInput: true,
-                  highlightSpecialChars: true,
-                  history: true,
-                  drawSelection: true,
-                  allowMultipleSelections: true,
-                  rectangularSelection: true,
-                  highlightSelectionMatches: true,
-                  dropCursor: true,
-                  crosshairCursor: true,
-                  closeBracketsKeymap: true,
-                  defaultKeymap: true,
-                  searchKeymap: true,
-                  historyKeymap: true,
-                  foldKeymap: true,
-                  completionKeymap: true,
-                  lintKeymap: true,
-                }}
-                theme={atomone}
-                extensions={[
-                  // javascript({ jsx: true }),
-                  loadLanguage('python'),
-                  // markdown({ base: markdownLanguage, codeLanguages: languages })
-                  mentions(roster),
-                  vim(),
-                ]}
-                className="nodrag nopan"
-              />
-              {/*
-              <CodeEditor
-                value={text}
-                onValueChange={code => setText(code)}
-                highlight={code => highlight(code, languages.py)}
-                padding={10}
-                style={{
-                  fontFamily: '"Fira code", "Fira Mono", monospace',
-                  fontSize: 12,
-                }}
-                className="nodrag nopan"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-                    e.preventDefault();
-                    applyText()
-                  }
-                  if (e.key === 'Escape') {
-                    e.preventDefault();
-                    cancelText()
-                  }
-                }}
-              />
-              */}
-              <br/>
-              <ApplyOrCancel />
-              </>
-            ) : (
-              <>
-              <TextareaAutosize
-                value={text}
-                onChange={(e) => {
-                  setText(e.target.value)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-                    e.preventDefault();
-                    applyText()
-                  }
-                  if (e.key === 'Escape') {
-                    e.preventDefault();
-                    cancelText()
-                  }
-                }}
-                className="nodrag"
-                minRows={6}
-                // maxRows={12}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  color: data.color || '',
-                  backgroundColor: data.backgroundColor || '',
-                }}
-              />
-              <br/>
-              <ApplyOrCancel />
-              </>
-            ) }
-            </>
-          ) : (
-            <>
-            { data.code ? (
-              <>
-              <CodeMirror
-                value={text}
-                // onChange={setText}
-                editable={false}
-                readOnly={true}
-                basicSetup={{
-                  syntaxHighlighting: true,
-                  highlightActiveLine: false,
-
-                  lineNumbers: false,
-                  foldGutter: false,
-                  autocompletion: false,
-                  closeBrackets: false,
-                  bracketMatching: false,
-                  indentOnInput: false,
-                  highlightSpecialChars: false,
-                  history: false,
-                  drawSelection: false,
-                  allowMultipleSelections: false,
-                  rectangularSelection: false,
-                  highlightSelectionMatches: false,
-                  dropCursor: false,
-                  crosshairCursor: false,
-                  closeBracketsKeymap: false,
-                  defaultKeymap: false,
-                  searchKeymap: false,
-                  historyKeymap: false,
-                  foldKeymap: false,
-                  completionKeymap: false,
-                  lintKeymap: false,
-                }}
-                theme={quietlight}
-                onClick={() => {
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                    )
-                  );
-                }}
-                // height="200px"
-                // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
-                extensions={[
-                  markdown({ base: markdownLanguage, codeLanguages: languages })
-                ]}
-                className="nodrag nopan"
-              />
-              {/*
-              <CodeEditor
-                value={text}
-                onValueChange={code => setText(code)}
-                highlight={code => highlight(code, languages.py)}
-                padding={10}
-                style={{
-                  fontFamily: '"Fira code", "Fira Mono", monospace',
-                  fontSize: 12,
-                }}
-                className="nodrag nopan"
-                onClick={() => {
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                    )
-                  );
-                }}
-              />
-              */}
-              </>
-            ) : (
-              <>
-              <div
-                onClick={() => {
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                    )
-                  );
-                }}
-                style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
-              >
-                {interactiveText}
-              </div>
-              </>
-            ) }
-            </>
-          ) }
-          </>
-        )}
+          <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+        </>) : (<>
+          { data.code && data.editing && (<>
+            <CodeEditor text={text} setText={setText} roster={roster} />
+            <br/>
+            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+          </>)}
+          { data.code && !data.editing && (<>
+             <CodeViewer text={text} data={data} id={id} setNodes={setNodes} />
+          </>)}
+          { !data.code && data.editing && (<>
+            <NoteEditor
+              text={text} setText={setText}
+              applyText={applyText} cancelText={cancelText} data={data}
+            />
+            <br/>
+            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+          </>)}
+          { !data.code && !data.editing && (<>
+            <NoteViewer
+              data={data} allNodes={allNodes}
+              setNodes={setNodes} id={id}
+            />
+          </>)}
+        </>)}
       </Card.Content>
 
       <Handle
@@ -1712,7 +1729,7 @@ function Map () {
                 key: attrs.jid,
                 value: username,
                 text: username,
-                label: `@${username}`, // for CodeMirror mentions: https://uiwjs.github.io/react-codemirror/#/extensions/mentions
+                // label: `@${username}`, // for CodeMirror mentions: https://uiwjs.github.io/react-codemirror/#/extensions/mentions
                 content: (
                   <>
                     <Icon name='user' color={presenceMap[username] ? 'green' : 'grey'} />
