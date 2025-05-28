@@ -477,8 +477,7 @@ const archetypes = {
           items: { type: 'string' }
         },
 
-        // TODO:
-        // env: { },
+        env: { },
 
         code: {
           type: 'object',
@@ -503,10 +502,10 @@ const archetypes = {
         description: '',
         joinRooms: [ 'code' ],
 
-        // TODO:
-        // env: {
-        //   'ENV_VAR': 'VALUE',
-        // },
+        env: {
+          'MY_ENV_VAR': 'my-value',
+          'MY_SECOND_ENV_VAR': 'some value',
+        },
 
         code: {
           kernel: 'python3',
