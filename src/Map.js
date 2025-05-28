@@ -50,6 +50,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { nanoid } from 'nanoid'
 import Dagre from '@dagrejs/dagre';
 
+import CodeEditor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-python';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
 import Menubar from './components/Menubar'
 import conf from './conf'
 import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
@@ -439,6 +446,18 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               { data.editing ? 'View' : 'Edit' }
             </Dropdown.Item>
             <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, code: !data.code } } : node
+                  )
+                );
+              }}
+            >
+              <Icon name={ data.code ? 'sticky note outline' : 'code' } />
+              { data.code ? 'Select Markdown' : 'Select Code' }
+            </Dropdown.Item>
+            <Dropdown.Item
               onClick={renameUname}
             >
               <Icon name='i cursor' />
@@ -511,6 +530,32 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
         { data.editing ? (
           <>
+          { data.code ? (
+            <>
+            <CodeEditor
+              value={text}
+              onValueChange={code => setText(code)}
+              highlight={code => highlight(code, languages.py)}
+              padding={10}
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12,
+              }}
+              className="nodrag nopan"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                  e.preventDefault();
+                  applyText()
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  cancelText()
+                }
+              }}
+            />
+            <br/>
+            </>
+          ) : (
             <TextareaAutosize
               value={text}
               onChange={(e) => {
@@ -536,40 +581,65 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 backgroundColor: data.backgroundColor || '',
               }}
             />
-            <Button.Group floated='right'>
-              <Button
-                compact positive
-                icon labelPosition='left'
-                onClick={applyText}
-              >
-                <Icon name='check' />
-                Apply
-              </Button>
-              <Button.Or />
-              <Button
-                compact
-                icon labelPosition='right'
-                onClick={cancelText}
-              >
-                <Icon name='cancel' />
-                Cancel
-              </Button>
-            </Button.Group>
-
+          ) }
+          <Button.Group floated='right'>
+            <Button
+              compact positive
+              icon labelPosition='left'
+              onClick={applyText}
+            >
+              <Icon name='check' />
+              Apply
+            </Button>
+            <Button.Or />
+            <Button
+              compact
+              icon labelPosition='right'
+              onClick={cancelText}
+            >
+              <Icon name='cancel' />
+              Cancel
+            </Button>
+          </Button.Group>
           </>
         ) : (
-          <div
-            onClick={() => {
-              setNodes((nodes) =>
-                nodes.map((node) =>
-                  node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                )
-              );
-            }}
-            style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
-          >
-            {interactiveText}
-          </div>
+          <>
+          { data.code ? (
+            <CodeEditor
+              value={text}
+              onValueChange={code => setText(code)}
+              highlight={code => highlight(code, languages.py)}
+              padding={10}
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12,
+              }}
+              className="nodrag nopan"
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                  )
+                );
+              }}
+            />
+          ) : (
+            <>
+            <div
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                  )
+                );
+              }}
+              style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
+            >
+              {interactiveText}
+            </div>
+            </>
+          ) }
+          </>
         ) }
       </Card.Content>
       <Handle
