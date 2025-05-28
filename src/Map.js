@@ -50,12 +50,31 @@ import { v4 as uuidv4 } from 'uuid'
 import { nanoid } from 'nanoid'
 import Dagre from '@dagrejs/dagre';
 
-import CodeEditor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-python';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import CodeMirror from '@uiw/react-codemirror';
+import { vim } from '@replit/codemirror-vim';
+import { mentions } from '@uiw/codemirror-extensions-mentions'
+import { loadLanguage, langNames, langs } from '@uiw/codemirror-extensions-langs'
+import { githubLight, githubDark, atomone, quietlight } from '@uiw/codemirror-themes-all'
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
+import { languages } from '@codemirror/language-data';
+import CodeMirrorMerge from 'react-codemirror-merge';
+import { EditorView } from 'codemirror';
+import { EditorState } from '@codemirror/state';
+
+// TODO Uninstall the packages:
+//
+// import { githubLight, githubDark } from '@uiw/codemirror-theme-github'
+// import { javascript } from '@codemirror/lang-javascript';
+// import { python } from '@codemirror/lang-python';
+// import { json } from '@codemirror/lang-json';
+// import { html } from '@codemirror/lang-html';
+//
+// import CodeEditor from 'react-simple-code-editor';
+// import { highlight, languages } from 'prismjs/components/prism-core';
+// import 'prismjs/components/prism-clike';
+// import 'prismjs/components/prism-javascript';
+// import 'prismjs/components/prism-python';
+// import 'prismjs/themes/prism.css'; //Example style, you can use another
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -265,10 +284,12 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const { presenceMap } = useMapContext();
+  const { presenceMap, roster } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
+  // console.log('presenceMap:', presenceMap)
+  // console.log('roster:', roster)
 
   useEffect(() => {
     setNewUname(data.uname);
@@ -532,6 +553,43 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <>
           { data.code ? (
             <>
+            <CodeMirror
+              value={text}
+              onChange={setText}
+              basicSetup={{
+                syntaxHighlighting: true,
+                highlightActiveLine: false,
+
+                lineNumbers: true,
+                foldGutter: true,
+                autocompletion: true,
+                closeBrackets: true,
+                bracketMatching: true,
+                indentOnInput: true,
+                highlightSpecialChars: true,
+                history: true,
+                drawSelection: true,
+                allowMultipleSelections: true,
+                rectangularSelection: true,
+                highlightSelectionMatches: true,
+                dropCursor: true,
+                crosshairCursor: true,
+                closeBracketsKeymap: true,
+                defaultKeymap: true,
+                searchKeymap: true,
+                historyKeymap: true,
+                foldKeymap: true,
+                completionKeymap: true,
+                lintKeymap: true,
+              }}
+              theme={atomone}
+              // height="200px"
+              // extensions={[javascript({ jsx: true })]}
+              // extensions={[loadLanguage('python'),mentions(roster)]}
+              extensions={[vim()]}
+              className="nodrag nopan"
+            />
+            {/*
             <CodeEditor
               value={text}
               onValueChange={code => setText(code)}
@@ -553,6 +611,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 }
               }}
             />
+            */}
             <br/>
             </>
           ) : (
@@ -605,6 +664,52 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         ) : (
           <>
           { data.code ? (
+            <>
+            <CodeMirror
+              value={text}
+              // onChange={setText}
+              editable={false}
+              readOnly={true}
+              basicSetup={{
+                syntaxHighlighting: true,
+                highlightActiveLine: false,
+
+                lineNumbers: false,
+                foldGutter: false,
+                autocompletion: false,
+                closeBrackets: false,
+                bracketMatching: false,
+                indentOnInput: false,
+                highlightSpecialChars: false,
+                history: false,
+                drawSelection: false,
+                allowMultipleSelections: false,
+                rectangularSelection: false,
+                highlightSelectionMatches: false,
+                dropCursor: false,
+                crosshairCursor: false,
+                closeBracketsKeymap: false,
+                defaultKeymap: false,
+                searchKeymap: false,
+                historyKeymap: false,
+                foldKeymap: false,
+                completionKeymap: false,
+                lintKeymap: false,
+              }}
+              theme={quietlight}
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                  )
+                );
+              }}
+              // height="200px"
+              // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
+              extensions={[markdown({ base: markdownLanguage, codeLanguages: languages })]}
+              className="nodrag nopan"
+            />
+            {/*
             <CodeEditor
               value={text}
               onValueChange={code => setText(code)}
@@ -623,6 +728,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 );
               }}
             />
+            */}
+            </>
           ) : (
             <>
             <div
@@ -1508,6 +1615,7 @@ function Map () {
                 key: attrs.jid,
                 value: username,
                 text: username,
+                label: `@${username}`, // for CodeMirror mentions: https://uiwjs.github.io/react-codemirror/#/extensions/mentions
                 content: (
                   <>
                     <Icon name='user' color={presenceMap[username] ? 'green' : 'grey'} />
@@ -2047,7 +2155,7 @@ function Map () {
 
   return (
     <MapContext.Provider value={{
-      presenceMap, credentials, recipient, sendPersonalMessage,
+      presenceMap, roster, credentials, recipient, sendPersonalMessage,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges
     }}>
