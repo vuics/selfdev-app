@@ -286,6 +286,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const [ newUname, setNewUname ] = useState(data.uname)
   const { presenceMap, roster } = useMapContext();
   const [ text, setText ] = useState(data.text)
+  const [ stash, setStash ] = useState(data.stash || '')
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
   // console.log('presenceMap:', presenceMap)
@@ -299,22 +300,27 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     setText(data.text);
   }, [data.text]);
 
+  useEffect(() => {
+    setStash(data.stash || '');
+  }, [data.stash]);
+
   const applyText = useCallback(() => {
     setNodes((nodes) =>
       nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, text, editing: !data.editing } } : node
+        node.id === id ? { ...node, data: { ...node.data, text, stash, editing: false, diffing: false } } : node
       )
     )
-  }, [setNodes, data.editing, text, id])
+  }, [setNodes, text, stash, id])
 
   const cancelText = useCallback(() => {
     setText(data.text)
+    setStash(data.stash)
     setNodes((nodes) =>
       nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+        node.id === id ? { ...node, data: { ...node.data, editing: false, diffing: false } } : node
       )
     )
-  }, [setText, setNodes, data.editing, data.text, id])
+  }, [setText, data.text, setStash, data.stash, setNodes, id])
 
   const renameUname = useCallback(() => {
     setNodes((nodes) =>
@@ -414,6 +420,30 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     };
   }, []);
 
+  const ApplyOrCancel = useCallback(() => {
+    return (
+      <Button.Group floated='right'>
+        <Button
+          compact positive
+          icon labelPosition='left'
+          onClick={applyText}
+        >
+          <Icon name='check' />
+          Apply
+        </Button>
+        <Button.Or />
+        <Button
+          compact
+          icon labelPosition='right'
+          onClick={cancelText}
+        >
+          <Icon name='cancel' />
+          Cancel
+        </Button>
+      </Button.Group>
+    )
+  }, [applyText, cancelText])
+
   return (
     <Card
       style={{
@@ -442,6 +472,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Icon size='large' name='ellipsis vertical' color='grey' />
           }>
           <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={renameUname}
+            >
+              <Icon name='i cursor' />
+              Rename
+            </Dropdown.Item>
             <Dropdown.Item
               onClick={copyText}
             >
@@ -476,13 +512,43 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name={ data.code ? 'sticky note outline' : 'code' } />
-              { data.code ? 'Select Markdown' : 'Select Code' }
+              { data.code ? 'Markdown Mode' : 'Code Mode' }
             </Dropdown.Item>
             <Dropdown.Item
-              onClick={renameUname}
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, diffing: !data.diffing } } : node
+                  )
+                );
+              }}
             >
-              <Icon name='i cursor' />
-              Rename
+              <Icon name={ data.diffing ? 'calendar times' : 'columns' } />
+              { data.diffing ? 'Close diff' : 'Diff with stash' }
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, stash: text } } : node
+                  )
+                );
+              }}
+            >
+              <Icon name='calendar plus' />
+              Stash text/code
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.id === id ? { ...node, data: { ...node.data, text: stash  } } : node
+                  )
+                );
+              }}
+            >
+              <Icon name='calendar minus' />
+              Restore from stash
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -549,206 +615,237 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { data.editing ? (
+        { data.diffing ? (
           <>
-          { data.code ? (
-            <>
-            <CodeMirror
+          <CodeMirrorMerge
+            orientation='a-b'
+            revertControls='b-to-a'
+            highlightChanges={true}
+            gutter={true}
+            // theme='light' // 'dark'
+            theme={atomone}
+            readOnly={false}
+            editable={true}
+            destroyRerender={false}
+          >
+            <CodeMirrorMerge.Original
               value={text}
               onChange={setText}
-              basicSetup={{
-                syntaxHighlighting: true,
-                highlightActiveLine: false,
-
-                lineNumbers: true,
-                foldGutter: true,
-                autocompletion: true,
-                closeBrackets: true,
-                bracketMatching: true,
-                indentOnInput: true,
-                highlightSpecialChars: true,
-                history: true,
-                drawSelection: true,
-                allowMultipleSelections: true,
-                rectangularSelection: true,
-                highlightSelectionMatches: true,
-                dropCursor: true,
-                crosshairCursor: true,
-                closeBracketsKeymap: true,
-                defaultKeymap: true,
-                searchKeymap: true,
-                historyKeymap: true,
-                foldKeymap: true,
-                completionKeymap: true,
-                lintKeymap: true,
-              }}
-              theme={atomone}
-              // height="200px"
-              // extensions={[javascript({ jsx: true })]}
-              // extensions={[loadLanguage('python'),mentions(roster)]}
-              extensions={[vim()]}
-              className="nodrag nopan"
+              extensions={[
+                EditorView.editable.of(true),
+                EditorState.readOnly.of(false)
+              ]}
             />
-            {/*
-            <CodeEditor
-              value={text}
-              onValueChange={code => setText(code)}
-              highlight={code => highlight(code, languages.py)}
-              padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 12,
-              }}
-              className="nodrag nopan"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-                  e.preventDefault();
-                  applyText()
-                }
-                if (e.key === 'Escape') {
-                  e.preventDefault();
-                  cancelText()
-                }
-              }}
+            <CodeMirrorMerge.Modified
+              value={stash}
+              onChange={setStash}
+              extensions={[
+                // EditorView.editable.of(false),
+                // EditorState.readOnly.of(true)
+                EditorView.editable.of(true),
+                EditorState.readOnly.of(false)
+              ]}
             />
-            */}
-            <br/>
-            </>
-          ) : (
-            <TextareaAutosize
-              value={text}
-              onChange={(e) => {
-                setText(e.target.value)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-                  e.preventDefault();
-                  applyText()
-                }
-                if (e.key === 'Escape') {
-                  e.preventDefault();
-                  cancelText()
-                }
-              }}
-              className="nodrag"
-              minRows={6}
-              // maxRows={12}
-              style={{
-                width: '100%',
-                height: '100%',
-                color: data.color || '',
-                backgroundColor: data.backgroundColor || '',
-              }}
-            />
-          ) }
-          <Button.Group floated='right'>
-            <Button
-              compact positive
-              icon labelPosition='left'
-              onClick={applyText}
-            >
-              <Icon name='check' />
-              Apply
-            </Button>
-            <Button.Or />
-            <Button
-              compact
-              icon labelPosition='right'
-              onClick={cancelText}
-            >
-              <Icon name='cancel' />
-              Cancel
-            </Button>
-          </Button.Group>
+          </CodeMirrorMerge>
+          <br/>
+          <ApplyOrCancel />
           </>
         ) : (
           <>
-          { data.code ? (
+          { data.editing ? (
             <>
-            <CodeMirror
-              value={text}
-              // onChange={setText}
-              editable={false}
-              readOnly={true}
-              basicSetup={{
-                syntaxHighlighting: true,
-                highlightActiveLine: false,
+            { data.code ? (
+              <>
+              <CodeMirror
+                value={text}
+                onChange={setText}
+                basicSetup={{
+                  syntaxHighlighting: true,
+                  highlightActiveLine: false,
 
-                lineNumbers: false,
-                foldGutter: false,
-                autocompletion: false,
-                closeBrackets: false,
-                bracketMatching: false,
-                indentOnInput: false,
-                highlightSpecialChars: false,
-                history: false,
-                drawSelection: false,
-                allowMultipleSelections: false,
-                rectangularSelection: false,
-                highlightSelectionMatches: false,
-                dropCursor: false,
-                crosshairCursor: false,
-                closeBracketsKeymap: false,
-                defaultKeymap: false,
-                searchKeymap: false,
-                historyKeymap: false,
-                foldKeymap: false,
-                completionKeymap: false,
-                lintKeymap: false,
-              }}
-              theme={quietlight}
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                  )
-                );
-              }}
-              // height="200px"
-              // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
-              extensions={[markdown({ base: markdownLanguage, codeLanguages: languages })]}
-              className="nodrag nopan"
-            />
-            {/*
-            <CodeEditor
-              value={text}
-              onValueChange={code => setText(code)}
-              highlight={code => highlight(code, languages.py)}
-              padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 12,
-              }}
-              className="nodrag nopan"
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                  )
-                );
-              }}
-            />
-            */}
+                  lineNumbers: true,
+                  foldGutter: true,
+                  autocompletion: true,
+                  closeBrackets: true,
+                  bracketMatching: true,
+                  indentOnInput: true,
+                  highlightSpecialChars: true,
+                  history: true,
+                  drawSelection: true,
+                  allowMultipleSelections: true,
+                  rectangularSelection: true,
+                  highlightSelectionMatches: true,
+                  dropCursor: true,
+                  crosshairCursor: true,
+                  closeBracketsKeymap: true,
+                  defaultKeymap: true,
+                  searchKeymap: true,
+                  historyKeymap: true,
+                  foldKeymap: true,
+                  completionKeymap: true,
+                  lintKeymap: true,
+                }}
+                theme={atomone}
+                extensions={[
+                  // javascript({ jsx: true }),
+                  loadLanguage('python'),
+                  // markdown({ base: markdownLanguage, codeLanguages: languages })
+                  mentions(roster),
+                  vim(),
+                ]}
+                className="nodrag nopan"
+              />
+              {/*
+              <CodeEditor
+                value={text}
+                onValueChange={code => setText(code)}
+                highlight={code => highlight(code, languages.py)}
+                padding={10}
+                style={{
+                  fontFamily: '"Fira code", "Fira Mono", monospace',
+                  fontSize: 12,
+                }}
+                className="nodrag nopan"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                    e.preventDefault();
+                    applyText()
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancelText()
+                  }
+                }}
+              />
+              */}
+              <br/>
+              <ApplyOrCancel />
+              </>
+            ) : (
+              <>
+              <TextareaAutosize
+                value={text}
+                onChange={(e) => {
+                  setText(e.target.value)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                    e.preventDefault();
+                    applyText()
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancelText()
+                  }
+                }}
+                className="nodrag"
+                minRows={6}
+                // maxRows={12}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  color: data.color || '',
+                  backgroundColor: data.backgroundColor || '',
+                }}
+              />
+              <br/>
+              <ApplyOrCancel />
+              </>
+            ) }
             </>
           ) : (
             <>
-            <div
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-                  )
-                );
-              }}
-              style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
-            >
-              {interactiveText}
-            </div>
+            { data.code ? (
+              <>
+              <CodeMirror
+                value={text}
+                // onChange={setText}
+                editable={false}
+                readOnly={true}
+                basicSetup={{
+                  syntaxHighlighting: true,
+                  highlightActiveLine: false,
+
+                  lineNumbers: false,
+                  foldGutter: false,
+                  autocompletion: false,
+                  closeBrackets: false,
+                  bracketMatching: false,
+                  indentOnInput: false,
+                  highlightSpecialChars: false,
+                  history: false,
+                  drawSelection: false,
+                  allowMultipleSelections: false,
+                  rectangularSelection: false,
+                  highlightSelectionMatches: false,
+                  dropCursor: false,
+                  crosshairCursor: false,
+                  closeBracketsKeymap: false,
+                  defaultKeymap: false,
+                  searchKeymap: false,
+                  historyKeymap: false,
+                  foldKeymap: false,
+                  completionKeymap: false,
+                  lintKeymap: false,
+                }}
+                theme={quietlight}
+                onClick={() => {
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                    )
+                  );
+                }}
+                // height="200px"
+                // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
+                extensions={[
+                  markdown({ base: markdownLanguage, codeLanguages: languages })
+                ]}
+                className="nodrag nopan"
+              />
+              {/*
+              <CodeEditor
+                value={text}
+                onValueChange={code => setText(code)}
+                highlight={code => highlight(code, languages.py)}
+                padding={10}
+                style={{
+                  fontFamily: '"Fira code", "Fira Mono", monospace',
+                  fontSize: 12,
+                }}
+                className="nodrag nopan"
+                onClick={() => {
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                    )
+                  );
+                }}
+              />
+              */}
+              </>
+            ) : (
+              <>
+              <div
+                onClick={() => {
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+                    )
+                  );
+                }}
+                style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
+              >
+                {interactiveText}
+              </div>
+              </>
+            ) }
             </>
           ) }
           </>
-        ) }
+        )}
       </Card.Content>
+
       <Handle
         type="source"
         position={Position.Bottom}
