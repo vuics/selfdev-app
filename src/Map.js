@@ -571,7 +571,7 @@ const Code = ({ inline, children = [], className, ...props }) => {
   return <code className={className}>{children}</code>;
 };
 
-const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
+const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
   return (<>
     <div
       onClick={() => {
@@ -581,20 +581,9 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
           )
         );
       }}
-      style={{ cursor: 'pointer', }}
+      style={{ cursor: 'pointer' }}
     >
-      {/*
-      <MarkdownEditor.Markdown source={data.text} />
-      */}
-      {/*
-      <MarkdownPreview
-        source={data.text}
-        components={{
-          code: Code
-        }}
-      />
-      */}
-      {data.text.split(variableOrCommentRegex).map((part, i) => {
+      {text.split(variableOrCommentRegex).map((part, i) => {
         if (variableOrCommentRegex.test(part)) {
           return (
             <ExpandingVariable
@@ -607,14 +596,6 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
           return (
             <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
           )
-          // return (
-          //   <MarkdownPreview
-          //     source={part}
-          //     components={{
-          //       code: Code
-          //     }}
-          //   />
-          // )
         }
       })}
     </div>
@@ -626,7 +607,9 @@ const NoteEditor = memo(({
 }) => {
   if (!data.editing) {
     return (
-      <NoteViewer data={data} allNodes={allNodes} setNodes={setNodes} id={id} />
+      <NoteViewer
+        data={data} allNodes={allNodes} setNodes={setNodes} id={id} text={text}
+      />
     )
   }
 
@@ -660,105 +643,69 @@ const NoteEditor = memo(({
 })
 
 const MarkdownEditor = memo(({
-  text, setText, applyText, cancelText, data, allNodes, setNodes, id
+  text, setText, applyText, cancelText, data, allNodes, setNodes, id,
+  roster,
 }) => {
+  const { markdownEditor } = useMapContext();
+
   if (!data.editing) {
     return (
-      <NoteViewer data={data} allNodes={allNodes} setNodes={setNodes} id={id} />
+      <NoteViewer
+        data={data} allNodes={allNodes} setNodes={setNodes} id={id} text={text}
+      />
     )
   }
 
-  return (<>
+  if (markdownEditor === 'markdown' || markdownEditor === 'markdown-dark') {
+    return (
+      <div data-color-mode={ markdownEditor === 'markdown' ? "light" : "dark" }>
+        <div className="wmde-markdown-var"> </div>
+        <UiwMarkdownEditor
+          value={text}
+          onChange={(value, viewUpdate) => setText(value)}
+          height="100%"
+          enableScroll={true}
+          // toolbars={[
+          //   'undo', 'redo', 'bold', 'italic', 'header', 'strike', 'underline',
+          //   'quote', 'olist', 'ulist', 'todo', 'link', 'image', 'code', 'codeBlock',
+          // ]}
+          toolbarsMode={[
+            'preview'
+          ]}
+          previewProps={{
+            components: {
+              code: Code
+            }
+          }}
+        />
+      </div>
+    )
+  }
 
-    {/* <div data-color-mode="light"> */}
-    <div data-color-mode="light">
-      <div className="wmde-markdown-var"> </div>
-      <UiwMarkdownEditor
-        value={text}
-        onChange={(value, viewUpdate) => setText(value)}
-        height="100%"
-        enableScroll={true}
-        // toolbars={[
-        //   'undo', 'redo', 'bold', 'italic', 'header', 'strike', 'underline',
-        //   'quote', 'olist', 'ulist', 'todo', 'link', 'image', 'code', 'codeBlock',
-        // ]}
-        toolbarsMode={[
-          'preview'
-        ]}
-        previewProps={{
-          components: {
-            code: Code
-          }
-        }}
-      />
-    </div>
+  if (markdownEditor === 'code-preview') {
+    return (
+      <div style={{ display: 'flex', gap: '0.5rem', padding: '0.5rem', width: '100%', height: '100%' }}>
+        <div style={{ flex: 1, width: '50%' }}>
+          <CodeEditor
+            text={text} setText={setText} roster={roster} data={data}
+            id={id} setNodes={setNodes}
+          />
+        </div>
+        <div style={{ flex: 1, width: '50%'  }}>
+          <NoteViewer
+            data={data} allNodes={allNodes} setNodes={setNodes} id={id} text={text}
+          />
+        </div>
+      </div>
+    )
+  }
 
-    {/*
-    <MDEditor
-      value={text}
-      onChange={setText}
-      // preview='edit'
-      // preview='preview'
-      preview='live'
-      // visibleDragbar={false}
-      // height={500}
-      minHeight={300}
-      height='100%'
-      previewOptions={{
-        components: {
-          code: Code
-        }
-      }}
-      style={{
-        width: '100%',
-        height: '100%',
-        color: data.color || '',
-        backgroundColor: data.backgroundColor || '',
-      }}
-      className="nodrag nopan"
-      textareaProps={{
-        onKeyDown: (e) => {
-          if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-            e.preventDefault();
-            applyText()
-          }
-          if (e.key === 'Escape') {
-            e.preventDefault();
-            cancelText()
-          }
-        }
-      }}
+  return (
+    <CodeEditor
+      text={text} setText={setText} roster={roster} data={data}
+      id={id} setNodes={setNodes}
     />
-    */}
-
-    {/*
-    <TextareaAutosize
-      value={text}
-      onChange={(e) => {
-        setText(e.target.value)
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-          e.preventDefault();
-          applyText()
-        }
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          cancelText()
-        }
-      }}
-      className="nodrag"
-      minRows={6}
-      // maxRows={12}
-      style={{
-        width: '100%',
-        height: '100%',
-        color: data.color || '',
-        backgroundColor: data.backgroundColor || '',
-      }}
-    />
-    */}
-  </>)
+  )
 })
 
 const ApplyOrCancel = memo(({ applyText, cancelText }) => {
@@ -1166,7 +1113,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <MarkdownEditor
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
-            allNodes={allNodes} setNodes={setNodes} id={id}
+            allNodes={allNodes} setNodes={setNodes} id={id} roster={roster}
           />
         </>)}
 
@@ -1773,6 +1720,13 @@ function Map () {
   useEffect(() => {
     localStorage.setItem('map.vimMode', vimMode);
   }, [vimMode]);
+
+  const [ markdownEditor, setMarkdownEditor ] = useState(() => {
+    return localStorage.getItem('map.markdownEditor') || 'markdown'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.markdownEditor', markdownEditor);
+  }, [markdownEditor]);
 
   // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
@@ -2624,7 +2578,7 @@ function Map () {
     <MapContext.Provider value={{
       presenceMap, roster, credentials, recipient, sendPersonalMessage,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
-      orderEdges, editorTheme, vimMode, viewerTheme
+      orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
     }}>
       <Container>
         <Menubar />
@@ -2976,6 +2930,26 @@ function Map () {
                 <Dropdown.Item onClick={() => { setVimMode(true) } }>
                   <Icon name={ vimMode ? 'check circle' : 'circle outline'} />
                   Vim
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown text='Markdown editor preview' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
+                  <Icon name={ markdownEditor === 'markdown' ? 'check circle' : 'circle outline'} />
+                  Markdown editor (light)
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
+                  <Icon name={ markdownEditor === 'markdown-dark' ? 'check circle' : 'circle outline'} />
+                  Markdown editor (dark)
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
+                  <Icon name={ markdownEditor === 'code' ? 'check circle' : 'circle outline'} />
+                  Code editor
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
+                  <Icon name={ markdownEditor === 'code-preview' ? 'check circle' : 'circle outline'} />
+                  Code editor with preview
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
