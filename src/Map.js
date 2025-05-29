@@ -880,23 +880,23 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Dropdown text='Note kind' pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => selectKind(undefined)}>
-                  <Icon name={ !data.kind ? 'check circle' : 'circle outline'} />
+                  <Icon name={ !data.kind ? 'dot circle' : 'circle outline'} />
                   Note
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('markdown')}>
-                  <Icon name={ (data.kind === 'markdown') ? 'check circle' : 'circle outline'} />
+                  <Icon name={ (data.kind === 'markdown') ? 'dot circle' : 'circle outline'} />
                   Markdown
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('code')}>
-                  <Icon name={ data.kind === 'code' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.kind === 'code' ? 'dot circle' : 'circle outline'} />
                   Code
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('raw')}>
-                  <Icon name={ data.kind === 'raw' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.kind === 'raw' ? 'dot circle' : 'circle outline'} />
                   Raw
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('diff')}>
-                  <Icon name={ data.kind === 'diff' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.kind === 'diff' ? 'dot circle' : 'circle outline'} />
                   Diff
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -905,23 +905,23 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Dropdown text='Programming language' pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => { selectLang(undefined); selectKind('raw') } }>
-                  <Icon name={ !data.lang ? 'check circle' : 'circle outline'} />
+                  <Icon name={ !data.lang ? 'dot circle' : 'circle outline'} />
                   (None)
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('python'); selectKind('code') } }>
-                  <Icon name={ data.lang === 'python' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.lang === 'python' ? 'dot circle' : 'circle outline'} />
                   Python
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('javascript'); selectKind('code') } }>
-                  <Icon name={ data.lang === 'javascript' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.lang === 'javascript' ? 'dot circle' : 'circle outline'} />
                   JavaScript
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('json'); selectKind('code') } }>
-                  <Icon name={ data.lang === 'json' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.lang === 'json' ? 'dot circle' : 'circle outline'} />
                   JSON
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('html'); selectKind('code') } }>
-                  <Icon name={ data.lang === 'html' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ data.lang === 'html' ? 'dot circle' : 'circle outline'} />
                   HTML
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -931,7 +931,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Dropdown.Menu>
                 { langNames.map((lng) => { return (
                   <Dropdown.Item onClick={() => { selectLang(lng); selectKind('code') } }>
-                    <Icon name={ data.lang === lng ? 'check circle' : 'circle outline'} />
+                    <Icon name={ data.lang === lng ? 'dot circle' : 'circle outline'} />
                     {lng}
                   </Dropdown.Item>
                 ) } ) }
@@ -2824,7 +2824,7 @@ function Map () {
                   }
                   return (
                     <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
-                      <Icon name={ viewerTheme === thm ? 'check circle' : 'circle outline'} />
+                      <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
                       {thm}
                     </Dropdown.Item>
                   )
@@ -2841,7 +2841,7 @@ function Map () {
                   }
                   return (
                     <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
-                      <Icon name={ editorTheme === thm ? 'check circle' : 'circle outline'} />
+                      <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
                       {thm}
                     </Dropdown.Item>
                   )
@@ -2851,11 +2851,11 @@ function Map () {
             <Dropdown text='Code editor mode' pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => { setVimMode(false) } }>
-                  <Icon name={ !vimMode ? 'check circle' : 'circle outline'} />
+                  <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
                   Normal
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { setVimMode(true) } }>
-                  <Icon name={ vimMode ? 'check circle' : 'circle outline'} />
+                  <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
                   Vim
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -2863,19 +2863,19 @@ function Map () {
             <Dropdown text='Markdown editor preview' pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
-                  <Icon name={ markdownEditor === 'markdown' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
                   Markdown editor (light)
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
-                  <Icon name={ markdownEditor === 'markdown-dark' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
                   Markdown editor (dark)
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
-                  <Icon name={ markdownEditor === 'code' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
                   Code editor
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
-                  <Icon name={ markdownEditor === 'code-preview' ? 'check circle' : 'circle outline'} />
+                  <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
                   Code editor with preview
                 </Dropdown.Item>
               </Dropdown.Menu>
