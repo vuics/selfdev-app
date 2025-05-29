@@ -2220,10 +2220,14 @@ function Map () {
 
   const addNote = useCallback(() => {
     const id = getNodeId()
+    const position = screenToFlowPosition({ x: width/2, y: height/2, })
+    position.x -= 300
+    position.y -= 200
+    console.log('position:', position)
     const newNode = {
       id,
       type: 'NoteNode',
-      position: screenToFlowPosition({ x: width*3/4, y: height/3, }),
+      position,
       data: {
         uname: getUname(id),
         text: '',
