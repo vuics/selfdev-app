@@ -63,7 +63,6 @@ import {
   andromeda,
   atomone,
   aura,
-  // basic,
   basicLight,
   basicDark,
   bbedit,
@@ -113,24 +112,8 @@ import { EditorState } from '@codemirror/state';
 
 import UiwMarkdownEditor from '@uiw/react-markdown-editor'
 import MarkdownPreview from '@uiw/react-markdown-preview'
-// import MDEditor from '@uiw/react-md-editor'
 import mermaid from "mermaid";
 import { getCodeString } from "rehype-rewrite";
-
-// TODO Uninstall the packages:
-//
-// import { githubLight, githubDark } from '@uiw/codemirror-theme-github'
-// import { javascript } from '@codemirror/lang-javascript';
-// import { python } from '@codemirror/lang-python';
-// import { json } from '@codemirror/lang-json';
-// import { html } from '@codemirror/lang-html';
-//
-// import CodeEditor from 'react-simple-code-editor';
-// import { highlight, languages } from 'prismjs/components/prism-core';
-// import 'prismjs/components/prism-clike';
-// import 'prismjs/components/prism-javascript';
-// import 'prismjs/components/prism-python';
-// import 'prismjs/themes/prism.css'; //Example style, you can use another
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -189,7 +172,6 @@ const editorThemes = {
   'xcode-light': xcodeLight,
   'xcode-dark': xcodeDark,
 }
-
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
@@ -442,11 +424,6 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
 
   // console.log('editorTheme:', editorTheme, ', vimMode:', vimMode, ', viewerTheme:', viewerTheme)
   return (<>
-    {/*
-    <div style={{ display: 'flex', gap: '1rem', padding: '1rem', width: '100%', height: '100%' }}>
-      <div style={{ flex: 1, width: '50%' }}>
-        <h3>Editor</h3>
-    */}
     <CodeMirror
       value={text}
       onChange={setText}
@@ -454,7 +431,6 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
       readOnly={!data.editing}
       basicSetup={{
         syntaxHighlighting: (data.kind !== 'raw' && data.lang),
-        // syntaxHighlighting: true,
         highlightActiveLine: false,
 
         lineNumbers: !!data.editing,
@@ -492,37 +468,6 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
       }
       className="nodrag nopan"
     />
-    {/*
-   </div>
-      <div style={{ flex: 1, width: '50%'  }}>
-        <h3>Preview</h3>
-        <MarkdownPreview source={text} />
-      </div>
-    </div>
-    */}
-    {/*
-    <CodeEditor
-      value={text}
-      onValueChange={code => setText(code)}
-      highlight={code => highlight(code, languages.py)}
-      padding={10}
-      style={{
-        fontFamily: '"Fira code", "Fira Mono", monospace',
-        fontSize: 12,
-      }}
-      className="nodrag nopan"
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
-          e.preventDefault();
-          applyText()
-        }
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          cancelText()
-        }
-      }}
-    />
-    */}
   </>)
 })
 
@@ -979,12 +924,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Icon name={ data.lang === 'html' ? 'check circle' : 'circle outline'} />
                   HTML
                 </Dropdown.Item>
-                {/*
-                <Dropdown.Item onClick={() => { selectLang('openqasm'); selectKind('code') } }>
-                  <Icon name={ data.lang === 'openqasm' ? 'check circle' : 'circle outline'} />
-                  OpenQASM
-                </Dropdown.Item>
-                */}
               </Dropdown.Menu>
             </Dropdown>
 
@@ -1092,11 +1031,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         ) }
 
         { !data.kind && (<>
-          {/*
-          <CodeEditor text={text} setText={setText} roster={roster}
-            markdownMode={true}
-          />
-          */}
           <NoteEditor
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
@@ -1105,11 +1039,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         </>)}
 
         { data.kind === 'markdown' && (<>
-          {/*
-          <CodeEditor text={text} setText={setText} roster={roster}
-            markdownMode={true}
-          />
-          */}
           <MarkdownEditor
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
@@ -1338,8 +1267,6 @@ const GroupNode = memo(({ id, data, style, selected }) => {
       <NodeResizer
         color="#ff0071"
         isVisible={selected}
-        // minWidth={100}
-        // minHeight={30}
       />
     </Card>
   );
@@ -2955,17 +2882,6 @@ function Map () {
             </Dropdown>
           </Dropdown.Menu>
         </Dropdown>
-
-        {/*
-        <Menu size='mini'>
-          <Menu.Menu position='right'>
-
-          <Menu.Item>
-            <Button primary>Sign Up</Button>
-          </Menu.Item>
-        </Menu.Menu>
-        </Menu>
-        */}
 
       </div>
       <Loader active={loading} inline='centered' />
