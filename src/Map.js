@@ -2561,14 +2561,23 @@ function Map () {
           <Menu.Menu>
             <Dropdown item simple text='File'>
               <Dropdown.Menu>
-                <Dropdown.Item>
+                <Dropdown.Item onClick={postMap}>
+                  <Icon name='file' />
+                  New
                 </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-          <Menu.Menu>
-            <Dropdown item simple text='Settings'>
-              <Dropdown.Menu>
+                <Dropdown.Item onClick={putMap}>
+                  <Icon name='save' />
+                  Save
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
+                  <Icon name='clone' />
+                  Duplicate
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
+                  <Icon name='text cursor' />
+                  Rename
+                </Dropdown.Item>
+                <Dropdown.Divider />
                 <Dropdown.Item>
                   <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
                     <Checkbox
@@ -2578,9 +2587,34 @@ function Map () {
                     />
                   } />
                 </Dropdown.Item>
-
                 <Dropdown.Divider />
+                <Dropdown.Item onClick={downloadMap}>
+                  <Icon name='download' />
+                  Download
+                </Dropdown.Item>
+                <Dropdown.Item onClick={uploadMapInit}>
+                  <Icon name='upload' />
+                  Upload
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => {
+                  setConfirm({
+                    open: true,
+                    header: 'Confirm Map Delete',
+                    message: 'Are you sure you want to delete your map?',
+                    func: deleteMap,
+                  })
+                } }>
+                  <Icon name='trash alternative' />
+                  Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
 
+          <Menu.Menu>
+            <Dropdown item simple text='View'>
+              <Dropdown.Menu>
                 <Dropdown.Item>
                   <Checkbox
                     label='Show mini map'
@@ -2602,8 +2636,13 @@ function Map () {
                     checked={showColors}
                   />
                 </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
 
-                <Dropdown.Divider />
+          <Menu.Menu>
+            <Dropdown item simple text='Settings'>
+              <Dropdown.Menu>
                 <Dropdown text='Code viewer theme' pointing='left' className='link item'>
                   <Dropdown.Menu>
                     { Object.keys(editorThemes).map((thm) => {
@@ -2650,7 +2689,7 @@ function Map () {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                <Dropdown text='Markdown editor preview' pointing='left' className='link item'>
+                <Dropdown text='Markdown editor options' pointing='left' className='link item'>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
                       <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
