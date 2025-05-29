@@ -553,7 +553,62 @@ const Code = ({ inline, children = [], className, ...props }) => {
   return <code className={className}>{children}</code>;
 };
 
-const NoteEditor = memo(({ text, setText, applyText, cancelText, data }) => {
+const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
+  return (<>
+    <div
+      onClick={() => {
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+          )
+        );
+      }}
+      style={{ cursor: 'pointer', }}
+    >
+      {/*
+      <MarkdownEditor.Markdown source={data.text} />
+      */}
+      {/*
+      <MarkdownPreview
+        source={data.text}
+        components={{
+          code: Code
+        }}
+      />
+      */}
+      {data.text.split(variableOrCommentRegex).map((part, i) => {
+        if (variableOrCommentRegex.test(part)) {
+          return (
+            <ExpandingVariable
+              key={i} part={part} allNodes={allNodes}
+              color={data.color}
+              backgroundColor={data.backgroundColor}
+            />
+          )
+        } else {
+          return (
+            <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
+          )
+          // return (
+          //   <MarkdownPreview
+          //     source={part}
+          //     components={{
+          //       code: Code
+          //     }}
+          //   />
+          // )
+        }
+      })}
+    </div>
+  </>)
+})
+
+const NoteEditor = memo(({ text, setText, applyText, cancelText, data, allNodes, setNodes, id }) => {
+  if (!data.editing) {
+    return (
+      <NoteViewer data={data} allNodes={allNodes} setNodes={setNodes} id={id} />
+    )
+  }
 
   return (<>
 
@@ -670,56 +725,6 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
       </Button>
     </Button.Group>
   )
-})
-
-const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
-  return (<>
-    <div
-      onClick={() => {
-        setNodes((nodes) =>
-          nodes.map((node) =>
-            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-          )
-        );
-      }}
-      style={{ cursor: 'pointer', }}
-    >
-      {/*
-      <MarkdownEditor.Markdown source={data.text} />
-      */}
-      {/*
-      <MarkdownPreview
-        source={data.text}
-        components={{
-          code: Code
-        }}
-      />
-      */}
-      {data.text.split(variableOrCommentRegex).map((part, i) => {
-        if (variableOrCommentRegex.test(part)) {
-          return (
-            <ExpandingVariable
-              key={i} part={part} allNodes={allNodes}
-              color={data.color}
-              backgroundColor={data.backgroundColor}
-            />
-          )
-        } else {
-          return (
-            <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
-          )
-          // return (
-          //   <MarkdownPreview
-          //     source={part}
-          //     components={{
-          //       code: Code
-          //     }}
-          //   />
-          // )
-        }
-      })}
-    </div>
-  </>)
 })
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
@@ -1081,7 +1086,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { (!data.kind || data.kind === 'markdown') && data.editing && (<>
+        { (!data.kind || data.kind === 'markdown') && (<>
           {/*
           <CodeEditor text={text} setText={setText} roster={roster}
             markdownMode={true}
@@ -1090,12 +1095,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <NoteEditor
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
-          />
-        </>)}
-        { (!data.kind || data.kind === 'markdown') && !data.editing && (<>
-          <NoteViewer
-            data={data} allNodes={allNodes}
-            setNodes={setNodes} id={id}
+            allNodes={allNodes} setNodes={setNodes} id={id}
           />
         </>)}
 
