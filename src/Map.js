@@ -1,5 +1,6 @@
 import React, {
   useState, useRef, useEffect, useCallback, memo, createContext, useContext,
+  Fragment,
 } from 'react'
 import axios from 'axios'
 import {
@@ -60,6 +61,12 @@ import { languages } from '@codemirror/language-data';
 import CodeMirrorMerge from 'react-codemirror-merge';
 import { EditorView } from 'codemirror';
 import { EditorState } from '@codemirror/state';
+
+import MarkdownEditor from '@uiw/react-markdown-editor'
+import MarkdownPreview from '@uiw/react-markdown-preview'
+// import MDEditor from '@uiw/react-md-editor'
+import mermaid from "mermaid";
+import { getCodeString } from "rehype-rewrite";
 
 // TODO Uninstall the packages:
 //
@@ -316,8 +323,13 @@ const DiffEditor = memo(({ text, setText, stash, setStash }) => {
   </>)
 })
 
-const CodeEditor = memo(({ text, setText, roster }) => {
+const CodeEditor = memo(({ text, setText, roster, markdownMode = false } = {}) => {
   return (<>
+    {/*
+    <div style={{ display: 'flex', gap: '1rem', padding: '1rem', width: '100%', height: '100%' }}>
+      <div style={{ flex: 1, width: '50%' }}>
+        <h3>Editor</h3>
+    */}
     <CodeMirror
       value={text}
       onChange={setText}
@@ -350,13 +362,20 @@ const CodeEditor = memo(({ text, setText, roster }) => {
       theme={atomone}
       extensions={[
         // javascript({ jsx: true }),
-        loadLanguage('python'),
-        // markdown({ base: markdownLanguage, codeLanguages: languages })
-        mentions(roster.map(({ name }) => { return { label: `@name` }})),
-        // vim(),
+        mentions(roster.map(({ name }) => { return { label: `@${name}` }})),
+        // vim(), // TODO: enable
+        markdownMode ? markdown({ base: markdownLanguage, codeLanguages: languages }) : loadLanguage('python'),
       ]}
       className="nodrag nopan"
     />
+    {/*
+   </div>
+      <div style={{ flex: 1, width: '50%'  }}>
+        <h3>Preview</h3>
+        <MarkdownPreview source={text} />
+      </div>
+    </div>
+    */}
     {/*
     <CodeEditor
       value={text}
@@ -454,8 +473,117 @@ const CodeViewer = memo(({ text, data, id, setNodes }) => {
   </>)
 })
 
+const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
+
+const Code = ({ inline, children = [], className, ...props }) => {
+  const demoid = useRef(`dome${randomid()}`);
+  const [container, setContainer] = useState(null);
+  const isMermaid =
+    className && /^language-mermaid/.test(className.toLocaleLowerCase());
+  const code = children
+    ? getCodeString(props.node.children)
+    : children[0] || "";
+
+  useEffect(() => {
+    if (container && isMermaid && demoid.current && code) {
+      mermaid
+        .render(demoid.current, code)
+        .then(({ svg, bindFunctions }) => {
+          console.log("svg:", svg);
+          container.innerHTML = svg;
+          if (bindFunctions) {
+            bindFunctions(container);
+          }
+        })
+        .catch((error) => {
+          console.log("error:", error);
+        });
+    }
+  }, [container, isMermaid, code, demoid]);
+
+  const refElement = useCallback((node) => {
+    if (node !== null) {
+      setContainer(node);
+    }
+  }, []);
+
+  if (isMermaid) {
+    return (
+      <Fragment>
+        <code id={demoid.current} style={{ display: "none" }} />
+        <code className={className} ref={refElement} data-name="mermaid" />
+      </Fragment>
+    );
+  }
+  return <code className={className}>{children}</code>;
+};
+
 const NoteEditor = memo(({ text, setText, applyText, cancelText, data }) => {
-  return (
+
+  return (<>
+
+    {/* <div data-color-mode="light"> */}
+    <div data-color-mode="light">
+      <div className="wmde-markdown-var"> </div>
+      <MarkdownEditor
+        value={text}
+        onChange={(value, viewUpdate) => setText(value)}
+        height="100%"
+        enableScroll={true}
+        // toolbars={[
+        //   'undo', 'redo', 'bold', 'italic', 'header', 'strike', 'underline',
+        //   'quote', 'olist', 'ulist', 'todo', 'link', 'image', 'code', 'codeBlock',
+        // ]}
+        toolbarsMode={[
+          'preview'
+        ]}
+        previewProps={{
+          components: {
+            code: Code
+          }
+        }}
+      />
+    </div>
+
+    {/*
+    <MDEditor
+      value={text}
+      onChange={setText}
+      // preview='edit'
+      // preview='preview'
+      preview='live'
+      // visibleDragbar={false}
+      // height={500}
+      minHeight={300}
+      height='100%'
+      previewOptions={{
+        components: {
+          code: Code
+        }
+      }}
+      style={{
+        width: '100%',
+        height: '100%',
+        color: data.color || '',
+        backgroundColor: data.backgroundColor || '',
+      }}
+      className="nodrag nopan"
+      textareaProps={{
+        onKeyDown: (e) => {
+          if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+            e.preventDefault();
+            applyText()
+          }
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelText()
+          }
+        }
+      }}
+    />
+    */}
+
+    {/*
     <TextareaAutosize
       value={text}
       onChange={(e) => {
@@ -481,7 +609,8 @@ const NoteEditor = memo(({ text, setText, applyText, cancelText, data }) => {
         backgroundColor: data.backgroundColor || '',
       }}
     />
-  )
+    */}
+  </>)
 })
 
 const ApplyOrCancel = memo(({ applyText, cancelText }) => {
@@ -518,8 +647,19 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
           )
         );
       }}
-      style={{ cursor: 'pointer', whiteSpace: 'pre-wrap' }}
+      style={{ cursor: 'pointer', }}
     >
+      {/*
+      <MarkdownEditor.Markdown source={data.text} />
+      */}
+      {/*
+      <MarkdownPreview
+        source={data.text}
+        components={{
+          code: Code
+        }}
+      />
+      */}
       {data.text.split(variableOrCommentRegex).map((part, i) => {
         if (variableOrCommentRegex.test(part)) {
           return (
@@ -530,12 +670,17 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
             />
           )
         } else {
-          // return (
-          //   <span key={i}>{part}</span>
-          // )
           return (
             <MarkdownMermaid key={i}>{part}</MarkdownMermaid>
           )
+          // return (
+          //   <MarkdownPreview
+          //     source={part}
+          //     components={{
+          //       code: Code
+          //     }}
+          //   />
+          // )
         }
       })};
     </div>
@@ -847,6 +992,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
              <CodeViewer text={text} data={data} id={id} setNodes={setNodes} />
           </>)}
           { !data.code && data.editing && (<>
+            {/*
+            <CodeEditor text={text} setText={setText} roster={roster}
+              markdownMode={true}
+            />
+            */}
             <NoteEditor
               text={text} setText={setText}
               applyText={applyText} cancelText={cancelText} data={data}
