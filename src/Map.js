@@ -392,73 +392,36 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
 })
 
 const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id }) => {
-  const { editorTheme, viewerTheme } = useMapContext();
-  const [ destroyRerender, setDestroyRerender ] = useState(false)
+  const { editorTheme } = useMapContext();
 
-  const extensions = []
-  // extensions.push(mentions(roster.map(({ name }) => { return { label: `@${name}` }})))
-  // if (vimMode) {
-  //   extensions.push(vim())
-  // }
+  const extensions = [
+    EditorView.editable.of(false),
+    EditorState.readOnly.of(true)
+  ]
   if (!data.kind || data.kind === 'markdown') {
     extensions.push(markdown({ base: markdownLanguage, codeLanguages: languages }))
   } else if (data.kind !== 'raw' && data.lang) {
     extensions.push(loadLanguage(data.lang))
   }
 
-  useEffect(() => {
-    setDestroyRerender(true)
-    setTimeout(() => { setDestroyRerender(false) }, 500)
-  }, [data.editing, editorTheme, viewerTheme, data.kind, data.lang]);
-
-  // console.log("DiffEditor editing:", data.editing)
-  // console.log('editorTheme:', editorTheme, ', viewerTheme:', viewerTheme)
   return (<>
     <CodeMirrorMerge
       orientation='a-b'
       revertControls={ data.editing ? 'b-to-a' : 'a-to-b' }
       highlightChanges={true}
       gutter={true}
-      // collapseUnchanged={{ margin: 3, minSize: 4 }}
-      // theme='light' // 'dark'
-      theme={data.editing ? editorThemes[editorTheme] : editorThemes[viewerTheme] }
-      // editable={data.editing}
-      // readOnly={!data.editing}
-      destroyRerender={destroyRerender}
-      // onClick={
-      //   data.editing
-      //     ? (() => {})
-      //     : (() => {
-      //         setNodes((nodes) =>
-      //           nodes.map((node) =>
-      //             node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-      //         ) ) })
-      // }
+      theme={editorThemes[editorTheme]}
+      destroyRerender={false}  // it can update text only with destroyRerender
     >
       <CodeMirrorMerge.Original
         value={text}
-        // onChange={data.editing ? setText : () => {}}
-        // onChange={(val) => data.editing && setText(val)}
         onChange={setText}
-        extensions={[
-          ...extensions,
-          // EditorView.editable.of(data.editing),
-          // EditorState.readOnly.of(!data.editing)
-          // EditorView.editable.of(true),
-          // EditorState.readOnly.of(false)
-          EditorView.editable.of(false),
-          EditorState.readOnly.of(true)
-        ]}
+        extensions={extensions}
       />
       <CodeMirrorMerge.Modified
         value={stash}
-        // onChange={data.editing ? setStash : () => {}}
         onChange={setStash}
-        extensions={[
-          ...extensions,
-          EditorView.editable.of(false),
-          EditorState.readOnly.of(true)
-        ]}
+        extensions={extensions}
       />
     </CodeMirrorMerge>
   </>)
