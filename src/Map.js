@@ -2556,6 +2556,126 @@ function Map () {
       </Modal>
 
       <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
+        {' '} {' '}
+        <Menu size='small' compact secondary>
+          <Menu.Menu>
+            <Dropdown item simple text='File'>
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
+          <Menu.Menu>
+            <Dropdown item simple text='Settings'>
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                  <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+                    <Checkbox
+                      label='Autosave'
+                      onChange={(e, data) => setAutosave(data.checked)}
+                      checked={autosave}
+                    />
+                  } />
+                </Dropdown.Item>
+
+                <Dropdown.Divider />
+
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show mini map'
+                    onChange={(e, data) => setShowMinimap(data.checked)}
+                    checked={showMinimap}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show control panel'
+                    onChange={(e, data) => setShowPanel(data.checked)}
+                    checked={showPanel}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show color controls'
+                    onChange={(e, data) => setShowColors(data.checked)}
+                    checked={showColors}
+                  />
+                </Dropdown.Item>
+
+                <Dropdown.Divider />
+                <Dropdown text='Code viewer theme' pointing='left' className='link item'>
+                  <Dropdown.Menu>
+                    { Object.keys(editorThemes).map((thm) => {
+                      if (thm === '-' || thm === '--') {
+                        return (
+                          <Dropdown.Divider />
+                        )
+                      }
+                      return (
+                        <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
+                          <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
+                          {thm}
+                        </Dropdown.Item>
+                      )
+                    } ) }
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown text='Code editor theme' pointing='left' className='link item'>
+                  <Dropdown.Menu>
+                    { Object.keys(editorThemes).map((thm) => {
+                      if (thm === '-' || thm === '--') {
+                        return (
+                          <Dropdown.Divider />
+                        )
+                      }
+                      return (
+                        <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
+                          <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
+                          {thm}
+                        </Dropdown.Item>
+                      )
+                    } ) }
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown text='Code editor mode' pointing='left' className='link item'>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => { setVimMode(false) } }>
+                      <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
+                      Normal
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => { setVimMode(true) } }>
+                      <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
+                      Vim
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown text='Markdown editor preview' pointing='left' className='link item'>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
+                      <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
+                      Markdown editor (light)
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
+                      <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
+                      Markdown editor (dark)
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
+                      <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
+                      Code editor
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
+                      <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
+                      Code editor with preview
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
+        </Menu>
+
+        {' '} {' '}
         <Button.Group>
           <Popup content='Create a new map' trigger={
             <Button icon onClick={postMap}>
@@ -2828,112 +2948,6 @@ function Map () {
           } />
         </Button.Group>
 
-        {' '} {' '}
-        <Dropdown item simple text='Settings'>
-          <Dropdown.Menu>
-            <Dropdown.Item>
-              <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
-                <Checkbox
-                  label='Autosave'
-                  onChange={(e, data) => setAutosave(data.checked)}
-                  checked={autosave}
-                />
-              } />
-            </Dropdown.Item>
-
-            <Dropdown.Divider />
-
-            <Dropdown.Item>
-              <Checkbox
-                label='Show mini map'
-                onChange={(e, data) => setShowMinimap(data.checked)}
-                checked={showMinimap}
-              />
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Checkbox
-                label='Show control panel'
-                onChange={(e, data) => setShowPanel(data.checked)}
-                checked={showPanel}
-              />
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Checkbox
-                label='Show color controls'
-                onChange={(e, data) => setShowColors(data.checked)}
-                checked={showColors}
-              />
-            </Dropdown.Item>
-
-            <Dropdown.Divider />
-            <Dropdown text='Code viewer theme' pointing='left' className='link item'>
-              <Dropdown.Menu>
-                { Object.keys(editorThemes).map((thm) => {
-                  if (thm === '-' || thm === '--') {
-                    return (
-                      <Dropdown.Divider />
-                    )
-                  }
-                  return (
-                    <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
-                      <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
-                      {thm}
-                    </Dropdown.Item>
-                  )
-                } ) }
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown text='Code editor theme' pointing='left' className='link item'>
-              <Dropdown.Menu>
-                { Object.keys(editorThemes).map((thm) => {
-                  if (thm === '-' || thm === '--') {
-                    return (
-                      <Dropdown.Divider />
-                    )
-                  }
-                  return (
-                    <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
-                      <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
-                      {thm}
-                    </Dropdown.Item>
-                  )
-                } ) }
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown text='Code editor mode' pointing='left' className='link item'>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => { setVimMode(false) } }>
-                  <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
-                  Normal
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => { setVimMode(true) } }>
-                  <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
-                  Vim
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown text='Markdown editor preview' pointing='left' className='link item'>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
-                  <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
-                  Markdown editor (light)
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
-                  <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
-                  Markdown editor (dark)
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
-                  <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
-                  Code editor
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
-                  <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
-                  Code editor with preview
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Menu>
-        </Dropdown>
 
       </div>
       <Loader active={loading} inline='centered' />
