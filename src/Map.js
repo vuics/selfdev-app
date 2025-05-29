@@ -1643,12 +1643,36 @@ function Map () {
   }, [showPanel]);
 
   const [ showColors, setShowColors ] = useState(() => {
-    const saved = localStorage.getItem('map.showColors') || true
+    const saved = localStorage.getItem('map.showColors') || false
     return saved === 'true'
   })
   useEffect(() => {
     localStorage.setItem('map.showColors', showColors.toString());
   }, [showColors]);
+
+  const [ showFile, setShowFile ] = useState(() => {
+    const saved = localStorage.getItem('map.showFile') || false
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showFile', showFile.toString());
+  }, [showFile]);
+
+  const [ showExecution, setShowExecution ] = useState(() => {
+    const saved = localStorage.getItem('map.showExecution') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showExecution', showExecution.toString());
+  }, [showExecution]);
+
+  const [ showLayout, setShowLayout ] = useState(() => {
+    const saved = localStorage.getItem('map.showLayout') || false
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showLayout', showLayout.toString());
+  }, [showLayout]);
 
   const [ editorTheme, setEditorTheme ] = useState(() => {
     return localStorage.getItem('map.editorTheme') || 'default'
@@ -2617,6 +2641,35 @@ function Map () {
               <Dropdown.Menu>
                 <Dropdown.Item>
                   <Checkbox
+                    label='Show file controls'
+                    onChange={(e, data) => setShowFile(data.checked)}
+                    checked={showFile}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show layout controls'
+                    onChange={(e, data) => setShowLayout(data.checked)}
+                    checked={showLayout}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show color controls'
+                    onChange={(e, data) => setShowColors(data.checked)}
+                    checked={showColors}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show execution controls'
+                    onChange={(e, data) => setShowExecution(data.checked)}
+                    checked={showExecution}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item>
+                  <Checkbox
                     label='Show mini map'
                     onChange={(e, data) => setShowMinimap(data.checked)}
                     checked={showMinimap}
@@ -2627,13 +2680,6 @@ function Map () {
                     label='Show control panel'
                     onChange={(e, data) => setShowPanel(data.checked)}
                     checked={showPanel}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show color controls'
-                    onChange={(e, data) => setShowColors(data.checked)}
-                    checked={showColors}
                   />
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -2714,60 +2760,62 @@ function Map () {
           </Menu.Menu>
         </Menu>
 
-        {' '} {' '}
-        <Button.Group>
-          <Popup content='Create a new map' trigger={
-            <Button icon onClick={postMap}>
-              <Icon name='file' />
-            </Button>
-          } />
-          <Popup content='Save the map' trigger={
-            <Button icon onClick={putMap}>
-              <Icon name='save' />
-            </Button>
-          } />
-          } />
-          <Popup content='Duplicate the map' trigger={
-            <Button icon onClick={() => postMap({ duplicate: true })}>
-              <Icon name='clone' />
-            </Button>
-          } />
-          <Popup content='Delete the map' trigger={
-            <Button icon onClick={() => {
-              setConfirm({
-                open: true,
-                header: 'Confirm Map Delete',
-                message: 'Are you sure you want to delete your map?',
-                func: deleteMap,
-              })
-            } }>
-              <Icon name='trash alternate' />
-            </Button>
-          } />
-          <Popup content='Download the map' trigger={
-            <Button icon onClick={downloadMap}>
-              <Icon name='download' />
-            </Button>
-          } />
-          <Popup content='Upload the map' trigger={
-            <Button icon onClick={uploadMapInit}>
-              <Icon name="upload" />
-              <input
-                type="file"
-                accept="application/json"
-                ref={fileInputRef}
-                onChange={uploadMap}
-                style={{ display: 'none' }} // hide input
-              />
-            </Button>
-          } />
-          <Popup content='Rename the map' trigger={
-            <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
-              <Icon name='text cursor' />
-            </Button>
-          } />
-        </Button.Group>
-        {' '}
+        { showFile && (<>
+          {' '} {' '}
+          <Button.Group>
+            <Popup content='Create a new map' trigger={
+              <Button icon onClick={postMap}>
+                <Icon name='file' />
+              </Button>
+            } />
+            <Popup content='Save the map' trigger={
+              <Button icon onClick={putMap}>
+                <Icon name='save' />
+              </Button>
+            } />
+            } />
+            <Popup content='Duplicate the map' trigger={
+              <Button icon onClick={() => postMap({ duplicate: true })}>
+                <Icon name='clone' />
+              </Button>
+            } />
+            <Popup content='Delete the map' trigger={
+              <Button icon onClick={() => {
+                setConfirm({
+                  open: true,
+                  header: 'Confirm Map Delete',
+                  message: 'Are you sure you want to delete your map?',
+                  func: deleteMap,
+                })
+              } }>
+                <Icon name='trash alternate' />
+              </Button>
+            } />
+            <Popup content='Download the map' trigger={
+              <Button icon onClick={downloadMap}>
+                <Icon name='download' />
+              </Button>
+            } />
+            <Popup content='Upload the map' trigger={
+              <Button icon onClick={uploadMapInit}>
+                <Icon name="upload" />
+                <input
+                  type="file"
+                  accept="application/json"
+                  ref={fileInputRef}
+                  onChange={uploadMap}
+                  style={{ display: 'none' }} // hide input
+                />
+              </Button>
+            } />
+            <Popup content='Rename the map' trigger={
+              <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
+                <Icon name='text cursor' />
+              </Button>
+            } />
+          </Button.Group>
+          {' '}
+        </>)}
 
         <span style={{ marginLeft: '1em' }} />
         { renaming && (
@@ -2844,19 +2892,21 @@ function Map () {
           </>
         )}
 
-        {' '}
-        <Button.Group>
-          <Popup content='Top-to-bottom layout' trigger={
-            <Button icon basic onClick={() => onLayout('TB')}>
-              <Icon name='grid layout' />
-            </Button>
-          } />
-          <Popup content='Left-to-right layout' trigger={
-            <Button icon basic onClick={() => onLayout('LR')}>
-              <Icon name='list layout' />
-            </Button>
-          } />
-        </Button.Group>
+        { showLayout && (<>
+          {' '}
+          <Button.Group>
+            <Popup content='Top-to-bottom layout' trigger={
+              <Button icon basic onClick={() => onLayout('TB')}>
+                <Icon name='grid layout' />
+              </Button>
+            } />
+            <Popup content='Left-to-right layout' trigger={
+              <Button icon basic onClick={() => onLayout('LR')}>
+                <Icon name='list layout' />
+              </Button>
+            } />
+          </Button.Group>
+        </>)}
 
         { showColors && (<>
           {' '} {' '}
@@ -2945,50 +2995,52 @@ function Map () {
           } />
         </>)}
 
-        {' '} {' '}
-        <Button.Group>
-          <Popup content='Reorder edges' trigger={
-            <Button icon basic onClick={orderEdges}>
-              <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
-            </Button>
-          } />
-          {playing ? (
-            <>
-              {pausing ? (
-                <Popup content='Resume running the map' trigger={
-                  <Button icon basic onClick={pauseMap}>
-                    <Icon name='play' color='yellow' />
-                  </Button>
-                } />
-              ) : (
-                <Popup content='Pause running the map' trigger={
-                  <Button icon basic onClick={pauseMap}>
-                    <Icon name='pause' color='yellow' />
-                  </Button>
-                } />
-              )}
-            </>
-          ) : (
-            <Popup content='Run the map' trigger={
-              <Button icon basic onClick={playMap}>
-                <Icon name='play' color='green' />
+        { showExecution && (<>
+          {' '} {' '}
+          <Button.Group>
+            <Popup content='Reorder edges' trigger={
+              <Button icon basic onClick={orderEdges}>
+                <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
               </Button>
             } />
-          )}
-          <Popup content='Step forward' trigger={
-            <Button icon basic onClick={stepMap}>
-              <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
-            </Button>
-          } />
-          <Popup content='Stop running the map' trigger={
-            <Button icon basic onClick={stopMap} disabled={!playing}>
-              <Icon name='stop' color='red' disabled={!playing} />
-            </Button>
-          } />
-        </Button.Group>
-
+            {playing ? (
+              <>
+                {pausing ? (
+                  <Popup content='Resume running the map' trigger={
+                    <Button icon basic onClick={pauseMap}>
+                      <Icon name='play' color='yellow' />
+                    </Button>
+                  } />
+                ) : (
+                  <Popup content='Pause running the map' trigger={
+                    <Button icon basic onClick={pauseMap}>
+                      <Icon name='pause' color='yellow' />
+                    </Button>
+                  } />
+                )}
+              </>
+            ) : (
+              <Popup content='Run the map' trigger={
+                <Button icon basic onClick={playMap}>
+                  <Icon name='play' color='green' />
+                </Button>
+              } />
+            )}
+            <Popup content='Step forward' trigger={
+              <Button icon basic onClick={stepMap}>
+                <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
+              </Button>
+            } />
+            <Popup content='Stop running the map' trigger={
+              <Button icon basic onClick={stopMap} disabled={!playing}>
+                <Icon name='stop' color='red' disabled={!playing} />
+              </Button>
+            } />
+          </Button.Group>
+        </>)}
 
       </div>
+
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
