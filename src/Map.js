@@ -56,7 +56,55 @@ import CodeMirror from '@uiw/react-codemirror';
 import { vim } from '@replit/codemirror-vim';
 import { mentions } from '@uiw/codemirror-extensions-mentions'
 import { loadLanguage, langNames, langs } from '@uiw/codemirror-extensions-langs'
-import { githubLight, githubDark, atomone, quietlight } from '@uiw/codemirror-themes-all'
+import {
+  abcdef,
+  abyss,
+  androidstudio,
+  andromeda,
+  atomone,
+  aura,
+  // basic,
+  basicLight,
+  basicDark,
+  bbedit,
+  bespin,
+  consoleLight,
+  consoleDark,
+  copilot,
+  duotoneLight,
+  duotoneDark,
+  darcula,
+  dracula,
+  eclipse,
+  githubLight,
+  githubDark,
+  gruvboxLight,
+  gruvboxDark,
+  kimbie,
+  materialLight,
+  materialDark,
+  monokai,
+  monokaiDimmed,
+  noctisLilac,
+  nord,
+  okaidia,
+  quietlight,
+  red,
+  solarizedLight,
+  solarizedDark,
+  sublime,
+  tokyoNight,
+  tokyoNightStorm,
+  tokyoNightDay,
+  vscodeLight,
+  vscodeDark,
+  whiteLight,
+  whiteDark,
+  tomorrowNightBlue,
+  xcodeLight,
+  xcodeDark,
+} from '@uiw/codemirror-themes-all'
+
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
 import CodeMirrorMerge from 'react-codemirror-merge';
@@ -88,6 +136,60 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
+
+const editorThemes = {
+  'default': 'light',
+  '-': '',
+  'light': 'light',
+  'dark': 'dark',
+  '--': '',
+  'abcdef': abcdef,
+  'abyss': abyss,
+  'androidstudio': androidstudio,
+  'andromeda': andromeda,
+  'atomone': atomone,
+  'aura': aura,
+  'basic-light': basicLight,
+  'basic-dark': basicDark,
+  'bbedit': bbedit,
+  'bespin': bespin,
+  'console-light': consoleLight,
+  'console-dark': consoleDark,
+  'copilot': copilot,
+  'duotone-light': duotoneLight,
+  'duotone-dark': duotoneDark,
+  'darcula': darcula,
+  'dracula': dracula,
+  'eclipse': eclipse,
+  'github-light': githubLight,
+  'github-dark': githubDark,
+  'gruvbox-light': gruvboxLight,
+  'gruvbox-dark': gruvboxDark,
+  'kimbie': kimbie,
+  'material-light': materialLight,
+  'material-dark': materialDark,
+  'monokai': monokai,
+  'monokai-dimmed': monokaiDimmed,
+  'noctis-lilac': noctisLilac,
+  'nord': nord,
+  'okaidia': okaidia,
+  'quietlight': quietlight,
+  'red': red,
+  'solarized-light': solarizedLight,
+  'solarized-dark': solarizedDark,
+  'sublime': sublime,
+  'tokyo-night': tokyoNight,
+  'tokyo-night-storm': tokyoNightStorm,
+  'tokyo-night-day': tokyoNightDay,
+  'vscode-light': vscodeLight,
+  'vscode-dark': vscodeDark,
+  'white-light': whiteLight,
+  'white-dark': whiteDark,
+  'tomorrow-night-blue': tomorrowNightBlue,
+  'xcode-light': xcodeLight,
+  'xcode-dark': xcodeDark,
+}
+
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
@@ -290,7 +392,27 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
 })
 
 const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id }) => {
-  console.log("DiffEditor editing:", data.editing)
+  const { editorTheme, viewerTheme } = useMapContext();
+  const [ destroyRerender, setDestroyRerender ] = useState(false)
+
+  const extensions = []
+  // extensions.push(mentions(roster.map(({ name }) => { return { label: `@${name}` }})))
+  // if (vimMode) {
+  //   extensions.push(vim())
+  // }
+  if (!data.kind || data.kind === 'markdown') {
+    extensions.push(markdown({ base: markdownLanguage, codeLanguages: languages }))
+  } else if (data.kind !== 'raw' && data.lang) {
+    extensions.push(loadLanguage(data.lang))
+  }
+
+  useEffect(() => {
+    setDestroyRerender(true)
+    setTimeout(() => { setDestroyRerender(false) }, 500)
+  }, [data.editing, editorTheme, viewerTheme, data.kind, data.lang]);
+
+  // console.log("DiffEditor editing:", data.editing)
+  // console.log('editorTheme:', editorTheme, ', viewerTheme:', viewerTheme)
   return (<>
     <CodeMirrorMerge
       orientation='a-b'
@@ -299,10 +421,10 @@ const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id })
       gutter={true}
       // collapseUnchanged={{ margin: 3, minSize: 4 }}
       // theme='light' // 'dark'
-      theme={data.editing ? atomone : quietlight}
+      theme={data.editing ? editorThemes[editorTheme] : editorThemes[viewerTheme] }
       // editable={data.editing}
       // readOnly={!data.editing}
-      destroyRerender={false}
+      destroyRerender={destroyRerender}
       // onClick={
       //   data.editing
       //     ? (() => {})
@@ -319,6 +441,7 @@ const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id })
         // onChange={(val) => data.editing && setText(val)}
         onChange={setText}
         extensions={[
+          ...extensions,
           // EditorView.editable.of(data.editing),
           // EditorState.readOnly.of(!data.editing)
           // EditorView.editable.of(true),
@@ -332,6 +455,7 @@ const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id })
         // onChange={data.editing ? setStash : () => {}}
         onChange={setStash}
         extensions={[
+          ...extensions,
           EditorView.editable.of(false),
           EditorState.readOnly.of(true)
         ]}
@@ -341,17 +465,19 @@ const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id })
 })
 
 const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
+  const { editorTheme, vimMode, viewerTheme } = useMapContext();
   const extensions = []
   extensions.push(mentions(roster.map(({ name }) => { return { label: `@${name}` }})))
-  // extensions.push(
-  //   vim(), // TODO: enable
-  // )
+  if (vimMode) {
+    extensions.push(vim())
+  }
   if (!data.kind || data.kind === 'markdown') {
     extensions.push(markdown({ base: markdownLanguage, codeLanguages: languages }))
   } else if (data.kind !== 'raw' && data.lang) {
     extensions.push(loadLanguage(data.lang))
   }
 
+  // console.log('editorTheme:', editorTheme, ', vimMode:', vimMode, ', viewerTheme:', viewerTheme)
   return (<>
     {/*
     <div style={{ display: 'flex', gap: '1rem', padding: '1rem', width: '100%', height: '100%' }}>
@@ -390,7 +516,7 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
         completionKeymap: !!data.editing,
         lintKeymap: !!data.editing,
       }}
-      theme={data.editing ? atomone : quietlight}
+      theme={data.editing ? editorThemes[editorTheme] : editorThemes[viewerTheme] }
       extensions={extensions}
       onClick={
         data.editing
@@ -431,77 +557,6 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
           e.preventDefault();
           cancelText()
         }
-      }}
-    />
-    */}
-  </>)
-})
-
-const CodeViewer = memo(({ text, data, id, setNodes }) => {
-  return (<>
-    <CodeMirror
-      value={text}
-      // onChange={setText}
-      editable={false}
-      readOnly={true}
-      basicSetup={{
-        syntaxHighlighting: true,
-        highlightActiveLine: false,
-
-        lineNumbers: false,
-        foldGutter: false,
-        autocompletion: false,
-        closeBrackets: false,
-        bracketMatching: false,
-        indentOnInput: false,
-        highlightSpecialChars: false,
-        history: false,
-        drawSelection: false,
-        allowMultipleSelections: false,
-        rectangularSelection: false,
-        highlightSelectionMatches: false,
-        dropCursor: false,
-        crosshairCursor: false,
-        closeBracketsKeymap: false,
-        defaultKeymap: false,
-        searchKeymap: false,
-        historyKeymap: false,
-        foldKeymap: false,
-        completionKeymap: false,
-        lintKeymap: false,
-      }}
-      theme={quietlight}
-      onClick={() => {
-        setNodes((nodes) =>
-          nodes.map((node) =>
-            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-          )
-        );
-      }}
-      // height="200px"
-      // extensions={[loadLanguage('python'),markdown({ base: markdownLanguage, codeLanguages: languages })]}
-      extensions={[
-        markdown({ base: markdownLanguage, codeLanguages: languages })
-      ]}
-      className="nodrag nopan"
-    />
-    {/*
-    <CodeEditor
-      value={text}
-      onValueChange={code => setText(code)}
-      highlight={code => highlight(code, languages.py)}
-      padding={10}
-      style={{
-        fontFamily: '"Fira code", "Fira Mono", monospace',
-        fontSize: 12,
-      }}
-      className="nodrag nopan"
-      onClick={() => {
-        setNodes((nodes) =>
-          nodes.map((node) =>
-            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-          )
-        );
       }}
     />
     */}
@@ -1734,6 +1789,28 @@ function Map () {
     localStorage.setItem('map.autosave', autosave.toString());
   }, [autosave]);
 
+  const [ editorTheme, setEditorTheme ] = useState(() => {
+    return localStorage.getItem('map.editorTheme') || 'default'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.editorTheme', editorTheme);
+  }, [editorTheme]);
+
+  const [ viewerTheme, setViewerTheme ] = useState(() => {
+    return localStorage.getItem('map.viewerTheme') || 'default'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.viewerTheme', viewerTheme);
+  }, [viewerTheme]);
+
+  const [ vimMode, setVimMode ] = useState(() => {
+    const saved = localStorage.getItem('map.vimMode') || false
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.vimMode', vimMode);
+  }, [vimMode]);
+
   // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
   // console.log('title:', title)
@@ -2584,7 +2661,7 @@ function Map () {
     <MapContext.Provider value={{
       presenceMap, roster, credentials, recipient, sendPersonalMessage,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
-      orderEdges
+      orderEdges, editorTheme, vimMode, viewerTheme
     }}>
       <Container>
         <Menubar />
@@ -2889,6 +2966,69 @@ function Map () {
             </Button>
           } />
         </Button.Group>
+
+        {' '} {' '}
+        <Dropdown item simple text='Settings'>
+          <Dropdown.Menu>
+            <Dropdown text='Code viewer theme' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                { Object.keys(editorThemes).map((thm) => {
+                  if (thm === '-' || thm === '--') {
+                    return (
+                      <Dropdown.Divider />
+                    )
+                  }
+                  return (
+                    <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
+                      <Icon name={ viewerTheme === thm ? 'check circle' : 'circle outline'} />
+                      {thm}
+                    </Dropdown.Item>
+                  )
+                } ) }
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown text='Code editor theme' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                { Object.keys(editorThemes).map((thm) => {
+                  if (thm === '-' || thm === '--') {
+                    return (
+                      <Dropdown.Divider />
+                    )
+                  }
+                  return (
+                    <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
+                      <Icon name={ editorTheme === thm ? 'check circle' : 'circle outline'} />
+                      {thm}
+                    </Dropdown.Item>
+                  )
+                } ) }
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown text='Code editor mode' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => { setVimMode(false) } }>
+                  <Icon name={ !vimMode ? 'check circle' : 'circle outline'} />
+                  Normal
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => { setVimMode(true) } }>
+                  <Icon name={ vimMode ? 'check circle' : 'circle outline'} />
+                  Vim
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Dropdown.Menu>
+        </Dropdown>
+
+        {/*
+        <Menu size='mini'>
+          <Menu.Menu position='right'>
+
+          <Menu.Item>
+            <Button primary>Sign Up</Button>
+          </Menu.Item>
+        </Menu.Menu>
+        </Menu>
+        */}
 
       </div>
       <Loader active={loading} inline='centered' />
