@@ -289,35 +289,51 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
   )
 })
 
-const DiffEditor = memo(({ text, setText, stash, setStash }) => {
+const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id }) => {
+  console.log("DiffEditor editing:", data.editing)
   return (<>
     <CodeMirrorMerge
       orientation='a-b'
-      revertControls='b-to-a'
+      revertControls={ data.editing ? 'b-to-a' : 'a-to-b' }
       highlightChanges={true}
       gutter={true}
+      // collapseUnchanged={{ margin: 3, minSize: 4 }}
       // theme='light' // 'dark'
-      theme={atomone}
-      readOnly={false}
-      editable={true}
+      theme={data.editing ? atomone : quietlight}
+      // editable={data.editing}
+      // readOnly={!data.editing}
       destroyRerender={false}
+      // onClick={
+      //   data.editing
+      //     ? (() => {})
+      //     : (() => {
+      //         setNodes((nodes) =>
+      //           nodes.map((node) =>
+      //             node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+      //         ) ) })
+      // }
     >
       <CodeMirrorMerge.Original
         value={text}
+        // onChange={data.editing ? setText : () => {}}
+        // onChange={(val) => data.editing && setText(val)}
         onChange={setText}
         extensions={[
-          EditorView.editable.of(true),
-          EditorState.readOnly.of(false)
+          // EditorView.editable.of(data.editing),
+          // EditorState.readOnly.of(!data.editing)
+          // EditorView.editable.of(true),
+          // EditorState.readOnly.of(false)
+          EditorView.editable.of(false),
+          EditorState.readOnly.of(true)
         ]}
       />
       <CodeMirrorMerge.Modified
         value={stash}
+        // onChange={data.editing ? setStash : () => {}}
         onChange={setStash}
         extensions={[
-          // EditorView.editable.of(false),
-          // EditorState.readOnly.of(true)
-          EditorView.editable.of(true),
-          EditorState.readOnly.of(false)
+          EditorView.editable.of(false),
+          EditorState.readOnly.of(true)
         ]}
       />
     </CodeMirrorMerge>
@@ -908,8 +924,12 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
             <Dropdown text='Note kind' pointing='left' className='link item'>
               <Dropdown.Menu>
+                <Dropdown.Item onClick={() => selectKind(undefined)}>
+                  <Icon name={ !data.kind ? 'check circle' : 'circle outline'} />
+                  (None)
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('markdown')}>
-                  <Icon name={ (data.kind === 'markdown' || !data.kind) ? 'check circle' : 'circle outline'} />
+                  <Icon name={ (data.kind === 'markdown') ? 'check circle' : 'circle outline'} />
                   Markdown
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('code')}>
@@ -1071,8 +1091,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
           />
-          <br/>
-          <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
         </>)}
         { (!data.kind || data.kind === 'markdown') && !data.editing && (<>
           <NoteViewer
@@ -1086,14 +1104,16 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             text={text} setText={setText} roster={roster} data={data}
             id={id} setNodes={setNodes}
           />
-          { data.editing && (<>
-            <br/>
-            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
-          </>)}
         </>)}
 
         { data.kind === 'diff' && (<>
-          <DiffEditor text={text} setText={setText} stash={stash} setStash={setStash} />
+          <DiffEditor
+            text={text} setText={setText} stash={stash} setStash={setStash}
+            data={data} setNodes={setNodes} id={id}
+          />
+        </>)}
+
+        { data.editing && (<>
           <br/>
           <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
         </>)}
