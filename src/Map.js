@@ -280,9 +280,9 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
       </Accordion.Title>
       { !ucomment && (
         <Accordion.Content active={active}>
-          <p>
+          <pre>
             {nodeText}
-          </p>
+          </pre>
         </Accordion.Content>
       )}
     </Accordion>
