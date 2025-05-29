@@ -16,6 +16,7 @@ import {
   Checkbox,
   Modal,
   Popup,
+  Menu,
   // Header,
   // Grid,
   // Label,
@@ -323,7 +324,18 @@ const DiffEditor = memo(({ text, setText, stash, setStash }) => {
   </>)
 })
 
-const CodeEditor = memo(({ text, setText, roster, markdownMode = false } = {}) => {
+const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
+  const extensions = []
+  extensions.push(mentions(roster.map(({ name }) => { return { label: `@${name}` }})))
+  // extensions.push(
+  //   vim(), // TODO: enable
+  // )
+  if (!data.kind || data.kind === 'markdown') {
+    extensions.push(markdown({ base: markdownLanguage, codeLanguages: languages }))
+  } else if (data.kind !== 'raw' && data.lang) {
+    extensions.push(loadLanguage(data.lang))
+  }
+
   return (<>
     {/*
     <div style={{ display: 'flex', gap: '1rem', padding: '1rem', width: '100%', height: '100%' }}>
@@ -333,39 +345,46 @@ const CodeEditor = memo(({ text, setText, roster, markdownMode = false } = {}) =
     <CodeMirror
       value={text}
       onChange={setText}
+      editable={!!data.editing}
+      readOnly={!data.editing}
       basicSetup={{
-        syntaxHighlighting: true,
+        syntaxHighlighting: (data.kind !== 'raw' && data.lang),
+        // syntaxHighlighting: true,
         highlightActiveLine: false,
 
-        lineNumbers: true,
-        foldGutter: true,
-        autocompletion: true,
-        closeBrackets: true,
-        bracketMatching: true,
-        indentOnInput: true,
-        highlightSpecialChars: true,
-        history: true,
-        drawSelection: true,
-        allowMultipleSelections: true,
-        rectangularSelection: true,
-        highlightSelectionMatches: true,
-        dropCursor: true,
-        crosshairCursor: true,
-        closeBracketsKeymap: true,
-        defaultKeymap: true,
-        searchKeymap: true,
-        historyKeymap: true,
-        foldKeymap: true,
-        completionKeymap: true,
-        lintKeymap: true,
+        lineNumbers: !!data.editing,
+        foldGutter: !!data.editing,
+        autocompletion: !!data.editing,
+        closeBrackets: !!data.editing,
+        bracketMatching: !!data.editing,
+        indentOnInput: !!data.editing,
+        highlightSpecialChars: !!data.editing,
+        history: !!data.editing,
+        drawSelection: !!data.editing,
+        allowMultipleSelections: !!data.editing,
+        rectangularSelection: !!data.editing,
+        highlightSelectionMatches: !!data.editing,
+        dropCursor: !!data.editing,
+        crosshairCursor: !!data.editing,
+        closeBracketsKeymap: !!data.editing,
+        defaultKeymap: !!data.editing,
+        searchKeymap: !!data.editing,
+        historyKeymap: !!data.editing,
+        foldKeymap: !!data.editing,
+        completionKeymap: !!data.editing,
+        lintKeymap: !!data.editing,
       }}
-      theme={atomone}
-      extensions={[
-        // javascript({ jsx: true }),
-        mentions(roster.map(({ name }) => { return { label: `@${name}` }})),
-        // vim(), // TODO: enable
-        markdownMode ? markdown({ base: markdownLanguage, codeLanguages: languages }) : loadLanguage('python'),
-      ]}
+      theme={data.editing ? atomone : quietlight}
+      extensions={extensions}
+      onClick={
+        data.editing
+          ? (() => {})
+          : (() => {
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+              ) ) })
+      }
       className="nodrag nopan"
     />
     {/*
@@ -682,7 +701,7 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
           //   />
           // )
         }
-      })};
+      })}
     </div>
   </>)
 })
@@ -713,7 +732,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const applyText = useCallback(() => {
     setNodes((nodes) =>
       nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, text, stash, editing: false, diffing: false } } : node
+        node.id === id ? { ...node, data: { ...node.data, text, stash, editing: false } } : node
       )
     )
   }, [setNodes, text, stash, id])
@@ -723,7 +742,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     setStash(data.stash)
     setNodes((nodes) =>
       nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, editing: false, diffing: false } } : node
+        node.id === id ? { ...node, data: { ...node.data, editing: false } } : node
       )
     )
   }, [setText, data.text, setStash, data.stash, setNodes, id])
@@ -791,6 +810,22 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   }, [setNodes, id])
 
+  const selectKind = (kind) => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, kind } } : node
+      )
+    )
+  }
+
+  const selectLang = (lang) => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, lang } } : node
+      )
+    )
+  }
+
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -836,12 +871,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           }>
           <Dropdown.Menu>
             <Dropdown.Item
-              onClick={renameUname}
-            >
-              <Icon name='i cursor' />
-              Rename
-            </Dropdown.Item>
-            <Dropdown.Item
               onClick={copyText}
             >
               <Icon name='copy' />
@@ -852,6 +881,15 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             >
               <Icon name='paste' />
               Paste
+            </Dropdown.Item>
+
+            <Dropdown.Divider />
+
+            <Dropdown.Item
+              onClick={renameUname}
+            >
+              <Icon name='i cursor' />
+              Rename
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -865,30 +903,74 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Icon name='edit' />
               { data.editing ? 'View' : 'Edit' }
             </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, code: !data.code } } : node
-                  )
-                );
-              }}
-            >
-              <Icon name={ data.code ? 'sticky note outline' : 'code' } />
-              { data.code ? 'Markdown Mode' : 'Code Mode' }
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, diffing: !data.diffing } } : node
-                  )
-                );
-              }}
-            >
-              <Icon name={ data.diffing ? 'calendar times' : 'columns' } />
-              { data.diffing ? 'Close diff' : 'Diff with stash' }
-            </Dropdown.Item>
+
+            <Dropdown.Divider />
+
+            <Dropdown text='Note kind' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => selectKind('markdown')}>
+                  <Icon name={ (data.kind === 'markdown' || !data.kind) ? 'check circle' : 'circle outline'} />
+                  Markdown
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectKind('code')}>
+                  <Icon name={ data.kind === 'code' ? 'check circle' : 'circle outline'} />
+                  Code
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectKind('raw')}>
+                  <Icon name={ data.kind === 'raw' ? 'check circle' : 'circle outline'} />
+                  Raw
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectKind('diff')}>
+                  <Icon name={ data.kind === 'diff' ? 'check circle' : 'circle outline'} />
+                  Diff
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <Dropdown text='Programming language' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => selectLang(undefined)}>
+                  <Icon name={ !data.lang ? 'check circle' : 'circle outline'} />
+                  (None)
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectLang('javascript')}>
+                  <Icon name={ data.lang === 'javascript' ? 'check circle' : 'circle outline'} />
+                  JavaScript
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectLang('python')}>
+                  <Icon name={ data.lang === 'python' ? 'check circle' : 'circle outline'} />
+                  Python
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectLang('json')}>
+                  <Icon name={ data.lang === 'json' ? 'check circle' : 'circle outline'} />
+                  JSON
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectLang('html')}>
+                  <Icon name={ data.lang === 'html' ? 'check circle' : 'circle outline'} />
+                  HTML
+                </Dropdown.Item>
+                {/*
+                <Dropdown.Item onClick={() => selectLang('openqasm')}>
+                  <Icon name={ data.lang === 'openqasm' ? 'check circle' : 'circle outline'} />
+                  OpenQASM
+                </Dropdown.Item>
+                */}
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <Dropdown text='More programming languages' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                { langNames.map((lng) => { return (
+                  <Dropdown.Item onClick={() => selectLang(lng)}>
+                    <Icon name={ data.lang === lng ? 'check circle' : 'circle outline'} />
+                    {lng}
+                  </Dropdown.Item>
+                ) } ) }
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <Dropdown.Divider />
+
             <Dropdown.Item
               onClick={() => {
                 setNodes((nodes) =>
@@ -899,7 +981,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name='calendar plus' />
-              Stash content
+              Stash content for diff
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -913,6 +995,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Icon name='calendar minus' />
               Restore content from stash
             </Dropdown.Item>
+            <Dropdown.Divider />
             <Dropdown.Item
               onClick={() => {
                 setNodes((nodes) => nodes.filter((n) => n.id !== id));
@@ -978,38 +1061,41 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { data.diffing ? (<>
+        { (!data.kind || data.kind === 'markdown') && data.editing && (<>
+          {/*
+          <CodeEditor text={text} setText={setText} roster={roster}
+            markdownMode={true}
+          />
+          */}
+          <NoteEditor
+            text={text} setText={setText}
+            applyText={applyText} cancelText={cancelText} data={data}
+          />
+          <br/>
+          <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+        </>)}
+        { (!data.kind || data.kind === 'markdown') && !data.editing && (<>
+          <NoteViewer
+            data={data} allNodes={allNodes}
+            setNodes={setNodes} id={id}
+          />
+        </>)}
+
+        { (data.kind === 'code' || data.kind === 'raw') && (<>
+          <CodeEditor
+            text={text} setText={setText} roster={roster} data={data}
+            id={id} setNodes={setNodes}
+          />
+          { data.editing && (<>
+            <br/>
+            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+          </>)}
+        </>)}
+
+        { data.kind === 'diff' && (<>
           <DiffEditor text={text} setText={setText} stash={stash} setStash={setStash} />
           <br/>
           <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
-        </>) : (<>
-          { data.code && data.editing && (<>
-            <CodeEditor text={text} setText={setText} roster={roster} />
-            <br/>
-            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
-          </>)}
-          { data.code && !data.editing && (<>
-             <CodeViewer text={text} data={data} id={id} setNodes={setNodes} />
-          </>)}
-          { !data.code && data.editing && (<>
-            {/*
-            <CodeEditor text={text} setText={setText} roster={roster}
-              markdownMode={true}
-            />
-            */}
-            <NoteEditor
-              text={text} setText={setText}
-              applyText={applyText} cancelText={cancelText} data={data}
-            />
-            <br/>
-            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
-          </>)}
-          { !data.code && !data.editing && (<>
-            <NoteViewer
-              data={data} allNodes={allNodes}
-              setNodes={setNodes} id={id}
-            />
-          </>)}
         </>)}
       </Card.Content>
 
