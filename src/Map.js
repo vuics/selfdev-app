@@ -1626,6 +1626,30 @@ function Map () {
     localStorage.setItem('map.autosave', autosave.toString());
   }, [autosave]);
 
+  const [ showMinimap, setShowMinimap ] = useState(() => {
+    const saved = localStorage.getItem('map.showMinimap') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showMinimap', showMinimap.toString());
+  }, [showMinimap]);
+
+  const [ showPanel, setShowPanel ] = useState(() => {
+    const saved = localStorage.getItem('map.showPanel') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showPanel', showPanel.toString());
+  }, [showPanel]);
+
+  const [ showColors, setShowColors ] = useState(() => {
+    const saved = localStorage.getItem('map.showColors') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showColors', showColors.toString());
+  }, [showColors]);
+
   const [ editorTheme, setEditorTheme ] = useState(() => {
     return localStorage.getItem('map.editorTheme') || 'default'
   })
@@ -2662,15 +2686,6 @@ function Map () {
         )}
 
         {' '}
-        <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
-          <Checkbox
-            label='Autosave'
-            onChange={(e, data) => setAutosave(data.checked)}
-            checked={autosave}
-          />
-        } />
-
-        {' '}
         <Button.Group>
           <Popup content='Top-to-bottom layout' trigger={
             <Button icon basic onClick={() => onLayout('TB')}>
@@ -2684,90 +2699,92 @@ function Map () {
           } />
         </Button.Group>
 
-        {' '}
-        <Popup content='Apply text color to selected notes' trigger={
-          <Icon name='font' color='grey' onClick={() => {
-            setNodes((nodes) =>
-              nodes.map((node) =>
-                node.selected ? { ...node, data: { ...node.data, color } } : node
-              )
-            )
-          }} />
-        } />
-        <Popup content='Select text color' trigger={
-          <input
-            className="nodrag"
-            type="color"
-            onChange={(e) => {
-              console.log('color:', e.target.value)
-              setColor(e.target.value)
+        { showColors && (<>
+          {' '} {' '}
+          <Popup content='Apply text color to selected notes' trigger={
+            <Icon name='font' color='grey' onClick={() => {
               setNodes((nodes) =>
                 nodes.map((node) =>
-                  node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
+                  node.selected ? { ...node, data: { ...node.data, color } } : node
                 )
               )
-            } }
-            value={color}
-          />
-        } />
-        {' '}
-        <Popup content='Apply background color to selected notes' trigger={
-          <Icon name='paint brush' color='grey' onClick={() => {
-            setNodes((nodes) =>
-              nodes.map((node) =>
-                node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
-              )
-            )
-          }} />
-        } />
-        <Popup content='Select background color' trigger={
-          <input
-            className="nodrag"
-            type="color"
-            onChange={(e) => {
-              setBackgroundColor(e.target.value)
+            }} />
+          } />
+          <Popup content='Select text color' trigger={
+            <input
+              className="nodrag"
+              type="color"
+              onChange={(e) => {
+                console.log('color:', e.target.value)
+                setColor(e.target.value)
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
+                  )
+                )
+              } }
+              value={color}
+            />
+          } />
+          {' '}
+          <Popup content='Apply background color to selected notes' trigger={
+            <Icon name='paint brush' color='grey' onClick={() => {
               setNodes((nodes) =>
                 nodes.map((node) =>
-                  node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
+                  node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
                 )
               )
-            } }
-            value={backgroundColor}
-          />
-        } />
-        {' '}
-        <Popup content='Apply edge color to selected notes' trigger={
-          <Icon name='linkify' color='grey' onClick={() => {
-            setEdges((edges) =>
-              edges.map((edge) =>
-                edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
-              )
-            );
-          }} />
-        } />
-        <Popup content='Select edge color' trigger={
-          <input
-            className="nodrag"
-            type="color"
-            onChange={(e) => {
-              setStroke(e.target.value)
+            }} />
+          } />
+          <Popup content='Select background color' trigger={
+            <input
+              className="nodrag"
+              type="color"
+              onChange={(e) => {
+                setBackgroundColor(e.target.value)
+                setNodes((nodes) =>
+                  nodes.map((node) =>
+                    node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
+                  )
+                )
+              } }
+              value={backgroundColor}
+            />
+          } />
+          {' '}
+          <Popup content='Apply edge color to selected notes' trigger={
+            <Icon name='linkify' color='grey' onClick={() => {
               setEdges((edges) =>
                 edges.map((edge) =>
-                  edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+                  edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
                 )
               );
-            } }
-            value={stroke}
-          />
-        } />
-        {' '}
-        <Popup content='Select text, background and edge colors by default' trigger={
-          <Icon name='history' color='grey' onClick={() => {
-            setColor(defaultColor)
-            setBackgroundColor(defaultBackgroundColor)
-            setStroke(defaultStroke)
-          }} />
-        } />
+            }} />
+          } />
+          <Popup content='Select edge color' trigger={
+            <input
+              className="nodrag"
+              type="color"
+              onChange={(e) => {
+                setStroke(e.target.value)
+                setEdges((edges) =>
+                  edges.map((edge) =>
+                    edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+                  )
+                );
+              } }
+              value={stroke}
+            />
+          } />
+          {' '}
+          <Popup content='Select text, background and edge colors by default' trigger={
+            <Icon name='history' color='grey' onClick={() => {
+              setColor(defaultColor)
+              setBackgroundColor(defaultBackgroundColor)
+              setStroke(defaultStroke)
+            }} />
+          } />
+        </>)}
 
         {' '} {' '}
         <Button.Group>
@@ -2814,6 +2831,41 @@ function Map () {
         {' '} {' '}
         <Dropdown item simple text='Settings'>
           <Dropdown.Menu>
+            <Dropdown.Item>
+              <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+                <Checkbox
+                  label='Autosave'
+                  onChange={(e, data) => setAutosave(data.checked)}
+                  checked={autosave}
+                />
+              } />
+            </Dropdown.Item>
+
+            <Dropdown.Divider />
+
+            <Dropdown.Item>
+              <Checkbox
+                label='Show mini map'
+                onChange={(e, data) => setShowMinimap(data.checked)}
+                checked={showMinimap}
+              />
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Checkbox
+                label='Show control panel'
+                onChange={(e, data) => setShowPanel(data.checked)}
+                checked={showPanel}
+              />
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Checkbox
+                label='Show color controls'
+                onChange={(e, data) => setShowColors(data.checked)}
+                checked={showColors}
+              />
+            </Dropdown.Item>
+
+            <Dropdown.Divider />
             <Dropdown text='Code viewer theme' pointing='left' className='link item'>
               <Dropdown.Menu>
                 { Object.keys(editorThemes).map((thm) => {
@@ -2923,66 +2975,70 @@ function Map () {
           panOnDrag={[1, 2]}
         >
           <Controls />
-          <MiniMap pannable zoomable position='top-left' />
+          { showMinimap && (
+            <MiniMap pannable zoomable position='top-left' />
+          )}
           <Background variant="dots" gap={12} size={1} />
-          <Panel position="top-right">
-            <Popup content='Select recipient' trigger={
-              <Dropdown
-                compact
-                fluid
-                selection
-                clearable
-                onSearchChange={(e, { value }) => setRecipientSearch(value)}
-                trigger={
-                  <>
-                  { !recipientSearch && (
-                    <span>
-                      <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
-                      {recipient}
-                    </span>
-                  )}
-                  </>
-                }
-                multiple={false}
-                search={true}
-                options={roster}
-                value={recipient}
-                placeholder="Recipient"
-                onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
-                loading={roster.length === 0}
-              />
-            } />
-            <Input
-              iconPosition='left'
-              placeholder='/RegExp/ Condition...'
-              value={condition}
-              onChange={e => setCondition(e.target.value)}
-            ><Icon name='usb' /><input /></Input>
-            <br/>
-            <Button.Group vertical labeled icon fluid compact>
-              <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
-              <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
-            </Button.Group>
-            <br/>
-            {/*
-            <Input
-              iconPosition='left' placeholder='room...' size='mini'
-              value={room}
-              onChange={e => setRoom(e.target.value)}
-            ><Icon name='group' /><input /></Input>
-            <Button basic size='mini'
-              onClick={async () => {
-                await sendRoomMessage({ room, recipient, prompt });
-              }}
-            >Groupchat</Button>
-            <Input
-              iconPosition='left' placeholder='prompt...' size='mini'
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-            ><Icon name='edit outline' /><input /></Input>
-            */}
-            <br />
-          </Panel>
+          { showPanel && (
+            <Panel position="top-right">
+              <Popup content='Select recipient' trigger={
+                <Dropdown
+                  compact
+                  fluid
+                  selection
+                  clearable
+                  onSearchChange={(e, { value }) => setRecipientSearch(value)}
+                  trigger={
+                    <>
+                    { !recipientSearch && (
+                      <span>
+                        <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                        {recipient}
+                      </span>
+                    )}
+                    </>
+                  }
+                  multiple={false}
+                  search={true}
+                  options={roster}
+                  value={recipient}
+                  placeholder="Recipient"
+                  onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
+                  loading={roster.length === 0}
+                />
+              } />
+              <Input
+                iconPosition='left'
+                placeholder='/RegExp/ Condition...'
+                value={condition}
+                onChange={e => setCondition(e.target.value)}
+              ><Icon name='usb' /><input /></Input>
+              <br/>
+              <Button.Group vertical labeled icon fluid compact>
+                <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
+                <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
+              </Button.Group>
+              <br/>
+              {/*
+              <Input
+                iconPosition='left' placeholder='room...' size='mini'
+                value={room}
+                onChange={e => setRoom(e.target.value)}
+              ><Icon name='group' /><input /></Input>
+              <Button basic size='mini'
+                onClick={async () => {
+                  await sendRoomMessage({ room, recipient, prompt });
+                }}
+              >Groupchat</Button>
+              <Input
+                iconPosition='left' placeholder='prompt...' size='mini'
+                value={prompt}
+                onChange={e => setPrompt(e.target.value)}
+              ><Icon name='edit outline' /><input /></Input>
+              */}
+              <br />
+            </Panel>
+          )}
         </ReactFlow>
       </div>
     </MapContext.Provider>
