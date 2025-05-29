@@ -63,7 +63,7 @@ import CodeMirrorMerge from 'react-codemirror-merge';
 import { EditorView } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 
-import MarkdownEditor from '@uiw/react-markdown-editor'
+import UiwMarkdownEditor from '@uiw/react-markdown-editor'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 // import MDEditor from '@uiw/react-md-editor'
 import mermaid from "mermaid";
@@ -603,7 +603,47 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id }) => {
   </>)
 })
 
-const NoteEditor = memo(({ text, setText, applyText, cancelText, data, allNodes, setNodes, id }) => {
+const NoteEditor = memo(({
+  text, setText, applyText, cancelText, data, allNodes, setNodes, id
+}) => {
+  if (!data.editing) {
+    return (
+      <NoteViewer data={data} allNodes={allNodes} setNodes={setNodes} id={id} />
+    )
+  }
+
+  return (<>
+    <TextareaAutosize
+      value={text}
+      onChange={(e) => {
+        setText(e.target.value)
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+          e.preventDefault();
+          applyText()
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          cancelText()
+        }
+      }}
+      className="nodrag"
+      minRows={6}
+      // maxRows={12}
+      style={{
+        width: '100%',
+        height: '100%',
+        color: data.color || '',
+        backgroundColor: data.backgroundColor || '',
+      }}
+    />
+  </>)
+})
+
+const MarkdownEditor = memo(({
+  text, setText, applyText, cancelText, data, allNodes, setNodes, id
+}) => {
   if (!data.editing) {
     return (
       <NoteViewer data={data} allNodes={allNodes} setNodes={setNodes} id={id} />
@@ -615,7 +655,7 @@ const NoteEditor = memo(({ text, setText, applyText, cancelText, data, allNodes,
     {/* <div data-color-mode="light"> */}
     <div data-color-mode="light">
       <div className="wmde-markdown-var"> </div>
-      <MarkdownEditor
+      <UiwMarkdownEditor
         value={text}
         onChange={(value, viewUpdate) => setText(value)}
         height="100%"
@@ -931,7 +971,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => selectKind(undefined)}>
                   <Icon name={ !data.kind ? 'check circle' : 'circle outline'} />
-                  (None)
+                  Note
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('markdown')}>
                   <Icon name={ (data.kind === 'markdown') ? 'check circle' : 'circle outline'} />
@@ -1086,13 +1126,26 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { (!data.kind || data.kind === 'markdown') && (<>
+        { !data.kind && (<>
           {/*
           <CodeEditor text={text} setText={setText} roster={roster}
             markdownMode={true}
           />
           */}
           <NoteEditor
+            text={text} setText={setText}
+            applyText={applyText} cancelText={cancelText} data={data}
+            allNodes={allNodes} setNodes={setNodes} id={id}
+          />
+        </>)}
+
+        { data.kind === 'markdown' && (<>
+          {/*
+          <CodeEditor text={text} setText={setText} roster={roster}
+            markdownMode={true}
+          />
+          */}
+          <MarkdownEditor
             text={text} setText={setText}
             applyText={applyText} cancelText={cancelText} data={data}
             allNodes={allNodes} setNodes={setNodes} id={id}
