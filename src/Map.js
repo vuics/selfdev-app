@@ -280,7 +280,7 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
       </Accordion.Title>
       { !ucomment && (
         <Accordion.Content active={active}>
-          <pre>
+          <pre style={{ overflow: 'auto' }}>
             {nodeText}
           </pre>
         </Accordion.Content>
@@ -994,28 +994,28 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
             <Dropdown text='Programming language' pointing='left' className='link item'>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => selectLang(undefined)}>
+                <Dropdown.Item onClick={() => { selectLang(undefined); selectKind('raw') } }>
                   <Icon name={ !data.lang ? 'check circle' : 'circle outline'} />
                   (None)
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => selectLang('javascript')}>
-                  <Icon name={ data.lang === 'javascript' ? 'check circle' : 'circle outline'} />
-                  JavaScript
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => selectLang('python')}>
+                <Dropdown.Item onClick={() => { selectLang('python'); selectKind('code') } }>
                   <Icon name={ data.lang === 'python' ? 'check circle' : 'circle outline'} />
                   Python
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => selectLang('json')}>
+                <Dropdown.Item onClick={() => { selectLang('javascript'); selectKind('code') } }>
+                  <Icon name={ data.lang === 'javascript' ? 'check circle' : 'circle outline'} />
+                  JavaScript
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => { selectLang('json'); selectKind('code') } }>
                   <Icon name={ data.lang === 'json' ? 'check circle' : 'circle outline'} />
                   JSON
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => selectLang('html')}>
+                <Dropdown.Item onClick={() => { selectLang('html'); selectKind('code') } }>
                   <Icon name={ data.lang === 'html' ? 'check circle' : 'circle outline'} />
                   HTML
                 </Dropdown.Item>
                 {/*
-                <Dropdown.Item onClick={() => selectLang('openqasm')}>
+                <Dropdown.Item onClick={() => { selectLang('openqasm'); selectKind('code') } }>
                   <Icon name={ data.lang === 'openqasm' ? 'check circle' : 'circle outline'} />
                   OpenQASM
                 </Dropdown.Item>
@@ -1026,7 +1026,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Dropdown text='More programming languages' pointing='left' className='link item'>
               <Dropdown.Menu>
                 { langNames.map((lng) => { return (
-                  <Dropdown.Item onClick={() => selectLang(lng)}>
+                  <Dropdown.Item onClick={() => { selectLang(lng); selectKind('code') } }>
                     <Icon name={ data.lang === lng ? 'check circle' : 'circle outline'} />
                     {lng}
                   </Dropdown.Item>
