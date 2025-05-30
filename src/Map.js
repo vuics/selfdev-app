@@ -797,6 +797,14 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     )
   }
 
+  const makeSlide = (slide) => {
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, slide } } : node
+      )
+    )
+  }
+
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -898,6 +906,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 <Dropdown.Item onClick={() => selectKind('diff')}>
                   <Icon name={ data.kind === 'diff' ? 'dot circle' : 'circle outline'} />
                   Diff
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => makeSlide(true)}>
+                  <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                  Slide
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -1588,6 +1601,8 @@ function Map () {
   steppingRef.current = stepping
   pausingRef.current = pausing
 
+  const [ currentSlide, setCurrentSlide ] = useState(0)
+
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
   const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
@@ -1673,6 +1688,14 @@ function Map () {
   useEffect(() => {
     localStorage.setItem('map.showLayout', showLayout.toString());
   }, [showLayout]);
+
+  const [ showSlides, setShowSlides ] = useState(() => {
+    const saved = localStorage.getItem('map.showSlides') || false
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showSlides', showSlides.toString());
+  }, [showSlides]);
 
   const [ editorTheme, setEditorTheme ] = useState(() => {
     return localStorage.getItem('map.editorTheme') || 'default'
@@ -2537,6 +2560,38 @@ function Map () {
     })
   }, [setEdges])
 
+
+  const navigateSlide = useCallback((direction) => {
+    const slideNodes = nodes.filter(nd => nd.data?.slide === true);
+    let gotoSlide = currentSlide + direction;
+    if (gotoSlide >= slideNodes.length) {
+      gotoSlide = 0;
+    } else if (gotoSlide < 0) {
+      gotoSlide = slideNodes.length - 1;
+    }
+    const gotoNode = slideNodes[gotoSlide] || null;
+    setTimeout(() => {
+      // NOTE:
+      // Node might be outside viewport or positioned incorrectly
+      // Is the node positioned off-screen (position: { x, y })?
+      // Are you updating nodes dynamically, and the update hasn’t re-rendered yet when fitView() runs?
+      // Fix: Consider wrapping fitView() in a setTimeout(() => ..., 0) to allow DOM updates to flush first:
+      fitView({ nodes: [gotoNode], duration: 800 });
+    }, 0);
+    setCurrentSlide(gotoSlide);
+    // console.log(`${direction > 0 ? 'next' : 'previous'} slide gotoSlide:`, gotoSlide, ', gotoNode:', gotoNode, ', slideNodes:', slideNodes);
+  }, [currentSlide, setCurrentSlide, fitView, nodes]);
+
+  const nextSlide = useCallback((e) => {
+    e.stopPropagation();
+    navigateSlide(1);
+  }, [navigateSlide]);
+
+  const previousSlide = useCallback((e) => {
+    e.stopPropagation();
+    navigateSlide(-1);
+  }, [navigateSlide]);
+
   // useEffect(() => {
   //   console.log('Current edges state:', edges);
   // }, [edges]);
@@ -2667,6 +2722,13 @@ function Map () {
                     checked={showExecution}
                   />
                 </Dropdown.Item>
+                <Dropdown.Item>
+                  <Checkbox
+                    label='Show slide controls'
+                    onChange={(e, data) => setShowSlides(data.checked)}
+                    checked={showSlides}
+                  />
+                </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item>
                   <Checkbox
@@ -2682,6 +2744,16 @@ function Map () {
                     checked={showPanel}
                   />
                 </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
+
+          <Menu.Menu>
+            <Dropdown item simple text='Slideshow'>
+              <Dropdown.Menu>
+                <Dropdown.Item>
+                </Dropdown.Item>
+                <Dropdown.Divider />
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Menu>
@@ -3034,6 +3106,22 @@ function Map () {
             <Popup content='Stop running the map' trigger={
               <Button icon basic onClick={stopMap} disabled={!playing}>
                 <Icon name='stop' color='red' disabled={!playing} />
+              </Button>
+            } />
+          </Button.Group>
+        </>)}
+
+        { showSlides && (<>
+          {' '} {' '}
+          <Button.Group>
+            <Popup content='Previous slide' trigger={
+              <Button icon basic onClick={previousSlide}>
+                <Icon name='caret square left outline' color='grey' />
+              </Button>
+            } />
+            <Popup content='Next slide' trigger={
+              <Button icon basic onClick={nextSlide}>
+                <Icon name='caret square right outline' color='grey' />
               </Button>
             } />
           </Button.Group>
