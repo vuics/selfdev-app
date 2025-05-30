@@ -3197,23 +3197,23 @@ function Map () {
 
         { showSlides && (<>
           {' '} {' '}
-          <Popup
-            content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
-            trigger={
-              <Button
-                icon basic
-                // active={deckSidebar}
-                // circular
-                onClick={(e, data) => setDeckSidebar(!deckSidebar)}
-                // color={deckSidebar ? 'blue' : 'standard'}
-              >
-                <Icon name={deckSidebar ? 'toggle on' : 'toggle off'}
-                  color={deckSidebar ? 'blue' : 'standard'}
-                />
-              </Button>
-            }
-          />
           <Button.Group>
+            <Popup
+              content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
+              trigger={
+                <Button
+                  icon basic
+                  // active={deckSidebar}
+                  // circular
+                  onClick={(e, data) => setDeckSidebar(!deckSidebar)}
+                  // color={deckSidebar ? 'blue' : 'standard'}
+                >
+                  <Icon name={deckSidebar ? 'images' : 'images outline'}
+                    color={deckSidebar ? 'blue' : 'standard'}
+                  />
+                </Button>
+              }
+            />
             <Popup content='Previous slide' trigger={
               <Button icon basic onClick={previousSlide}>
                 <Icon name='caret square left outline' color='blue' />
@@ -3271,7 +3271,7 @@ function Map () {
                   setCurrentSlide(nd.data.slideIndex);
                 }}
               >
-                <Icon name='sticky note outline' />
+                <Icon name='image outline' />
                 {nd.data.slideIndex+1}. {nd.data.uname}
               </Menu.Item>
             ))
