@@ -17,6 +17,10 @@ import {
   Modal,
   Popup,
   Menu,
+  Grid,
+  Segment,
+  Sidebar,
+
   // Header,
   // Grid,
   // Label,
@@ -856,7 +860,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     });
   };
 
-  const getTotalSlides = useCallback((nodes) => {
+  const getTotalSlides = useCallback(() => {
     return allNodes.filter(node => node.data?.slide === true).length;
   }, [allNodes])
 
@@ -979,11 +983,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(-1)}>
                     <Icon name={ data.slide ? 'check square' : 'square outline'} />
-                    Reorder slide down
+                    Move slide down
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(1)}>
                     <Icon name={ data.slide ? 'check square' : 'square outline'} />
-                    Reorder slide up
+                    Move slide up
                   </Dropdown.Item>
                 </>)}
               </Dropdown.Menu>
@@ -1676,6 +1680,7 @@ function Map () {
   pausingRef.current = pausing
 
   const [ currentSlide, setCurrentSlide ] = useState(-1)
+  const [ visibleDeck, setVisibleDeck ] = useState(false)
 
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
@@ -3223,6 +3228,13 @@ function Map () {
               </Button>
             } />
           </Button.Group>
+          <Popup content='Toggle visibility of slide deck navigator' trigger={
+            <Checkbox
+              checked={visibleDeck}
+              label={{ children: <code>Slide deck</code> }}
+              onChange={(e, data) => setVisibleDeck(data.checked)}
+            />
+          } />
         </>)}
 
       </div>
@@ -3239,99 +3251,142 @@ function Map () {
         />
       }
 
-      <div
-        className="wrapper" ref={reactFlowWrapper}
-        style={{ width: width, height: height - conf.iframe.topOffset - conf.iframe.bottomOffset }}
-      >
-        <ReactFlow
-          style={{ backgroundColor: "#F7F9FB" }}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onEdgesDelete={onEdgesDelete}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          onInit={setRfInstance}
-          onConnect={onConnect}
-          onConnectEnd={onConnectEnd}
-          // onReconnect={onReconnect}
-          fitView
-          fitViewOptions={{ padding: 2 }}
-          // nodeOrigin={nodeOrigin}
-
-          panOnScroll={true}
-          selectionOnDrag={true}
-          selectionMode={SelectionMode.Partial}
-          panOnDrag={[1, 2]}
+      <Sidebar.Pushable as={Segment}>
+        <Sidebar
+          as={Menu}
+          // animation='overlay'
+          // animation='push'
+          // animation='scale down'
+          // animation='uncover'
+          // animation='slide out'
+          animation='slide along'
+          icon='labeled'
+          // inverted
+          onHide={() => setVisibleDeck(false)}
+          vertical
+          width='thin'
+          visible={visibleDeck}
         >
-          <Controls />
-          { showMinimap && (
-            <MiniMap pannable zoomable position='top-left' />
-          )}
-          <Background variant="dots" gap={12} size={1} />
-          { showPanel && (
-            <Panel position="top-right">
-              <Popup content='Select recipient' trigger={
-                <Dropdown
-                  compact
-                  fluid
-                  selection
-                  clearable
-                  onSearchChange={(e, { value }) => setRecipientSearch(value)}
-                  trigger={
-                    <>
-                    { !recipientSearch && (
-                      <span>
-                        <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
-                        {recipient}
-                      </span>
-                    )}
-                    </>
-                  }
-                  multiple={false}
-                  search={true}
-                  options={roster}
-                  value={recipient}
-                  placeholder="Recipient"
-                  onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
-                  loading={roster.length === 0}
-                />
-              } />
-              <Input
-                iconPosition='left'
-                placeholder='/RegExp/ Condition...'
-                value={condition}
-                onChange={e => setCondition(e.target.value)}
-              ><Icon name='usb' /><input /></Input>
-              <br/>
-              <Button.Group vertical labeled icon fluid compact>
-                <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
-                <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
-              </Button.Group>
-              <br/>
-              {/*
-              <Input
-                iconPosition='left' placeholder='room...' size='mini'
-                value={room}
-                onChange={e => setRoom(e.target.value)}
-              ><Icon name='group' /><input /></Input>
-              <Button basic size='mini'
-                onClick={async () => {
-                  await sendRoomMessage({ room, recipient, prompt });
+          { nodes
+            .filter(nd => nd.data?.slide)
+            .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
+            .map(nd => (
+              <Menu.Item
+                active={nd.data.slideIndex === currentSlide}
+                onClick={() => {
+                  setTimeout(() => {
+                    // NOTE: fitView is deferred to ensure layout is up to date
+                    fitView({ nodes: [nd], duration: 800 });
+                  }, 0);
+                  setCurrentSlide(nd.data.slideIndex);
                 }}
-              >Groupchat</Button>
-              <Input
-                iconPosition='left' placeholder='prompt...' size='mini'
-                value={prompt}
-                onChange={e => setPrompt(e.target.value)}
-              ><Icon name='edit outline' /><input /></Input>
-              */}
-              <br />
-            </Panel>
-          )}
-        </ReactFlow>
-      </div>
+              >
+                <Icon name='sticky note outline' />
+                {nd.data.slideIndex+1}. {nd.data.uname}
+              </Menu.Item>
+            ))
+          }
+        </Sidebar>
+
+        {/*
+        <Sidebar.Pusher dimmed={visibleDeck}>
+        */}
+        <Sidebar.Pusher dimmed={false}>
+          <div
+            className="wrapper" ref={reactFlowWrapper}
+            style={{ width: width, height: height - conf.iframe.topOffset - conf.iframe.bottomOffset }}
+          >
+            <ReactFlow
+              style={{ backgroundColor: "#F7F9FB" }}
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              onEdgesDelete={onEdgesDelete}
+              nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
+              onInit={setRfInstance}
+              onConnect={onConnect}
+              onConnectEnd={onConnectEnd}
+              // onReconnect={onReconnect}
+              fitView
+              fitViewOptions={{ padding: 2 }}
+              // nodeOrigin={nodeOrigin}
+
+              panOnScroll={true}
+              selectionOnDrag={true}
+              selectionMode={SelectionMode.Partial}
+              panOnDrag={[1, 2]}
+            >
+              <Controls />
+              { showMinimap && (
+                <MiniMap pannable zoomable position='top-left' />
+              )}
+              <Background variant="dots" gap={12} size={1} />
+              { showPanel && (
+                <Panel position="top-right">
+                  <Popup content='Select recipient' trigger={
+                    <Dropdown
+                      compact
+                      fluid
+                      selection
+                      clearable
+                      onSearchChange={(e, { value }) => setRecipientSearch(value)}
+                      trigger={
+                        <>
+                        { !recipientSearch && (
+                          <span>
+                            <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                            {recipient}
+                          </span>
+                        )}
+                        </>
+                      }
+                      multiple={false}
+                      search={true}
+                      options={roster}
+                      value={recipient}
+                      placeholder="Recipient"
+                      onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
+                      loading={roster.length === 0}
+                    />
+                  } />
+                  <Input
+                    iconPosition='left'
+                    placeholder='/RegExp/ Condition...'
+                    value={condition}
+                    onChange={e => setCondition(e.target.value)}
+                  ><Icon name='usb' /><input /></Input>
+                  <br/>
+                  <Button.Group vertical labeled icon fluid compact>
+                    <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
+                    <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
+                  </Button.Group>
+                  <br/>
+                  {/*
+                  <Input
+                    iconPosition='left' placeholder='room...' size='mini'
+                    value={room}
+                    onChange={e => setRoom(e.target.value)}
+                  ><Icon name='group' /><input /></Input>
+                  <Button basic size='mini'
+                    onClick={async () => {
+                      await sendRoomMessage({ room, recipient, prompt });
+                    }}
+                  >Groupchat</Button>
+                  <Input
+                    iconPosition='left' placeholder='prompt...' size='mini'
+                    value={prompt}
+                    onChange={e => setPrompt(e.target.value)}
+                  ><Icon name='edit outline' /><input /></Input>
+                  */}
+                  <br />
+                </Panel>
+              )}
+            </ReactFlow>
+          </div>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
     </MapContext.Provider>
   )
 }
