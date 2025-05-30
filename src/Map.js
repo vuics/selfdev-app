@@ -680,7 +680,7 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const { presenceMap, roster } = useMapContext();
+  const { presenceMap, roster, setCurrentSlide } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
   const allNodes = getNodes()
@@ -798,12 +798,67 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   }
 
   const makeSlide = (slide) => {
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, slide } } : node
-      )
-    )
-  }
+    // Some nodes may already have slideIndex values, but what if they're
+    // inconsistent (e.g. gaps, duplicates, or mixed with undefined),
+    // you'll want to normalize all existing slideIndexes first,
+    // then assign the new one cleanly.
+    setNodes((nodes) => {
+      // Step 1: Extract and normalize all existing slides
+      const slides = nodes
+        .filter(n => n.data?.slide)
+        .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
+        .map((n, i) => ({ ...n, data: { ...n.data, slideIndex: i } }));
+
+      // Step 2: Build a map for normalized slide indexes
+      const slideMap = Object.fromEntries(slides.map(n => [n.id, n]));
+
+      // Step 3: Update all nodes
+      return nodes.map((n) => {
+        const isTarget = n.id === id;
+        // If this is the node being updated
+        if (isTarget) {
+          return { ...n, data: { ...n.data, slide, slideIndex: slide ? slides.length : undefined, }, };
+        }
+        // Else, normalize existing slide nodes
+        return slideMap[n.id] ?? n;
+      });
+    });
+  };
+
+  const reorderSlide = (direction) => {
+    setNodes((nodes) => {
+      // Step 1: Normalize slideIndexes
+      const slides = nodes
+        .filter(n => n.data?.slide)
+        .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
+        .map((n, i) => ({ ...n, data: { ...n.data, slideIndex: i } }));
+
+      const index = slides.findIndex(n => n.id === id);
+      const swapIndex = index + direction;
+
+      if (index === -1 || swapIndex < 0 || swapIndex >= slides.length) return nodes;
+
+      // Swap slideIndexes
+      const slideA = slides[index];
+      const slideB = slides[swapIndex];
+
+      const updatedNodes = nodes.map((n) => {
+        if (n.id === slideA.id) {
+          return { ...n, data: { ...n.data, slideIndex: slideB.data.slideIndex } };
+        }
+        if (n.id === slideB.id) {
+          return { ...n, data: { ...n.data, slideIndex: slideA.data.slideIndex } };
+        }
+        return n;
+      });
+
+      return updatedNodes;
+    });
+  };
+
+  const getTotalSlides = useCallback((nodes) => {
+    return allNodes.filter(node => node.data?.slide === true).length;
+  }, [allNodes])
 
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
@@ -907,11 +962,30 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Icon name={ data.kind === 'diff' ? 'dot circle' : 'circle outline'} />
                   Diff
                 </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => makeSlide(true)}>
-                  <Icon name={ data.slide ? 'check square' : 'square outline'} />
-                  Slide
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <Dropdown text='Slide' pointing='left' className='link item'>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => makeSlide(!data.slide)}>
+                  <Icon name={ data.slide ? 'toggle on' : 'toggle off'} />
+                  { data.slide ? 'Remove from slides' : 'Add to slides' }
                 </Dropdown.Item>
+                { data.slide && (<>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => setCurrentSlide(data.slideIndex)}>
+                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                    Set current slide: {data.slideIndex + 1} / {getTotalSlides()}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => reorderSlide(-1)}>
+                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                    Reorder slide down
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => reorderSlide(1)}>
+                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                    Reorder slide up
+                  </Dropdown.Item>
+                </>)}
               </Dropdown.Menu>
             </Dropdown>
 
@@ -1601,7 +1675,7 @@ function Map () {
   steppingRef.current = stepping
   pausingRef.current = pausing
 
-  const [ currentSlide, setCurrentSlide ] = useState(0)
+  const [ currentSlide, setCurrentSlide ] = useState(-1)
 
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
@@ -2561,26 +2635,49 @@ function Map () {
   }, [setEdges])
 
 
+  // const navigateSlide = useCallback((direction) => {
+  //   const slideNodes = nodes.filter(nd => nd.data?.slide === true);
+  //   let gotoSlide = currentSlide + direction;
+  //   if (gotoSlide >= slideNodes.length) {
+  //     gotoSlide = 0;
+  //   } else if (gotoSlide < 0) {
+  //     gotoSlide = slideNodes.length - 1;
+  //   }
+  //   const gotoNode = slideNodes[gotoSlide] || null;
+  //   setTimeout(() => {
+  //     // NOTE:
+  //     // Node might be outside viewport or positioned incorrectly
+  //     // Is the node positioned off-screen (position: { x, y })?
+  //     // Are you updating nodes dynamically, and the update hasn’t re-rendered yet when fitView() runs?
+  //     // Fix: Consider wrapping fitView() in a setTimeout(() => ..., 0) to allow DOM updates to flush first:
+  //     fitView({ nodes: [gotoNode], duration: 800 });
+  //   }, 0);
+  //   setCurrentSlide(gotoSlide);
+  //   // console.log(`${direction > 0 ? 'next' : 'previous'} slide gotoSlide:`, gotoSlide, ', gotoNode:', gotoNode, ', slideNodes:', slideNodes);
+  // }, [currentSlide, setCurrentSlide, fitView, nodes]);
+
   const navigateSlide = useCallback((direction) => {
-    const slideNodes = nodes.filter(nd => nd.data?.slide === true);
-    let gotoSlide = currentSlide + direction;
-    if (gotoSlide >= slideNodes.length) {
-      gotoSlide = 0;
-    } else if (gotoSlide < 0) {
-      gotoSlide = slideNodes.length - 1;
-    }
-    const gotoNode = slideNodes[gotoSlide] || null;
+    // Step 1: Filter and sort slide nodes by slideIndex
+    const slideNodes = nodes
+      .filter(nd => nd.data?.slide)
+      .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0));
+
+    // Step 2: Find current index in slideNodes
+    const currentIndex = slideNodes.findIndex(n => n.data.slideIndex === currentSlide);
+
+    // Step 3: Calculate next index with wraparound
+    let gotoIndex = currentIndex + direction;
+    if (gotoIndex >= slideNodes.length) gotoIndex = 0;
+    if (gotoIndex < 0) gotoIndex = slideNodes.length - 1;
+    const gotoNode = slideNodes[gotoIndex];
+
     setTimeout(() => {
-      // NOTE:
-      // Node might be outside viewport or positioned incorrectly
-      // Is the node positioned off-screen (position: { x, y })?
-      // Are you updating nodes dynamically, and the update hasn’t re-rendered yet when fitView() runs?
-      // Fix: Consider wrapping fitView() in a setTimeout(() => ..., 0) to allow DOM updates to flush first:
+      // NOTE: fitView is deferred to ensure layout is up to date
       fitView({ nodes: [gotoNode], duration: 800 });
     }, 0);
-    setCurrentSlide(gotoSlide);
-    // console.log(`${direction > 0 ? 'next' : 'previous'} slide gotoSlide:`, gotoSlide, ', gotoNode:', gotoNode, ', slideNodes:', slideNodes);
+    setCurrentSlide(gotoNode.data.slideIndex);
   }, [currentSlide, setCurrentSlide, fitView, nodes]);
+
 
   const nextSlide = useCallback((e) => {
     e.stopPropagation();
@@ -2609,6 +2706,7 @@ function Map () {
       presenceMap, roster, credentials, recipient, sendPersonalMessage,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
+      setCurrentSlide,
     }}>
       <Container>
         <Menubar />
