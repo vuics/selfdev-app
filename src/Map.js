@@ -815,18 +815,23 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       // Step 2: Build a map for normalized slide indexes
       const slideMap = Object.fromEntries(slides.map(n => [n.id, n]));
 
+      const slideIndex = slide ? slides.length : undefined
+      if (slideIndex) {
+        setCurrentSlide(slideIndex)
+      }
+
       // Step 3: Update all nodes
       return nodes.map((n) => {
         const isTarget = n.id === id;
         // If this is the node being updated
         if (isTarget) {
-          return { ...n, data: { ...n.data, slide, slideIndex: slide ? slides.length : undefined, }, };
+          return { ...n, data: { ...n.data, slide, slideIndex, }, };
         }
         // Else, normalize existing slide nodes
         return slideMap[n.id] ?? n;
       });
     });
-  }, [setNodes, id]);
+  }, [setNodes, id, setCurrentSlide]);
 
   const reorderSlide = useCallback((direction) => {
     setNodes((nodes) => {
@@ -844,6 +849,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       // Swap slideIndexes
       const slideA = slides[index];
       const slideB = slides[swapIndex];
+      setCurrentSlide(swapIndex)
 
       const updatedNodes = nodes.map((n) => {
         if (n.id === slideA.id) {
@@ -857,7 +863,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
       return updatedNodes;
     });
-  }, [id, setNodes]);
+  }, [id, setNodes, setCurrentSlide]);
 
   const getTotalSlides = useCallback(() => {
     return allNodes.filter(node => node.data?.slide === true).length;
@@ -977,16 +983,16 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 { data.slide && (<>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => setCurrentSlide(data.slideIndex)}>
-                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                    <Icon name='hand pointer outline' />
                     Activate slide: {data.slideIndex + 1} / {getTotalSlides()}
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => reorderSlide(-1)}>
-                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
-                    Move slide down
-                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(1)}>
-                    <Icon name={ data.slide ? 'check square' : 'square outline'} />
+                    <Icon name='long arrow alternate up' />
                     Move slide up
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => reorderSlide(-1)}>
+                    <Icon name='long arrow alternate down' />
+                    Move slide down
                   </Dropdown.Item>
                 </>)}
               </Dropdown.Menu>
