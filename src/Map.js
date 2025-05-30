@@ -17,7 +17,6 @@ import {
   Modal,
   Popup,
   Menu,
-  Grid,
   Segment,
   Sidebar,
 
@@ -362,7 +361,7 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
           name='linkify'
           onClick={(e => {
             e.stopPropagation();
-            fitView({ nodes: foundNodes });
+            fitView({ nodes: foundNodes, duration: 1000 });
           })}
         />
       </Accordion.Title>
@@ -801,7 +800,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     )
   }
 
-  const makeSlide = (slide) => {
+  const makeSlide = useCallback((slide) => {
     // Some nodes may already have slideIndex values, but what if they're
     // inconsistent (e.g. gaps, duplicates, or mixed with undefined),
     // you'll want to normalize all existing slideIndexes first,
@@ -827,9 +826,9 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         return slideMap[n.id] ?? n;
       });
     });
-  };
+  }, [setNodes, id]);
 
-  const reorderSlide = (direction) => {
+  const reorderSlide = useCallback((direction) => {
     setNodes((nodes) => {
       // Step 1: Normalize slideIndexes
       const slides = nodes
@@ -858,7 +857,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
       return updatedNodes;
     });
-  };
+  }, [id, setNodes]);
 
   const getTotalSlides = useCallback(() => {
     return allNodes.filter(node => node.data?.slide === true).length;
@@ -979,7 +978,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => setCurrentSlide(data.slideIndex)}>
                     <Icon name={ data.slide ? 'check square' : 'square outline'} />
-                    Set current slide: {data.slideIndex + 1} / {getTotalSlides()}
+                    Activate slide: {data.slideIndex + 1} / {getTotalSlides()}
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(-1)}>
                     <Icon name={ data.slide ? 'check square' : 'square outline'} />
@@ -1680,7 +1679,7 @@ function Map () {
   pausingRef.current = pausing
 
   const [ currentSlide, setCurrentSlide ] = useState(-1)
-  const [ visibleDeck, setVisibleDeck ] = useState(false)
+  const [ deckSidebar, setDeckSidebar ] = useState(false)
 
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
@@ -2639,28 +2638,6 @@ function Map () {
     })
   }, [setEdges])
 
-
-  // const navigateSlide = useCallback((direction) => {
-  //   const slideNodes = nodes.filter(nd => nd.data?.slide === true);
-  //   let gotoSlide = currentSlide + direction;
-  //   if (gotoSlide >= slideNodes.length) {
-  //     gotoSlide = 0;
-  //   } else if (gotoSlide < 0) {
-  //     gotoSlide = slideNodes.length - 1;
-  //   }
-  //   const gotoNode = slideNodes[gotoSlide] || null;
-  //   setTimeout(() => {
-  //     // NOTE:
-  //     // Node might be outside viewport or positioned incorrectly
-  //     // Is the node positioned off-screen (position: { x, y })?
-  //     // Are you updating nodes dynamically, and the update hasn’t re-rendered yet when fitView() runs?
-  //     // Fix: Consider wrapping fitView() in a setTimeout(() => ..., 0) to allow DOM updates to flush first:
-  //     fitView({ nodes: [gotoNode], duration: 800 });
-  //   }, 0);
-  //   setCurrentSlide(gotoSlide);
-  //   // console.log(`${direction > 0 ? 'next' : 'previous'} slide gotoSlide:`, gotoSlide, ', gotoNode:', gotoNode, ', slideNodes:', slideNodes);
-  // }, [currentSlide, setCurrentSlide, fitView, nodes]);
-
   const navigateSlide = useCallback((direction) => {
     // Step 1: Filter and sort slide nodes by slideIndex
     const slideNodes = nodes
@@ -2678,7 +2655,7 @@ function Map () {
 
     setTimeout(() => {
       // NOTE: fitView is deferred to ensure layout is up to date
-      fitView({ nodes: [gotoNode], duration: 800 });
+      fitView({ nodes: [gotoNode], duration: 1000 });
     }, 0);
     setCurrentSlide(gotoNode.data.slideIndex);
   }, [currentSlide, setCurrentSlide, fitView, nodes]);
@@ -2835,6 +2812,14 @@ function Map () {
                 <Dropdown.Divider />
                 <Dropdown.Item>
                   <Checkbox
+                    label='Show deck sidebar'
+                    checked={deckSidebar}
+                    onChange={(e, data) => setDeckSidebar(data.checked)}
+                  />
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item>
+                  <Checkbox
                     label='Show mini map'
                     onChange={(e, data) => setShowMinimap(data.checked)}
                     checked={showMinimap}
@@ -2847,16 +2832,6 @@ function Map () {
                     checked={showPanel}
                   />
                 </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-
-          <Menu.Menu>
-            <Dropdown item simple text='Slideshow'>
-              <Dropdown.Menu>
-                <Dropdown.Item>
-                </Dropdown.Item>
-                <Dropdown.Divider />
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Menu>
@@ -3216,25 +3191,34 @@ function Map () {
 
         { showSlides && (<>
           {' '} {' '}
+          <Popup
+            content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
+            trigger={
+              <Button
+                icon basic
+                // active={deckSidebar}
+                // circular
+                onClick={(e, data) => setDeckSidebar(!deckSidebar)}
+                // color={deckSidebar ? 'blue' : 'standard'}
+              >
+                <Icon name={deckSidebar ? 'toggle on' : 'toggle off'}
+                  color={deckSidebar ? 'blue' : 'standard'}
+                />
+              </Button>
+            }
+          />
           <Button.Group>
             <Popup content='Previous slide' trigger={
               <Button icon basic onClick={previousSlide}>
-                <Icon name='caret square left outline' color='grey' />
+                <Icon name='caret square left outline' color='blue' />
               </Button>
             } />
             <Popup content='Next slide' trigger={
               <Button icon basic onClick={nextSlide}>
-                <Icon name='caret square right outline' color='grey' />
+                <Icon name='caret square right outline' color='blue' />
               </Button>
             } />
           </Button.Group>
-          <Popup content='Toggle visibility of slide deck navigator' trigger={
-            <Checkbox
-              checked={visibleDeck}
-              label={{ children: <code>Slide deck</code> }}
-              onChange={(e, data) => setVisibleDeck(data.checked)}
-            />
-          } />
         </>)}
 
       </div>
@@ -3262,10 +3246,10 @@ function Map () {
           animation='slide along'
           icon='labeled'
           // inverted
-          onHide={() => setVisibleDeck(false)}
+          onHide={() => setDeckSidebar(false)}
           vertical
           width='thin'
-          visible={visibleDeck}
+          visible={deckSidebar}
         >
           { nodes
             .filter(nd => nd.data?.slide)
@@ -3276,7 +3260,7 @@ function Map () {
                 onClick={() => {
                   setTimeout(() => {
                     // NOTE: fitView is deferred to ensure layout is up to date
-                    fitView({ nodes: [nd], duration: 800 });
+                    fitView({ nodes: [nd], duration: 1000 });
                   }, 0);
                   setCurrentSlide(nd.data.slideIndex);
                 }}
@@ -3288,9 +3272,6 @@ function Map () {
           }
         </Sidebar>
 
-        {/*
-        <Sidebar.Pusher dimmed={visibleDeck}>
-        */}
         <Sidebar.Pusher dimmed={false}>
           <div
             className="wrapper" ref={reactFlowWrapper}
