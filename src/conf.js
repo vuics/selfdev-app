@@ -111,6 +111,10 @@ const conf = {
     enable: bool(process.env.REACT_APP_KEYS_ENABLE || true),
   },
 
+  vault: {
+    enable: bool(process.env.REACT_APP_VAULT_ENABLE || true),
+  },
+
   subscription: {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
   },

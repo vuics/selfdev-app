@@ -31,6 +31,7 @@ import Docs from './Docs'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
+import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
@@ -111,6 +112,9 @@ const Index = () => {
       )}
       { conf.keys.enable && (
         <Route path='/keys' element={(<Private> <Keys /> </Private>)}/>
+      )}
+      { conf.vault.enable && (
+        <Route path='/vault' element={(<Private> <Vault /> </Private>)}/>
       )}
       { conf.subscription.enable && (
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>

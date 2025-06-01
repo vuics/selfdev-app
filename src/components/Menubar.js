@@ -114,6 +114,12 @@ const Menubar = () => {
               API Keys
             </Dropdown.Item>
             )}
+            { conf.vault.enable && (
+            <Dropdown.Item onClick={() => navigate('/vault')}>
+              <Icon name='shield alternate' />
+              Vault
+            </Dropdown.Item>
+            )}
             { conf.subscription.enable && (
               <Dropdown.Item onClick={() => navigate('/subscription')}>
                 <Icon name='handshake' />
