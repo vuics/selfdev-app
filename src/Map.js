@@ -1725,6 +1725,22 @@ function Map () {
     localStorage.setItem('map.autosave', autosave.toString());
   }, [autosave]);
 
+  const [ showMenu, setShowMenu ] = useState(() => {
+    const saved = localStorage.getItem('map.showMenu') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showMenu', showMenu.toString());
+  }, [showMenu]);
+
+  const [ showOpener, setShowOpener ] = useState(() => {
+    const saved = localStorage.getItem('map.showOpener') || true
+    return saved === 'true'
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showOpener', showOpener.toString());
+  }, [showOpener]);
+
   const [ showMinimap, setShowMinimap ] = useState(() => {
     const saved = localStorage.getItem('map.showMinimap') || true
     return saved === 'true'
@@ -2722,199 +2738,233 @@ function Map () {
 
       <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
         {' '} {' '}
-        <Menu size='small' compact secondary>
-          <Menu.Menu>
-            <Dropdown item simple text='File'>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={postMap}>
-                  <Icon name='file' />
-                  New
-                </Dropdown.Item>
-                <Dropdown.Item onClick={putMap}>
-                  <Icon name='save' />
-                  Save
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
-                  <Icon name='clone' />
-                  Duplicate
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
-                  <Icon name='text cursor' />
-                  Rename
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item>
-                  <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+        { !showMenu && (
+          <Button.Group>
+            <Popup
+              content={(!showMenu ? 'Show' : 'Hide') + ' menu' }
+              trigger={
+                <Button
+                  icon basic
+                  onClick={(e, data) => setShowMenu(!showMenu)}
+                >
+                  <Icon name={'bars'}
+                    color={showMenu ? 'grey' : 'standard'}
+                  />
+                </Button>
+              }
+            />
+          </Button.Group>
+        )}
+        { showMenu && (<>
+          <Menu compact secondary>
+            <Menu.Menu>
+              <Dropdown simple text='File' icon=''>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={postMap}>
+                    <Icon name='file' />
+                    New
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={putMap}>
+                    <Icon name='save' />
+                    Save
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
+                    <Icon name='clone' />
+                    Duplicate
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
+                    <Icon name='text cursor' />
+                    Rename
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+                      <Checkbox
+                        label='Autosave'
+                        onChange={(e, data) => setAutosave(data.checked)}
+                        checked={autosave}
+                      />
+                    } />
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={downloadMap}>
+                    <Icon name='download' />
+                    Download
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={uploadMapInit}>
+                    <Icon name='upload' />
+                    Upload
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => {
+                    setConfirm({
+                      open: true,
+                      header: 'Confirm Map Delete',
+                      message: 'Are you sure you want to delete your map?',
+                      func: deleteMap,
+                    })
+                  } }>
+                    <Icon name='trash alternative' />
+                    Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Menu>
+
+            <Menu.Menu>
+              <Dropdown simple text='View' icon=''>
+                <Dropdown.Menu>
+                  <Dropdown.Item>
                     <Checkbox
-                      label='Autosave'
-                      onChange={(e, data) => setAutosave(data.checked)}
-                      checked={autosave}
+                      label='Show menu'
+                      onChange={(e, data) => setShowMenu(data.checked)}
+                      checked={showMenu}
                     />
-                  } />
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={downloadMap}>
-                  <Icon name='download' />
-                  Download
-                </Dropdown.Item>
-                <Dropdown.Item onClick={uploadMapInit}>
-                  <Icon name='upload' />
-                  Upload
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={() => {
-                  setConfirm({
-                    open: true,
-                    header: 'Confirm Map Delete',
-                    message: 'Are you sure you want to delete your map?',
-                    func: deleteMap,
-                  })
-                } }>
-                  <Icon name='trash alternative' />
-                  Delete
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show opener'
+                      onChange={(e, data) => setShowOpener(data.checked)}
+                      checked={showOpener}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show file controls'
+                      onChange={(e, data) => setShowFile(data.checked)}
+                      checked={showFile}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show layout controls'
+                      onChange={(e, data) => setShowLayout(data.checked)}
+                      checked={showLayout}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show color controls'
+                      onChange={(e, data) => setShowColors(data.checked)}
+                      checked={showColors}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show execution controls'
+                      onChange={(e, data) => setShowExecution(data.checked)}
+                      checked={showExecution}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show slide controls'
+                      onChange={(e, data) => setShowSlides(data.checked)}
+                      checked={showSlides}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show deck sidebar'
+                      checked={deckSidebar}
+                      onChange={(e, data) => setDeckSidebar(data.checked)}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show mini map'
+                      onChange={(e, data) => setShowMinimap(data.checked)}
+                      checked={showMinimap}
+                    />
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Checkbox
+                      label='Show control panel'
+                      onChange={(e, data) => setShowPanel(data.checked)}
+                      checked={showPanel}
+                    />
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Menu>
 
-          <Menu.Menu>
-            <Dropdown item simple text='View'>
-              <Dropdown.Menu>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show file controls'
-                    onChange={(e, data) => setShowFile(data.checked)}
-                    checked={showFile}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show layout controls'
-                    onChange={(e, data) => setShowLayout(data.checked)}
-                    checked={showLayout}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show color controls'
-                    onChange={(e, data) => setShowColors(data.checked)}
-                    checked={showColors}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show execution controls'
-                    onChange={(e, data) => setShowExecution(data.checked)}
-                    checked={showExecution}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show slide controls'
-                    onChange={(e, data) => setShowSlides(data.checked)}
-                    checked={showSlides}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show deck sidebar'
-                    checked={deckSidebar}
-                    onChange={(e, data) => setDeckSidebar(data.checked)}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show mini map'
-                    onChange={(e, data) => setShowMinimap(data.checked)}
-                    checked={showMinimap}
-                  />
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Checkbox
-                    label='Show control panel'
-                    onChange={(e, data) => setShowPanel(data.checked)}
-                    checked={showPanel}
-                  />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-
-          <Menu.Menu>
-            <Dropdown item simple text='Settings'>
-              <Dropdown.Menu>
-                <Dropdown text='Code viewer theme' pointing='left' className='link item'>
-                  <Dropdown.Menu>
-                    { Object.keys(editorThemes).map((thm) => {
-                      if (thm === '-' || thm === '--') {
+            <Menu.Menu>
+              <Dropdown simple text='Settings' icon=''>
+                <Dropdown.Menu>
+                  <Dropdown text='Code viewer theme' pointing='left' className='link item'>
+                    <Dropdown.Menu>
+                      { Object.keys(editorThemes).map((thm) => {
+                        if (thm === '-' || thm === '--') {
+                          return (
+                            <Dropdown.Divider />
+                          )
+                        }
                         return (
-                          <Dropdown.Divider />
+                          <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
+                            <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
+                            {thm}
+                          </Dropdown.Item>
                         )
-                      }
-                      return (
-                        <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
-                          <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
-                          {thm}
-                        </Dropdown.Item>
-                      )
-                    } ) }
-                  </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown text='Code editor theme' pointing='left' className='link item'>
-                  <Dropdown.Menu>
-                    { Object.keys(editorThemes).map((thm) => {
-                      if (thm === '-' || thm === '--') {
+                      } ) }
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Dropdown text='Code editor theme' pointing='left' className='link item'>
+                    <Dropdown.Menu>
+                      { Object.keys(editorThemes).map((thm) => {
+                        if (thm === '-' || thm === '--') {
+                          return (
+                            <Dropdown.Divider />
+                          )
+                        }
                         return (
-                          <Dropdown.Divider />
+                          <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
+                            <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
+                            {thm}
+                          </Dropdown.Item>
                         )
-                      }
-                      return (
-                        <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
-                          <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
-                          {thm}
-                        </Dropdown.Item>
-                      )
-                    } ) }
-                  </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown text='Code editor mode' pointing='left' className='link item'>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => { setVimMode(false) } }>
-                      <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
-                      Normal
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setVimMode(true) } }>
-                      <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
-                      Vim
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown text='Markdown editor options' pointing='left' className='link item'>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
-                      <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
-                      Markdown editor (light)
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
-                      <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
-                      Markdown editor (dark)
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
-                      <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
-                      Code editor
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
-                      <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
-                      Code editor with preview
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-        </Menu>
+                      } ) }
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Dropdown text='Code editor mode' pointing='left' className='link item'>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => { setVimMode(false) } }>
+                        <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
+                        Normal
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => { setVimMode(true) } }>
+                        <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
+                        Vim
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Dropdown text='Markdown editor options' pointing='left' className='link item'>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
+                        <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
+                        Markdown editor (light)
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
+                        <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
+                        Markdown editor (dark)
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
+                        <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
+                        Code editor
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
+                        <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
+                        Code editor with preview
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Menu>
+          </Menu>
+        </>) }
 
         { showFile && (<>
           {' '} {' '}
@@ -2974,43 +3024,41 @@ function Map () {
         </>)}
 
         <span style={{ marginLeft: '1em' }} />
-        { renaming && (
-          <>
-            <Input
-              iconPosition='left'
-              placeholder='Title...'
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setRenaming(renaming => !renaming)
-                }
-                if (e.key === 'Escape') {
-                  setRenaming(renaming => !renaming)
-                  setTitle(getMap(mapId).title)
-                }
+        { renaming && (<>
+          {' '}
+          <Input
+            iconPosition='left'
+            placeholder='Title...'
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setRenaming(renaming => !renaming)
+              }
+              if (e.key === 'Escape') {
+                setRenaming(renaming => !renaming)
+                setTitle(getMap(mapId).title)
+              }
+            }}
+          ><Icon name='map' /><input /></Input>
+          {' '}
+          <Button.Group>
+            <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
+              <Icon name='check' />
+            </Button>
+            <Button.Or />
+            <Button icon
+              onClick={() => {
+                setRenaming(renaming => !renaming)
+                setTitle(getMap(mapId).title)
               }}
-            ><Icon name='map' /><input /></Input>
-            {' '}
-            <Button.Group>
-              <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
-                <Icon name='check' />
-              </Button>
-              <Button.Or />
-              <Button icon
-                onClick={() => {
-                  setRenaming(renaming => !renaming)
-                  setTitle(getMap(mapId).title)
-                }}
-              >
-                <Icon name='cancel' />
-              </Button>
-            </Button.Group>
-          </>
-        )}
-        {' '}
-        { !renaming && (
-          <>
+            >
+              <Icon name='cancel' />
+            </Button>
+          </Button.Group>
+        </>)}
+        { !renaming && showOpener && (<>
+          {' '}
           <Icon name='folder open outline' />
           <Popup content='Select a map to open' trigger={
             <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
@@ -3045,8 +3093,7 @@ function Map () {
               </Dropdown.Menu>
             </Dropdown>
           } />
-          </>
-        )}
+        </>)}
 
         { showLayout && (<>
           {' '}
@@ -3203,10 +3250,7 @@ function Map () {
               trigger={
                 <Button
                   icon basic
-                  // active={deckSidebar}
-                  // circular
                   onClick={(e, data) => setDeckSidebar(!deckSidebar)}
-                  // color={deckSidebar ? 'blue' : 'standard'}
                 >
                   <Icon name={deckSidebar ? 'images' : 'images outline'}
                     color={deckSidebar ? 'blue' : 'standard'}
