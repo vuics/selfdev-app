@@ -19,7 +19,13 @@ const archetypes = {
           type: 'object',
           properties: {
             provider: { type: 'string' },
-            name: { type: 'string' }
+            name: { type: 'string' },
+            apiKey: {
+              type: 'object',
+              properties: {
+                valueFromVault: { type: 'string' },
+              },
+            },
           }
         },
         systemMessage: { type: 'string' },
@@ -33,6 +39,9 @@ const archetypes = {
         model: {
           provider: 'openai',
           name: 'gpt-4o-mini',
+          apiKey: {
+            valueFromVault: 'OPENAI_API_KEY',
+          },
         },
         systemMessage: '',
       }
@@ -57,15 +66,27 @@ const archetypes = {
           type: 'object',
           properties: {
             provider: { type: 'string' },
-            name: { type: 'string' }
-          }
+            name: { type: 'string' },
+            apiKey: {
+              type: 'object',
+              properties: {
+                valueFromVault: { type: 'string' },
+              },
+            },
+          },
         },
         embeddings: {
           type: 'object',
           properties: {
             provider: { type: 'string' },
-            name: { type: 'string' }
-          }
+            name: { type: 'string' },
+            apiKey: {
+              type: 'object',
+              properties: {
+                valueFromVault: { type: 'string' },
+              },
+            },
+          },
         },
         vectorStore: { type: 'string' },
         loaders: {
@@ -117,10 +138,16 @@ const archetypes = {
         model: {
           provider: 'openai',
           name: 'gpt-4o-mini',
+          apiKey: {
+            valueFromVault: 'OPENAI_API_KEY',
+          },
         },
         embeddings: {
           provider: 'openai',
           name: 'text-embedding-3-large',
+          apiKey: {
+            valueFromVault: 'OPENAI_API_KEY',
+          },
         },
         vectorStore: 'chroma',
         loaders: [ {
@@ -374,6 +401,18 @@ const archetypes = {
                 style: { type: 'string' },
               },
             },
+            instance: {
+              type: 'object',
+              properties: {
+                valueFromVault: { type: 'string' },
+              },
+            },
+            apiKey: {
+              type: 'object',
+              properties: {
+                valueFromVault: { type: 'string' },
+              },
+            },
           },
         },
       }
@@ -393,6 +432,12 @@ const archetypes = {
             enable: true,
             output: 'text',   // text, mpl
             style: 'str',     // only for text output
+          },
+          instance: {
+            valueFromVault: 'IBM_CLOUD_QISKIT_INSTANCE',
+          },
+          apiKey: {
+            valueFromVault: 'IBM_CLOUD_API_KEY',
           },
         },
       }
