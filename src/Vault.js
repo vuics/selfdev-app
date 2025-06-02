@@ -17,7 +17,6 @@ import {
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-import { sleep } from './helper'
 
 const Vault = () => {
   const [ vault, setVault ] = useState({})
@@ -25,7 +24,7 @@ const Vault = () => {
   const [ keyError, setKeyError ] = useState('')
   const [ value, setValue ] = useState('')
   const [ valueError, setValueError ] = useState('')
-  const [ visible, setVisible ] = useState(null)
+  const [ visibles, setVisibles ] = useState([])
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
   const [ adding, setAdding ] = useState(false)
@@ -33,7 +32,7 @@ const Vault = () => {
 
   const getVault = async () => {
     setLoading(true)
-    setVisible(null)
+    setVisibles([])
     try {
       const res = await axios.get(`${conf.api.url}/vault`, {
         headers: { 'Content-Type': 'application/json' },
@@ -80,7 +79,7 @@ const Vault = () => {
   }
 
   const addSecret = async () => {
-    setVisible(null)
+    setVisibles([])
     if (!key) {
       return setKeyError('Key is empty')
     }
@@ -110,7 +109,7 @@ const Vault = () => {
   }
 
   const deleteSecret = async ({ key }) => {
-    setVisible(null)
+    setVisibles([])
     setLoading(true)
     try {
       const res = await axios.delete(`${conf.api.url}/vault`, {
@@ -194,31 +193,40 @@ const Vault = () => {
                 <Table.Cell width={5}>{ key }</Table.Cell>
                 <Table.Cell width={9}>
                   <Input
-                    type={ visible === key ? 'text': 'password' }
+                    type={ visibles.includes(key) ? 'text': 'password' }
                     value={ value || '*********' }
                     action
                     fluid
                   >
                     <input />
-                    <Button icon onClick={() => { exposeSecret({ key }); setVisible(visible === key ? null : key ) }}>
-                      <Icon name={ visible === key? 'eye slash' : 'eye' } />
-                    </Button>
-                    <Popup
-                      content='Copied'
-                      on='click'
-                      pinned
-                      trigger={
+                      <Popup content='Expose the secret value' trigger={
+                        <Button
+                          icon
+                          onClick={() => {
+                            if (visibles.includes(key)) {
+                              setVisibles(prev => prev.filter(k => k !== key));
+                            } else {
+                              exposeSecret({ key });
+                              setVisibles(prev => [...prev, key]);
+                            }
+                          }}
+                        >
+                          <Icon name={ visibles.includes(key) ? 'eye slash' : 'eye' } />
+                        </Button>
+                      } />
+                      <Popup content='Copy the secret value' trigger={
                         <Button icon onClick={async () => { exposeSecret({ key, copy: true });  }}>
                           <Icon name='copy' />
                         </Button>
-                      }
-                    />
+                      } />
                   </Input>
                 </Table.Cell>
                 <Table.Cell width={1} textAlign='right'>
-                  <Button icon onClick={() => { deleteSecret({ key }) }}>
-                    <Icon name='trash' />
-                  </Button>
+                  <Popup content='Delete the key-value secret' trigger={
+                    <Button icon onClick={() => { deleteSecret({ key }) }}>
+                      <Icon name='trash' />
+                    </Button>
+                  } />
                 </Table.Cell>
               </Table.Row>
             ))}
