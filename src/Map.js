@@ -959,7 +959,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                       );
                     }}
                   >
-                    <Icon name='stop' />
+                    <Icon name='window close outline' />
                     Close diff
                   </Dropdown.Item>
                   <Dropdown.Divider />
@@ -975,7 +975,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                       );
                     }}
                   >
-                    <Icon name='columns' />
+                    <Icon name='caret square right outline' />
                     Diff stash (view)
                   </Dropdown.Item>
                 </>) }
@@ -989,7 +989,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                       );
                     }}
                   >
-                    <Icon name='columns' />
+                    <Icon name='caret square left outline' />
                     Diff restore (edit)
                   </Dropdown.Item>
                 </>) }
@@ -1005,7 +1005,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   }}
                 >
                   <Icon name='long arrow alternate right' />
-                  Stash content for diff
+                  Stash content
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1017,7 +1017,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   }}
                 >
                   <Icon name='long arrow alternate left' />
-                  Restore content from stash
+                  Restore content
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
