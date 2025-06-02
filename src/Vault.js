@@ -14,11 +14,13 @@ import {
   Popup,
   Input,
 } from 'semantic-ui-react'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
+import { sleep } from './helper'
 
 const Vault = () => {
-  const [ vault, setVault ] = useState([])
+  const [ vault, setVault ] = useState({})
   const [ key, setKey ] = useState('')
   const [ keyError, setKeyError ] = useState('')
   const [ value, setValue ] = useState('')
@@ -31,13 +33,14 @@ const Vault = () => {
 
   const getVault = async () => {
     setLoading(true)
+    setVisible(null)
     try {
       const res = await axios.get(`${conf.api.url}/vault`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
       console.log('vault index res:', res)
-      setVault(res?.data || [])
+      setVault(res?.data || {})
     } catch (err) {
       console.error('getVault error:', err);
       return setResponseError(err?.response?.data?.message || 'Error getting vault.')
@@ -50,7 +53,34 @@ const Vault = () => {
     getVault()
   }, [])
 
+  const exposeSecret = async ({ key, copy = false } = {}) => {
+    setLoading(true)
+    try {
+      const res = await axios.post(`${conf.api.url}/vault/expose`, {
+        key,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('post vault res:', res)
+      // setResponseMessage(`${res.statusText} vault "${res.data}"`)
+      setVault(prevVault => ({
+        ...prevVault,
+        ...res?.data,
+      }));
+      if (copy) {
+        navigator.clipboard.writeText(res?.data[key])
+      }
+    } catch (err) {
+      console.error('post vault error:', err);
+      return setResponseError(err.toString() || 'Error posting vault.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const addSecret = async () => {
+    setVisible(null)
     if (!key) {
       return setKeyError('Key is empty')
     }
@@ -68,8 +98,7 @@ const Vault = () => {
       })
       console.log('post vault res:', res)
       // setResponseMessage(`${res.statusText} vault "${res.data}"`)
-      // vault.push(res.data)
-      setVault(res?.data || [])
+      setVault(res?.data || {})
       setKey('')
       setValue('')
     } catch (err) {
@@ -81,6 +110,7 @@ const Vault = () => {
   }
 
   const deleteSecret = async ({ key }) => {
+    setVisible(null)
     setLoading(true)
     try {
       const res = await axios.delete(`${conf.api.url}/vault`, {
@@ -91,7 +121,7 @@ const Vault = () => {
       })
       console.log('delete vault res:', res)
       // setResponseMessage(`API vault "${name}" deleted`)
-      setVault(res?.data || [])
+      setVault(res?.data || {})
     } catch (err) {
       console.error('delete vault error:', err);
       return setResponseError(err.toString() || 'Error deleting vault.')
@@ -165,12 +195,12 @@ const Vault = () => {
                 <Table.Cell width={9}>
                   <Input
                     type={ visible === key ? 'text': 'password' }
-                    defaultValue={ value }
+                    value={ value || '*********' }
                     action
                     fluid
                   >
                     <input />
-                    <Button icon onClick={() => { setVisible(visible === key ? null : key ) }}>
+                    <Button icon onClick={() => { exposeSecret({ key }); setVisible(visible === key ? null : key ) }}>
                       <Icon name={ visible === key? 'eye slash' : 'eye' } />
                     </Button>
                     <Popup
@@ -178,7 +208,7 @@ const Vault = () => {
                       on='click'
                       pinned
                       trigger={
-                        <Button icon onClick={() => { navigator.clipboard.writeText(value) }}>
+                        <Button icon onClick={async () => { exposeSecret({ key, copy: true });  }}>
                           <Icon name='copy' />
                         </Button>
                       }
