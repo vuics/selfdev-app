@@ -19,9 +19,11 @@ import conf from './conf'
 
 const Vault = () => {
   const [ vault, setVault ] = useState([])
-  const [ name, setName ] = useState('')
+  const [ key, setKey ] = useState('')
+  const [ keyError, setKeyError ] = useState('')
+  const [ value, setValue ] = useState('')
+  const [ valueError, setValueError ] = useState('')
   const [ visible, setVisible ] = useState(null)
-  const [ nameError, setNameError ] = useState('')
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
   const [ adding, setAdding ] = useState(false)
@@ -33,7 +35,6 @@ const Vault = () => {
       const res = await axios.get(`${conf.api.url}/vault`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('vault index res:', res)
       setVault(res?.data || [])
@@ -49,21 +50,28 @@ const Vault = () => {
     getVault()
   }, [])
 
-  const handleSubmit = async () => {
+  const addSecret = async () => {
+    if (!key) {
+      return setKeyError('Key is empty')
+    }
+    if (!value) {
+      return setValueError('Value is empty')
+    }
     setLoading(true)
     try {
       const res = await axios.post(`${conf.api.url}/vault`, {
-        name,
+        key,
+        value
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('post vault res:', res)
-      // setResponseMessage(`${res.statusText} API vault "${res.data.name}"`)
-      vault.push(res.data)
-      setVault(vault)
-      setName('')
+      // setResponseMessage(`${res.statusText} vault "${res.data}"`)
+      // vault.push(res.data)
+      setVault(res?.data || [])
+      setKey('')
+      setValue('')
     } catch (err) {
       console.error('post vault error:', err);
       return setResponseError(err.toString() || 'Error posting vault.')
@@ -72,17 +80,18 @@ const Vault = () => {
     }
   }
 
-  const handleDelete = async ({ _id, name }) => {
+  const deleteSecret = async ({ key }) => {
     setLoading(true)
     try {
-      const res = await axios.delete(`${conf.api.url}/vault/${_id}`, {
+      const res = await axios.delete(`${conf.api.url}/vault`, {
+        data: { key },
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
+        // crossOrigin: { mode: 'cors' },
       })
       console.log('delete vault res:', res)
       // setResponseMessage(`API vault "${name}" deleted`)
-      setVault(vault.filter(obj => obj._id !== _id))
+      setVault(res?.data || [])
     } catch (err) {
       console.error('delete vault error:', err);
       return setResponseError(err.toString() || 'Error deleting vault.')
@@ -116,6 +125,26 @@ const Vault = () => {
           onDismiss={() => setResponseMessage('')}
         />
       }
+      { keyError &&
+        <Message
+          negative
+          style={{ textAlign: 'left'}}
+          icon='exclamation circle'
+          header='Error'
+          content={keyError}
+          onDismiss={() => setKeyError('')}
+        />
+      }
+      { valueError &&
+        <Message
+          negative
+          style={{ textAlign: 'left'}}
+          icon='exclamation circle'
+          header='Error'
+          content={valueError}
+          onDismiss={() => setValueError('') }
+        />
+      }
 
       <Segment secondary>
         <Header as='h3'>Vault</Header>
@@ -123,52 +152,44 @@ const Vault = () => {
         <Table striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Key</Table.HeaderCell>
               <Table.HeaderCell>Value</Table.HeaderCell>
-              {/*
-              <Table.HeaderCell>Created At</Table.HeaderCell>
-              <Table.HeaderCell>Last Used At</Table.HeaderCell>
               <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
-              */}
             </Table.Row>
           </Table.Header>
 
           <Table.Body>
             { Object.entries(vault).map(([key, value]) => (
               <Table.Row key={key}>
-                <Table.Cell>{ key }</Table.Cell>
-                <Table.Cell>{ value }</Table.Cell>
-                {/*
-                <Table.Cell>
+                <Table.Cell width={5}>{ key }</Table.Cell>
+                <Table.Cell width={9}>
                   <Input
-                    type={ visible === _id ? 'text': 'password' }
-                    defaultValue={ key+':'+secret }
+                    type={ visible === key ? 'text': 'password' }
+                    defaultValue={ value }
                     action
+                    fluid
                   >
                     <input />
-                    <Button icon onClick={() => { setVisible(visible === _id ? null : _id) }}>
-                      <Icon name='eye' />
+                    <Button icon onClick={() => { setVisible(visible === key ? null : key ) }}>
+                      <Icon name={ visible === key? 'eye slash' : 'eye' } />
                     </Button>
                     <Popup
                       content='Copied'
                       on='click'
                       pinned
                       trigger={
-                        <Button icon onClick={() => { navigator.clipboard.writeText(`${key}:${secret}`) }}>
+                        <Button icon onClick={() => { navigator.clipboard.writeText(value) }}>
                           <Icon name='copy' />
                         </Button>
                       }
                     />
                   </Input>
                 </Table.Cell>
-                <Table.Cell>{ new Date(createdAt).toLocaleDateString() }</Table.Cell>
-                <Table.Cell>{ lastUsedAt && new Date(lastUsedAt).toLocaleDateString() }</Table.Cell>
-                <Table.Cell textAlign='right'>
-                  <Button icon onClick={() => { handleDelete({ name, _id }) }}>
+                <Table.Cell width={1} textAlign='right'>
+                  <Button icon onClick={() => { deleteSecret({ key }) }}>
                     <Icon name='trash' />
                   </Button>
                 </Table.Cell>
-                */}
               </Table.Row>
             ))}
           </Table.Body>
@@ -177,23 +198,36 @@ const Vault = () => {
         { !adding && (
           <Button onClick={() => setAdding(!adding) }>
             <Icon name='add' />
-            {' '}Add Key{' '}
+            {' '}Add Secret{' '}
           </Button>
         )}
 
         { adding && (
           <Form>
             <Segment stacked>
-              <Header as='h4'>Add Key</Header>
+              <Header as='h4'>Add Secret</Header>
               <Form.Input fluid
                 icon='key'
                 iconPosition='left'
-                placeholder='Key Name'
-                name='name'
-                value={name}
-                onChange={e => setName(e.target.value)}
-                error={ !isEmpty(nameError) && {
-                  content: nameError,
+                placeholder='Key'
+                name='key'
+                value={key}
+                onChange={e => setKey(e.target.value)}
+                error={ !isEmpty(keyError) && {
+                  content: keyError,
+                  pointing: 'above',
+                }}
+                required
+              />
+              <Form.Input fluid
+                icon='envelope'
+                iconPosition='left'
+                placeholder='Value'
+                name='value'
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                error={ !isEmpty(valueError) && {
+                  content: valueError,
                   pointing: 'above',
                 }}
                 required
@@ -204,7 +238,7 @@ const Vault = () => {
                   {' '}Cancel{' '}
                 </Button>
                 <Button.Or />
-                <Button positive onClick={() => { handleSubmit(); setAdding(!adding) }}>
+                <Button positive onClick={() => { addSecret(); setAdding(!adding) }}>
                   <Icon name='save' />
                   {' '}Submit{' '}
                 </Button>
@@ -214,8 +248,6 @@ const Vault = () => {
         )}
       </Segment>
 
-      <Segment>
-      </Segment>
       <Message info>
         <Message.Header>
           Your keys are safely protected and securely stored.

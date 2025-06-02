@@ -33,7 +33,6 @@ const Keys = () => {
       const res = await axios.get(`${conf.api.url}/key`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('keys index res:', res)
       setKeys(res?.data || [])
@@ -57,7 +56,6 @@ const Keys = () => {
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('post key res:', res)
       // setResponseMessage(`${res.statusText} API key "${res.data.name}"`)
@@ -78,7 +76,6 @@ const Keys = () => {
       const res = await axios.delete(`${conf.api.url}/key/${_id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('delete key res:', res)
       // setResponseMessage(`API key "${name}" deleted`)
