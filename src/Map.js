@@ -946,6 +946,81 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Icon name='edit' />
               { data.editing ? 'View' : 'Edit' }
             </Dropdown.Item>
+            <Dropdown text='Diff' pointing='left' className='link item'>
+              <Dropdown.Menu>
+
+                { data.diffing && (<>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setNodes((nodes) =>
+                        nodes.map((node) =>
+                          node.id === id ? { ...node, data: { ...node.data, diffing: !data.diffing } } : node
+                        )
+                      );
+                    }}
+                  >
+                    <Icon name='stop' />
+                    Close diff
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                </>) }
+
+                { (!data.diffing || data.editing) && (<>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setNodes((nodes) =>
+                        nodes.map((node) =>
+                          node.id === id ? { ...node, data: { ...node.data, diffing: true, editing: false } } : node
+                        )
+                      );
+                    }}
+                  >
+                    <Icon name='columns' />
+                    Diff stash (view)
+                  </Dropdown.Item>
+                </>) }
+                { (!data.diffing || !data.editing) && (<>
+                  <Dropdown.Item
+                    onClick={() => {
+                      setNodes((nodes) =>
+                        nodes.map((node) =>
+                          node.id === id ? { ...node, data: { ...node.data, diffing: true, editing: true } } : node
+                        )
+                      );
+                    }}
+                  >
+                    <Icon name='columns' />
+                    Diff restore (edit)
+                  </Dropdown.Item>
+                </>) }
+
+                <Dropdown.Divider />
+                <Dropdown.Item
+                  onClick={() => {
+                    setNodes((nodes) =>
+                      nodes.map((node) =>
+                        node.id === id ? { ...node, data: { ...node.data, stash: text, editing: true } } : node
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='long arrow alternate right' />
+                  Stash content for diff
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    setNodes((nodes) =>
+                      nodes.map((node) =>
+                        node.id === id ? { ...node, data: { ...node.data, text: stash  } } : node
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='long arrow alternate left' />
+                  Restore content from stash
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
 
             <Dropdown.Divider />
 
@@ -953,7 +1028,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => selectKind(undefined)}>
                   <Icon name={ !data.kind ? 'dot circle' : 'circle outline'} />
-                  Note
+                  Plain note
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('markdown')}>
                   <Icon name={ (data.kind === 'markdown') ? 'dot circle' : 'circle outline'} />
@@ -966,10 +1041,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 <Dropdown.Item onClick={() => selectKind('raw')}>
                   <Icon name={ data.kind === 'raw' ? 'dot circle' : 'circle outline'} />
                   Raw
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => selectKind('diff')}>
-                  <Icon name={ data.kind === 'diff' ? 'dot circle' : 'circle outline'} />
-                  Diff
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -1038,31 +1109,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
             <Dropdown.Item
               onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, stash: text } } : node
-                  )
-                );
-              }}
-            >
-              <Icon name='calendar plus' />
-              Stash content for diff
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.id === id ? { ...node, data: { ...node.data, text: stash  } } : node
-                  )
-                );
-              }}
-            >
-              <Icon name='calendar minus' />
-              Restore content from stash
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item
-              onClick={() => {
                 setNodes((nodes) => nodes.filter((n) => n.id !== id));
               }}
             >
@@ -1126,34 +1172,34 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>
         ) }
 
-        { !data.kind && (<>
-          <NoteEditor
-            text={text} setText={setText}
-            applyText={applyText} cancelText={cancelText} data={data}
-            allNodes={allNodes} setNodes={setNodes} id={id}
-          />
-        </>)}
-
-        { data.kind === 'markdown' && (<>
-          <MarkdownEditor
-            text={text} setText={setText}
-            applyText={applyText} cancelText={cancelText} data={data}
-            allNodes={allNodes} setNodes={setNodes} id={id} roster={roster}
-          />
-        </>)}
-
-        { (data.kind === 'code' || data.kind === 'raw') && (<>
-          <CodeEditor
-            text={text} setText={setText} roster={roster} data={data}
-            id={id} setNodes={setNodes}
-          />
-        </>)}
-
-        { data.kind === 'diff' && (<>
+        { data.diffing ? (<>
           <DiffEditor
             text={text} setText={setText} stash={stash} setStash={setStash}
             data={data} setNodes={setNodes} id={id}
           />
+        </>) : (<>
+          { !data.kind && (<>
+            <NoteEditor
+              text={text} setText={setText}
+              applyText={applyText} cancelText={cancelText} data={data}
+              allNodes={allNodes} setNodes={setNodes} id={id}
+            />
+          </>)}
+
+          { data.kind === 'markdown' && (<>
+            <MarkdownEditor
+              text={text} setText={setText}
+              applyText={applyText} cancelText={cancelText} data={data}
+              allNodes={allNodes} setNodes={setNodes} id={id} roster={roster}
+            />
+          </>)}
+
+          { (data.kind === 'code' || data.kind === 'raw') && (<>
+            <CodeEditor
+              text={text} setText={setText} roster={roster} data={data}
+              id={id} setNodes={setNodes}
+            />
+          </>)}
         </>)}
 
         { data.editing && (<>
