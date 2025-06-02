@@ -38,7 +38,7 @@ const Vault = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log('vault index res:', res)
+      // console.log('vault index res:', res)
       setVault(res?.data || {})
     } catch (err) {
       console.error('getVault error:', err);
@@ -61,7 +61,7 @@ const Vault = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log('post vault res:', res)
+      // console.log('post vault res:', res)
       // setResponseMessage(`${res.statusText} vault "${res.data}"`)
       setVault(prevVault => ({
         ...prevVault,
@@ -95,7 +95,7 @@ const Vault = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log('post vault res:', res)
+      // console.log('post vault res:', res)
       // setResponseMessage(`${res.statusText} vault "${res.data}"`)
       setVault(res?.data || {})
       setKey('')
@@ -121,7 +121,7 @@ const Vault = () => {
         withCredentials: true,
         // crossOrigin: { mode: 'cors' },
       })
-      console.log('delete vault res:', res)
+      // console.log('delete vault res:', res)
       // setResponseMessage(`API vault "${name}" deleted`)
       setVault(res?.data || {})
     } catch (err) {
