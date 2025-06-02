@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty, has } from 'lodash'
 import axios from 'axios'
 import {
   Form,
@@ -83,8 +83,8 @@ const Vault = () => {
     if (!key) {
       return setKeyError('Key is empty')
     }
-    if (!value) {
-      return setValueError('Value is empty')
+    if (has(vault, key)) {
+      return setKeyError('The key already exists')
     }
     setLoading(true)
     try {
@@ -99,7 +99,10 @@ const Vault = () => {
       // setResponseMessage(`${res.statusText} vault "${res.data}"`)
       setVault(res?.data || {})
       setKey('')
+      setKeyError('')
       setValue('')
+      setValueError('')
+      setAdding(!adding)
     } catch (err) {
       console.error('post vault error:', err);
       return setResponseError(err.toString() || 'Error posting vault.')
@@ -154,26 +157,6 @@ const Vault = () => {
           onDismiss={() => setResponseMessage('')}
         />
       }
-      { keyError &&
-        <Message
-          negative
-          style={{ textAlign: 'left'}}
-          icon='exclamation circle'
-          header='Error'
-          content={keyError}
-          onDismiss={() => setKeyError('')}
-        />
-      }
-      { valueError &&
-        <Message
-          negative
-          style={{ textAlign: 'left'}}
-          icon='exclamation circle'
-          header='Error'
-          content={valueError}
-          onDismiss={() => setValueError('') }
-        />
-      }
 
       <Segment secondary>
         <Header as='h3'>Vault</Header>
@@ -194,7 +177,7 @@ const Vault = () => {
                 <Table.Cell width={9}>
                   <Input
                     type={ visibles.includes(key) ? 'text': 'password' }
-                    value={ value || '*********' }
+                    value={ value === null ? '***************************' : value }
                     action
                     fluid
                   >
@@ -236,14 +219,14 @@ const Vault = () => {
         { !adding && (
           <Button onClick={() => setAdding(!adding) }>
             <Icon name='add' />
-            {' '}Add Secret{' '}
+            {' '}Add Key/Value{' '}
           </Button>
         )}
 
         { adding && (
           <Form>
             <Segment stacked>
-              <Header as='h4'>Add Secret</Header>
+              <Header as='h4'>Add Key/Value Secret</Header>
               <Form.Input fluid
                 icon='key'
                 iconPosition='left'
@@ -268,7 +251,6 @@ const Vault = () => {
                   content: valueError,
                   pointing: 'above',
                 }}
-                required
               />
               <Button.Group>
                 <Button onClick={() => setAdding(!adding) }>
@@ -276,7 +258,7 @@ const Vault = () => {
                   {' '}Cancel{' '}
                 </Button>
                 <Button.Or />
-                <Button positive onClick={() => { addSecret(); setAdding(!adding) }}>
+                <Button positive onClick={() => { addSecret() }}>
                   <Icon name='save' />
                   {' '}Submit{' '}
                 </Button>
