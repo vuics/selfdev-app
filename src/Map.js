@@ -683,12 +683,12 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const { presenceMap, roster, setCurrentSlide } = useMapContext();
+  const { presence, roster, setCurrentSlide } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
-  // console.log('presenceMap:', presenceMap)
+  // console.log('presence:', presence)
   // console.log('roster:', roster)
 
   useEffect(() => {
@@ -1166,7 +1166,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <br />
             Waiting for a reply from:{' '}
             <Button compact size='mini'>
-              <Icon name='user' color={ presenceMap[data.waitRecipient] ? 'green' : 'red' }/>
+              <Icon name='user' color={ presence[data.waitRecipient] ? 'green' : 'red' }/>
               {data.waitRecipient}
             </Button>
           </>
@@ -1466,7 +1466,7 @@ const RequestEdge = memo(({
     targetX,
     targetY,
   });
-  const { presenceMap } = useMapContext();
+  const { presence } = useMapContext();
   const [ sourceNode, targetNode ] = useNodesData([source, target])
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
@@ -1520,7 +1520,7 @@ const RequestEdge = memo(({
           >
             <Icon
               name={ data.recipient ? 'user' : 'sync'}
-              color={ data.recipient ? (presenceMap[data.recipient] ? 'green' : 'red' ) : 'grey' }
+              color={ data.recipient ? (presence[data.recipient] ? 'green' : 'red' ) : 'grey' }
             />
             {data.recipient}
           </Button>
@@ -1706,7 +1706,7 @@ function Map () {
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
   const [ roster, setRoster ] = useState([])
-  const [ presenceMap, setPresenceMap ] = useState({});
+  const [ presence, setPresence ] = useState({});
   const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
   const [ renaming, setRenaming ] = useState(false)
@@ -1876,7 +1876,8 @@ function Map () {
   // console.log('nodes:', nodes)
   // console.log('title:', title)
   // console.log('condition:', condition)
-  // console.log('presenceMap:', presenceMap)
+  // console.log('presence:', presence)
+  // console.log('roster:', roster)
   // console.log('openerSearch:', openerSearch)
   // console.log('color:', color, 'backgroundColor:', backgroundColor)
 
@@ -2169,17 +2170,17 @@ function Map () {
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => {
-              const username = attrs.jid.split('@')[0];
+              // const username = attrs.jid.split('@')[0];
+              const username = attrs.jid.split('/')[0];
               return {
                 jid: attrs.jid,
                 name: username,
                 key: attrs.jid,
                 value: username,
                 text: username,
-                // label: `@${username}`, // for CodeMirror mentions: https://uiwjs.github.io/react-codemirror/#/extensions/mentions
                 content: (
                   <>
-                    <Icon name='user' color={presenceMap[username] ? 'green' : 'grey'} />
+                    <Icon name='user' color={presence[username] ? 'green' : 'grey'} />
                     {username}
                   </>
                 ),
@@ -2191,15 +2192,16 @@ function Map () {
       } else if (stanza.is('presence')) {
         const from = stanza.attrs.from;
         const type = stanza.attrs.type;
-        const username = from.split('@')[0];
+        // const username = from.split('@')[0];
+        const username = from.split('/')[0];
 
-        setPresenceMap(prev => {
+        setPresence(prev => {
           const updated = { ...prev, [username]: type !== 'unavailable' };
           // Update roster with new presence info
           setRoster(prevRoster => {
             // console.log('prevRoster:', prevRoster)
             return prevRoster.map(user => {
-              if (user.name !== username) return user; // No change
+              if (user.name !== username) { return user; } // No change
               const isOnline = updated[user.name];
               return {
                 ...user,
@@ -2227,7 +2229,8 @@ function Map () {
 
       if (type === 'chat' || type === 'normal' || !type) {
         console.log(`Personal message response from ${from}: ${body}`);
-        const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('@')[0])
+        // const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('@')[0])
+        const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('/')[0])
         if (updateNode) {
           setNodes((nodes) =>
             nodes.map((node) =>
@@ -2753,7 +2756,7 @@ function Map () {
 
   return (
     <MapContext.Provider value={{
-      presenceMap, roster, credentials, recipient, sendPersonalMessage,
+      presence, roster, credentials, recipient, sendPersonalMessage,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
       setCurrentSlide,
@@ -3413,7 +3416,7 @@ function Map () {
                         <>
                         { !recipientSearch && (
                           <span>
-                            <Icon name='user' color={ presenceMap[recipient] ? 'green' : 'grey' }/>
+                            <Icon name='user' color={ presence[recipient] ? 'green' : 'grey' }/>
                             {recipient}
                           </span>
                         )}
@@ -3433,8 +3436,8 @@ function Map () {
                     placeholder='/RegExp/ Condition...'
                     value={condition}
                     onChange={e => setCondition(e.target.value)}
+                    fluid
                   ><Icon name='usb' /><input /></Input>
-                  <br/>
                   <Button.Group vertical labeled icon fluid compact>
                     <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
                     <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
