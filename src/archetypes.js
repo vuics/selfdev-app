@@ -521,13 +521,11 @@ const archetypes = {
           type: 'array',
           items: { type: 'string' }
         },
-
-        env: { },
-
         code: {
           type: 'object',
           properties: {
             kernel: { type: 'string' },
+            env: { },
             commands: {
               type: 'object',
               properties: {
@@ -547,13 +545,12 @@ const archetypes = {
         description: '',
         joinRooms: [ 'code' ],
 
-        env: {
-          'MY_ENV_VAR': 'my-value',
-          'MY_SECOND_ENV_VAR': 'some value',
-        },
-
         code: {
           kernel: 'python3',
+          env: {
+            'MY_ENV_VAR': 'my-value',
+            'MY_SECOND_ENV_VAR': 'some value',
+          },
           commands: {
             start: "^//START$",
             restart: "^//RESTART$",
