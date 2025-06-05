@@ -2452,9 +2452,11 @@ function Map () {
 
       const id = getNodeId();
       const { clientX, clientY } = 'changedTouches' in event ? event.changedTouches[0] : event;
+      const position = screenToFlowPosition({ x: clientX, y: clientY, })
+      position.x -= 300
       const newNode = {
         id,
-        position: screenToFlowPosition({ x: clientX, y: clientY, }),
+        position,
         data: {
           uname: getUname(id),
           text: '',
