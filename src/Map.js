@@ -1466,7 +1466,7 @@ const RequestEdge = memo(({
     targetX,
     targetY,
   });
-  const { presence } = useMapContext();
+  const { presence, roster } = useMapContext();
   const [ sourceNode, targetNode ] = useNodesData([source, target])
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
@@ -1522,7 +1522,7 @@ const RequestEdge = memo(({
               name={ data.recipient ? 'user' : 'sync'}
               color={ data.recipient ? (presence[data.recipient] ? 'green' : 'red' ) : 'grey' }
             />
-            {data.recipient}
+            {(roster.find(r => r.jid === data.recipient))?.name || data.recipient}
           </Button>
 
           { data.condition && (
@@ -2170,19 +2170,9 @@ function Map () {
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => {
-              const username = attrs.jid.split('/')[0];
               return {
-                jid: attrs.jid,
-                name: username,
-                key: attrs.jid,
-                value: username,
-                text: username,
-                content: (
-                  <>
-                    <Icon name='user' color={presence[username] ? 'green' : 'grey'} />
-                    {username}
-                  </>
-                ),
+                jid: attrs.jid.split('/')[0],
+                name: attrs.name,
               };
             });
             setRoster(updatedRoster);
@@ -2191,28 +2181,10 @@ function Map () {
       } else if (stanza.is('presence')) {
         const from = stanza.attrs.from;
         const type = stanza.attrs.type;
-        const username = from.split('/')[0];
+        const jid = from.split('/')[0];
 
         setPresence(prev => {
-          const updated = { ...prev, [username]: type !== 'unavailable' };
-          // Update roster with new presence info
-          setRoster(prevRoster => {
-            // console.log('prevRoster:', prevRoster)
-            return prevRoster.map(user => {
-              if (user.name !== username) { return user; } // No change
-              const isOnline = updated[user.name];
-              return {
-                ...user,
-                content: (
-                  <>
-                    <Icon name='user' color={isOnline ? 'green' : 'grey'} />
-                    {user.name}
-                  </>
-                ),
-              };
-            })
-          });
-          return updated;
+          return { ...prev, [jid]: type !== 'unavailable' };
         });
       }
 
@@ -3417,14 +3389,28 @@ function Map () {
                         { !recipientSearch && (
                           <span>
                             <Icon name='user' color={ presence[recipient] ? 'green' : 'grey' }/>
-                            {recipient}
+                            {(roster.find(r => r.jid === recipient))?.name || recipient}
                           </span>
                         )}
                         </>
                       }
                       multiple={false}
                       search={true}
-                      options={roster}
+                      options={
+                        roster.map(r => {
+                          return {
+                            key: r.jid,
+                            text: r.name,
+                            value: r.jid,
+                            content: (
+                              <>
+                                <Icon name='user' color={presence[r.jid] ? 'green' : 'grey'} />
+                                {r.name}
+                              </>
+                            ),
+                          }
+                        })
+                      }
                       value={recipient}
                       placeholder="Recipient"
                       onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}

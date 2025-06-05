@@ -127,9 +127,8 @@ const Hive = () => {
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => {
-              const jid = attrs.jid.split('/')[0];
               return {
-                jid,
+                jid: attrs.jid.split('/')[0],
                 name: attrs.name,
               };
             });
