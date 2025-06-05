@@ -202,6 +202,27 @@ const Hive = () => {
     xmppRef.current.send(iq)
   }
 
+  const sortAgents = (a, b) => {
+    // 1. Sort by deployed (true first)
+    if (a.deployed !== b.deployed) {
+      return b.deployed - a.deployed  // true > false → descending
+    }
+
+    // 2. Sort by updatedAt (newer first)
+    const updatedA = new Date(a.updatedAt || 0)
+    const updatedB = new Date(b.updatedAt || 0)
+
+    if (updatedA.getTime() !== updatedB.getTime()) {
+      return updatedB - updatedA
+    }
+
+    // 3. Sort by createdAt (newer first)
+    const createdA = new Date(a.createdAt || 0)
+    const createdB = new Date(b.createdAt || 0)
+
+    return createdB - createdA
+  }
+
   const indexAgents = async () => {
     setLoading(true)
     try {
@@ -211,7 +232,7 @@ const Hive = () => {
         crossOrigin: { mode: 'cors' },
       })
       console.log('agents index res:', res)
-      setAgents(res?.data || [])
+      setAgents(res?.data.sort(sortAgents) || [])
       setAgentsImmutable(res?.data || [])
     } catch (err) {
       console.error('indexAgents error:', err);
