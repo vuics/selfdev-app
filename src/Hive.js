@@ -18,6 +18,8 @@ import {
   Popup,
 } from 'semantic-ui-react'
 import Ajv from 'ajv'
+import { client, xml } from '@xmpp/client'
+import { v4 as uuidv4 } from 'uuid'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -36,6 +38,193 @@ const Hive = () => {
   const [ adding, setAdding ] = useState(false)
   const [ loading, setLoading ] = useState(true)
   const fileInputRef = useRef(null);
+
+  const xmppRef = useRef(null);
+  const [ credentials, setCredentials ] = useState(null)
+  const [ roster, setRoster ] = useState([])
+  const [ presence, setPresence ] = useState({});
+
+  useEffect(() =>{
+    async function fetchCredentials () {
+      try {
+        const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+          crossOrigin: { mode: 'cors' },
+        })
+        console.log('fetchCredentials response:', response)
+        const { user, password, jid } = response.data
+        setCredentials({ user, password, jid })
+      } catch (err) {
+        console.error('xmpp/credentials error:', err)
+        setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
+        setLoading(false)
+      }
+    }
+    fetchCredentials()
+  }, [])
+
+  useEffect(() => {
+    console.log('xmpp client credentials:', credentials)
+    if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
+      return console.error("No credentials error")
+    }
+
+    // Initialize XMPP client
+    const xmpp = client({
+      service: conf.xmpp.websocketUrl,
+      domain: conf.xmpp.host,
+      username: credentials.user,
+      password: credentials.password,
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+    xmppRef.current = xmpp;
+    console.log('xmpp:', xmpp)
+
+    // Handle online event
+    xmpp.on('online', async (jid) => {
+      console.log(`Connected as ${jid.toString()}`);
+
+      // Get roster (contact list)
+      await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
+        xml('query', { xmlns: 'jabber:iq:roster' })
+      ));
+      console.log('Requested roster');
+
+      // Send initial presence to let the server know we're online
+      xmpp.send(xml('presence'));
+      console.log('Sent initial presence');
+
+      setLoading(false)
+    });
+
+    // Handle errors
+    xmpp.on('error', (err) => {
+      setLoading(false)
+      console.error('XMPP error:', err);
+      setResponseError(`XMPP error: ${err}`)
+    });
+
+    // Handle disconnection
+    xmpp.on('close', () => {
+      setLoading(false)
+      console.log('Connection closed');
+    });
+
+    // Handle incoming stanzas
+    xmpp.on('stanza', (stanza) => {
+      // console.log('Got stanza:', stanza.toString());
+
+      if (stanza.is('iq') && stanza.attrs.type === 'result') {
+        const query = stanza.getChild('query', 'jabber:iq:roster');
+        if (query) {
+          const items = query.getChildren('item');
+          if (items && items.length) {
+            const updatedRoster = items.map(({ attrs }) => {
+              const username = attrs.jid.split('/')[0];
+              return {
+                jid: attrs.jid,
+                name: username,
+                key: attrs.jid,
+                value: username,
+                text: username,
+                content: (
+                  <>
+                    <Icon name='user' color={presence[username] ? 'green' : 'grey'} />
+                    {username}
+                  </>
+                ),
+              };
+            });
+            setRoster(updatedRoster);
+          }
+        }
+      } else if (stanza.is('presence')) {
+        const from = stanza.attrs.from;
+        const type = stanza.attrs.type;
+        const username = from.split('/')[0];
+
+        setPresence(prev => {
+          const updated = { ...prev, [username]: type !== 'unavailable' };
+          // Update roster with new presence info
+          setRoster(prevRoster => {
+            // console.log('prevRoster:', prevRoster)
+            return prevRoster.map(user => {
+              if (user.name !== username) { return user; } // No change
+              const isOnline = updated[user.name];
+              return {
+                ...user,
+                content: (
+                  <>
+                    <Icon name='user' color={isOnline ? 'green' : 'grey'} />
+                    {user.name}
+                  </>
+                ),
+              };
+            })
+          });
+          return updated;
+        });
+      }
+
+      // Skip non-message stanzas
+      if (!stanza.is('message')) return;
+
+      const body = stanza.getChildText('body');
+      if (!body) return;
+
+      const from = stanza.attrs.from;
+      const type = stanza.attrs.type;
+
+      if (type === 'chat' || type === 'normal' || !type) {
+        console.log(`Personal message response from ${from}: ${body}`);
+      } else if (type === 'groupchat') {
+        // Skip our own messages
+        if (from.includes(`/${credentials.user}`)) return;
+        // Skip historical messages
+        const delay = stanza.getChild('delay');
+        if (delay) return;
+        console.log(`Group chat message from ${from}: ${body}`);
+      }
+    });
+
+    xmpp.start().catch(console.error);
+  }, [credentials]) // presense should not be supplied because it should only connect once
+
+  const addToRoster = ({ jid, name, groups = [] } = {}) => {
+    const iq = xml(
+      'iq',
+      { type: 'set', id: `roster_${uuidv4()}` },
+      xml('query', { xmlns: 'jabber:iq:roster' }, [
+        xml(
+          'item',
+          { jid, name },
+          groups.map(group => xml('group', {}, group))
+        ),
+      ])
+    )
+    xmppRef.current.send(iq)
+    console.log('addToRoster iq:', iq)
+
+    // Send a subscription request
+    const presence = xml('presence', { to: jid, type: 'subscribe' })
+    xmppRef.current.send(presence)
+    console.log('addToRoster subscribe presense:', presence)
+  }
+
+  const removeFromRoster = ({ jid }) => {
+    const iq = xml(
+      'iq',
+      { type: 'set', id: `remove_${uuidv4()}` },
+      xml('query', { xmlns: 'jabber:iq:roster' }, [
+        xml('item', { jid, subscription: 'remove' }),
+      ])
+    )
+
+    xmppRef.current.send(iq)
+  }
 
   const indexAgents = async () => {
     setLoading(true)
@@ -82,6 +271,11 @@ const Hive = () => {
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
       setOptions(archetypes[archetype].defaultOptions())
+      addToRoster({
+        jid: `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`,
+        name: res.data.options.name,
+        groups: res.data.options.joinRooms,
+      })
     } catch (err) {
       console.error('post agent error:', err);
       return setResponseError(err.toString() || 'Error posting agent.')
@@ -102,8 +296,21 @@ const Hive = () => {
       })
       console.log('agent put res:', res)
       // setResponseMessage(`Agent updated successfully`)
+      const [prevAgent] = agentsImmutable.filter(a => a._id === agent._id)
       setAgents(agents.map(a => a._id === res.data._id ? res.data : a))
       setAgentsImmutable(agentsImmutable.map(a => a._id === res.data._id ? res.data : a))
+      console.log('compare agent names: previous:', prevAgent.options.name, ', new:', res.data.options.name)
+      if (prevAgent.options.name !== res.data.options.name) {
+        console.log('agent name changed: previous:', prevAgent.options.name, ', new:', res.data.options.name)
+        removeFromRoster({
+          jid: `${prevAgent.options.name}@${credentials.user}.${conf.xmpp.host}`,
+        })
+        addToRoster({
+          jid: `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`,
+          name: res.data.options.name,
+          groups: res.data.options.joinRooms,
+        })
+      }
     } catch (err) {
       console.error('delete agent error:', err);
       return setResponseError(err.toString() || 'Error deleting agent.')
@@ -122,8 +329,12 @@ const Hive = () => {
       })
       console.log('agent delete res:', res)
       // setResponseMessage(`Agent deleted successfully`)
+      const [deletedAgent] = agents.filter(obj => obj._id === _id)
       setAgents(agents.filter(obj => obj._id !== _id))
       setAgentsImmutable(agentsImmutable.filter(obj => obj._id !== _id))
+      removeFromRoster({
+        jid: `${deletedAgent.options.name}@${credentials.user}.${conf.xmpp.host}`,
+      })
     } catch (err) {
       console.error('delete agent error:', err);
       return setResponseError(err.toString() || 'Error deleting agent.')

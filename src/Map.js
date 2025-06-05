@@ -2255,7 +2255,7 @@ function Map () {
     });
 
     xmpp.start().catch(console.error);
-  }, [credentials])
+  }, [credentials]) // presense should not be supplied because it should only connect once
 
   const sendPersonalMessage = async ({ credentials, recipient, prompt }) => {
     if (!recipient || !prompt || !credentials) {
