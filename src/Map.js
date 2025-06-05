@@ -269,7 +269,7 @@ async function playEdge ({
   )
 
   if (recipient) {
-    await sendPersonalMessage({ credentials, recipient: recipient, prompt: smartText });
+    await sendPersonalMessage({ credentials, recipient, prompt: smartText });
   } else {
     const edges = getEdges()
     const edge = edges.find(edge => edge.id === edgeId)
@@ -2170,7 +2170,6 @@ function Map () {
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => {
-              // const username = attrs.jid.split('@')[0];
               const username = attrs.jid.split('/')[0];
               return {
                 jid: attrs.jid,
@@ -2192,7 +2191,6 @@ function Map () {
       } else if (stanza.is('presence')) {
         const from = stanza.attrs.from;
         const type = stanza.attrs.type;
-        // const username = from.split('@')[0];
         const username = from.split('/')[0];
 
         setPresence(prev => {
@@ -2263,7 +2261,7 @@ function Map () {
     if (!recipient || !prompt || !credentials) {
       return console.error('Error sending personal message to recipient:', recipient, ', prompt:', prompt)
     }
-    const to = recipient.includes("@") ? recipient : `${recipient}@${conf.xmpp.host}`
+    const to = recipient
     const message = xml('message', {
         type: 'chat',
         to,
