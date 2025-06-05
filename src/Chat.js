@@ -31,7 +31,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 const logError = (error: Error, info: { componentStack: string }) => {
   // Do something with the error, e.g. log to an external API
-  console.error("Talk Error Boundary:", error, ', info:', info)
+  console.error("Chat Error Boundary:", error, ', info:', info)
 }
 
 export function Pane ({ panel, width, height }) {
@@ -171,7 +171,7 @@ export function SplitLayout ({ panels }) {
   )
 }
 
-export default function Talk () {
+export default function Chat () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ converseRoot, setConverseRoot ] = useState(null)
@@ -207,43 +207,45 @@ export default function Talk () {
         const { converse } = event.detail;
         console.log('converse:', converse)
         try {
-          converse.plugins.add('synthetic-ui-plugin', {
-            initialize: function () {
-              // console.log('this._converse:', this._converse)
-              this._converse.api.listen.on('callButtonClicked', function(data) {
-                console.log('callButtonClicked data:', data)
-                // console.log('Strophe connection is', data.connection);
-                // console.log('Bare buddy JID is', data.model.get('jid'));
-              });
+          if (conf.synthetic.enable) {
+            converse.plugins.add('synthetic-ui-plugin', {
+              initialize: function () {
+                // console.log('this._converse:', this._converse)
+                this._converse.api.listen.on('callButtonClicked', function(data) {
+                  console.log('callButtonClicked data:', data)
+                  // console.log('Strophe connection is', data.connection);
+                  // console.log('Bare buddy JID is', data.model.get('jid'));
+                });
 
-              // NOTE: The Synthetic UI depends on the system components.
-              //       See: ../synthetic-ui.md
-              //
-              this._converse.api.listen.on('message', function (data) {
-                console.log('converse api message> data:', data)
-                if (data && data.stanza) {
-                  console.log('data.attrs:', data.attrs)
-                  const { body } = data.attrs
-                  if (!body) {
-                    return
-                  }
-                  if (body.includes("[[synthetic-ui:hide('all')]]")) {
-                    setPanels([])
-                  } else {
-                    for (const component in conf.synthetic.components) {
-                      if (body.includes(`[[synthetic-ui:hide('${component}')]]`)) {
-                        // remove element
-                        setPanels(prevPanels => prevPanels.filter(panel => panel !== component));
-                      } else if (body.includes(`[[synthetic-ui:show('${component}')]]`)) {
-                        // prepend element
-                        setPanels(prevPanels => [...prevPanels, component])
+                // NOTE: The Synthetic UI depends on the system components.
+                //       See: ../synthetic-ui.md
+                //
+                this._converse.api.listen.on('message', function (data) {
+                  console.log('converse api message> data:', data)
+                  if (data && data.stanza) {
+                    console.log('data.attrs:', data.attrs)
+                    const { body } = data.attrs
+                    if (!body) {
+                      return
+                    }
+                    if (body.includes("[[synthetic-ui:hide('all')]]")) {
+                      setPanels([])
+                    } else {
+                      for (const component in conf.synthetic.components) {
+                        if (body.includes(`[[synthetic-ui:hide('${component}')]]`)) {
+                          // remove element
+                          setPanels(prevPanels => prevPanels.filter(panel => panel !== component));
+                        } else if (body.includes(`[[synthetic-ui:show('${component}')]]`)) {
+                          // prepend element
+                          setPanels(prevPanels => [...prevPanels, component])
+                        }
                       }
                     }
                   }
-                }
-              });
-            },
-          });
+                });
+              },
+            });
+          }
 
           const converseOptions = {
             root: converseRoot,

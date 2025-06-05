@@ -14,7 +14,7 @@ import { TextAuto, QCMarkdown } from './components/Text'
 import Menubar from './components/Menubar'
 import conf from './conf'
 
-const Chat = () => {
+export default function Talk () {
   const name = localStorage.getItem('user.firstName') + ' ' +
     localStorage.getItem('user.lastName')
 
@@ -177,5 +177,3 @@ const Chat = () => {
     </Container>
   )
 }
-
-export default Chat
