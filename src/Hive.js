@@ -44,6 +44,9 @@ const Hive = () => {
   const [ roster, setRoster ] = useState([])
   const [ presence, setPresence ] = useState({});
 
+  // console.log('roster:', roster)
+  // console.log('presence:', presence)
+
   useEffect(() =>{
     async function fetchCredentials () {
       try {
@@ -120,22 +123,14 @@ const Hive = () => {
       if (stanza.is('iq') && stanza.attrs.type === 'result') {
         const query = stanza.getChild('query', 'jabber:iq:roster');
         if (query) {
+          console.log('recieved roster query:', query)
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => {
-              const username = attrs.jid.split('/')[0];
+              const jid = attrs.jid.split('/')[0];
               return {
-                jid: attrs.jid,
-                name: username,
-                key: attrs.jid,
-                value: username,
-                text: username,
-                content: (
-                  <>
-                    <Icon name='user' color={presence[username] ? 'green' : 'grey'} />
-                    {username}
-                  </>
-                ),
+                jid,
+                name: attrs.name,
               };
             });
             setRoster(updatedRoster);
@@ -144,28 +139,10 @@ const Hive = () => {
       } else if (stanza.is('presence')) {
         const from = stanza.attrs.from;
         const type = stanza.attrs.type;
-        const username = from.split('/')[0];
+        const jid = from.split('/')[0];
 
         setPresence(prev => {
-          const updated = { ...prev, [username]: type !== 'unavailable' };
-          // Update roster with new presence info
-          setRoster(prevRoster => {
-            // console.log('prevRoster:', prevRoster)
-            return prevRoster.map(user => {
-              if (user.name !== username) { return user; } // No change
-              const isOnline = updated[user.name];
-              return {
-                ...user,
-                content: (
-                  <>
-                    <Icon name='user' color={isOnline ? 'green' : 'grey'} />
-                    {user.name}
-                  </>
-                ),
-              };
-            })
-          });
-          return updated;
+          return { ...prev, [jid]: type !== 'unavailable' };
         });
       }
 
@@ -296,17 +273,20 @@ const Hive = () => {
       })
       console.log('agent put res:', res)
       // setResponseMessage(`Agent updated successfully`)
-      const [prevAgent] = agentsImmutable.filter(a => a._id === agent._id)
+      const prevAgent = agentsImmutable.find(a => a._id === agent._id)
       setAgents(agents.map(a => a._id === res.data._id ? res.data : a))
       setAgentsImmutable(agentsImmutable.map(a => a._id === res.data._id ? res.data : a))
-      console.log('compare agent names: previous:', prevAgent.options.name, ', new:', res.data.options.name)
-      if (prevAgent.options.name !== res.data.options.name) {
-        console.log('agent name changed: previous:', prevAgent.options.name, ', new:', res.data.options.name)
+      const jid = `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`
+      const name = res.data.options.name
+      const inRoster = roster.find(r => r.jid === jid && r.name === name)
+      console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
+      if (!inRoster) {
+        console.log('Agent with name:', res.data.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
         removeFromRoster({
           jid: `${prevAgent.options.name}@${credentials.user}.${conf.xmpp.host}`,
         })
         addToRoster({
-          jid: `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`,
+          jid,
           name: res.data.options.name,
           groups: res.data.options.joinRooms,
         })
@@ -531,7 +511,23 @@ const Hive = () => {
                     <Grid>
                       <Grid.Row>
                         <Grid.Column width={13}>
-                          <span style={{color:'lightgrey'}}>@</span>
+                          <Icon
+                            name={
+                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                                ? (agent.deployed ? 'spy' : 'spinner')
+                                : (agent.deployed ? 'spinner' : 'spy')
+                            }
+                            color={
+                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                                ? (agent.deployed ? 'green' : 'red')
+                                : (agent.deployed ? 'yellow' : 'grey')
+                            }
+                            loading={
+                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                                ? (agent.deployed ? false : true)
+                                : (agent.deployed ? true : false)
+                            }
+                          />
                           {agent.options?.name || '(no name)'}
                         </Grid.Column>
                         <Grid.Column width={3}>
