@@ -19,10 +19,10 @@ import {
   Menu,
   Segment,
   Sidebar,
+  Label,
 
   // Header,
   // Grid,
-  // Label,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -114,7 +114,6 @@ import { EditorView } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 
 import UiwMarkdownEditor from '@uiw/react-markdown-editor'
-import MarkdownPreview from '@uiw/react-markdown-preview'
 import mermaid from "mermaid";
 import { getCodeString } from "rehype-rewrite";
 
@@ -241,10 +240,13 @@ function checkCondition({ condition, text }) {
 }
 
 async function playEdge ({
-  text, condition, getNodes, setNodes, getEdges, setEdges,
-  sendPersonalMessage, credentials, recipient,
+  sourceNodeData, edgeData,
+  getNodes, setNodes, getEdges, setEdges,
+  credentials, sendPersonalMessage, sendAttachments,
   edgeId, targetId,
 }) {
+  const { text, attachments } = sourceNodeData
+  const { recipient, condition } = edgeData
   const smartText = buildSmartText({ text, getNodes })
   // console.log('smartText:', smartText)
   const [ satisfied, safe ] = checkCondition({ condition, text: smartText })
@@ -269,6 +271,9 @@ async function playEdge ({
   )
 
   if (recipient) {
+    if (attachments && attachments.length > 0) {
+      await sendAttachments({ credentials, recipient, attachments })
+    }
     await sendPersonalMessage({ credentials, recipient, prompt: smartText });
   } else {
     const edges = getEdges()
@@ -683,9 +688,10 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const { presence, roster, setCurrentSlide } = useMapContext();
+  const { presence, roster, setCurrentSlide, attachFile } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
+  const attachFileInputRef = useRef(null);
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
   // console.log('presence:', presence)
@@ -869,6 +875,27 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     return allNodes.filter(node => node.data?.slide === true).length;
   }, [allNodes])
 
+  const attachFileInit = () => {
+    attachFileInputRef.current.click(); // triggers hidden input
+  };
+
+  const onFileInputChange = async (event) => {
+    try {
+      const fileUrl = await attachFile(event)
+      console.log('fileUrl:', fileUrl)
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === id ? { ...node, data: {
+            ...node.data,
+            attachments: [...(node.data.attachments || []), fileUrl]
+          } } : node
+        )
+      );
+    } catch (err) {
+      console.error('Error attaching file:', err);
+    }
+  }
+
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -945,6 +972,17 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             >
               <Icon name='edit' />
               { data.editing ? 'View' : 'Edit' }
+            </Dropdown.Item>
+            <Dropdown.Item onClick={attachFileInit} >
+              <Icon name='attach' />
+              Attach file
+              <input
+                type="file"
+                // accept="application/json"
+                ref={attachFileInputRef}
+                onChange={onFileInputChange}
+                style={{ display: 'none' }} // hide input
+              />
             </Dropdown.Item>
             <Dropdown text='Diff' pointing='left' className='link item'>
               <Dropdown.Menu>
@@ -1207,6 +1245,39 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
         </>)}
       </Card.Content>
+      {data.attachments && (
+        <Card.Content>
+          {data.attachments.map((url, index) => (
+            <Label
+              key={index}
+              as='a'
+              href={url}
+              target='_blank'
+              rel='noopener noreferrer'
+              basic
+              color='grey'
+            >
+              <Icon name='attach' />
+              {url.split('/').pop()}
+              <Icon
+                name='delete'
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent opening the link when clicking the icon
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: {
+                        ...node.data,
+                        attachments: (node.data.attachments || []).filter((item) => item !== url),
+                      } } : node
+                    )
+                  );
+                }}
+                style={{ marginLeft: '1em', cursor: 'pointer' }}
+              />
+            </Label>
+          ))}
+        </Card.Content>
+      )}
 
       <Handle
         type="source"
@@ -1471,7 +1542,7 @@ const RequestEdge = memo(({
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
   const {
-    credentials, recipient, sendPersonalMessage,
+    credentials, recipient, sendPersonalMessage, sendAttachments,
     condition, reordering, orderEdges, setEdges, getEdges,
   } = useMapContext();
 
@@ -1511,9 +1582,9 @@ const RequestEdge = memo(({
             onClick={async () => {
               console.log('source:', source, ', target:', target)
               await playEdge({
-                text: sourceNode.data.text, condition: data.condition,
-                getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
-                credentials, recipient: data.recipient,
+                sourceNodeData: sourceNode.data, edgeData: data,
+                getNodes, setNodes, getEdges, setEdges,
+                credentials, sendPersonalMessage, sendAttachments,
                 edgeId: id, targetId: targetNode.id,
               })
             }}
@@ -2227,16 +2298,15 @@ function Map () {
     });
 
     xmpp.start().catch(console.error);
-  }, [credentials]) // presense should not be supplied because it should only connect once
+  }, [credentials]) // `presense` should not be supplied because it should only connect once
 
   const sendPersonalMessage = async ({ credentials, recipient, prompt }) => {
     if (!recipient || !prompt || !credentials) {
       return console.error('Error sending personal message to recipient:', recipient, ', prompt:', prompt)
     }
-    const to = recipient
     const message = xml('message', {
         type: 'chat',
-        to,
+        to: recipient,
         from: credentials.jid,
         id: uuidv4()
       },
@@ -2244,7 +2314,96 @@ function Map () {
       xml('body', {}, prompt)
     );
     await xmppRef.current.send(message);
-    console.log('Personal message sent, prompt:', prompt, ', to:', to);
+    console.log('Personal message sent, prompt:', prompt, ', to:', recipient);
+  }
+
+  const sendAttachments = async ({ credentials, recipient, attachments }) => {
+    if (!credentials || !recipient || !attachments) {
+      return console.error('Error sending attachments to recipient:', recipient, ', attachments:', attachments)
+    }
+    for (const url of attachments) {
+      const message = xml('message', {
+          type: 'chat',
+          to: recipient,
+          from: credentials.jid,
+          id: uuidv4()
+        },
+        xml('body', {}, url),
+        // Optionally, include XEP-0066 Out of Band Data
+        xml('x', { xmlns: 'jabber:x:oob' },
+          xml('url', {}, url),
+          xml('desc', {}, 'Uploaded file')
+        )
+      )
+      await xmppRef.current.send(message);
+      console.log('Personal message with attachment sent, url:', url, ', to:', recipient);
+    }
+  }
+
+  const attachFile = async (event) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const file = event.target.files[0];
+        if (!file) {
+          throw new Error(`Error attaching file: ${file}`)
+        }
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            // console.log('Loaded file:', e.target.result)
+            const contentType = file.type || 'application/octet-stream'
+            // console.log('Content-Type:', contentType);
+            const slotRequestIQ = xml(
+              'iq',
+              { type: 'get', to: conf.xmpp.shareHost, id: `upload_${uuidv4()}` },
+              xml('request', {
+                xmlns: 'urn:xmpp:http:upload:0',
+                filename: file.name,
+                size: file.size,
+                'content-type': contentType,
+              })
+            );
+            // console.log('📤 Sending slot request...');
+            const response = await xmppRef.current.sendReceive(slotRequestIQ);
+            // console.log('response:', response)
+
+            const slot = response.getChild('slot', 'urn:xmpp:http:upload:0');
+            const putEl = slot.getChild('put');
+            const putUrl = putEl?.attrs?.url || '';
+            const getUrl = slot.getChild('get')?.attrs?.url || '';
+            // console.log('✅ Upload slot received:', slot)
+            // console.log('PUT URL:', putUrl);
+            // console.log('GET URL:', getUrl);
+
+            let headers = {};
+            const headerEls = putEl?.getChildren('header') || [];
+            console.log('headerEls:', headerEls)
+            for (const headerEl of headerEls) {
+              const name = headerEl.attrs.name;
+              const value = headerEl.getText();
+              headers[name] = value;
+            }
+            headers['Content-Type'] = contentType
+            // console.log('headers:', headers)
+
+            // const response1 =
+            await axios.put(putUrl, reader.result, { headers });
+            // console.log('response1:', response1);
+            console.log('✅ File uploaded, link:', getUrl);
+            resolve(getUrl)
+          } catch (err) {
+            console.error('Error geting upload slot or uploading:', err);
+            throw err
+          }
+        };
+        reader.onerror = (err) => {
+          throw err
+        };
+        reader.readAsArrayBuffer(file);
+      } catch (err) {
+        reject(err);
+      }
+    })
   }
 
   const joinRoom = async ({ roomJid }) => {
@@ -2309,9 +2468,9 @@ function Map () {
     const nodes = getNodes()
     const sourceNode = nodes.find(node => node.id === params.source)
     await playEdge({
-      text: sourceNode.data.text, condition,
-      getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
-      credentials, recipient: undefined,
+      sourceNodeData: sourceNode.data, edgeData: variableEdge.data,
+      getNodes, setNodes, getEdges, setEdges,
+      credentials, sendPersonalMessage, sendAttachments,
       edgeId, targetId: params.target,
     })
   }, [setEdges, condition, stroke, credentials, getNodes, setNodes, getEdges ]);
@@ -2463,9 +2622,9 @@ function Map () {
       );
 
       await playEdge({
-        text: connection.fromNode.data.text, condition,
-        getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
-        credentials, recipient,
+        sourceNodeData: connection.fromNode.data, edgeData: newEdge.data,
+        getNodes, setNodes, getEdges, setEdges,
+        credentials, sendPersonalMessage, sendAttachments,
         edgeId, targetId: id,
       })
     }
@@ -2536,9 +2695,9 @@ function Map () {
       // console.log('targetNode:', targetNode)
 
       await playEdge({
-        text: sourceNode.data.text, condition: edge.data.condition,
-        getNodes, setNodes, getEdges, setEdges, sendPersonalMessage,
-        credentials, recipient: edge.data.recipient,
+        sourceNodeData: sourceNode.data, edgeData: edge.data,
+        getNodes, setNodes, getEdges, setEdges,
+        credentials, sendPersonalMessage, sendAttachments,
         edgeId: edge.id, targetId: edge.target,
       })
 
@@ -2728,10 +2887,11 @@ function Map () {
 
   return (
     <MapContext.Provider value={{
-      presence, roster, credentials, recipient, sendPersonalMessage,
+      presence, roster, recipient,
+      credentials, sendPersonalMessage, sendAttachments,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
-      setCurrentSlide,
+      setCurrentSlide, attachFile,
     }}>
       <Container>
         <Menubar />

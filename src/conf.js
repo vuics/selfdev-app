@@ -126,6 +126,7 @@ const conf = {
     discoverConnectionMethods: bool(process.env.REACT_APP_XMPP_DISCOVER_CONNECTION_METHODS || false),
     websocketUrl: process.env.REACT_APP_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
     mucHost: process.env.REACT_APP_XMPP_MUC_HOST || 'conference.localhost',
+    shareHost: process.env.REACT_APP_XMPP_SHARE_HOST || 'share.localhost',
   },
 
   jitsi: {
