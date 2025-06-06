@@ -1203,10 +1203,25 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <>
             <br />
             Waiting for a reply from:{' '}
-            <Button compact size='mini'>
+            <Label as='a' basic color='grey'>
               <Icon name='user' color={ presence[data.waitRecipient] ? 'green' : 'red' }/>
-              {data.waitRecipient}
-            </Button>
+              {(roster.find(r => r.jid === data.waitRecipient))?.name || data.waitRecipient}
+              <Icon
+                name='delete'
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent opening the link when clicking the icon
+                  setNodes((nodes) =>
+                    nodes.map((node) =>
+                      node.id === id ? { ...node, data: {
+                        ...node.data,
+                        waitRecipient: undefined,
+                      } } : node
+                    )
+                  );
+                }}
+                style={{ marginLeft: '1em', cursor: 'pointer' }}
+              />
+            </Label>
           </>
         ) }
 
