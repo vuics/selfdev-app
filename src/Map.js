@@ -2888,7 +2888,7 @@ function Map () {
                   <Dropdown.Divider />
                   <Dropdown.Item>
                     <Checkbox
-                      label='Show deck sidebar'
+                      label='Show slides deck sidebar'
                       checked={deckSidebar}
                       onChange={(e, data) => setDeckSidebar(data.checked)}
                     />
