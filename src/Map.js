@@ -58,7 +58,7 @@ import Dagre from '@dagrejs/dagre';
 import CodeMirror from '@uiw/react-codemirror';
 import { vim } from '@replit/codemirror-vim';
 import { mentions } from '@uiw/codemirror-extensions-mentions'
-import { loadLanguage, langNames, langs } from '@uiw/codemirror-extensions-langs'
+import { loadLanguage, langNames } from '@uiw/codemirror-extensions-langs'
 import {
   abcdef,
   abyss,
