@@ -20,9 +20,9 @@ import {
   Segment,
   Sidebar,
   Label,
+  Grid,
 
   // Header,
-  // Grid,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -1041,7 +1041,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   onClick={() => {
                     setNodes((nodes) =>
                       nodes.map((node) =>
-                        node.id === id ? { ...node, data: { ...node.data, stash: text, editing: true } } : node
+                        node.id === id ? { ...node, data: { ...node.data, stash: text, stashAttachments: node.data.attachments } } : node
                       )
                     );
                   }}
@@ -1053,13 +1053,27 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   onClick={() => {
                     setNodes((nodes) =>
                       nodes.map((node) =>
-                        node.id === id ? { ...node, data: { ...node.data, text: stash  } } : node
+                        node.id === id ? { ...node, data: { ...node.data, text: stash, attachments: node.data.stashAttachments  } } : node
                       )
                     );
                   }}
                 >
                   <Icon name='long arrow alternate left' />
                   Restore content
+                </Dropdown.Item>
+
+                <Dropdown.Divider />
+                <Dropdown.Item
+                  onClick={() => {
+                    setNodes((nodes) =>
+                      nodes.map((node) =>
+                        node.id === id ? { ...node, data: { ...node.data, stash: '', stashAttachments: undefined } } : node
+                      )
+                    );
+                  }}
+                >
+                  <Icon name='erase' />
+                  Clear stash
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -1270,35 +1284,74 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Loader active={attaching}  size='tiny' inline='centered' />
           )}
 
-          {data.attachments?.map((url, index) => (
-            <Label
-              key={index}
-              as='a'
-              href={url}
-              target='_blank'
-              rel='noopener noreferrer'
-              basic
-              color='grey'
-            >
-              <Icon name='attach' />
-              {url.split('/').pop()}
-              <Icon
-                name='delete'
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent opening the link when clicking the icon
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: {
-                        ...node.data,
-                        attachments: (node.data.attachments || []).filter((item) => item !== url),
-                      } } : node
-                    )
-                  );
-                }}
-                style={{ marginLeft: '1em', cursor: 'pointer' }}
-              />
-            </Label>
-          ))}
+          <Grid divided='vertically'>
+            <Grid.Row columns={data.diffing ? 2 : 1}>
+              <Grid.Column>
+                {data.attachments?.map((url, index) => (
+                  <Label
+                    key={index}
+                    as='a'
+                    href={url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    basic
+                    color='grey'
+                  >
+                    <Icon name='attach' />
+                    {url.split('/').pop()}
+                    <Icon
+                      name='delete'
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent opening the link when clicking the icon
+                        setNodes((nodes) =>
+                          nodes.map((node) =>
+                            node.id === id ? { ...node, data: {
+                              ...node.data,
+                              attachments: (node.data.attachments || []).filter((item) => item !== url),
+                            } } : node
+                          )
+                        );
+                      }}
+                      style={{ marginLeft: '1em', cursor: 'pointer' }}
+                    />
+                  </Label>
+                ))}
+              </Grid.Column>
+              { data.diffing && (
+                <Grid.Column>
+                  {data.stashAttachments?.map((url, index) => (
+                    <Label
+                      key={index}
+                      as='a'
+                      href={url}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      basic
+                      color='grey'
+                    >
+                      <Icon name='attach' />
+                      {url.split('/').pop()}
+                      <Icon
+                        name='delete'
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent opening the link when clicking the icon
+                          setNodes((nodes) =>
+                            nodes.map((node) =>
+                              node.id === id ? { ...node, data: {
+                                ...node.data,
+                                stashAttachments: (node.data.stashAttachments || []).filter((item) => item !== url),
+                              } } : node
+                            )
+                          );
+                        }}
+                        style={{ marginLeft: '1em', cursor: 'pointer' }}
+                      />
+                    </Label>
+                  ))}
+                </Grid.Column>
+              )}
+            </Grid.Row>
+          </Grid>
         </Card.Content>
       )}
 
