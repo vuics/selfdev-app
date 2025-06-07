@@ -15,23 +15,23 @@ const archetypes = {
           type: 'array',
           items: { type: 'string' }
         },
-        systemMessage: { type: 'string' },
-        model: {
-          type: 'object',
-          properties: {
-            provider: { type: 'string' },
-            name: { type: 'string' },
-            apiKey: {
-              type: 'object',
-              properties: {
-                valueFromVault: { type: 'string' },
-              },
-            },
-          }
-        },
         chat: {
           type: 'object',
           properties: {
+            systemMessage: { type: 'string' },
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              }
+            },
             session: { type: 'string' },
           }
         },
@@ -43,16 +43,16 @@ const archetypes = {
         name,
         description: '',
         joinRooms: [ 'chat' ],
-        systemMessage: '',
-        model: {
-          provider: 'openai',
-          name: 'gpt-4o-mini',
-          apiKey: {
-            valueFromVault: 'OPENAI_API_KEY',
-          },
-        },
         chat: {
-          session: name,
+          systemMessage: '',
+          model: {
+            provider: 'openai',
+            name: 'gpt-4o-mini',
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
+          },
+          session: '',
         },
       }
     }
@@ -72,36 +72,36 @@ const archetypes = {
           type: 'array',
           items: { type: 'string' }
         },
-        systemMessage: { type: 'string' },
-        model: {
-          type: 'object',
-          properties: {
-            provider: { type: 'string' },
-            name: { type: 'string' },
-            apiKey: {
-              type: 'object',
-              properties: {
-                valueFromVault: { type: 'string' },
-              },
-            },
-          },
-        },
-        embeddings: {
-          type: 'object',
-          properties: {
-            provider: { type: 'string' },
-            name: { type: 'string' },
-            apiKey: {
-              type: 'object',
-              properties: {
-                valueFromVault: { type: 'string' },
-              },
-            },
-          },
-        },
         rag: {
           type: 'object',
           properties: {
+            systemMessage: { type: 'string' },
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              },
+            },
+            embeddings: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              },
+            },
             vectorStore: { type: 'string' },
             commands: {
               type: 'object',
@@ -163,25 +163,25 @@ const archetypes = {
         name: faker.internet.username().toLowerCase(),
         description: '',
         joinRooms: [ 'rag' ],
-        systemMessage: `You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+        rag: {
+          systemMessage: `You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
 Question: {question}
 Context: {context}
 Answer:`,
-        model: {
-          provider: 'openai',
-          name: 'gpt-4o-mini',
-          apiKey: {
-            valueFromVault: 'OPENAI_API_KEY',
+          model: {
+            provider: 'openai',
+            name: 'gpt-4o-mini',
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
           },
-        },
-        embeddings: {
-          provider: 'openai',
-          name: 'text-embedding-3-large',
-          apiKey: {
-            valueFromVault: 'OPENAI_API_KEY',
+          embeddings: {
+            provider: 'openai',
+            name: 'text-embedding-3-large',
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
           },
-        },
-        rag: {
           vectorStore: 'chroma',
           commands: {
             get: '^//GET$',
