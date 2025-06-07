@@ -692,6 +692,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
   const attachFileInputRef = useRef(null);
+  const [ attaching, setAttaching ] = useState(false)
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
   // console.log('presence:', presence)
@@ -881,6 +882,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
   const onFileInputChange = async (event) => {
     try {
+      setAttaching(true)
       const fileUrl = await attachFile(event)
       console.log('fileUrl:', fileUrl)
       setNodes((nodes) =>
@@ -893,6 +895,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       );
     } catch (err) {
       console.error('Error attaching file:', err);
+    } finally {
+      setAttaching(false)
     }
   }
 
@@ -1260,9 +1264,13 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
         </>)}
       </Card.Content>
-      {data.attachments && (
+      { (data.attachments || attaching) && (
         <Card.Content>
-          {data.attachments.map((url, index) => (
+          {attaching && (
+            <Loader active={attaching}  size='tiny' inline='centered' />
+          )}
+
+          {data.attachments?.map((url, index) => (
             <Label
               key={index}
               as='a'
