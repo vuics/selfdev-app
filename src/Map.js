@@ -283,16 +283,20 @@ async function playEdge ({
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id === edge.target) {
+          // console.log('+ smartText:', smartText, ', satisfied:', satisfied)
           if (smartText && satisfied) {
+            const attachments = [...new Set([...(node.data.attachments || []), ...(sourceNode.data.attachments || []) ])]
+            // console.log('edge attachments:', attachments)
             if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`) &&
                 !node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
-              return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, } }
+              return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, attachments } }
             } else if (node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
-              return { ...node, data: { ...node.data, text: node.data.text.replace(`[/*[${sourceNode.data.uname}]*/]`, `[[${sourceNode.data.uname}]]`) } }
+              return { ...node, data: { ...node.data, text: node.data.text.replace(`[/*[${sourceNode.data.uname}]*/]`, `[[${sourceNode.data.uname}]]`), attachments } }
             }
+            return { ...node, data: { ...node.data, attachments } }
           } else {
             // unlinkEdge({ edge, getNodes, setNodes })
-            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`) } }
+            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`), attachments: node.data.attachments.filter(item => !sourceNode.data.attachments.includes(item)) } }
           }
         }
         return node
