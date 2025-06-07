@@ -251,11 +251,11 @@ Answer:`,
     }
   },
 
-  'notebook-v1.0': {
-    key: 'notebook-v1.0',
-    value: 'notebook-v1.0',
-    icon: 'file code',
-    text: 'Notebook v1.0',
+  'imagegen-v1.0': {
+    key: 'imagegen-v1.0',
+    value: 'imagegen-v1.0',
+    icon: 'images',
+    text: 'ImageGen v1.0',
     schema: {
       type: 'object',
       properties: {
@@ -265,43 +265,58 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        notebook: {
+        imagegen: {
           type: 'object',
           properties: {
-            filePath: { type: 'string' },
-            kernelName: { type: 'string' },
-            parameters: { },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
-          },
-        }
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              }
+            },
+            size: { type: 'string' },
+            quality: { type: 'string' },
+            style: { type: 'string' },
+            n: { type: 'number' },
+          }
+        },
       }
     },
-    defaultOptions: () => {
+    defaultOptions: function () {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'notebook' ],
-        notebook: {
-          // filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
-          filePath: '',
-          kernelName: 'python3',
-          parameters: {
-            who: 'Earth',
-            num: 0.3,
+        joinRooms: [ 'imagegen' ],
+        imagegen: {
+          // See docs on params: https://platform.openai.com/docs/api-reference/images/create
+          model: {
+            provider: 'openai',
+            name: 'dall-e-2',    // "dall-e-2", "dall-e-3", "gpt-image-1",
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
           },
-          parseJson: true,
-          promptKey: 'prompt',
+          size: '256x256',      // "256x256", "512x512", "1024x1024"; DALL·E 3 only supports "1024x1024")
+          quality: 'standard',  // "standard" (default) or "hd" (for high detail)
+          style: 'natural',     // "vivid" (default) or "natural" — affects artistic style
+          n: 1,                 // OpenAI limits you to n=1
         },
       }
     }
   },
 
-  'command-v1.0': {
-    key: 'command-v1.0',
-    value: 'command-v1.0',
-    icon: 'terminal',
-    text: 'Command v1.0',
+  'code-v1.0': {
+    key: 'code-v1.0',
+    value: 'code-v1.0',
+    icon: 'code',
+    text: 'Code v1.0',
     schema: {
       type: 'object',
       properties: {
@@ -311,104 +326,42 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        command: {
+        code: {
           type: 'object',
           properties: {
-            execute: { type: 'string' },
-            shell: { type: 'boolean' },
+            kernel: { type: 'string' },
+            env: { },
+            commands: {
+              type: 'object',
+              properties: {
+                start: { type: 'string' },
+                restart: { type: 'string' },
+                reconnect: { type: 'string' },
+                shutdown: { type: 'string' },
+              },
+            },
           },
-        }
+        },
       }
     },
     defaultOptions: () => {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'command' ],
-        command: {
-          // execute: '/bin/sh',
-          execute: '',
-          shell: false,
-        },
-      }
-    }
-  },
+        joinRooms: [ 'code' ],
 
-  'langflow-v1.0': {
-    key: 'langflow-v1.0',
-    value: 'langflow-v1.0',
-    icon: 'code branch',
-    text: 'Langflow v1.0',
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
-        langflow: {
-          type: 'object',
-          properties: {
-            flowId: { type: 'string' },
-            sessionId: { type: 'string' },
+        code: {
+          kernel: 'python3',
+          env: {
+            'MY_ENV_VAR': 'my-value',
+            'MY_SECOND_ENV_VAR': 'some value',
           },
-        },
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'langflow' ],
-        langflow: {
-          flowId: '',
-          sessionId: '',
-        },
-      }
-    }
-  },
-
-  'nodered-v1.0': {
-    key: 'nodered-v1.0',
-    value: 'nodered-v1.0',
-    icon: 'map signs',
-    text: 'Node-RED v1.0',
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
-        nodered: {
-          type: 'object',
-          properties: {
-            method: { type: 'string' },
-            route: { type: 'string' },
-            payload: { },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
+          commands: {
+            start: "^//START$",
+            restart: "^//RESTART$",
+            reconnect: "^//RECONNECT$",
+            shutdown: "^//SHUTDOWN$",
           },
-        },
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'nodered' ],
-        nodered: {
-          method: 'POST',
-          route: '',
-          payload: {
-            prompt: '',
-          },
-          parseJson: true,
-          promptKey: 'prompt',
         },
       }
     }
@@ -540,11 +493,11 @@ Answer:`,
     }
   },
 
-  'code-v1.0': {
-    key: 'code-v1.0',
-    value: 'code-v1.0',
-    icon: 'code',
-    text: 'Code v1.0',
+  'command-v1.0': {
+    key: 'command-v1.0',
+    value: 'command-v1.0',
+    icon: 'terminal',
+    text: 'Command v1.0',
     schema: {
       type: 'object',
       properties: {
@@ -554,20 +507,48 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        code: {
+        command: {
           type: 'object',
           properties: {
-            kernel: { type: 'string' },
-            env: { },
-            commands: {
-              type: 'object',
-              properties: {
-                start: { type: 'string' },
-                restart: { type: 'string' },
-                reconnect: { type: 'string' },
-                shutdown: { type: 'string' },
-              },
-            },
+            execute: { type: 'string' },
+            shell: { type: 'boolean' },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'command' ],
+        command: {
+          // execute: '/bin/sh',
+          execute: '',
+          shell: false,
+        },
+      }
+    }
+  },
+
+  'langflow-v1.0': {
+    key: 'langflow-v1.0',
+    value: 'langflow-v1.0',
+    icon: 'code branch',
+    text: 'Langflow v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        langflow: {
+          type: 'object',
+          properties: {
+            flowId: { type: 'string' },
+            sessionId: { type: 'string' },
           },
         },
       }
@@ -576,30 +557,20 @@ Answer:`,
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'code' ],
-
-        code: {
-          kernel: 'python3',
-          env: {
-            'MY_ENV_VAR': 'my-value',
-            'MY_SECOND_ENV_VAR': 'some value',
-          },
-          commands: {
-            start: "^//START$",
-            restart: "^//RESTART$",
-            reconnect: "^//RECONNECT$",
-            shutdown: "^//SHUTDOWN$",
-          },
+        joinRooms: [ 'langflow' ],
+        langflow: {
+          flowId: '',
+          sessionId: '',
         },
       }
     }
   },
 
-  'imagegen-v1.0': {
-    key: 'imagegen-v1.0',
-    value: 'imagegen-v1.0',
-    icon: 'images',
-    text: 'ImageGen v1.0',
+  'nodered-v1.0': {
+    key: 'nodered-v1.0',
+    value: 'nodered-v1.0',
+    icon: 'map signs',
+    text: 'Node-RED v1.0',
     schema: {
       type: 'object',
       properties: {
@@ -609,48 +580,77 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        imagegen: {
+        nodered: {
           type: 'object',
           properties: {
-            model: {
-              type: 'object',
-              properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
-                apiKey: {
-                  type: 'object',
-                  properties: {
-                    valueFromVault: { type: 'string' },
-                  },
-                },
-              }
-            },
-            size: { type: 'string' },
-            quality: { type: 'string' },
-            style: { type: 'string' },
-            n: { type: 'number' },
-          }
+            method: { type: 'string' },
+            route: { type: 'string' },
+            payload: { },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
         },
       }
     },
-    defaultOptions: function () {
+    defaultOptions: () => {
       return {
         name: faker.internet.username().toLowerCase(),
         description: '',
-        joinRooms: [ 'imagegen' ],
-        imagegen: {
-          // See docs on params: https://platform.openai.com/docs/api-reference/images/create
-          model: {
-            provider: 'openai',
-            name: 'dall-e-2',    // "dall-e-2", "dall-e-3", "gpt-image-1",
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
+        joinRooms: [ 'nodered' ],
+        nodered: {
+          method: 'POST',
+          route: '',
+          payload: {
+            prompt: '',
           },
-          size: '256x256',      // "256x256", "512x512", "1024x1024"; DALL·E 3 only supports "1024x1024")
-          quality: 'standard',  // "standard" (default) or "hd" (for high detail)
-          style: 'natural',     // "vivid" (default) or "natural" — affects artistic style
-          n: 1,                 // OpenAI limits you to n=1
+          parseJson: true,
+          promptKey: 'prompt',
+        },
+      }
+    }
+  },
+
+  'notebook-v1.0': {
+    key: 'notebook-v1.0',
+    value: 'notebook-v1.0',
+    icon: 'file code',
+    text: 'Notebook v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        notebook: {
+          type: 'object',
+          properties: {
+            filePath: { type: 'string' },
+            kernelName: { type: 'string' },
+            parameters: { },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'notebook' ],
+        notebook: {
+          // filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
+          filePath: '',
+          kernelName: 'python3',
+          parameters: {
+            who: 'Earth',
+            num: 0.3,
+          },
+          parseJson: true,
+          promptKey: 'prompt',
         },
       }
     }
