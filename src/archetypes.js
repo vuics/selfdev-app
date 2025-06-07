@@ -594,6 +594,67 @@ Answer:`,
       }
     }
   },
+
+  'imagegen-v1.0': {
+    key: 'imagegen-v1.0',
+    value: 'imagegen-v1.0',
+    icon: 'images',
+    text: 'ImageGen v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        imagegen: {
+          type: 'object',
+          properties: {
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              }
+            },
+            size: { type: 'string' },
+            quality: { type: 'string' },
+            style: { type: 'string' },
+            n: { type: 'number' },
+          }
+        },
+      }
+    },
+    defaultOptions: function () {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'imagegen' ],
+        imagegen: {
+          // See docs on params: https://platform.openai.com/docs/api-reference/images/create
+          model: {
+            provider: 'openai',
+            name: 'dall-e-2',    // "dall-e-2", "dall-e-3", "gpt-image-1",
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
+          },
+          size: '256x256',      // "256x256", "512x512", "1024x1024"; DALL·E 3 only supports "1024x1024")
+          quality: 'standard',  // "standard" (default) or "hd" (for high detail)
+          style: 'natural',     // "vivid" (default) or "natural" — affects artistic style
+          n: 1,                 // OpenAI limits you to n=1
+        },
+      }
+    }
+  },
 }
 
 export default archetypes
