@@ -127,6 +127,7 @@ const conf = {
     websocketUrl: process.env.REACT_APP_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
     mucHost: process.env.REACT_APP_XMPP_MUC_HOST || 'conference.localhost',
     shareHost: process.env.REACT_APP_XMPP_SHARE_HOST || 'share.localhost',
+    shareUrlPrefix: process.env.REACT_APP_SHARE_URL_PREFIX || 'https://selfdev-prosody.dev.local:5281/file_share/',
   },
 
   jitsi: {

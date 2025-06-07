@@ -1845,6 +1845,10 @@ const hiddenConfirm = {
   func: () => {},
 }
 
+const shareUrlRegex = new RegExp(
+  "^" + conf.xmpp.shareUrlPrefix.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&")
+);
+
 function Map () {
   const { height, width } = useWindowDimensions();
   const [ loading, setLoading ] = useState(true)
@@ -2346,20 +2350,33 @@ function Map () {
 
       if (type === 'chat' || type === 'normal' || !type) {
         console.log(`Personal message response from ${from}: ${body}`);
-        // const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('@')[0])
         const [updateNode] = getNodes().filter(nd => nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('/')[0])
         if (updateNode) {
-          setNodes((nodes) =>
-            nodes.map((node) =>
-              node.id === updateNode.id ? {
-                ...node,
-                data: { ...node.data, text: body, waitRecipient: undefined, },
-                // Make the proper sizing. Allow dynamic change of heigth.
-                width: 600,
-                height: undefined,
-              } : node
-            )
-          );
+          if (shareUrlRegex.test(body)) {
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.id === updateNode.id ? {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    attachments: [...(node.data.attachments || []), body]
+                  },
+                } : node
+              )
+            );
+          } else {
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.id === updateNode.id ? {
+                  ...node,
+                  data: { ...node.data, text: body, waitRecipient: undefined, },
+                  // Make the proper sizing. Allow dynamic change of heigth.
+                  width: 600,
+                  height: undefined,
+                } : node
+              )
+            );
+          }
         }
       } else if (type === 'groupchat') {
         // Skip our own messages
