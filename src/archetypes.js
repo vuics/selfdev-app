@@ -29,11 +29,18 @@ const archetypes = {
             },
           }
         },
+        chat: {
+          type: 'object',
+          properties: {
+            session: { type: 'string' },
+          }
+        },
       }
     },
     defaultOptions: function () {
+      const name = faker.internet.username().toLowerCase()
       return {
-        name: faker.internet.username().toLowerCase(),
+        name,
         description: '',
         joinRooms: [ 'chat' ],
         systemMessage: '',
@@ -43,6 +50,9 @@ const archetypes = {
           apiKey: {
             valueFromVault: 'OPENAI_API_KEY',
           },
+        },
+        chat: {
+          session: name,
         },
       }
     }
