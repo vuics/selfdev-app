@@ -348,7 +348,7 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        flow: {
+        langflow: {
           type: 'object',
           properties: {
             flowId: { type: 'string' },
@@ -362,7 +362,7 @@ Answer:`,
         name: faker.internet.username().toLowerCase(),
         description: '',
         joinRooms: [ 'langflow' ],
-        flow: {
+        langflow: {
           flowId: '',
           sessionId: '',
         },
@@ -384,7 +384,7 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        webhook: {
+        nodered: {
           type: 'object',
           properties: {
             method: { type: 'string' },
@@ -401,7 +401,7 @@ Answer:`,
         name: faker.internet.username().toLowerCase(),
         description: '',
         joinRooms: [ 'nodered' ],
-        webhook: {
+        nodered: {
           method: 'POST',
           route: '',
           payload: {
@@ -428,7 +428,7 @@ Answer:`,
           type: 'array',
           items: { type: 'string' }
         },
-        qiskit: {
+        quantum: {
           type: 'object',
           properties: {
             // provider: { type: 'string' },
@@ -465,7 +465,7 @@ Answer:`,
         name: faker.internet.username().toLowerCase(),
         description: '',
         joinRooms: [ 'quantum' ],
-        qiskit: {
+        quantum: {
           // provider: 'ibm',
           backend: 'fake_almaden_v2',  // least_busy, fake_almaden_v2, ibm_torino, ibm_brisbane, ibm_sherbrooke
           minNumQubits: 127,  // only for least_busy backend
