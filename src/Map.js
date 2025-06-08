@@ -692,11 +692,18 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
-  const { presence, roster, setCurrentSlide, attachFile } = useMapContext();
+  const {
+    presence, roster, setCurrentSlide, attachFile, uploadFile,
+  } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
   const attachFileInputRef = useRef(null);
   const [ attaching, setAttaching ] = useState(false)
+
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+
   const allNodes = getNodes()
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
   // console.log('presence:', presence)
@@ -904,6 +911,65 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
     }
   }
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('Audio tracks:', stream.getAudioTracks()); // Debug log
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm;codecs=opus'
+      });
+
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        try {
+          const contentType = 'audio/webm;codecs=opus';
+          const audioBlob = new Blob(audioChunksRef.current, { type: contentType });
+          const filename = `recording-${Date.now()}.webm`;
+          const buffer = await audioBlob.arrayBuffer();
+          const recordingUrl = await uploadFile({
+            buffer,
+            filename,
+            size: audioBlob.size,
+            contentType,
+          });
+          console.log('Uploaded recording url:', recordingUrl);
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.id === id ? { ...node, data: {
+                ...node.data,
+                text: node.data.text + `\n<audio controls><source src="${recordingUrl}" type="${contentType}">Your browser does not support the audio element.</audio>`,
+                attachments: [...(node.data.attachments || []), recordingUrl],
+              } } : node
+            )
+          );
+        } catch (err) {
+          console.error('Error on stopping and uploading recording:', err);
+        }
+      };
+
+      mediaRecorder.start();
+      setRecording(true);
+    } catch (error) {
+      console.error('Microphone access failed:', error);
+      alert('Microphone access denied or not available.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+    }
+  };
+
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e: any) => {
@@ -991,6 +1057,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 onChange={onFileInputChange}
                 style={{ display: 'none' }} // hide input
               />
+            </Dropdown.Item>
+            <Dropdown.Item onClick={ recording ? stopRecording : startRecording } >
+              <Icon name={ recording ? 'microphone slash' : 'microphone' } />
+              {recording ? 'Stop Recording' : 'Record Audio'}
             </Dropdown.Item>
             <Dropdown text='Diff' pointing='left' className='link item'>
               <Dropdown.Menu>
@@ -2437,6 +2507,53 @@ function Map () {
     }
   }
 
+  const uploadFile = async ({ buffer, filename, size, contentType = 'application/octet-stream' } = {}) => {
+    try {
+      // console.log('Content-Type:', contentType);
+      const slotRequestIQ = xml(
+        'iq',
+        { type: 'get', to: conf.xmpp.shareHost, id: `upload_${uuidv4()}` },
+        xml('request', {
+          xmlns: 'urn:xmpp:http:upload:0',
+          filename,
+          size,
+          'content-type': contentType,
+        })
+      );
+      // console.log('📤 Sending slot request...');
+      const response = await xmppRef.current.sendReceive(slotRequestIQ);
+      // console.log('response:', response)
+
+      const slot = response.getChild('slot', 'urn:xmpp:http:upload:0');
+      const putEl = slot.getChild('put');
+      const putUrl = putEl?.attrs?.url || '';
+      const getUrl = slot.getChild('get')?.attrs?.url || '';
+      // console.log('✅ Upload slot received:', slot)
+      // console.log('PUT URL:', putUrl);
+      // console.log('GET URL:', getUrl);
+
+      let headers = {};
+      const headerEls = putEl?.getChildren('header') || [];
+      console.log('headerEls:', headerEls)
+      for (const headerEl of headerEls) {
+        const name = headerEl.attrs.name;
+        const value = headerEl.getText();
+        headers[name] = value;
+      }
+      headers['Content-Type'] = contentType
+      // console.log('headers:', headers)
+
+      // const response1 =
+      await axios.put(putUrl, buffer, { headers });
+      // console.log('response1:', response1);
+      console.log('✅ File uploaded, link:', getUrl);
+      return getUrl
+    } catch (err) {
+      console.error('Error geting upload slot or uploading:', err);
+      throw err
+    }
+  }
+
   const attachFile = async (event) => {
     return new Promise((resolve, reject) => {
       try {
@@ -2446,52 +2563,14 @@ function Map () {
         }
         const reader = new FileReader();
         reader.onload = async (e) => {
-          try {
-            // console.log('Loaded file:', e.target.result)
-            const contentType = file.type || 'application/octet-stream'
-            // console.log('Content-Type:', contentType);
-            const slotRequestIQ = xml(
-              'iq',
-              { type: 'get', to: conf.xmpp.shareHost, id: `upload_${uuidv4()}` },
-              xml('request', {
-                xmlns: 'urn:xmpp:http:upload:0',
-                filename: file.name,
-                size: file.size,
-                'content-type': contentType,
-              })
-            );
-            // console.log('📤 Sending slot request...');
-            const response = await xmppRef.current.sendReceive(slotRequestIQ);
-            // console.log('response:', response)
-
-            const slot = response.getChild('slot', 'urn:xmpp:http:upload:0');
-            const putEl = slot.getChild('put');
-            const putUrl = putEl?.attrs?.url || '';
-            const getUrl = slot.getChild('get')?.attrs?.url || '';
-            // console.log('✅ Upload slot received:', slot)
-            // console.log('PUT URL:', putUrl);
-            // console.log('GET URL:', getUrl);
-
-            let headers = {};
-            const headerEls = putEl?.getChildren('header') || [];
-            console.log('headerEls:', headerEls)
-            for (const headerEl of headerEls) {
-              const name = headerEl.attrs.name;
-              const value = headerEl.getText();
-              headers[name] = value;
-            }
-            headers['Content-Type'] = contentType
-            // console.log('headers:', headers)
-
-            // const response1 =
-            await axios.put(putUrl, reader.result, { headers });
-            // console.log('response1:', response1);
-            console.log('✅ File uploaded, link:', getUrl);
-            resolve(getUrl)
-          } catch (err) {
-            console.error('Error geting upload slot or uploading:', err);
-            throw err
-          }
+          // console.log('Loaded file:', e.target.result)
+          const getUrl = await uploadFile({
+            buffer: reader.result,
+            filename: file.name,
+            size: file.size,
+            contentType: file.type || 'application/octet-stream'
+          })
+          resolve(getUrl)
         };
         reader.onerror = (err) => {
           throw err
@@ -2988,7 +3067,7 @@ function Map () {
       credentials, sendPersonalMessage, sendAttachments,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
-      setCurrentSlide, attachFile,
+      setCurrentSlide, attachFile, uploadFile,
     }}>
       <Container>
         <Menubar />
