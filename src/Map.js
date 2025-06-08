@@ -284,7 +284,7 @@ async function playEdge ({
       nodes.map((node) => {
         if (node.id === edge.target) {
           // console.log('+ smartText:', smartText, ', satisfied:', satisfied)
-          if (smartText && satisfied) {
+          if ((smartText || sourceNode.data.attachments?.length > 0) && satisfied) {
             const attachments = [...new Set([...(node.data.attachments || []), ...(sourceNode.data.attachments || []) ])]
             // console.log('edge attachments:', attachments)
             if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`) &&
