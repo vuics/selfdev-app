@@ -251,6 +251,113 @@ Answer:`,
     }
   },
 
+  'stt-v1.0': {
+    key: 'stt-v1.0',
+    value: 'stt-v1.0',
+    icon: 'headphones',
+    text: 'Speech-to-Text v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        stt: {
+          type: 'object',
+          properties: {
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              }
+            },
+            language: { type: 'string' },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'stt' ],
+        stt: {
+          model: {
+            provider: 'openai',
+            name: 'whisper-1',
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
+          },
+          language: 'en',
+        },
+      }
+    }
+  },
+
+  'tts-v1.0': {
+    key: 'tts-v1.0',
+    value: 'tts-v1.0',
+    icon: 'file audio',
+    text: 'Text-to-Speech v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        tts: {
+          type: 'object',
+          properties: {
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                name: { type: 'string' },
+                apiKey: {
+                  type: 'object',
+                  properties: {
+                    valueFromVault: { type: 'string' },
+                  },
+                },
+              }
+            },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'tts' ],
+        tts: {
+          model: {
+            provider: 'openai',
+            name: 'tts-1',
+            voice: 'nova',
+            apiKey: {
+              valueFromVault: 'OPENAI_API_KEY',
+            },
+          },
+        },
+      }
+    }
+  },
+
   'imagegen-v1.0': {
     key: 'imagegen-v1.0',
     value: 'imagegen-v1.0',
@@ -651,113 +758,6 @@ Answer:`,
           },
           parseJson: true,
           promptKey: 'prompt',
-        },
-      }
-    }
-  },
-
-  'stt-v1.0': {
-    key: 'stt-v1.0',
-    value: 'stt-v1.0',
-    icon: 'headphones',
-    text: 'Speech-to-Text v1.0',
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
-        stt: {
-          type: 'object',
-          properties: {
-            model: {
-              type: 'object',
-              properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
-                apiKey: {
-                  type: 'object',
-                  properties: {
-                    valueFromVault: { type: 'string' },
-                  },
-                },
-              }
-            },
-            language: { type: 'string' },
-          },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'stt' ],
-        stt: {
-          model: {
-            provider: 'openai',
-            name: 'whisper-1',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          language: 'en',
-        },
-      }
-    }
-  },
-
-  'tts-v1.0': {
-    key: 'tts-v1.0',
-    value: 'tts-v1.0',
-    icon: 'file audio',
-    text: 'Text-to-Speech v1.0',
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
-        tts: {
-          type: 'object',
-          properties: {
-            model: {
-              type: 'object',
-              properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
-                apiKey: {
-                  type: 'object',
-                  properties: {
-                    valueFromVault: { type: 'string' },
-                  },
-                },
-              }
-            },
-          },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'tts' ],
-        tts: {
-          model: {
-            provider: 'openai',
-            name: 'tts-1',
-            voice: 'nova',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
         },
       }
     }
