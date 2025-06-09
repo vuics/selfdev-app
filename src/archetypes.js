@@ -333,6 +333,8 @@ Answer:`,
                     valueFromVault: { type: 'string' },
                   },
                 },
+                format: { type: 'string' },
+                speed: { type: 'number' },
               }
             },
           },
@@ -353,6 +355,8 @@ Answer:`,
               valueFromVault: 'OPENAI_API_KEY',
             },
           },
+          format: 'mp3', // mp3, flac, wav, pcm
+          speed: 1,
         },
       }
     }
