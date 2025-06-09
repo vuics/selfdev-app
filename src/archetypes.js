@@ -752,7 +752,8 @@ Answer:`,
         tts: {
           model: {
             provider: 'openai',
-            name: 'gpt-4o-mini',
+            name: 'tts-1',
+            voice: 'nova',
             apiKey: {
               valueFromVault: 'OPENAI_API_KEY',
             },
