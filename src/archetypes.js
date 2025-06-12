@@ -766,6 +766,58 @@ Answer:`,
       }
     }
   },
+
+  'avatar-v1.0': {
+    key: 'avatar-v1.0',
+    value: 'avatar-v1.0',
+    icon: 'smile outline',
+    text: 'Avatar (Talking Face) v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        avatar: {
+          type: 'object',
+          properties: {
+            model: {
+              type: 'object',
+              properties: {
+                provider: { type: 'string' },
+                // name: { type: 'string' },
+                // apiKey: {
+                //   type: 'object',
+                //   properties: {
+                //     valueFromVault: { type: 'string' },
+                //   },
+                // },
+              }
+            },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'avatar' ],
+        avatar: {
+          model: {
+            provider: 'sadtalker',
+            // name: 'gpt-4o-mini',
+            // apiKey: {
+            //   valueFromVault: 'OPENAI_API_KEY',
+            // },
+          },
+        },
+      }
+    }
+  },
 }
 
 export default archetypes
