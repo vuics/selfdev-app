@@ -533,17 +533,17 @@ const Hive = () => {
                         <Grid.Column width={13}>
                           <Icon
                             name={
-                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? 'spy' : 'spinner')
                                 : (agent.deployed ? 'spinner' : 'spy')
                             }
                             color={
-                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? 'green' : 'red')
                                 : (agent.deployed ? 'yellow' : 'grey')
                             }
                             loading={
-                              presence[`${agent.options.name}@${credentials.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? false : true)
                                 : (agent.deployed ? true : false)
                             }
