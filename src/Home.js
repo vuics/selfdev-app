@@ -18,7 +18,8 @@ import {
   Sidebar,
   List,
   Divider,
-  // Grid,
+  Grid,
+  Popup,
   // Label,
 } from 'semantic-ui-react'
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -608,13 +609,6 @@ const HomepageLayout = () => {
           </Container>
         </Container>
       </div>
-      <div
-        style={{
-          height: '1px',
-          backgroundColor: '#999',
-        }}
-      />
-
 
       <div style={{
         height: '1px',
@@ -673,9 +667,11 @@ const HomepageLayout = () => {
               <List.Item>
                 <strong>Map:</strong> The Visual Command Center for Agentic Collaboration. Visually orchestrate agents and human resources, design complex workflows, connect prompts, control execution, and create compelling presentations—all within a user-friendly, no-code/low-code environment.
               </List.Item>
+              {/*
               <List.Item>
                 <strong>Vault:</strong> Securely store your API keys and credentials with robust encryption, ensuring the safety of your data and integrations.
               </List.Item>
+              */}
               <List.Item>
                 <strong>API & CLI:</strong> Access platform features programmatically for advanced customization and seamless integration.
               </List.Item>
@@ -755,7 +751,78 @@ const HomepageLayout = () => {
         </Segment>
       </Container>
 
-      <Divider />
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
+      <div style={{
+        padding: '0 2em 0 2em',
+        backgroundColor: '#fafafa',
+        // padding: '2rem 2rem 2rem 2rem',
+        // textAlign: 'center',
+      }}>
+        <Container
+          fluid
+          style={{
+            // height: '50vh',
+            height: 'auto',
+            // backgroundColor: '#eee',
+            // backgroundColor: '#fafafa',
+            // backgroundColor: '#999',
+            // backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+            // backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
+            // backgroundSize: '20px 20px',
+            borderLeft: '1px solid #ccc',
+            borderRight: '1px solid #ccc',
+            // boxSizing: 'border-box',
+          }}
+        >
+          <div style={{
+            height: '1rem',
+          }}/>
+          <Grid celled verticalAlign="middle">
+            <Grid.Row>
+              <Grid.Column width={6} textAlign='center'>
+                <Icon size='huge' name='shield' />
+                <Header as="h1" textAlign="center">
+                  Scale with security
+                </Header>
+              </Grid.Column>
+              <Grid.Column width={10}>
+                <p style={{
+                  fontSize: "1.8em", lineHeight: "1.6em",
+                  padding: '2rem 2rem',
+                  textAlign: 'center',
+                  color: 'slategray'
+                }}>
+                  Securely store your API keys and credentials in <strong>Vault</strong> with robust encryption, ensuring the safety of your data and integrations.
+                </p>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <div style={{
+            height: '1rem',
+            // backgroundColor: '#fafafa',
+          }}/>
+        </Container>
+      </div>
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
+
+          <Segment placeholder>
+            <Header icon>
+              <Icon name='pdf file outline' />
+              No documents are listed for this customer.
+            </Header>
+            <Button primary>Add Document</Button>
+          </Segment>
+
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
 
       {/* Free Tier Section */}
       <Container text textAlign="center" style={{ marginTop: "3em", marginBottom: "3em" }}>
@@ -856,6 +923,82 @@ const HomepageLayout = () => {
         </div>
       </Container>
 
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
+      <div style={{
+        padding: '0 2em 0 2em',
+        // backgroundColor: '#fafafa',
+        // padding: '2rem 2rem 2rem 2rem',
+        // textAlign: 'center',
+      }}>
+
+        <Container
+          fluid
+          style={{
+            position: 'relative', overflow: 'hidden',
+            // height: 'auto',
+            // backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+            borderLeft: '1px solid #ccc',
+            borderRight: '1px solid #ccc',
+          }}
+        >
+          {/* Background Layer */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+              // WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100px)',
+              maskImage: 'linear-gradient(to bottom, black 0%, transparent 100px)',
+              // WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              zIndex: 0,
+            }}
+          />
+
+          <div style={{
+            padding: '2rem 2rem 2rem 2rem',
+            textAlign: 'center',
+          }}>
+            <Popup
+              content={'user.bio'}
+              key={'user.name'}
+              header={'user.name'}
+              trigger={
+                <Image avatar alt="logo" src='/images/logo192.png' />
+              }
+            />
+            <Popup
+              content={'user.bio'}
+              key={'user.name'}
+              header={'user.name'}
+              trigger={
+                <Image avatar alt="logo" src='/images/logo192.png' />
+              }
+            />
+            <Popup
+              content={'user.bio'}
+              key={'user.name'}
+              header={'user.name'}
+              trigger={
+                <Image avatar alt="logo" src='/images/logo192.png' />
+              }
+            />
+            <Header as="h1" textAlign="center">
+              Empowering the next generation of entrepreneurs.
+            </Header>
+          </div>
+        </Container>
+      </div>
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
 
       <div className="dot-background" style={{
         width: '100%',
