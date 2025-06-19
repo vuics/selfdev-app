@@ -998,7 +998,7 @@ const HomepageLayout = () => {
               }
             />
             <Popup
-              content={'...'}
+              content={'The service is convenient and easy to use. Everything works great!'}
               key={'Aslan Atemov'}
               header={'Aslan Atemov'}
               trigger={
@@ -1013,6 +1013,15 @@ const HomepageLayout = () => {
                 <Image avatar alt="reviewer photo" src='/images/reviewers/JonathanSimons.png' />
               }
             />
+            <Popup
+              content={'...'}
+              key={'Alexander Labyrich'}
+              header={'Alexander Labyrich'}
+              trigger={
+                <Image avatar alt="reviewer photo" src='/images/reviewers/AlexanderLabyrich.png' />
+              }
+            />
+
             <Header as="h1" textAlign="center">
               Empowering the next generation of entrepreneurs.
             </Header>
