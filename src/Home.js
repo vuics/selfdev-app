@@ -966,27 +966,51 @@ const HomepageLayout = () => {
             textAlign: 'center',
           }}>
             <Popup
-              content={'user.bio'}
-              key={'user.name'}
-              header={'user.name'}
+              content={'Cool project. The future belongs to these technologies. It solves the tasks in time.'}
+              key={'Alexander Pavlov'}
+              header={'Alexander Pavlov'}
               trigger={
-                <Image avatar alt="logo" src='/images/logo192.png' />
+                <Image avatar alt="reviewer photo" src='/images/reviewers/AlexanderPavlov.png' />
               }
             />
             <Popup
-              content={'user.bio'}
-              key={'user.name'}
-              header={'user.name'}
+              content={'The platform allows entrepreneurs to significantly reduce the time spent on supporting current business issues, and most importantly, using new technologies with HiperAgency is easy and does not require a long study of the issue. And even "from scratch" of knowledge and ideas about the benefits of AI in your business, you can start using this platform and programming in a common language. It is great to turn from an individual entrepreneur into a developer for the needs of your business, reducing the time spent on explaining the task to outsourcing contractors. You can do the necessary minimum yourself with the help of this wonderful platform.'}
+              key={'Kate Melnikova'}
+              header={'Kate Melnikova'}
               trigger={
-                <Image avatar alt="logo" src='/images/logo192.png' />
+                <Image avatar alt="reviewer photo" src='/images/reviewers/KateMelnikova.png' />
               }
             />
             <Popup
-              content={'user.bio'}
-              key={'user.name'}
-              header={'user.name'}
+              content={'...'}
+              key={'Dmitriy Arakcheev'}
+              header={'Dmitriy Arakcheev'}
               trigger={
-                <Image avatar alt="logo" src='/images/logo192.png' />
+                <Image avatar alt="reviewer photo" src='/images/reviewers/DmitriyArakcheev.png' />
+              }
+            />
+            <Popup
+              content={'It helped to solve tasks.'}
+              key={'Aleksey Arakcheev'}
+              header={'Aleksey Arakcheev'}
+              trigger={
+                <Image avatar alt="reviewer photo" src='/images/reviewers/AlekseyArakcheev.png' />
+              }
+            />
+            <Popup
+              content={'...'}
+              key={'Aslan Atemov'}
+              header={'Aslan Atemov'}
+              trigger={
+                <Image avatar alt="reviewer photo" src='/images/reviewers/AslanAtemov.png' />
+              }
+            />
+            <Popup
+              content={'I love these agents.'}
+              key={'Jonathan Simons'}
+              header={'Jonathan Simons'}
+              trigger={
+                <Image avatar alt="reviewer photo" src='/images/reviewers/JonathanSimons.png' />
               }
             />
             <Header as="h1" textAlign="center">
