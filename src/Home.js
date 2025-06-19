@@ -100,7 +100,7 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
           <Button style={{ marginBottom: '1em', }}
             compact color='black' onClick={() => logIn(false)}
           >
-            { available ? "Start for Free" : 'Join a Whitelist' }
+            { available ? "Start for free" : 'Join a whitelist' }
           </Button>
           <Button compact basic as="a" href="https://github.com/vuics/hyperagency" target="_blank" rel="noreferrer">
             Star on GitHub
@@ -906,45 +906,35 @@ const HomepageLayout = () => {
           }}/>
         </Container>
       </div>
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
-
-          <Segment placeholder>
-            <Header icon>
-              <Icon name='pdf file outline' />
-              No documents are listed for this customer.
-            </Header>
-            <Button primary>Add Document</Button>
-          </Segment>
 
       <div style={{
         height: '1px',
         backgroundColor: '#999',
       }}/>
-
-      {/* Free Tier Section */}
       <Container text textAlign="center" style={{ marginTop: "3em", marginBottom: "3em" }}>
         <Header as="h2" style={{ marginBottom: "1rem" }}>
           Start Building Your Autonomous Future Today - It's Free!
         </Header>
         <List bulleted size="large" style={{ marginBottom: "2rem" }}>
           <List.Item>
-            <strong>Free Tier:</strong> Run up to 3 agents simultaneously on our cloud-hosted platform.
+            <strong>Open-Source:</strong> Self-host the platform and run unlimited agents for free.
           </List.Item>
           <List.Item>
-            <strong>Open-Source:</strong> Self-host the platform and run unlimited agents.
+            <strong>Free Tier:</strong> Run up to 3 agents simultaneously on our cloud-hosted platform.
           </List.Item>
+          {/*
           <List.Item>
             <strong>Freemium Limits:</strong> Web app code is open-source; mobile and desktop app code is closed.
           </List.Item>
+          */}
         </List>
-        <Button primary size="large" style={{ marginRight: "1rem" }}>
-          Sign Up for Free (No Credit Card Required)
+        <Button style={{ marginBottom: '1em', }}
+          compact color='black' onClick={() => logIn(false)}
+        >
+          { available ? "Start for free" : 'Join a whitelist' }
         </Button>
-        <Button secondary size="large" as="a" href="https://github.com/hyperagency" target="_blank" rel="noreferrer">
-          Star on GitHub
+        <Button compact basic as="a" href="/pricing">
+          See our plans
         </Button>
       </Container>
 
