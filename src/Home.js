@@ -3,7 +3,7 @@
 
 import { createMedia } from '@artsy/fresnel'
 import PropTypes from 'prop-types'
-import React, {  useState, useEffect } from 'react'
+import React, {  useState, useEffect, useRef, useMemo } from 'react'
 import { InView } from 'react-intersection-observer'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -21,6 +21,12 @@ import {
   // Grid,
   // Label,
 } from 'semantic-ui-react'
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+// FIXME: delete?
+// import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
+// +    "react-scroll-parallax": "^3.4.5",
+// +    "react-spring": "^10.0.1",
 
 import Footer from './components/Footer'
 import conf from './conf'
@@ -94,7 +100,7 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
             { available ? "Start for Free" : 'Join a Whitelist' }
           </Button>
           <Button compact basic as="a" href="https://github.com/vuics/hyperagency" target="_blank" rel="noreferrer">
-            Explore on GitHub
+            Star on GitHub
           </Button>
         </Container>
       </Container>
@@ -265,6 +271,130 @@ ResponsiveContainer.propTypes = {
   logIn: PropTypes.func,
 }
 
+const WordWithScrollColor = ({ word, index, totalWords, scrollProgress }) => {
+  // We compress the transformation range to the first 60% of the scroll
+  const scrollStart = (index / totalWords) * 0.6;
+  const scrollEnd = ((index + 1) / totalWords) * 0.6;
+
+  const color = useTransform(scrollProgress, [scrollStart, scrollEnd], ['#ccc', '#111']);
+
+  return (
+    <motion.span
+      style={{
+        color,
+        marginRight: '0.5em',
+        transition: 'color 0.2s ease-out',
+        lineHeight: '3rem',
+      }}
+    >
+      {word}
+    </motion.span>
+  );
+};
+
+const ColorScrollText = ({ children }) => {
+  const stickyRef = useRef(null);
+  const words = children.split(' ')
+  const totalWords = words.length;
+
+  // Track scroll progress through a long sticky zone
+  const { scrollYProgress } = useScroll({
+    target: stickyRef,
+    offset: ['start center', 'end center'],
+  });
+
+  return (<>
+    <div style={{
+      height: '1px',
+      backgroundColor: '#999',
+    }}/>
+    <div style={{
+      padding: '0 2em 0 2em',
+      // textAlign: 'center',
+    }}>
+      <div style={{
+        position: 'relative',
+        borderLeft: '1px solid #ccc',
+        borderRight: '1px solid #ccc',
+        boxSizing: 'border-box',
+      }}>
+        {/* Background */}
+        <div
+          style={{
+            padding: '0 2em 0 2em',
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+            height: '360vh',
+            backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            // backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23999999' fill-opacity='0.27'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            zIndex: 0,
+          }}
+        />
+
+        {/* Space before sticky starts */}
+        <div style={{ height: '50vh' }} />
+
+        {/* Sticky container (longer to keep text stuck) */}
+        <div
+          ref={stickyRef}
+          style={{
+            height: '250vh', // extended scroll duration
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              position: 'sticky',
+              top: '42vh',
+              display: 'flex',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              fontSize: '2rem',
+              zIndex: 10,
+              textAlign: 'center',
+              padding: '0 8rem',
+            }}
+          >
+            {words.map((word, index) => (
+              <WordWithScrollColor
+                key={index}
+                word={word}
+                index={index}
+                totalWords={totalWords}
+                scrollProgress={scrollYProgress}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Spacer after sticky */}
+        <div style={{ height: '60vh' }} />
+
+        {/* Next section */}
+        {/*
+        <div style={{
+          height: '1px',
+          backgroundColor: '#999',
+        }}/>
+        <div
+          style={{
+            padding: '4rem 2rem',
+            backgroundColor: '#fff',
+            position: 'relative',
+            zIndex: 1,
+          }}
+        >
+          <h2>Tired of being bogged down in repetitive tasks? Dreaming of scaling your business without the endless grind?</h2>
+          <p>HyperAgency makes it possible. We're building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.</p>
+        </div>
+        */}
+      </div>
+    </div>
+  </>);
+};
+
 const HomepageLayout = () => {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
@@ -306,8 +436,89 @@ const HomepageLayout = () => {
       })
   }, []);
 
+
   return (
     <ResponsiveContainer logIn={logIn} available={available}>
+
+      <ColorScrollText>
+        {/*
+        Autonomous agents empower you to scale twice.
+        */}
+        Imagine a World Where Your Business Runs Itself
+      </ColorScrollText>
+
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
+      <div style={{
+        padding: '0 2em 0 2em',
+        // textAlign: 'center',
+      }}>
+        <Container
+          fluid
+          style={{
+            // height: '35vh',
+            height: 'auto',
+            backgroundColor: '#ffffff',
+            // backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+            borderLeft: '1px solid #ccc',
+            borderRight: '1px solid #ccc',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{ padding: 1 }}/>
+          <Header as="h1" textAlign="center" style={{
+            // marginTop: '0',
+            padding: '2rem',
+            paddingBottom: '0',
+          }}>
+            Tired of being bogged down in repetitive tasks?
+          </Header>
+          <Header as="h3" textAlign="center" style={{
+            // marginTop: '0',
+            // padding: '1rem',
+          }}>
+            Dreaming of scaling your business without the endless grind?
+          </Header>
+          <p style={{
+            fontSize: "1.2em", lineHeight: "1.6em",
+            padding: '1rem 2rem 4rem',
+            textAlign: 'center',
+          }}>
+            HyperAgency makes it possible.
+            <br/>
+            <br/>
+            We're building a future where intelligent AI agents work <em>alongside</em> you,
+            automating the mundane, amplifying your creativity, and unlocking unprecedented growth.
+          </p>
+        </Container>
+      </div>
+
+      <div style={{
+        height: '1px',
+        backgroundColor: '#999',
+      }}/>
+      <div style={{
+        padding: '0 2em 0 2em',
+        // textAlign: 'center',
+      }}>
+        <Container
+          fluid
+          style={{
+            height: '20vh',
+            backgroundColor: '#ffffff',
+            // backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            borderLeft: '1px solid #ccc',
+            borderRight: '1px solid #ccc',
+            boxSizing: 'border-box',
+          }}
+        >
+        </Container>
+      </div>
+
       <div style={{
         height: '1px',
         backgroundColor: '#999',
@@ -339,6 +550,7 @@ const HomepageLayout = () => {
             }}
           >
             <div style={{ padding: 1 }}/>
+            {/*
             <Header as="h1" textAlign="center" style={{ marginBottom: '2rem', marginTop: '2rem' }}>
               Imagine a World Where Your Business Runs Itself
             </Header>
@@ -347,6 +559,7 @@ const HomepageLayout = () => {
               HyperAgency makes it possible. We're building a future where intelligent AI agents work <em>alongside</em> you,
               automating the mundane, amplifying your creativity, and unlocking unprecedented growth.
             </p>
+            */}
             <List bulleted size="large" style={{ marginTop: "1.5em" }}>
               <List.Item>
                 <strong>Virtual Startup Teams:</strong> Experience unparalleled growth with virtual teams designed to assist
@@ -564,7 +777,7 @@ const HomepageLayout = () => {
           Sign Up for Free (No Credit Card Required)
         </Button>
         <Button secondary size="large" as="a" href="https://github.com/hyperagency" target="_blank" rel="noreferrer">
-          Explore on GitHub
+          Star on GitHub
         </Button>
       </Container>
 
