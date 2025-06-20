@@ -166,7 +166,10 @@ const DesktopContainer = ({ children, available, logIn }) => {
         >
           <Container>
             <Menu.Item active>
-              <Image avatar alt="logo" src='/images/logo192.png' />
+              <Image avatar alt="logo" src='/images/logo192.png' style={{
+                filter: 'grayscale(100%)',
+                marginRight: '1rem',
+              }}/>
               <Link to='/' style={{ color: 'black', fontSize: '1.9rem' }}>{' '}
                 HyperAgency
               </Link>
@@ -225,25 +228,67 @@ const MobileContainer = ({ children, available, logIn }) => {
         <Sidebar
           as={Menu}
           animation='overlay'
+          icon='labeled'
+          inverted
           onHide={() => setSidebarOpened(false)}
           vertical
           visible={sidebarOpened}
+          width='wide'
         >
           <Menu.Item active>
-            <Link to='/'>Home</Link>
+            <Link to='/' style={{ color: 'white', fontSize: '2.6rem' }}>{' '}
+              <Image avatar alt="logo" src='/images/logo192.png' style={{
+                filter: 'grayscale(100%)',
+              }}/>
+              HyperAgency
+            </Link>
           </Menu.Item>
           { available ? (
             <>
               <Menu.Item as='a' onClick={() => logIn(true)}>
+                <Icon name='sign-in' />
                 Log In
               </Menu.Item>
               <Menu.Item as='a' onClick={() => logIn(false)}>
-                Sign up
+                <Icon name='signup' />
+                Sign Up
               </Menu.Item>
             </>
           ) : (
             <Menu.Item onClick={() => logIn(false)}>
               { available ? 'Get Started' : 'Join a Whitelist' }
+            </Menu.Item>
+          )}
+          <Menu.Item as="a" href={conf.contact.github}>
+            <Icon name='mobile alternate' />
+            Mobile App
+          </Menu.Item>
+          <Menu.Item as="a" href={conf.docs.url}>
+            <Icon name='book' />
+            Documentation
+          </Menu.Item>
+          { conf.contact.github && (
+            <Menu.Item as="a" href={conf.contact.github} target="_blank" rel="noreferrer">
+              <Icon name='github' />
+              GitHub
+            </Menu.Item>
+          )}
+          { conf.contact.discord && (
+            <Menu.Item as="a" href={conf.contact.discord} target="_blank" rel="noreferrer">
+              <Icon name='discord' />
+              Discord
+            </Menu.Item>
+          )}
+          { conf.contact.youtube && (
+            <Menu.Item as="a" href={conf.contact.youtube} target="_blank" rel="noreferrer">
+              <Icon name='YouTube' />
+              YouTube
+            </Menu.Item>
+          )}
+          { conf.contact.email && (
+            <Menu.Item as="a" href={`mailto:${conf.contact.email}`} target="_blank" rel="noreferrer">
+              <Icon name='mail' />
+              Contact Us
             </Menu.Item>
           )}
         </Sidebar>
@@ -257,16 +302,18 @@ const MobileContainer = ({ children, available, logIn }) => {
             <Container>
               <Menu pointing secondary size='large'>
                 <Menu.Item onClick={() => setSidebarOpened(true)}>
-                  <Icon name='sidebar' />
+                  <Icon size='big' name='sidebar' />
                 </Menu.Item>
                 <Menu.Item position='right'>
                   { available ? (
                     <>
-                      <Button as='a' onClick={() => logIn(true)}>
+                      <Button basic as='a' onClick={() => logIn(true)} icon labelPosition='left'>
+                        <Icon name='sign-in' />
                         { available ? 'Log In' : 'Join a Whilelist' }
                       </Button>
-                      <Button as='a' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)}>
-                        { available ? 'Sign up': 'Join a Whitelist' }
+                      <Button as='a' color='black' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)} icon labelPosition='right'>
+                        { available ? 'Sign Up': 'Join a Whitelist' }
+                        <Icon name='signup' />
                       </Button>
                     </>
                   ) : (
@@ -384,7 +431,7 @@ const DesktopScrollText = ({ children }) => {
         transform: 'scale(0.25)', transformOrigin: 'top center',
         height: '310px',
       }}>
-        <img src={OctopusSvg} className="App-logo" alt="logo" />
+        <img src={OctopusSvg} alt="Octopus symbol" />
       </div>
       <div style={{ height: '30vh' }} />
     </Outter>
@@ -421,7 +468,7 @@ const MobileScrollText = ({ children }) => {
         transform: 'scale(0.5)', transformOrigin: 'top center',
         height: '310px',
       }}>
-        <img src={OctopusSvg} className="App-logo" alt="logo" />
+        <img src={OctopusSvg} alt="Octopus symbol" />
       </div>
       <div style={{ height: '10vh' }} />
     </Outter>
@@ -992,6 +1039,7 @@ const HomepageLayout = () => {
           padding: '6rem 2rem 2rem 2rem',
           textAlign: 'center',
           zIndex: 1,
+          filter: 'grayscale(100%)',
         }}>
           <Popup
             content={'Cool project. The future belongs to these technologies. It solves the tasks in time.'}
