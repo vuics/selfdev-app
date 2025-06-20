@@ -7,17 +7,19 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   List,
   Icon,
   Loader,
   Divider,
+  // Image,
 } from 'semantic-ui-react'
 import { validateEmail, validatePhone, validatePassword } from './validation'
 import { requestLogin } from './Login'
+
 import conf from './conf'
+import OctopusSvg from './octopus.svg'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   return (
@@ -139,9 +141,27 @@ const Signup = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/images/logo192.png' /> Create a New Account
+        <Header as='h2' color='black' textAlign='center'>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1rem',
+          }}>
+            <img
+              src={OctopusSvg}
+              alt="Octopus logo"
+              style={{
+                filter: 'grayscale(100%)',
+                width: '40px',   // adjust as needed
+                height: '40px',  // adjust as needed
+                objectFit: 'contain',
+              }}
+            />
+            <span>Create a New Account</span>
+          </div>
         </Header>
+
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
           <Message
@@ -263,7 +283,7 @@ const Signup = () => {
               >
               </Form.Checkbox>
             </Form.Group>
-            <Button color='teal' fluid size='large' onClick={handleSubmit} disabled={!agree}>
+            <Button color='black' fluid size='large' onClick={handleSubmit} disabled={!agree}>
               <Icon name='user plus' />
               {' '}Sign Up{' '}
             </Button>
@@ -271,9 +291,14 @@ const Signup = () => {
         </Form>
         <Message>
           Have an existing account?{' '}
-          <Button color='grey' size='mini' onClick={() => navigate('/login')}>
+          <Button
+            size='mini'
+            style={{ marginLeft: '0.5em' }}
+            onClick={() => navigate('/login')}
+            icon labelPosition='right'
+          >
             Log In{' '}
-            <Icon name='right arrow' />
+            <Icon name='sign-in' />
           </Button>
         </Message>
       </Grid.Column>

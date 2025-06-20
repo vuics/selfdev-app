@@ -7,14 +7,16 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   Icon,
   Loader,
   Divider,
+  // Image,
 } from 'semantic-ui-react'
+
 import conf from './conf'
+import OctopusSvg from './octopus.svg'
 
 const requestLogin = async ({ email, password, rememberme }) => {
   try {
@@ -45,7 +47,7 @@ const Login = () => {
   const [ password, setPassword ] = useState('')
   const [ emailError, setEmailError ] = useState('')
   const [ passwordError, setPasswordError ] = useState('')
-  // const [ rememberme, setRememberme ] = useState(false)
+  const [ rememberme, setRememberme ] = useState(false)
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
 
@@ -69,7 +71,7 @@ const Login = () => {
 
     setLoading(true)
     try {
-      await requestLogin({ email, password, rememberme: false })
+      await requestLogin({ email, password, rememberme })
       navigate(conf.account.start)
     } catch (err) {
       console.error('login error:', err);
@@ -82,8 +84,15 @@ const Login = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/images/logo192.png' /> Log-in to your account
+        <div style={{
+          filter: 'grayscale(100%)',
+          transform: 'scale(0.35)',
+          height: '200px',
+        }}>
+          <img src={OctopusSvg} alt="Octopus logo" />
+        </div>
+        <Header as='h2' color='black' textAlign='center'>
+          Log-in to Your Account
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
@@ -127,15 +136,13 @@ const Login = () => {
               }}
               required
             />
-            {/* FIXME: fix on API server
             <Form.Checkbox
               label='Remember Me'
               checked={rememberme}
               onChange={(e, data) => setRememberme(data.checked)}
             />
-            */}
 
-            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+            <Button color='black' fluid size='large' onClick={handleSubmit}>
               <Icon name='sign-in' />
               {' '}Login{' '}
             </Button>
@@ -147,9 +154,14 @@ const Login = () => {
           </label>
           <Divider />
           New to us?{' '}
-          <Button color='grey' size='mini' onClick={() => navigate('/signup')}>
+          <Button
+            size='mini'
+            style={{ marginLeft: '0.5em' }}
+            onClick={() => navigate('/signup')}
+            icon labelPosition='right'
+          >
             Sign Up{' '}
-            <Icon name='right arrow' />
+            <Icon name='user plus' />
           </Button>
         </Message>
       </Grid.Column>

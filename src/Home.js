@@ -194,7 +194,7 @@ const DesktopContainer = ({ children, available, logIn }) => {
                   </Button>
                   <Button compact as='a' color='black' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)} icon labelPosition='right'>
                     Sign Up
-                    <Icon name='signup' />
+                    <Icon name='user plus' />
                   </Button>
                 </>
               ) : (
@@ -250,7 +250,7 @@ const MobileContainer = ({ children, available, logIn }) => {
                 Log In
               </Menu.Item>
               <Menu.Item as='a' onClick={() => logIn(false)}>
-                <Icon name='signup' />
+                <Icon name='user plus' />
                 Sign Up
               </Menu.Item>
             </>
@@ -313,7 +313,7 @@ const MobileContainer = ({ children, available, logIn }) => {
                       </Button>
                       <Button as='a' color='black' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)} icon labelPosition='right'>
                         { available ? 'Sign Up': 'Join a Whitelist' }
-                        <Icon name='signup' />
+                        <Icon name='user plus' />
                       </Button>
                     </>
                   ) : (
@@ -428,7 +428,8 @@ const DesktopScrollText = ({ children }) => {
       <div style={{ height: '30vh' }} />
       <div style={{
         filter: 'grayscale(100%)',
-        transform: 'scale(0.25)', transformOrigin: 'top center',
+        transform: 'scale(0.25)',
+        transformOrigin: 'top center',
         height: '310px',
       }}>
         <img src={OctopusSvg} alt="Octopus symbol" />
@@ -465,7 +466,8 @@ const MobileScrollText = ({ children }) => {
       <div style={{ height: '20vh' }} />
       <div style={{
         filter: 'grayscale(100%)',
-        transform: 'scale(0.5)', transformOrigin: 'top center',
+        transform: 'scale(0.5)',
+        transformOrigin: 'top center',
         height: '310px',
       }}>
         <img src={OctopusSvg} alt="Octopus symbol" />

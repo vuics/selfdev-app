@@ -7,17 +7,19 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   Icon,
   Loader,
   Divider,
+  // Image,
 } from 'semantic-ui-react'
+
 import { validatePassword } from './validation'
 import { PasswordRequirements } from './Signup'
 import { requestLogin } from './Login'
 import conf from './conf'
+import OctopusSvg from './octopus.svg'
 
 const Reset = () => {
   const [ searchParams, ] = useSearchParams()
@@ -81,8 +83,15 @@ const Reset = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/images/logo192.png' /> Reset Password
+        <div style={{
+          filter: 'grayscale(100%)',
+          transform: 'scale(0.35)',
+          height: '200px',
+        }}>
+          <img src={OctopusSvg} alt="Octopus logo" />
+        </div>
+        <Header as='h2' color='black' textAlign='center'>
+          Reset Password
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
@@ -135,7 +144,7 @@ const Reset = () => {
             />
 
             <Divider />
-            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+            <Button color='black' fluid size='large' onClick={handleSubmit}>
               <Icon name='edit outline' />
               {' '}Reset password{' '}
             </Button>
@@ -143,9 +152,14 @@ const Reset = () => {
         </Form>
         <Message>
           Remember password?{' '}
-          <Button color='grey' size='mini' onClick={() => navigate('/login')}>
+          <Button
+            size='mini'
+            style={{ marginLeft: '0.5em' }}
+            onClick={() => navigate('/login')}
+            icon labelPosition='right'
+          >
             Log In{' '}
-            <Icon name='right arrow' />
+            <Icon name='sign-in' />
           </Button>
         </Message>
       </Grid.Column>

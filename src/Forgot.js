@@ -7,14 +7,16 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
   Icon,
   Loader,
+  // Image,
 } from 'semantic-ui-react'
+
 import { validateEmail  } from './validation'
 import conf from './conf'
+import OctopusSvg from './octopus.svg'
 
 const Forgot = () => {
   const navigate = useNavigate()
@@ -61,8 +63,15 @@ const Forgot = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/images/logo192.png' /> Forgot Password?
+        <div style={{
+          filter: 'grayscale(100%)',
+          transform: 'scale(0.35)',
+          height: '200px',
+        }}>
+          <img src={OctopusSvg} alt="Octopus logo" />
+        </div>
+        <Header as='h2' color='black' textAlign='center'>
+          Forgot Password?
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
@@ -103,7 +112,7 @@ const Forgot = () => {
               required
             />
 
-            <Button color='teal' fluid size='large' onClick={handleSubmit}>
+            <Button color='black' fluid size='large' onClick={handleSubmit}>
               <Icon name='mail' />
               {' '}Email Me Reset Password Link{' '}
             </Button>
@@ -111,9 +120,14 @@ const Forgot = () => {
         </Form>
         <Message>
           Remember password?{' '}
-          <Button color='grey' size='mini' onClick={() => navigate('/login')}>
+          <Button
+            size='mini'
+            style={{ marginLeft: '0.5em' }}
+            onClick={() => navigate('/login')}
+            icon labelPosition='right'
+          >
             Log In{' '}
-            <Icon name='right arrow' />
+            <Icon name='sign-in' />
           </Button>
         </Message>
       </Grid.Column>
