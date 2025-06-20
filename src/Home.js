@@ -31,6 +31,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 // +    "react-spring": "^10.0.1",
 
 import Footer from './components/Footer'
+import { Divi, Outter, Inner, Empty } from './components/Design'
 import conf from './conf'
 import OctopusSvg from './octopus.svg'
 
@@ -42,54 +43,6 @@ const { MediaContextProvider, Media } = createMedia({
   },
 })
 
-function Divi ({ children, style }) {
-  return (
-    <div style={{
-      height: '1px',
-      backgroundColor: '#999',
-      ...style,
-    }}>
-      { children }
-    </div>
-  )
-}
-
-function Outter ({ children, style, wrapper }) {
-  return (
-    <div style={{
-      padding: '0 2rem 0 2rem',
-    }}>
-      <Container fluid style={{
-        backgroundColor: '#ffffff',
-        borderLeft: '1px solid #ccc',
-        borderRight: '1px solid #ccc',
-        boxSizing: 'border-box',
-        ...style,
-      }}>
-        { wrapper && (
-          <div style={{ padding: 1 }}/>
-        )}
-        {children}
-      </Container>
-    </div>
-  )
-}
-
-function Inner ({ children, style }) {
-  return (
-    <Container style={{
-      backgroundColor: '#ffffff',
-      backgroundImage: 'none',
-      borderLeft: '1px solid #999',
-      borderRight: '1px solid #999',
-      boxSizing: 'border-box',
-      ...style,
-    }}>
-      {children}
-    </Container>
-  )
-}
-
 const HomepageHeading = ({ mobile, available, logIn }) => {
   return (<>
     <Outter wrapper style={{
@@ -97,18 +50,9 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
     }}>
       <Container
         style={{
-          // height: '60vh',
-          // backgroundColor: '#ffffff', // Solid white
-          // backgroundImage: 'none',    // Remove background image
-          // borderLeft: '1px solid #999',
-          // borderRight: '1px solid #999',
-          // boxSizing: 'border-box',
           padding: '0 1em',
         }}
       >
-        {/*
-        <div style={{ padding: 1 }}/>
-        */}
         <Header
           as='h1'
           style={{
@@ -126,7 +70,6 @@ const HomepageHeading = ({ mobile, available, logIn }) => {
             fontWeight: 'normal',
             // marginTop: mobile ? '0.25em' : '0.5em',
             marginBottom: '1em',
-            // color: 'slategray',
           }}
         >
           Autopilot your business. Focus on what you love.
@@ -1120,7 +1063,7 @@ const HomepageLayout = () => {
         height: '10vh',
       }}/>
 
-      <div style={{ padding: '0.3rem' }}/>
+      <Empty />
 
       <Footer />
     </ResponsiveContainer>
