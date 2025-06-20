@@ -7,8 +7,6 @@ import conf from './conf.js'
 
 // import App from './App'
 import Home from './Home'
-import Team from './Team'
-import Roadmap from './Roadmap'
 import Terms from './Terms'
 import Privacy from './Privacy'
 import Signup from './Signup'
@@ -16,6 +14,11 @@ import Login from './Login'
 import Forgot from './Forgot'
 import Reset from './Reset'
 import Logout from './Logout'
+
+import Team from './Team'
+import Mission from './Mission'
+import Roadmap from './Roadmap'
+
 import Chat from './Chat'
 import Talk from './Talk'
 import Map from './Map'
@@ -70,6 +73,9 @@ const Index = () => {
 
       { conf.team.enable && (
         <Route path="/team" element={<Team />}/>
+      )}
+      { conf.mission.enable && (
+        <Route path="/mission" element={<Mission />}/>
       )}
       { conf.roadmap.enable && (
         <Route path="/roadmap" element={<Roadmap />}/>

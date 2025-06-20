@@ -33,7 +33,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
 import conf from './conf'
-import OctopusSvg from './octopus.svg'
+import Logo from './components/Logo'
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -109,11 +109,8 @@ const DesktopContainer = ({ children, available, logIn }) => {
         >
           <Container>
             <Menu.Item active>
-              <Image avatar alt="logo" src='/images/logo192.png' style={{
-                filter: 'grayscale(100%)',
-                marginRight: '1rem',
-              }}/>
-              <Link to='/' style={{ color: 'black', fontSize: '1.9rem' }}>{' '}
+              <Logo size='mini' gray />
+              <Link to='/' style={{ marginLeft: '1rem', color: 'black', fontSize: '1.9rem' }}>{' '}
                 HyperAgency
               </Link>
             </Menu.Item>
@@ -180,9 +177,7 @@ const MobileContainer = ({ children, available, logIn }) => {
         >
           <Menu.Item active>
             <Link to='/' style={{ color: 'white', fontSize: '2.6rem' }}>{' '}
-              <Image avatar alt="logo" src='/images/logo192.png' style={{
-                filter: 'grayscale(100%)',
-              }}/>
+              <Logo size='medium' gray />
               HyperAgency
             </Link>
           </Menu.Item>
@@ -369,13 +364,8 @@ const DesktopScrollText = ({ children }) => {
       </div>
 
       <div style={{ height: '30vh' }} />
-      <div style={{
-        filter: 'grayscale(100%)',
-        transform: 'scale(0.25)',
-        transformOrigin: 'top center',
-        height: '310px',
-      }}>
-        <img src={OctopusSvg} alt="Octopus symbol" />
+      <div style={{ textAlign: 'center' }}>
+        <Logo size='huge' gray />
       </div>
       <div style={{ height: '30vh' }} />
     </Outter>
@@ -407,13 +397,8 @@ const MobileScrollText = ({ children }) => {
         {children}
       </div>
       <div style={{ height: '20vh' }} />
-      <div style={{
-        filter: 'grayscale(100%)',
-        transform: 'scale(0.5)',
-        transformOrigin: 'top center',
-        height: '310px',
-      }}>
-        <img src={OctopusSvg} alt="Octopus symbol" />
+      <div style={{ textAlign: 'center' }}>
+        <Logo size='huge' gray />
       </div>
       <div style={{ height: '10vh' }} />
     </Outter>

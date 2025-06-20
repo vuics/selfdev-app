@@ -129,6 +129,10 @@ const conf = {
     enable: bool(process.env.REACT_APP_TEAM_ENABLE || true),
   },
 
+  mission: {
+    enable: bool(process.env.REACT_APP_MISSION_ENABLE || true),
+  },
+
   roadmap: {
     enable: bool(process.env.REACT_APP_ROADMAP_ENABLE || true),
   },

@@ -9,6 +9,7 @@ import {
 } from 'semantic-ui-react'
 
 import conf from '../conf.js'
+import Logo from './Logo'
 
 const Footer = () => {
   return (<>
@@ -17,8 +18,18 @@ const Footer = () => {
         <Grid divided inverted stackable>
           <Grid.Row>
             <Grid.Column width={3}>
-              <Header inverted as='h3'>
-                HyperAgency
+              <Header inverted as='h3' style={{ margin: 0 }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  textAlign: 'left',
+                }}>
+                  <Logo size='milli' gray />
+                  <Header.Content style={{ display: 'flex', flexDirection: 'column' }}>
+                    HyperAgency
+                  </Header.Content>
+                </div>
               </Header>
               { conf.contact.email && (
                 <List link inverted>
@@ -75,7 +86,10 @@ const Footer = () => {
             </Grid.Column>
             <Grid.Column width={5}>
               <Header inverted as='h4'>
-                Info
+                <Header.Content>
+                  <Icon inverted color='grey' name='info circle' />
+                  Info
+                </Header.Content>
               </Header>
               <List link inverted>
                 <List.Item as='a'>
@@ -105,7 +119,7 @@ const Footer = () => {
                 <List.Item as='a'>
                   <a href='/mobile'>
                     <Icon link inverted color='grey' name='mobile alternate' />
-                    Mobile apps (iOS/Android/Web)
+                    Mobile apps
                   </a>
                 </List.Item>
               </List>
@@ -113,12 +127,12 @@ const Footer = () => {
             <Grid.Column width={7}>
               <Header inverted as='h4'>
                 <Header.Content>
-                <Icon inverted color='grey' name='university' />
+                  <Icon inverted color='grey' name='university' />
                   About Us
                 </Header.Content>
-                  <Header.Subheader style={{ color: 'gray' }}>
-                    Self-developing HyperAgency is uniquely tailored to your business needs.
-                  </Header.Subheader>
+                <Header.Subheader style={{ color: 'gray' }}>
+                  Self-developing HyperAgency is uniquely tailored to your business needs.
+                </Header.Subheader>
               </Header>
               <List link inverted>
                 <List.Item as='a'>

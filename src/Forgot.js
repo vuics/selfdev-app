@@ -16,7 +16,7 @@ import {
 
 import { validateEmail  } from './validation'
 import conf from './conf'
-import OctopusSvg from './octopus.svg'
+import Logo from './components/Logo'
 
 const Forgot = () => {
   const navigate = useNavigate()
@@ -63,13 +63,7 @@ const Forgot = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <div style={{
-          filter: 'grayscale(100%)',
-          transform: 'scale(0.35)',
-          height: '200px',
-        }}>
-          <img src={OctopusSvg} alt="Octopus logo" />
-        </div>
+        <Logo size='large' gray />
         <Header as='h2' color='black' textAlign='center'>
           Forgot Password?
         </Header>

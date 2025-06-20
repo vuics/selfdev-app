@@ -13,7 +13,9 @@ import {
   Divider,
   Icon,
 } from 'semantic-ui-react'
+
 import Footer from './components/Footer'
+import Logo from './components/Logo'
 
 export default function Roadmap () {
   return (<>
@@ -21,7 +23,8 @@ export default function Roadmap () {
     <Container>
       <Segment padded textAlign="center" inverted color='white'>
         <Header as="h1">
-          Selfdev
+          <Logo size='tiny' />
+          HyperAgency Roadmap
         </Header>
       </Segment>
     </Container>
@@ -32,8 +35,6 @@ export default function Roadmap () {
         <Header as="h2">
           Description
         </Header>
-        <Image src='/images/logo192.png' centered />
-        <br />
         <p style={{ fontSize: '1.6em', textAlign: 'center' }}>
           Selfdev is a distributed Agent-as-a-Service platform that empowers forward-thinking teams to automate operations and accelerate execution saving time and money. Build and run intelligent agentic workflows with any API, model, or database — effortlessly.
         </p>

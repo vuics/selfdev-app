@@ -19,7 +19,7 @@ import { validateEmail, validatePhone, validatePassword } from './validation'
 import { requestLogin } from './Login'
 
 import conf from './conf'
-import OctopusSvg from './octopus.svg'
+import Logo from './components/Logo'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   return (
@@ -148,16 +148,7 @@ const Signup = () => {
             justifyContent: 'center',
             gap: '1rem',
           }}>
-            <img
-              src={OctopusSvg}
-              alt="Octopus logo"
-              style={{
-                filter: 'grayscale(100%)',
-                width: '40px',   // adjust as needed
-                height: '40px',  // adjust as needed
-                objectFit: 'contain',
-              }}
-            />
+            <Logo size='tiny' gray />
             <span>Create a New Account</span>
           </div>
         </Header>
