@@ -80,46 +80,55 @@ const Footer = () => {
               <List link inverted>
                 <List.Item as='a'>
                   <a href='/'>
+                    <Icon link inverted color='grey' name='home' />
                     Home
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/team'>
+                    <Icon link inverted color='grey' name='group' />
                     Team
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/product'>
+                    <Icon link inverted color='grey' name='bell' />
                     Product Features
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href={conf.docs.url}>
+                    <Icon link inverted color='grey' name='book' />
                     Documentation
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/pricing'>
+                    <Icon link inverted color='grey' name='tags' />
                     Pricing
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/security'>
+                    <Icon link inverted color='grey' name='shield' />
                     Security
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/mobile'>
+                    <Icon link inverted color='grey' name='mobile alternate' />
                     Mobile apps (iOS/Android/Web)
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/mission'>
+                    <Icon link inverted color='grey' name='globe' />
                     Mission
                   </a>
                 </List.Item>
                 <List.Item as='a'>
                   <a href='/roadmap'>
+                    <Icon link inverted color='grey' name='chart line' />
                     Roadmap
                   </a>
                 </List.Item>
