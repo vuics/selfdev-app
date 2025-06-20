@@ -8,7 +8,7 @@ import conf from './conf.js'
 // import App from './App'
 import Home from './Home'
 import Team from './Team'
-import Product from './Product'
+import Roadmap from './Roadmap'
 import Terms from './Terms'
 import Privacy from './Privacy'
 import Signup from './Signup'
@@ -58,8 +58,6 @@ const Index = () => {
   <>
     <Routes>
       <Route path="/" element={<Home />}/>
-      <Route path="/team" element={<Team />}/>
-      <Route path="/product" element={<Product />}/>
       <Route path="/test" element={<Test />}/>
       <Route path="/terms" element={<Terms />}/>
       <Route path="/privacy" element={<Privacy />}/>
@@ -69,6 +67,13 @@ const Index = () => {
       <Route path="/reset" element={<Reset />}/>
       <Route path="/logout" element={<Logout />}/>
       <Route path="/landing/:id" element={<Landing />}/>
+
+      { conf.team.enable && (
+        <Route path="/team" element={<Team />}/>
+      )}
+      { conf.roadmap.enable && (
+        <Route path="/roadmap" element={<Roadmap />}/>
+      )}
 
       { conf.chat.enable && (
         <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>

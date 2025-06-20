@@ -125,6 +125,14 @@ const conf = {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
   },
 
+  team: {
+    enable: bool(process.env.REACT_APP_TEAM_ENABLE || true),
+  },
+
+  roadmap: {
+    enable: bool(process.env.REACT_APP_ROADMAP_ENABLE || true),
+  },
+
   xmpp: {
     host: process.env.REACT_APP_XMPP_HOST || 'localhost',
     boshServiceUrl: process.env.REACT_APP_XMPP_BOSH_SERVICE_URL || '',  // 'https://localhost:5281/http-bind/',

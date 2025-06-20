@@ -85,18 +85,6 @@ const Footer = () => {
                   </a>
                 </List.Item>
                 <List.Item as='a'>
-                  <a href='/team'>
-                    <Icon link inverted color='grey' name='group' />
-                    Team
-                  </a>
-                </List.Item>
-                <List.Item as='a'>
-                  <a href='/product'>
-                    <Icon link inverted color='grey' name='bell' />
-                    Product Features
-                  </a>
-                </List.Item>
-                <List.Item as='a'>
                   <a href={conf.docs.url}>
                     <Icon link inverted color='grey' name='book' />
                     Documentation
@@ -120,27 +108,45 @@ const Footer = () => {
                     Mobile apps (iOS/Android/Web)
                   </a>
                 </List.Item>
+              </List>
+            </Grid.Column>
+            <Grid.Column width={7}>
+              <Header inverted as='h4'>
+                <Header.Content>
+                <Icon inverted color='grey' name='university' />
+                  About Us
+                </Header.Content>
+                  <Header.Subheader style={{ color: 'gray' }}>
+                    Self-developing HyperAgency is uniquely tailored to your business needs.
+                  </Header.Subheader>
+              </Header>
+              <List link inverted>
+                <List.Item as='a'>
+                  <p>
+                  </p>
+                </List.Item>
+                { conf.team.enable && (
+                  <List.Item as='a'>
+                    <a href='/team'>
+                      <Icon link inverted color='grey' name='group' />
+                      Team
+                    </a>
+                  </List.Item>
+                )}
                 <List.Item as='a'>
                   <a href='/mission'>
                     <Icon link inverted color='grey' name='globe' />
                     Mission
                   </a>
                 </List.Item>
-                <List.Item as='a'>
-                  <a href='/roadmap'>
-                    <Icon link inverted color='grey' name='chart line' />
-                    Roadmap
-                  </a>
-                </List.Item>
-              </List>
-            </Grid.Column>
-            <Grid.Column width={7}>
-              <List link inverted>
-                <List.Item as='a'>
-                  <p>
-                    Self-developing HyperAgency is uniquely tailored to your business needs.
-                  </p>
-                </List.Item>
+                { conf.roadmap.enable && (
+                  <List.Item as='a'>
+                    <a href='/roadmap'>
+                      <Icon link inverted color='grey' name='map outline' />
+                      Roadmap
+                    </a>
+                  </List.Item>
+                )}
               </List>
             </Grid.Column>
           </Grid.Row>

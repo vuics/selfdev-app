@@ -15,11 +15,11 @@ import {
 } from 'semantic-ui-react'
 import Footer from './components/Footer'
 
-const Product = () => (
-  <>
+export default function Roadmap () {
+  return (<>
     <br />
     <Container>
-      <Segment padded textAlign="center" inverted color='blue'>
+      <Segment padded textAlign="center" inverted color='white'>
         <Header as="h1">
           Selfdev
         </Header>
@@ -1260,7 +1260,5 @@ const Product = () => (
     <br />
 
     <Footer />
-  </>
-)
-
-export default Product
+  </>)
+}
