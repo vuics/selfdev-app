@@ -359,7 +359,6 @@ const ColorScrollText = ({ children }) => {
           // zIndex: 0,
         }}
       />
-
       <div style={{ height: '50vh' }} />
 
       <div
@@ -395,7 +394,6 @@ const ColorScrollText = ({ children }) => {
       </div>
 
       <div style={{ height: '30vh' }} />
-
       <div style={{
         filter: 'grayscale(100%)',
         transform: 'scale(0.25)', transformOrigin: 'top center',
@@ -403,21 +401,7 @@ const ColorScrollText = ({ children }) => {
       }}>
         <img src={OctopusSvg} className="App-logo" alt="logo" />
       </div>
-
       <div style={{ height: '30vh' }} />
-
-      {/*
-      <Divi />
-      <div
-        style={{
-          backgroundColor: '#fff',
-          position: 'relative',
-          zIndex: 1,
-        }}
-      >
-        <p>...</p>
-      </div>
-      */}
     </Outter>
   </>);
 };
@@ -619,14 +603,11 @@ const HomepageLayout = () => {
       </Outter>
 
       <ColorScrollText>
-        {/*
-        Autonomous agents empower you to scale twice.
-        */}
         Imagine a World Where Your Business Runs Itself
       </ColorScrollText>
 
       <Divi />
-      <Outter wrapper>
+      <Outter wrapper style={{ position: 'relative', overflow: 'hidden' }}>
         <Header as="h1" textAlign="center" style={{
           // marginTop: '0',
           padding: '2rem',
