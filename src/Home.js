@@ -20,7 +20,7 @@ import {
   Divider,
   Grid,
   Popup,
-  Card,
+  // Card,
   // Label,
 } from 'semantic-ui-react'
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -308,6 +308,15 @@ const WordWithScrollColor = ({ word, index, totalWords, scrollProgress }) => {
   );
 };
 
+function Divi () {
+  return (
+    <div style={{
+      height: '1px',
+      backgroundColor: '#999',
+    }}/>
+  )
+}
+
 const ColorScrollText = ({ children }) => {
   const stickyRef = useRef(null);
   const words = children.split(' ')
@@ -320,10 +329,7 @@ const ColorScrollText = ({ children }) => {
   });
 
   return (<>
-    <div style={{
-      height: '1px',
-      backgroundColor: '#999',
-    }}/>
+    <Divi />
     <div style={{
       padding: '0 2em 0 2em',
       // textAlign: 'center',
@@ -400,10 +406,7 @@ const ColorScrollText = ({ children }) => {
 
         {/* Next section */}
         {/*
-        <div style={{
-          height: '1px',
-          backgroundColor: '#999',
-        }}/>
+        <Divi />
         <div
           style={{
             padding: '4rem 2rem',
@@ -468,10 +471,7 @@ const HomepageLayout = () => {
   return (
     <ResponsiveContainer logIn={logIn} available={available}>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2rem 0 2rem',
         // textAlign: 'center',
@@ -485,7 +485,7 @@ const HomepageLayout = () => {
         }}>
           <div style={{ padding: 1 }}/>
           <Header as="h1" textAlign="center" style={{ marginBottom: '2rem', marginTop: '2rem' }}>
-            Key Features: Your Toolkit for Building an Autonomous Business
+            Your Toolkit for Building an Autonomous Business
           </Header>
           <Menu secondary compact icon='labeled'>
             <Menu.Item
@@ -639,10 +639,7 @@ const HomepageLayout = () => {
         Imagine a World Where Your Business Runs Itself
       </ColorScrollText>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -711,10 +708,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -801,12 +795,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div
-        style={{
-          height: '1px',
-          backgroundColor: '#999',
-        }}
-      />
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -887,10 +876,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -913,10 +899,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         backgroundColor: '#fafafa',
@@ -961,10 +944,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -987,10 +967,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -1017,11 +994,6 @@ const HomepageLayout = () => {
                 <List.Item>
                   <strong>Cloud Deployment:</strong> Hassle-free hosting and management of your HyperAgency platform.
                 </List.Item>
-                {/*
-                <List.Item>
-                  <strong>Freemium Limits:</strong> Web app code is open-source; mobile and desktop app code is closed.
-                </List.Item>
-                */}
               </List>
               <Button compact basic as="a" href={conf.contact.github} target="_blank" rel="noreferrer">
                 Star on GitHub
@@ -1036,13 +1008,9 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
-        // textAlign: 'center',
       }}>
         <Container
           fluid
@@ -1104,10 +1072,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -1126,10 +1091,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -1227,10 +1189,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // textAlign: 'center',
@@ -1249,10 +1208,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         // backgroundColor: '#fafafa',
@@ -1370,10 +1326,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        height: '1px',
-        backgroundColor: '#999',
-      }}/>
+      <Divi />
       <div style={{
         padding: '0 2em 0 2em',
         textAlign: 'center',
@@ -1391,9 +1344,7 @@ const HomepageLayout = () => {
         </Container>
       </div>
 
-      <div style={{
-        padding: '0.3rem',
-      }}/>
+      <div style={{ padding: '0.3rem' }}/>
 
       <Footer />
     </ResponsiveContainer>
