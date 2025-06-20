@@ -59,16 +59,13 @@ function Outter ({ children, style, wrapper }) {
     <div style={{
       padding: '0 2rem 0 2rem',
     }}>
-      <Container
-        fluid
-        style={{
-          backgroundColor: '#ffffff',
-          borderLeft: '1px solid #ccc',
-          borderRight: '1px solid #ccc',
-          boxSizing: 'border-box',
-          ...style,
-        }}
-      >
+      <Container fluid style={{
+        backgroundColor: '#ffffff',
+        borderLeft: '1px solid #ccc',
+        borderRight: '1px solid #ccc',
+        boxSizing: 'border-box',
+        ...style,
+      }}>
         { wrapper && (
           <div style={{ padding: 1 }}/>
         )}
@@ -78,9 +75,18 @@ function Outter ({ children, style, wrapper }) {
   )
 }
 
-function Inner ({ children }) {
+function Inner ({ children, style }) {
   return (
-    <></>
+    <Container style={{
+      backgroundColor: '#ffffff',
+      backgroundImage: 'none',
+      borderLeft: '1px solid #999',
+      borderRight: '1px solid #999',
+      boxSizing: 'border-box',
+      ...style,
+    }}>
+      {children}
+    </Container>
   )
 }
 
@@ -341,43 +347,39 @@ const ColorScrollText = ({ children }) => {
     <Outter style={{
       position: 'relative',
     }}>
-      {/* Background */}
       <div
         style={{
-          padding: '0 2em 0 2em',
+          // padding: '0 2em 0 2em',
           position: 'absolute',
-          top: 0,
+          // top: 0,
           width: '100%',
           height: '397vh',
           backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
           backgroundSize: '20px 20px',
-          // backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23999999' fill-opacity='0.27'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          zIndex: 0,
+          // zIndex: 0,
         }}
       />
 
-      {/* Space before sticky starts */}
       <div style={{ height: '50vh' }} />
 
-      {/* Sticky container (longer to keep text stuck) */}
       <div
         ref={stickyRef}
         style={{
           height: '250vh', // extended scroll duration
-          position: 'relative',
+          // position: 'relative',
         }}
       >
         <div
           style={{
             position: 'sticky',
             top: '42vh',
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
+            // display: 'flex',
+            // justifyContent: 'center',
+            // flexWrap: 'wrap',
             fontSize: '2rem',
-            zIndex: 10,
+            // zIndex: 10,
             textAlign: 'center',
-            padding: '0 8rem',
+            // padding: '0 8rem',
           }}
         >
           {words.map((word, index) => (
@@ -402,22 +404,18 @@ const ColorScrollText = ({ children }) => {
         <img src={OctopusSvg} className="App-logo" alt="logo" />
       </div>
 
-      {/* Spacer after sticky */}
       <div style={{ height: '30vh' }} />
 
-      {/* Next section */}
       {/*
       <Divi />
       <div
         style={{
-          padding: '4rem 2rem',
           backgroundColor: '#fff',
           position: 'relative',
           zIndex: 1,
         }}
       >
-        <h2>Tired of being bogged down in repetitive tasks? Dreaming of scaling your business without the endless grind?</h2>
-        <p>HyperAgency makes it possible. We're building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.</p>
+        <p>...</p>
       </div>
       */}
     </Outter>
@@ -663,17 +661,9 @@ const HomepageLayout = () => {
       <Outter style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23636363' fill-opacity='0.17' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
       }}>
-        <Container
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: 'none',
-            borderLeft: '1px solid #999',
-            borderRight: '1px solid #999',
-            boxSizing: 'border-box',
-            padding: '3rem 1rem 3rem 1rem',
-          }}
-        >
-          <div style={{ padding: 1 }}/>
+        <Inner style={{
+          padding: '3rem 1rem 3rem 1rem',
+        }}>
           <List bulleted size="large" style={{ marginTop: "1.5em" }}>
             <List.Item>
               <strong>Virtual Startup Teams:</strong> Experience unparalleled growth with virtual teams designed to assist
@@ -700,7 +690,7 @@ const HomepageLayout = () => {
               in the background to support your vision.
             </List.Item>
           </List>
-        </Container>
+        </Inner>
       </Outter>
 
       <Divi />
@@ -849,16 +839,7 @@ const HomepageLayout = () => {
           repeating-linear-gradient(90deg, #ccc, #ccc 1px, transparent 1px, transparent 15px)
         `,
       }}>
-        <Container
-          style={{
-            backgroundColor: '#ffffff', // Solid white
-            backgroundImage: 'none',    // Remove background image
-            borderLeft: '1px solid #999',
-            borderRight: '1px solid #999',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div style={{ padding: 1 }}/>
+        <Inner>
           <div style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
             <Container text style={{ marginTop: "3em", marginBottom: "3em" }}>
               <Header as="h2" textAlign="center" style={{ marginBottom: "1rem" }}>
@@ -889,7 +870,7 @@ const HomepageLayout = () => {
               </Button>
             </Container>
           </div>
-        </Container>
+        </Inner>
       </Outter>
 
       <Divi />
@@ -902,21 +883,15 @@ const HomepageLayout = () => {
       <Outter style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23cccccc' fill-opacity='0.4' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E")`,
       }}>
-        <Container
-          style={{
+        <Inner style={{
             position: 'relative',
+            overflow: 'hidden',
             backgroundImage: `url("/images/sea-stars.png")`,
             backgroundSize: 'cover',              // or 'contain' if you prefer
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
-            // filter: 'grayscale(100%)',
-            borderLeft: '1px solid #999',
-            borderRight: '1px solid #999',
-            boxSizing: 'border-box',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ padding: 1 }}/>
+            filter: 'grayscale(100%)',
+        }}>
           <div style={{
             position: 'absolute',
             top: 0,
@@ -980,7 +955,7 @@ const HomepageLayout = () => {
               </Button>
             </Container>
           </div>
-        </Container>
+        </Inner>
       </Outter>
 
       <Divi />
