@@ -125,6 +125,18 @@ const conf = {
     enable: bool(process.env.REACT_APP_SUBSCRIPTION_ENABLE || true),
   },
 
+  pricing: {
+    enable: bool(process.env.REACT_APP_PRICING_ENABLE || true),
+  },
+
+  security: {
+    enable: bool(process.env.REACT_APP_SECURITY_ENABLE || true),
+  },
+
+  mobile: {
+    enable: bool(process.env.REACT_APP_MOBILE_ENABLE || true),
+  },
+
   team: {
     enable: bool(process.env.REACT_APP_TEAM_ENABLE || true),
   },

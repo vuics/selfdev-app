@@ -15,6 +15,9 @@ import Forgot from './Forgot'
 import Reset from './Reset'
 import Logout from './Logout'
 
+import Pricing from './Pricing'
+import Security from './Security'
+import Mobile from './Mobile'
 import Team from './Team'
 import Mission from './Mission'
 import Roadmap from './Roadmap'
@@ -70,6 +73,16 @@ const Index = () => {
       <Route path="/reset" element={<Reset />}/>
       <Route path="/logout" element={<Logout />}/>
       <Route path="/landing/:id" element={<Landing />}/>
+
+      { conf.pricing.enable && (
+        <Route path="/pricing" element={<Pricing />}/>
+      )}
+      { conf.security.enable && (
+        <Route path="/security" element={<Security />}/>
+      )}
+      { conf.mobile.enable && (
+        <Route path="/mobile" element={<Mobile />}/>
+      )}
 
       { conf.team.enable && (
         <Route path="/team" element={<Team />}/>

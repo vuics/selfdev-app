@@ -98,30 +98,38 @@ const Footer = () => {
                     Home
                   </a>
                 </List.Item>
-                <List.Item as='a'>
-                  <a href={conf.docs.url}>
-                    <Icon link inverted color='grey' name='book' />
-                    Documentation
-                  </a>
-                </List.Item>
-                <List.Item as='a'>
-                  <a href='/pricing'>
-                    <Icon link inverted color='grey' name='tags' />
-                    Pricing
-                  </a>
-                </List.Item>
-                <List.Item as='a'>
-                  <a href='/security'>
-                    <Icon link inverted color='grey' name='shield' />
-                    Security
-                  </a>
-                </List.Item>
-                <List.Item as='a'>
-                  <a href='/mobile'>
-                    <Icon link inverted color='grey' name='mobile alternate' />
-                    Mobile apps
-                  </a>
-                </List.Item>
+                { conf.docs.enable && (
+                  <List.Item as='a'>
+                    <a href={conf.docs.url}>
+                      <Icon link inverted color='grey' name='book' />
+                      Documentation
+                    </a>
+                  </List.Item>
+                )}
+                { conf.pricing.enable && (
+                  <List.Item as='a'>
+                    <a href='/pricing'>
+                      <Icon link inverted color='grey' name='tags' />
+                      Pricing
+                    </a>
+                  </List.Item>
+                )}
+                { conf.security.enable && (
+                  <List.Item as='a'>
+                    <a href='/security'>
+                      <Icon link inverted color='grey' name='shield' />
+                      Security
+                    </a>
+                  </List.Item>
+                )}
+                { conf.mobile.enable && (
+                  <List.Item as='a'>
+                    <a href='/mobile'>
+                      <Icon link inverted color='grey' name='mobile alternate' />
+                      Mobile apps
+                    </a>
+                  </List.Item>
+                )}
               </List>
             </Grid.Column>
             <Grid.Column width={7}>
