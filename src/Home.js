@@ -314,29 +314,23 @@ const WordWithScrollColor = ({ word, index, totalWords, scrollProgress }) => {
   // We compress the transformation range to the first 60% of the scroll
   const scrollStart = (index / totalWords) * 0.6;
   const scrollEnd = ((index + 1) / totalWords) * 0.6;
-
   const color = useTransform(scrollProgress, [scrollStart, scrollEnd], ['#ccc', '#111']);
 
   return (
-    <motion.span
-      style={{
-        color,
-        marginRight: '0.5em',
-        transition: 'color 0.2s ease-out',
-        lineHeight: '3rem',
-      }}
-    >
+    <motion.span style={{
+      color,
+      marginRight: '0.5em',
+      transition: 'color 0.2s ease-out',
+    }}>
       {word}
     </motion.span>
   );
 };
 
-const ColorScrollText = ({ children }) => {
+const DesktopScrollText = ({ children }) => {
   const stickyRef = useRef(null);
   const words = children.split(' ')
   const totalWords = words.length;
-
-  // Track scroll progress through a long sticky zone
   const { scrollYProgress } = useScroll({
     target: stickyRef,
     offset: ['start center', 'end center'],
@@ -349,38 +343,29 @@ const ColorScrollText = ({ children }) => {
     }}>
       <div
         style={{
-          // padding: '0 2em 0 2em',
           position: 'absolute',
-          // top: 0,
           width: '100%',
           height: '397vh',
           backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
           backgroundSize: '20px 20px',
-          // zIndex: 0,
         }}
       />
       <div style={{ height: '50vh' }} />
 
-      <div
-        ref={stickyRef}
-        style={{
-          height: '250vh', // extended scroll duration
-          // position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            position: 'sticky',
-            top: '42vh',
-            // display: 'flex',
-            // justifyContent: 'center',
-            // flexWrap: 'wrap',
-            fontSize: '2rem',
-            // zIndex: 10,
-            textAlign: 'center',
-            // padding: '0 8rem',
-          }}
-        >
+      <div ref={stickyRef} style={{
+        height: '250vh',
+      }} >
+        <div style={{
+          position: 'sticky',
+          top: '42vh',
+          display: 'flex',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          fontSize: '2rem',
+          textAlign: 'center',
+          padding: '0 8rem',
+          lineHeight: '3rem',
+        }}>
           {words.map((word, index) => (
             <WordWithScrollColor
               key={index}
@@ -405,6 +390,54 @@ const ColorScrollText = ({ children }) => {
     </Outter>
   </>);
 };
+
+const MobileScrollText = ({ children }) => {
+  return (<>
+    <Divi />
+    <Outter style={{
+      position: 'relative',
+    }}>
+      <div
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100vh',
+          backgroundImage: 'radial-gradient(#888 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
+        }}
+      />
+      <div style={{ height: '20vh' }} />
+      <div style={{
+        fontSize: '2rem',
+        textAlign: 'center',
+        padding: '0 2rem',
+        lineHeight: '3rem',
+      }}>
+        {children}
+      </div>
+      <div style={{ height: '20vh' }} />
+      <div style={{
+        filter: 'grayscale(100%)',
+        transform: 'scale(0.5)', transformOrigin: 'top center',
+        height: '310px',
+      }}>
+        <img src={OctopusSvg} className="App-logo" alt="logo" />
+      </div>
+      <div style={{ height: '10vh' }} />
+    </Outter>
+  </>);
+};
+
+const ResponsiveScrollText = ({ children }) => (
+  <MediaContextProvider>
+    <Media greaterThan='mobile'>
+      <DesktopScrollText>{children}</DesktopScrollText>
+    </Media>
+    <Media at='mobile'>
+      <MobileScrollText>{children}</MobileScrollText>
+    </Media>
+  </MediaContextProvider>
+)
 
 const HomepageLayout = () => {
   const navigate = useNavigate()
@@ -602,9 +635,9 @@ const HomepageLayout = () => {
         </div>
       </Outter>
 
-      <ColorScrollText>
+      <ResponsiveScrollText>
         Imagine a World Where Your Business Runs Itself
-      </ColorScrollText>
+      </ResponsiveScrollText>
 
       <Divi />
       <Outter wrapper style={{ position: 'relative', overflow: 'hidden' }}>
