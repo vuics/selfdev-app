@@ -5,7 +5,12 @@ const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 
 const conf = {
   contact: {
-    email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@vuics.com'
+    email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@vuics.com',
+    github: process.env.REACT_APP_CONTACT_GITHUB || 'https://github.com/vuics/hyper-agency',
+    linkedin: process.env.REACT_APP_CONTACT_LINKEDIN || '',
+    discord: process.env.REACT_APP_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
+    youtube: process.env.REACT_APP_CONTACT_YOUTUBE || '',
+    x: process.env.REACT_APP_CONTACT_X || '',
   },
 
   api: {

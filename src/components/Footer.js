@@ -5,7 +5,10 @@ import {
   Grid,
   Header,
   List,
+  Icon,
 } from 'semantic-ui-react'
+
+import conf from '../conf.js'
 
 const Footer = () => {
   return (<>
@@ -17,12 +20,57 @@ const Footer = () => {
               <Header inverted as='h3'>
                 HyperAgency
               </Header>
+              { conf.contact.email && (
+                <List link inverted>
+                  <List.Item as='a'>
+                    <a href={`mailto:${conf.contact.email}`}>
+                      <Icon link inverted color='grey' name='mail' />
+                      Contact Us
+                    </a>
+                  </List.Item>
+                </List>
+              )}
               <List link inverted>
-                <List.Item as='a'>
-                  <a href='mailto:admin@vuics.com'>
-                    Contact Us
-                  </a>
-                </List.Item>
+                { conf.contact.github && (
+                  <List.Item as='a'>
+                    <a href={conf.contact.github}>
+                      <Icon link inverted color='grey' name='github' />
+                      GitHub
+                    </a>
+                  </List.Item>
+                )}
+                { conf.contact.linkedin && (
+                  <List.Item as='a'>
+                    <a href={conf.contact.linkedin}>
+                      <Icon link inverted color='grey' name='linkedin' />
+                      LinkedIn
+                    </a>
+                  </List.Item>
+                )}
+                { conf.contact.discord && (
+                  <List.Item as='a'>
+                    <a href={conf.contact.discord}>
+                      <Icon link inverted color='grey' name='discord' />
+                      Discord
+                    </a>
+                  </List.Item>
+                )}
+                { conf.contact.youtube && (
+                  <List.Item as='a'>
+                    <a href={conf.contact.youtube}>
+                      <Icon link inverted color='grey' name='youtube' />
+                      YouTube
+                    </a>
+                  </List.Item>
+                )}
+                { conf.contact.x && (
+                  <List.Item as='a'>
+                    <a href={conf.contact.x}>
+                      <Icon link inverted color='grey' name='twitter' />
+                      X
+                    </a>
+                  </List.Item>
+                )}
               </List>
             </Grid.Column>
             <Grid.Column width={5}>
@@ -43,6 +91,36 @@ const Footer = () => {
                 <List.Item as='a'>
                   <a href='/product'>
                     Product Features
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href={conf.docs.url}>
+                    Documentation
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href='/pricing'>
+                    Pricing
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href='/security'>
+                    Security
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href='/mobile'>
+                    Mobile apps (iOS/Android/Web)
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href='/mission'>
+                    Mission
+                  </a>
+                </List.Item>
+                <List.Item as='a'>
+                  <a href='/roadmap'>
+                    Roadmap
                   </a>
                 </List.Item>
               </List>
@@ -68,9 +146,14 @@ const Footer = () => {
             Terms of Service
           </a>
         </span>
-        <span>
+        <span style={{ margin: '0 1em' }}>
           <a href="/privacy" style={{ color: 'silver' }}>
             Privacy Policy
+          </a>
+        </span>
+        <span style={{ margin: '0 1em' }}>
+          <a href="/llm.txt" style={{ color: 'silver' }}>
+            LLM
           </a>
         </span>
       </Container>
