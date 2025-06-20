@@ -152,8 +152,8 @@ const Footer = () => {
           </a>
         </span>
         <span style={{ margin: '0 1em' }}>
-          <a href="/llm.txt" style={{ color: 'silver' }}>
-            LLM
+          <a href="/llms.txt" style={{ color: 'silver' }}>
+            LLMs
           </a>
         </span>
       </Container>
