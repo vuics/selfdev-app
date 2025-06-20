@@ -135,6 +135,7 @@ const conf = {
 
   mobile: {
     enable: bool(process.env.REACT_APP_MOBILE_ENABLE || true),
+    webAppUrl: process.env.REACT_APP_MOBILE_WEB_APP_URL || 'https://mobile.selfdev.vuics.com/',
   },
 
   team: {
