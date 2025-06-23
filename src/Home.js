@@ -1035,6 +1035,14 @@ const HomepageLayout = () => {
               <Image avatar alt="reviewer photo" src='/images/reviewers/AlexanderLabyrich.png' />
             }
           />
+          <Popup
+            content={'Powerful application. The functionality is amazing, you can simulate any event, game, debate, negotiations... as limitless as your imagination!'}
+            key={'Anna Ageeva'}
+            header={'Anna Ageeva'}
+            trigger={
+              <Image avatar alt="reviewer photo" src='/images/reviewers/AnnaAgeeva.png' />
+            }
+          />
 
           <Header as="h1" textAlign="center">
             Empowering the next generation of entrepreneurs.
