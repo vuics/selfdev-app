@@ -1,7 +1,7 @@
 import {
   Divider,
   Header,
-  // Container,
+  Container,
   // Segment,
   // Card,
   // Icon,
@@ -20,9 +20,24 @@ import {
 //   cogsPattern,
 } from './components/patterns'
 
+
 export default function Pricing () {
   return (<>
     <ResponsiveContainer>
+      <Outter style={{
+        // height: '10vh',
+      }}>
+        <Container style={{ paddingTop: "3em", paddingBottom: '3rem' }}>
+          <Header as="h1" textAlign="center">
+            From zero to IPO.
+          </Header>
+          <p>
+            Designed for every stage of your journey. Start today, no credit card required.
+          </p>
+        </Container>
+      </Outter>
+
+      <Divi />
       <Outter style={{
         height: '10vh',
       }}/>

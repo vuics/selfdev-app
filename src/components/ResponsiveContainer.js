@@ -174,6 +174,10 @@ const MobileContainer = ({ children }) => {
               HyperAgency
             </Link>
           </Menu.Item>
+          <Menu.Item as="a" href={'/pricing'}>
+            <Icon name='tags' />
+            Pricing
+          </Menu.Item>
           { available ? (
             <>
               <Menu.Item as='a' onClick={() => logIn(true)}>
@@ -190,10 +194,6 @@ const MobileContainer = ({ children }) => {
               { available ? 'Get Started' : 'Join a Whitelist' }
             </Menu.Item>
           )}
-          <Menu.Item as="a" href={'/pricing'}>
-            <Icon name='tags' />
-            Pricing
-          </Menu.Item>
           <Menu.Item as="a" href={'/mobile'}>
             <Icon name='mobile alternate' />
             Mobile App
