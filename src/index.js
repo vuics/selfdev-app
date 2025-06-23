@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, createContext, useContext, } from 'react'
 import ReactDOM from 'react-dom/client';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
 import conf from './conf.js'
 
 // import App from './App'
@@ -59,9 +61,50 @@ const Private = ({ children }) => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const Index = () => {
-  return (
-  <>
+export const IndexContext = createContext({});
+export const useIndexContext = () => useContext(IndexContext);
+
+function Index () {
+  const navigate = useNavigate()
+  const [available, setAvailable] = useState(true)
+  const logIn = (openLogin) => {
+    if (available) {
+      if (openLogin) {
+        navigate('/login')
+      } else {
+        navigate('/signup')
+      }
+    } else {
+      console.log('navigate to interestForm')
+      window.open(conf.interestForm.url, '_blank')
+    }
+  }
+
+  useEffect(() => {
+    // Run only once
+    // console.log('conf.api.url:', conf.api.url)
+    // console.log(`Getting ${conf.api.url}/available`)
+
+    axios.get(`${conf.api.url}/available`)
+      .then((response) => {
+        if (response.data.status === 'available') {
+          console.log('The API is available. You can log in.')
+        } else {
+          console.warn('Unknown availability status. Join a Whitelist.')
+          setAvailable(false)
+        }
+      })
+      .catch(function (error) {
+        console.error('error:', error);
+        console.warn('The API is unavailable. Join a Whitelist.')
+        setAvailable(false)
+      })
+  }, []);
+
+  return (<>
+  <IndexContext.Provider value={{
+    available, logIn
+  }}>
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/test" element={<Test />}/>
@@ -145,8 +188,8 @@ const Index = () => {
       )}
       <Route path="*" element={<Error />}/>
     </Routes>
-  </>
-  )
+  </IndexContext.Provider>
+  </>)
 }
 root.render(
   <BrowserRouter>
