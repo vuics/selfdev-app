@@ -36,6 +36,9 @@ const DesktopContainer = ({ heading, children }) => {
           pointing={!fixed}
           secondary={!fixed}
           size='tiny'
+          style={{
+            fontSize: '1rem',
+          }}
         >
           <Container>
             <Menu.Item active={pathname==='/'}>
@@ -44,11 +47,27 @@ const DesktopContainer = ({ heading, children }) => {
                 HyperAgency
               </Link>
             </Menu.Item>
-            <Menu.Item active={pathname==='/pricing'}>
-              <Link to='/pricing' style={{ marginLeft: '1rem', color: 'black', fontSize: '1.4rem' }}>{' '}
-                Pricing
-              </Link>
-            </Menu.Item>
+            { conf.docs.enable && (
+              <Menu.Item>
+                <Link to={conf.docs.url} style={{ color: 'black' }}>{' '}
+                  Docs
+                </Link>
+              </Menu.Item>
+            )}
+            { conf.mobile.enable && (
+              <Menu.Item active={pathname==='/mobile'}>
+                <Link to='/mobile' style={{ color: 'black' }}>{' '}
+                  Mobile
+                </Link>
+              </Menu.Item>
+            )}
+            { conf.pricing.enable && (
+              <Menu.Item active={pathname==='/pricing'}>
+                <Link to='/pricing' style={{ color: 'black' }}>{' '}
+                  Pricing
+                </Link>
+              </Menu.Item>
+            )}
             <Menu.Item position='right'>
               <div style={{ marginRight: '2rem' }}>
                 { conf.contact.github && (
@@ -120,6 +139,12 @@ const MobileContainer = ({ heading, children }) => {
               HyperAgency
             </Link>
           </Menu.Item>
+          { conf.mobile.enable && (
+            <Menu.Item as="a" href={'/mobile'}>
+              <Icon name='mobile alternate' />
+              Mobile App
+            </Menu.Item>
+          )}
           { available ? (
             <>
               <Menu.Item as='a' onClick={() => logIn(true)}>
@@ -136,18 +161,18 @@ const MobileContainer = ({ heading, children }) => {
               { available ? 'Get Started' : 'Join a Whitelist' }
             </Menu.Item>
           )}
-          <Menu.Item as="a" href={'/pricing'}>
-            <Icon name='tags' />
-            Pricing
-          </Menu.Item>
-          <Menu.Item as="a" href={'/mobile'}>
-            <Icon name='mobile alternate' />
-            Mobile App
-          </Menu.Item>
-          <Menu.Item as="a" href={conf.docs.url}>
-            <Icon name='book' />
-            Documentation
-          </Menu.Item>
+          { conf.docs.enable && (
+            <Menu.Item as="a" href={conf.docs.url}>
+              <Icon name='book' />
+              Documentation
+            </Menu.Item>
+          )}
+          { conf.pricing.enable && (
+            <Menu.Item as="a" href={'/pricing'}>
+              <Icon name='tags' />
+              Pricing
+            </Menu.Item>
+          )}
           { conf.contact.github && (
             <Menu.Item as="a" href={conf.contact.github} target="_blank" rel="noreferrer">
               <Icon name='github' />

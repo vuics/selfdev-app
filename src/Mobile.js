@@ -10,89 +10,92 @@ import {
 } from 'semantic-ui-react'
 
 import conf from './conf'
+import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
 import { texturePattern, } from './components/patterns'
 
 export default function Pricing () {
-  return (<>
-    <Empty />
-    <Outter style={{
-      height: '10vh',
-    }}/>
+  return (
+    <ResponsiveContainer>
+      <Empty />
+      <Outter style={{
+        height: '10vh',
+      }}/>
 
-    <Divi />
-    <Outter style={{
-      backgroundImage: texturePattern,
-    }}>
-      <Inner>
-        <div style={{ padding: '6rem 6rem 6rem 6rem' }}>
-          <Header as='h1' textAlign='center'>
-            Mobile Apps
-            <Divider />
-          </Header>
-
-          <Segment basic>
-            <Header as='h3'>
-              Install via Expo
+      <Divi />
+      <Outter style={{
+        backgroundImage: texturePattern,
+      }}>
+        <Inner>
+          <div style={{ padding: '6rem 6rem 6rem 6rem' }}>
+            <Header as='h1' textAlign='center'>
+              Mobile Apps
+              <Divider />
             </Header>
-            <p>
-              You can experience our mobile app instantly using <strong>Expo Go</strong>. First, download the Expo Go app from the app store:
-            </p>
-            <Button
-              color='black'
-              icon
-              labelPosition='left'
-              as='a'
-              href='https://expo.dev/client'
-              target='_blank'
-              rel='noopener noreferrer'
-              style={{ marginBottom: '1em' }}
-            >
-              <Icon name='external alternate' />
-              Get Expo Go
-            </Button>
 
-            <p>
-              Then scan the QR code below to open our app in Expo:
-            </p>
+            <Segment basic>
+              <Header as='h3'>
+                Install via Expo
+              </Header>
+              <p>
+                You can experience our mobile app instantly using <strong>Expo Go</strong>. First, download the Expo Go app from the app store:
+              </p>
+              <Button
+                color='black'
+                icon
+                labelPosition='left'
+                as='a'
+                href='https://expo.dev/client'
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{ marginBottom: '1em' }}
+              >
+                <Icon name='external alternate' />
+                Get Expo Go
+              </Button>
 
-            <Image src='/images/qr/eas-update.svg' size='small' centered />
-            <p style={{ textAlign: 'center' }}>
-              <strong>Runtime Version:</strong> 1.0.0<br />
-              <strong>Published:</strong> May 24, 2025 – 4:37 PM
-            </p>
-          </Segment>
+              <p>
+                Then scan the QR code below to open our app in Expo:
+              </p>
 
-          <Divider section />
+              <Image src='/images/qr/eas-update.svg' size='small' centered />
+              <p style={{ textAlign: 'center' }}>
+                <strong>Runtime Version:</strong> 1.0.0<br />
+                <strong>Published:</strong> May 24, 2025 – 4:37 PM
+              </p>
+            </Segment>
 
-          <Segment basic>
-            <Header as='h3'>
-              Mobile Web Version
-            </Header>
-            <p>
-              You can also use our fully responsive mobile web app, accessible directly in your browser:
-            </p>
-            <Button
-              color='blue'
-              icon='mobile alternate'
-              content='Open Mobile Web App'
-              as='a'
-              href={conf.mobile.webAppUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-            />
-          </Segment>
-        </div>
-      </Inner>
-    </Outter>
+            <Divider section />
 
-    <Divi />
-    <Outter style={{
-      height: '10vh',
-    }}/>
+            <Segment basic>
+              <Header as='h3'>
+                Mobile Web Version
+              </Header>
+              <p>
+                You can also use our fully responsive mobile web app, accessible directly in your browser:
+              </p>
+              <Button
+                color='blue'
+                icon='mobile alternate'
+                content='Open Mobile Web App'
+                as='a'
+                href={conf.mobile.webAppUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+              />
+            </Segment>
+          </div>
+        </Inner>
+      </Outter>
 
-    <Empty />
-    <Footer />
-  </>)
+      <Divi />
+      <Outter style={{
+        height: '10vh',
+      }}/>
+
+      <Empty />
+      <Footer />
+    </ResponsiveContainer>
+  )
 }

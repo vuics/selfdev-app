@@ -11,15 +11,7 @@ import {
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
-import {
-//   dotsPattern, dotsSize,
-  // diagonalsPattern,
-//   bricksPattern,
-  squaresInSquaresPattern,
-//   texturePattern,
-//   cogsPattern,
-} from './components/patterns'
-
+import { squaresInSquaresPattern, } from './components/patterns'
 
 export default function Pricing () {
   return (<>
