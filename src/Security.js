@@ -26,6 +26,7 @@ export default function Security () {
       <Empty />
       <Outter style={{
         height: '10vh',
+        backgroundImage: bricksPattern,
       }}/>
 
       <Divi />
@@ -123,6 +124,7 @@ export default function Security () {
       <Divi />
       <Outter style={{
         height: '10vh',
+        backgroundImage: bricksPattern,
       }}/>
 
       <Empty />

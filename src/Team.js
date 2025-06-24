@@ -1,18 +1,19 @@
 import {
-  // Container,
   Divider,
-  // Segment,
   Header,
   Card,
   Icon,
   Image,
+  // Container,
+  // Segment,
 } from 'semantic-ui-react'
 
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
 import {
-  jigsawPattern
+  texturePattern,
+  jigsawPattern,
 } from './components/patterns'
 
 export default function Team () {
@@ -21,6 +22,7 @@ export default function Team () {
       <Empty />
       <Outter style={{
         height: '10vh',
+        backgroundImage: texturePattern,
       }}/>
 
       <Divi />
@@ -28,7 +30,7 @@ export default function Team () {
         backgroundImage: jigsawPattern
       }}>
         <Inner>
-          <div style={{ padding: '1rem 1rem 1rem 1rem' }}>
+          <div style={{ padding: '1rem 1rem' }}>
             <Header as='h1' textAlign='center'>
               Team
               <Divider />
@@ -68,6 +70,7 @@ export default function Team () {
       <Divi />
       <Outter style={{
         height: '10vh',
+        backgroundImage: texturePattern,
       }}/>
 
       <Empty />

@@ -13,7 +13,10 @@ import conf from './conf'
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
-import { texturePattern, } from './components/patterns'
+import {
+  dotsPattern,
+  dotsSize,
+} from './components/patterns'
 import { useIsMobile } from './components/Media'
 
 export default function Mobile () {
@@ -23,11 +26,14 @@ export default function Mobile () {
       <Empty />
       <Outter style={{
         height: '10vh',
+        backgroundImage: dotsPattern,
+        backgroundSize: dotsSize,
       }}/>
 
       <Divi />
       <Outter style={{
-        backgroundImage: texturePattern,
+        backgroundImage: dotsPattern,
+        backgroundSize: dotsSize,
       }}>
         <Inner>
           <div style={{
@@ -96,6 +102,8 @@ export default function Mobile () {
       <Divi />
       <Outter style={{
         height: '10vh',
+        backgroundImage: dotsPattern,
+        backgroundSize: dotsSize,
       }}/>
 
       <Empty />

@@ -11,16 +11,19 @@ import {
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
-import { squaresInSquaresPattern, } from './components/patterns'
+import {
+  texturePattern,
+} from './components/patterns'
 import { useIsMobile } from './components/Media'
 
 export default function Pricing () {
   const isMobile = useIsMobile()
-  return (<>
+  return (
     <ResponsiveContainer>
 
       <Outter style={{
         height: '10vh',
+        backgroundImage: texturePattern,
       }}/>
 
       <Divi />
@@ -41,12 +44,12 @@ export default function Pricing () {
       <Divi />
       <Outter style={{
         height: '10vh',
+        backgroundImage: texturePattern,
       }}/>
 
       <Divi />
       <Outter style={{
-        // backgroundImage: diagonalsPattern,
-        backgroundImage: squaresInSquaresPattern,
+        backgroundImage: texturePattern,
       }}>
         <Inner>
           <div style={{
@@ -66,10 +69,11 @@ export default function Pricing () {
       <Divi />
       <Outter style={{
         height: '10vh',
+        backgroundImage: texturePattern,
       }}/>
 
       <Empty />
       <Footer />
     </ResponsiveContainer>
-  </>)
+  )
 }
