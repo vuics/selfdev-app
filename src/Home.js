@@ -26,7 +26,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 // +    "react-spring": "^10.0.1",
 
 import { useIndexContext } from './index'
-import { MediaContextProvider, Media } from './components/Media'
+import { MediaContextProvider, Media, useIsMobile } from './components/Media'
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
@@ -162,7 +162,68 @@ const ResponsiveScrollText = ({ children }) => (
   </MediaContextProvider>
 )
 
-const HomepageLayout = () => {
+function Heading ({ children }) {
+  const isMobile = useIsMobile()
+  const { available, logIn } = useIndexContext()
+
+  // console.log('HomeHeading isMobile:', isMobile)
+
+  return (<>
+    <Outter wrapper style={{
+      height: isMobile ? 'auto': '90vh',
+    }}>
+      <Container
+        style={{
+          padding: isMobile ? '0 0.1rem 0' : '0 1rem 3rem',
+          textAlign: isMobile ? 'center' : 'left',
+        }}
+      >
+        <Header
+          as='h1'
+          style={{
+            fontSize: isMobile ? '2rem' : '3rem',
+            fontWeight: 'bold',
+            paddingTop: isMobile ? '3rem' : '30vh',
+          }}
+        >
+          Open-source Agentic AI<br/> Supercharges Entrepreneurial Dreams
+        </Header>
+        <Header
+          as='h3'
+          style={{
+            fontSize: isMobile ? '1.3em' : '1.7em',
+            fontWeight: 'normal',
+            marginBottom: isMobile ? '3rem' : '1rem',
+          }}
+        >
+          Autopilot your business. Focus on what you love.
+          <br/>
+          Powered by Self-developing HyperAgency.
+        </Header>
+        <div
+          style={{ paddingBottom: '3em', }}
+        >
+          <Button
+            compact color='black'
+            onClick={() => logIn(false)}
+          >
+            { available ? "Start for free" : 'Join a whitelist' }
+          </Button>
+          <Button
+            compact basic as="a"
+            href={conf.contact.github}
+            target="_blank" rel="noreferrer"
+          >
+            Star on GitHub
+          </Button>
+          { children }
+        </div>
+      </Container>
+    </Outter>
+  </>)
+}
+
+export default function Home() {
   const { available, logIn } = useIndexContext()
   const [activeArchetype, setActiveArchetype] = useState('chat')
   const handleArchetypeClick = (e, { name }) => setActiveArchetype(name)
@@ -170,7 +231,7 @@ const HomepageLayout = () => {
   const handleFeatureClick = (e, { name }) => setActiveFeature(name)
 
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer heading={ () => (<Heading />) }>
 
       <Divi />
       <Outter style={{ textAlign: 'center' }} wrapper >
@@ -771,5 +832,3 @@ const HomepageLayout = () => {
     </ResponsiveContainer>
   )
 }
-
-export default HomepageLayout

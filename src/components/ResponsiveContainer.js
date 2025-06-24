@@ -1,15 +1,14 @@
 import React, { useState, } from 'react'
-import PropTypes from 'prop-types'
 import { Link, useLocation } from 'react-router-dom'
 import { InView } from 'react-intersection-observer'
 import {
   Button,
   Container,
-  Header,
   Icon,
   Menu,
   Segment,
   Sidebar,
+  // Header,
   // Image,
   // List,
   // Divider,
@@ -21,79 +20,10 @@ import {
 
 import conf from '../conf'
 import Logo from './Logo'
-import { MediaContextProvider, Media, useIsMobile } from './Media'
-import {
-  Outter,
-  // Divi, Inner, Empty
-} from './Design'
+import { MediaContextProvider, Media } from './Media'
 import { useIndexContext } from '../index'
 
-const HomeHeading = ({ children }) => {
-  const isMobile = useIsMobile()
-  const { available, logIn } = useIndexContext()
-
-  // console.log('HomeHeading isMobile:', isMobile)
-
-  return (<>
-    <Outter wrapper style={{
-      height: isMobile ? 'auto': '90vh',
-    }}>
-      <Container
-        style={{
-          padding: isMobile ? '0 0.1rem 0' : '0 1rem 3rem',
-          textAlign: isMobile ? 'center' : 'left',
-        }}
-      >
-        <Header
-          as='h1'
-          style={{
-            fontSize: isMobile ? '2rem' : '3rem',
-            fontWeight: 'bold',
-            paddingTop: isMobile ? '3rem' : '30vh',
-          }}
-        >
-          Open-source Agentic AI<br/> Supercharges Entrepreneurial Dreams
-        </Header>
-        <Header
-          as='h3'
-          style={{
-            fontSize: isMobile ? '1.3em' : '1.7em',
-            fontWeight: 'normal',
-            marginBottom: isMobile ? '3rem' : '1rem',
-          }}
-        >
-          Autopilot your business. Focus on what you love.
-          <br/>
-          Powered by Self-developing HyperAgency.
-        </Header>
-        <div
-          style={{ paddingBottom: '3em', }}
-        >
-          <Button
-            compact color='black'
-            onClick={() => logIn(false)}
-          >
-            { available ? "Start for free" : 'Join a whitelist' }
-          </Button>
-          <Button
-            compact basic as="a"
-            href={conf.contact.github}
-            target="_blank" rel="noreferrer"
-          >
-            Star on GitHub
-          </Button>
-          { children }
-        </div>
-      </Container>
-    </Outter>
-  </>)
-}
-
-HomeHeading.propTypes = {
-  children: PropTypes.node,
-}
-
-const DesktopContainer = ({ children }) => {
+const DesktopContainer = ({ heading, children }) => {
   const { available, logIn } = useIndexContext()
   const { pathname } = useLocation()
   const [ fixed, setFixed ] = useState(false)
@@ -159,9 +89,7 @@ const DesktopContainer = ({ children }) => {
             </Menu.Item>
           </Container>
         </Menu>
-        { pathname==='/' && (
-          <HomeHeading />
-        )}
+        {heading && heading()}
       </InView>
 
       {children}
@@ -169,12 +97,7 @@ const DesktopContainer = ({ children }) => {
   )
 }
 
-DesktopContainer.propTypes = {
-  children: PropTypes.node,
-}
-
-const MobileContainer = ({ children }) => {
-  const { pathname } = useLocation()
+const MobileContainer = ({ heading, children }) => {
   const { available, logIn } = useIndexContext()
   const [ sidebarOpened, setSidebarOpened ] = useState(false)
 
@@ -296,9 +219,7 @@ const MobileContainer = ({ children }) => {
                 </Menu.Item>
               </Menu>
             </Container>
-            { pathname==='/' && (
-              <HomeHeading />
-            )}
+            {heading && heading()}
           </Segment>
 
           {children}
@@ -308,24 +229,15 @@ const MobileContainer = ({ children }) => {
   )
 }
 
-MobileContainer.propTypes = {
-  children: PropTypes.node,
-}
-
-export default function ResponsiveContainer ({ children }) {
+export default function ResponsiveContainer ({ children, heading }) {
   return (<>
     {/* Heads up!
      * For large applications it may not be best option to put all page into these containers at
      * they will be rendered twice for SSR.
      */}
     <MediaContextProvider>
-      <DesktopContainer>{children}</DesktopContainer>
-      <MobileContainer>{children}</MobileContainer>
+      <DesktopContainer heading={heading}>{children}</DesktopContainer>
+      <MobileContainer heading={heading}>{children}</MobileContainer>
     </MediaContextProvider>
   </>)
 }
-
-ResponsiveContainer.propTypes = {
-  children: PropTypes.node,
-}
-
