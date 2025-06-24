@@ -3,6 +3,8 @@ import {
   Container,
 } from 'semantic-ui-react'
 
+import { useIsMobile } from './Media'
+
 export function Divi ({ children, style }) {
   return (
     <div style={{
@@ -16,9 +18,10 @@ export function Divi ({ children, style }) {
 }
 
 export function Outter ({ children, style, wrapper }) {
+  const isMobile = useIsMobile()
   return (
     <div style={{
-      padding: '0 2rem 0 2rem',
+      padding: isMobile ? '0 0.1rem' : '0 2rem',
     }}>
       <Container fluid style={{
         backgroundColor: '#ffffff',
