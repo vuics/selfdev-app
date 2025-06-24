@@ -5,6 +5,7 @@ import {
   Segment,
   Icon,
   Button,
+  List,
   // Container,
   // Card,
 } from 'semantic-ui-react'
@@ -41,12 +42,28 @@ export default function Mobile () {
           }}>
             <Header as='h1' textAlign='center'>
               Mobile Apps
-              <Divider />
             </Header>
-
             <Segment basic>
               <Header as='h3'>
-                Install via Expo
+                Options
+              </Header>
+              <p>
+                There are 2 options for mobile apps available:
+              </p>
+              <List bulleted>
+                <List.Item as='a' href={"#native"}>Native iOS and Android apps.</List.Item>
+                <List.Item as='a' href={"#web"}>Mobile web app.</List.Item>
+              </List>
+            </Segment>
+
+            <Divider section />
+
+            <Segment basic>
+              <Header as='h3' id="native">
+                Native apps
+                <Header.Subheader>
+                  Install via Expo
+                </Header.Subheader>
               </Header>
               <p>
                 You can experience our mobile app instantly using <strong>Expo Go</strong>. First, download the Expo Go app from the app store:
@@ -79,8 +96,13 @@ export default function Mobile () {
             <Divider section />
 
             <Segment basic>
+              <Header as='h3' id="web">
+              </Header>
               <Header as='h3'>
-                Mobile Web Version
+                Mobile Web
+                <Header.Subheader>
+                  Open a Link
+                </Header.Subheader>
               </Header>
               <p>
                 You can also use our fully responsive mobile web app, accessible directly in your browser:
