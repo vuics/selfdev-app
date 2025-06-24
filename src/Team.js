@@ -4,8 +4,8 @@ import {
   Card,
   Icon,
   Image,
+  Segment,
   // Container,
-  // Segment,
 } from 'semantic-ui-react'
 
 import ResponsiveContainer from './components/ResponsiveContainer'
@@ -31,38 +31,44 @@ export default function Team () {
       }}>
         <Inner>
           <div style={{ padding: '1rem 1rem' }}>
-            <Header as='h1' textAlign='center'>
-              Team
-              <Divider />
-              <Header.Subheader>
-                A solo-founder with very strong business, technology, psychology background.
-              </Header.Subheader>
+            <Header as='h1' icon textAlign='center'>
+              <Icon name='group' circular />
+              <Header.Content>
+                Team
+                <Header.Subheader>
+                  A solo-founder with very strong business, technology, psychology background.
+                </Header.Subheader>
+              </Header.Content>
             </Header>
-            <br/>
-            <Card.Group centered>
-              <Card>
-                <Image src='/images/team/artem-arakcheev.jpg' wrapped />
-                <Card.Content>
-                  <Card.Header>
-                    Artem Arakcheev, PhD, DBA
-                  </Card.Header>
-                  <Card.Meta>
-                    Founder
-                  </Card.Meta>
-                  <Card.Description>
-                    Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.
-                  </Card.Description>
-                </Card.Content>
-                <Card.Content extra textAlign='center'>
-                  <a href="https://www.linkedin.com/in/artem-arakcheev/">
-                    <Icon size='big' name='linkedin'/>
-                  </a>
-                  <a href="https://github.com/alphara">
-                    <Icon size='big' name='github' />
-                  </a>
-                </Card.Content>
-              </Card>
-            </Card.Group>
+
+            <Divider />
+
+            <Segment basic>
+              <Card.Group centered>
+                <Card>
+                  <Image src='/images/team/artem-arakcheev.jpg' wrapped />
+                  <Card.Content>
+                    <Card.Header>
+                      Artem Arakcheev, PhD, DBA
+                    </Card.Header>
+                    <Card.Meta>
+                      Founder
+                    </Card.Meta>
+                    <Card.Description>
+                      Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.
+                    </Card.Description>
+                  </Card.Content>
+                  <Card.Content extra textAlign='center'>
+                    <a href="https://www.linkedin.com/in/artem-arakcheev/">
+                      <Icon size='big' name='linkedin'/>
+                    </a>
+                    <a href="https://github.com/alphara">
+                      <Icon size='big' name='github' />
+                    </a>
+                  </Card.Content>
+                </Card>
+              </Card.Group>
+            </Segment>
           </div>
         </Inner>
       </Outter>

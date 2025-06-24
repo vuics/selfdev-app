@@ -2,9 +2,9 @@ import {
   Divider,
   Header,
   Container,
-  // Segment,
+  Segment,
+  Icon,
   // Card,
-  // Icon,
   // Image,
 } from 'semantic-ui-react'
 
@@ -32,12 +32,17 @@ export default function Pricing () {
         textAlign: 'center'
       }}>
         <Container style={{ paddingTop: "3em", paddingBottom: '3rem' }}>
-          <Header as="h1">
-            From zero to IPO
+          <Header as='h1' icon textAlign='center'>
+            <Icon name='line graph' circular />
+            <Header.Content>
+              From zero to IPO
+            </Header.Content>
           </Header>
-          <p>
-            Designed for every stage of your journey. Start today, no credit card required.
-          </p>
+          <Segment basic>
+            <p>
+              Designed for every stage of your journey. Start today, no credit card required.
+            </p>
+          </Segment>
         </Container>
       </Outter>
 
@@ -55,13 +60,18 @@ export default function Pricing () {
           <div style={{
             padding: isMobile ? '3rem 1rem' : '6rem 6rem',
           }}>
-            <Header as='h1' textAlign='center'>
-              Pricing
-              <Divider />
+            <Header as='h1' icon textAlign='center'>
+              <Icon name='tags' circular />
+              <Header.Content>
+                Pricing
+              </Header.Content>
             </Header>
-            <br/>
-            <p>
-            </p>
+            <Divider />
+            <Segment basic>
+              <p>
+                ...
+              </p>
+            </Segment>
           </div>
         </Inner>
       </Outter>

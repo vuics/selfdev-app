@@ -40,8 +40,11 @@ export default function Mobile () {
           <div style={{
             padding: isMobile ? '3rem 1rem' : '6rem 6rem',
           }}>
-            <Header as='h1' textAlign='center'>
-              Mobile Apps
+            <Header as='h1' icon textAlign='center'>
+              <Icon name='mobile alternate' circular />
+              <Header.Content>
+                Mobile Apps
+              </Header.Content>
             </Header>
             <Segment basic>
               <Header as='h3'>

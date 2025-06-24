@@ -40,7 +40,9 @@ export default function Security () {
 
             <Header as='h1' icon textAlign='center'>
               <Icon name='shield alternate' circular />
-              <Header.Content>Security at HyperAgency</Header.Content>
+              <Header.Content>
+                Security at HyperAgency
+              </Header.Content>
             </Header>
 
             <Segment basic>
