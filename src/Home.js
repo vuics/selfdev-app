@@ -231,7 +231,7 @@ export default function Home() {
   const handleFeatureClick = (e, { name }) => setActiveFeature(name)
 
   return (
-    <ResponsiveContainer heading={ () => (<Heading />) }>
+    <ResponsiveContainer heading={ <Heading /> }>
 
       <Divi />
       <Outter style={{ textAlign: 'center' }} wrapper >

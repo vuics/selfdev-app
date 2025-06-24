@@ -89,7 +89,7 @@ const DesktopContainer = ({ heading, children }) => {
             </Menu.Item>
           </Container>
         </Menu>
-        {heading && heading()}
+        {heading}
       </InView>
 
       {children}
@@ -219,7 +219,7 @@ const MobileContainer = ({ heading, children }) => {
                 </Menu.Item>
               </Menu>
             </Container>
-            {heading && heading()}
+            {heading}
           </Segment>
 
           {children}
