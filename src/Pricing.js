@@ -24,12 +24,19 @@ import {
 export default function Pricing () {
   return (<>
     <ResponsiveContainer>
+
+      <Outter style={{
+        height: '10vh',
+      }}/>
+
+      <Divi />
       <Outter style={{
         // height: '10vh',
+        textAlign: 'center'
       }}>
         <Container style={{ paddingTop: "3em", paddingBottom: '3rem' }}>
-          <Header as="h1" textAlign="center">
-            From zero to IPO.
+          <Header as="h1">
+            From zero to IPO
           </Header>
           <p>
             Designed for every stage of your journey. Start today, no credit card required.

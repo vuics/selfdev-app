@@ -21,30 +21,35 @@ import {
 
 import conf from '../conf'
 import Logo from './Logo'
-import { MediaContextProvider, Media } from './Media'
+import { MediaContextProvider, Media, useIsMobile } from './Media'
 import {
   Outter,
   // Divi, Inner, Empty
 } from './Design'
 import { useIndexContext } from '../index'
 
-const HomepageHeading = ({ mobile }) => {
+const HomeHeading = ({ children }) => {
+  const isMobile = useIsMobile()
   const { available, logIn } = useIndexContext()
+
+  // console.log('HomeHeading isMobile:', isMobile)
+
   return (<>
     <Outter wrapper style={{
-      height: '90vh',
+      height: isMobile ? 'auto': '90vh',
     }}>
       <Container
         style={{
-          padding: '0 1em',
+          padding: isMobile ? '0 0.1rem 0' : '0 1rem 3rem',
+          textAlign: isMobile ? 'center' : 'left',
         }}
       >
         <Header
           as='h1'
           style={{
-            fontSize: mobile ? '3em' : '3em',
+            fontSize: isMobile ? '2rem' : '3rem',
             fontWeight: 'bold',
-            paddingTop: '30vh',
+            paddingTop: isMobile ? '3rem' : '30vh',
           }}
         >
           Open-source Agentic AI<br/> Supercharges Entrepreneurial Dreams
@@ -52,31 +57,40 @@ const HomepageHeading = ({ mobile }) => {
         <Header
           as='h3'
           style={{
-            fontSize: mobile ? '1.6em' : '1.7em',
+            fontSize: isMobile ? '1.3em' : '1.7em',
             fontWeight: 'normal',
-            // marginTop: mobile ? '0.25em' : '0.5em',
-            marginBottom: '1em',
+            marginBottom: isMobile ? '3rem' : '1rem',
           }}
         >
           Autopilot your business. Focus on what you love.
           <br/>
           Powered by Self-developing HyperAgency.
         </Header>
-        <Button style={{ marginBottom: '1em', }}
-          compact color='black' onClick={() => logIn(false)}
+        <div
+          style={{ paddingBottom: '3em', }}
         >
-          { available ? "Start for free" : 'Join a whitelist' }
-        </Button>
-        <Button compact basic as="a" href={conf.contact.github} target="_blank" rel="noreferrer">
-          Star on GitHub
-        </Button>
+          <Button
+            compact color='black'
+            onClick={() => logIn(false)}
+          >
+            { available ? "Start for free" : 'Join a whitelist' }
+          </Button>
+          <Button
+            compact basic as="a"
+            href={conf.contact.github}
+            target="_blank" rel="noreferrer"
+          >
+            Star on GitHub
+          </Button>
+          { children }
+        </div>
       </Container>
     </Outter>
   </>)
 }
 
-HomepageHeading.propTypes = {
-  mobile: PropTypes.bool,
+HomeHeading.propTypes = {
+  children: PropTypes.node,
 }
 
 const DesktopContainer = ({ children }) => {
@@ -108,22 +122,31 @@ const DesktopContainer = ({ children }) => {
             <Menu.Item position='right'>
               <div style={{ marginRight: '2rem' }}>
                 { conf.contact.github && (
-                  <Button icon='github' color='standard' basic circular as="a" href={conf.contact.github} target="_blank" rel="noreferrer" />
+                  <Button icon='github' basic circular as="a" href={conf.contact.github} target="_blank" rel="noreferrer" />
                 )}
                 { conf.contact.discord && (
-                  <Button icon='discord' color='standard' basic circular as="a" href={conf.contact.discord} target="_blank" rel="noreferrer" />
+                  <Button icon='discord' basic circular as="a" href={conf.contact.discord} target="_blank" rel="noreferrer" />
                 )}
                 { conf.contact.youtube && (
-                  <Button icon='youtube' color='standard' basic circular as="a" href={conf.contact.youtube} target="_blank" rel="noreferrer" />
+                  <Button icon='youtube' basic circular as="a" href={conf.contact.youtube} target="_blank" rel="noreferrer" />
                 )}
               </div>
               { available ? (
                 <>
-                  <Button compact basic as='a' onClick={() => logIn(true)} icon labelPosition='left'>
+                  <Button
+                    compact basic as='a'
+                    onClick={() => logIn(true)}
+                    icon labelPosition='left'
+                  >
                     <Icon name='sign-in' />
                     Log In
                   </Button>
-                  <Button compact as='a' color='black' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)} icon labelPosition='right'>
+                  <Button
+                    compact as='a' color='black'
+                    style={{ marginLeft: '0.5em' }}
+                    onClick={() => logIn(false)}
+                    icon labelPosition='right'
+                  >
                     Sign Up
                     <Icon name='user plus' />
                   </Button>
@@ -137,7 +160,7 @@ const DesktopContainer = ({ children }) => {
           </Container>
         </Menu>
         { pathname==='/' && (
-          <HomepageHeading available={available} logIn={logIn}/>
+          <HomeHeading />
         )}
       </InView>
 
@@ -166,17 +189,13 @@ const MobileContainer = ({ children }) => {
           onHide={() => setSidebarOpened(false)}
           vertical
           visible={sidebarOpened}
-          width='wide'
+          width='thin'
         >
           <Menu.Item active>
-            <Link to='/' style={{ color: 'white', fontSize: '2.6rem' }}>{' '}
-              <Logo size='medium' gray />
+            <Link to='/' style={{ color: 'white', fontSize: '1.3rem' }}>{' '}
+              <Logo size='tiny' gray />
               HyperAgency
             </Link>
-          </Menu.Item>
-          <Menu.Item as="a" href={'/pricing'}>
-            <Icon name='tags' />
-            Pricing
           </Menu.Item>
           { available ? (
             <>
@@ -194,6 +213,10 @@ const MobileContainer = ({ children }) => {
               { available ? 'Get Started' : 'Join a Whitelist' }
             </Menu.Item>
           )}
+          <Menu.Item as="a" href={'/pricing'}>
+            <Icon name='tags' />
+            Pricing
+          </Menu.Item>
           <Menu.Item as="a" href={'/mobile'}>
             <Icon name='mobile alternate' />
             Mobile App
@@ -226,12 +249,21 @@ const MobileContainer = ({ children }) => {
               Contact Us
             </Menu.Item>
           )}
+          <Menu.Item
+            onClick={() => setSidebarOpened(false)}
+          >
+            <Icon name='close' />
+            Close Sidebar
+          </Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
           <Segment
             textAlign='center'
-            style={{ minHeight: 350, padding: '1em 0em' }}
+            style={{
+              // minHeight: 350,
+              padding: '1em 0 0'
+            }}
             vertical
           >
             <Container>
@@ -242,13 +274,18 @@ const MobileContainer = ({ children }) => {
                 <Menu.Item position='right'>
                   { available ? (
                     <>
-                      <Button basic as='a' onClick={() => logIn(true)} icon labelPosition='left'>
-                        <Icon name='sign-in' />
-                        { available ? 'Log In' : 'Join a Whilelist' }
+                      <Button
+                        basic as='a'
+                        onClick={() => logIn(true)}
+                      >
+                        Log In
                       </Button>
-                      <Button as='a' color='black' style={{ marginLeft: '0.5em' }} onClick={() => logIn(false)} icon labelPosition='right'>
-                        { available ? 'Sign Up': 'Join a Whitelist' }
-                        <Icon name='user plus' />
+                      <Button
+                        as='a' color='black'
+                        style={{ marginLeft: '0.5em' }}
+                        onClick={() => logIn(false)}
+                      >
+                        Sign Up
                       </Button>
                     </>
                   ) : (
@@ -260,7 +297,7 @@ const MobileContainer = ({ children }) => {
               </Menu>
             </Container>
             { pathname==='/' && (
-              <HomepageHeading mobile available={available} logIn={logIn}/>
+              <HomeHeading />
             )}
           </Segment>
 
