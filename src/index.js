@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useContext, } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css';
@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import conf from './conf.js'
+import { IndexContext } from './components/IndexContext'
 
 // import App from './App'
 import Home from './Home'
@@ -61,9 +62,6 @@ const Private = ({ children }) => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-export const IndexContext = createContext({});
-export const useIndexContext = () => useContext(IndexContext);
-
 function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
@@ -101,7 +99,7 @@ function Index () {
       })
   }, []);
 
-  return (<>
+  return (
   <IndexContext.Provider value={{
     available, logIn
   }}>
@@ -189,7 +187,7 @@ function Index () {
       <Route path="*" element={<Error />}/>
     </Routes>
   </IndexContext.Provider>
-  </>)
+  )
 }
 root.render(
   <BrowserRouter>

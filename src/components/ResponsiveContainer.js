@@ -21,7 +21,7 @@ import {
 import conf from '../conf'
 import Logo from './Logo'
 import { MediaContextProvider, Media } from './Media'
-import { useIndexContext } from '../index'
+import { useIndexContext } from './IndexContext'
 
 const DesktopContainer = ({ heading, children }) => {
   const { available, logIn } = useIndexContext()
