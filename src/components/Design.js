@@ -40,6 +40,7 @@ export function Outter ({ children, style, wrapper }) {
 }
 
 export function Inner ({ children, style }) {
+  const isMobile = useIsMobile()
   return (
     <Container style={{
       backgroundColor: '#ffffff',

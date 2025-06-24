@@ -14,8 +14,10 @@ import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
 import { texturePattern, } from './components/patterns'
+import { useIsMobile } from './components/Media'
 
-export default function Pricing () {
+export default function Mobile () {
+  const isMobile = useIsMobile()
   return (
     <ResponsiveContainer>
       <Empty />
@@ -28,7 +30,9 @@ export default function Pricing () {
         backgroundImage: texturePattern,
       }}>
         <Inner>
-          <div style={{ padding: '6rem 6rem 6rem 6rem' }}>
+          <div style={{
+            padding: isMobile ? '3rem 1rem' : '6rem 6rem',
+          }}>
             <Header as='h1' textAlign='center'>
               Mobile Apps
               <Divider />
