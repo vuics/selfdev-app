@@ -9,7 +9,8 @@ export function Divi ({ children, style }) {
   return (
     <div style={{
       height: '1px',
-      backgroundColor: '#999',
+      // backgroundColor: '#ccc',
+      border: '0.5px dashed #ccc',
       ...style,
     }}>
       { children }
@@ -44,8 +45,8 @@ export function Inner ({ children, style }) {
     <Container style={{
       backgroundColor: '#ffffff',
       backgroundImage: 'none',
-      borderLeft: '1px solid #999',
-      borderRight: '1px solid #999',
+      borderLeft: '1px dotted #ccc',
+      borderRight: '1px dotted #ccc',
       boxSizing: 'border-box',
       ...style,
     }}>
