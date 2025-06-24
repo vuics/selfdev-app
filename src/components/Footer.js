@@ -17,7 +17,7 @@ const Footer = () => {
       <Container>
         <Grid divided inverted stackable>
           <Grid.Row>
-            <Grid.Column width={3}>
+            <Grid.Column width={5}>
               <Header inverted as='h3' style={{ margin: 0 }}>
                 <div style={{
                   display: 'flex',
@@ -132,7 +132,7 @@ const Footer = () => {
                 )}
               </List>
             </Grid.Column>
-            <Grid.Column width={7}>
+            <Grid.Column width={6}>
               <Header inverted as='h4'>
                 <Header.Content>
                   <Icon inverted color='grey' name='university' />
