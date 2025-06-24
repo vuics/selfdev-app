@@ -44,7 +44,7 @@ const DesktopContainer = ({ heading, children }) => {
             <Menu.Item active={pathname==='/'}>
               <Logo size='mini' gray />
               <Link to='/' style={{ marginLeft: '1rem', color: 'black', fontSize: '1.9rem' }}>{' '}
-                HyperAgency
+                {conf.app.name}
               </Link>
             </Menu.Item>
             { conf.docs.enable && (
@@ -136,7 +136,7 @@ const MobileContainer = ({ heading, children }) => {
           <Menu.Item active>
             <Link to='/' style={{ color: 'white', fontSize: '1.3rem' }}>{' '}
               <Logo size='tiny' gray />
-              HyperAgency
+              {conf.app.name}
             </Link>
           </Menu.Item>
           { conf.mobile.enable && (

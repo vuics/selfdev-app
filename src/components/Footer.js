@@ -27,7 +27,7 @@ const Footer = () => {
                 }}>
                   <Logo size='milli' gray />
                   <Header.Content style={{ display: 'flex', flexDirection: 'column' }}>
-                    HyperAgency
+                    {conf.app.name}
                   </Header.Content>
                 </div>
               </Header>
@@ -139,7 +139,7 @@ const Footer = () => {
                   About Us
                 </Header.Content>
                 <Header.Subheader style={{ color: 'gray' }}>
-                  Self-developing HyperAgency is uniquely tailored to your business needs.
+                  Self-developing {conf.app.name} is uniquely tailored to your business needs.
                 </Header.Subheader>
               </Header>
               <List link inverted>

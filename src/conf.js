@@ -4,6 +4,11 @@ const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 // const arr = (str) => str ? str.split(',') : []
 
 const conf = {
+  app: {
+    name: process.env.REACT_APP_NAME || 'HyperAgency',
+    // name: process.env.REACT_APP_NAME || 'Selfdev',
+  },
+
   contact: {
     email: process.env.REACT_APP_CONTACT_EMAIL || 'admin@vuics.com',
     github: process.env.REACT_APP_CONTACT_GITHUB || 'https://github.com/vuics/hyper-agency',

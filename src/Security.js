@@ -41,13 +41,13 @@ export default function Security () {
             <Header as='h1' icon textAlign='center'>
               <Icon name='shield alternate' circular />
               <Header.Content>
-                Security at HyperAgency
+                Security at {conf.app.name}
               </Header.Content>
             </Header>
 
             <Segment basic>
               <p>
-                At <strong>HyperAgency</strong>, the security and privacy of our platform, our users, and your data are our highest priorities. 
+                At <strong>{conf.app.name}</strong>, the security and privacy of our platform, our users, and your data are our highest priorities.
                 We are committed to building agentic AI systems that are not only powerful and autonomous, but also safe and resilient.
               </p>
 
@@ -55,7 +55,7 @@ export default function Security () {
 
               <Header as='h2'>Responsible Disclosure</Header>
               <p>
-                We deeply appreciate researchers, developers, and users who help us keep HyperAgency secure. If you discover a vulnerability,
+                We deeply appreciate researchers, developers, and users who help us keep {conf.app.name} secure. If you discover a vulnerability,
                 we encourage responsible disclosure.
               </p>
               <p>
@@ -114,7 +114,7 @@ export default function Security () {
 
               <Header as='h2'>Contact</Header>
               <p>
-                Have questions or concerns about security at HyperAgency? Reach out at{' '}
+                Have questions or concerns about security at {conf.app.name}? Reach out at{' '}
                 <a href={`mailto:${conf.contact.email}`}>{conf.contact.email}</a>
               </p>
             </Segment>

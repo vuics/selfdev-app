@@ -14,6 +14,7 @@ import {
   Icon,
 } from 'semantic-ui-react'
 
+import conf from './conf'
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import Logo from './components/Logo'
@@ -26,7 +27,7 @@ export default function Roadmap () {
         <Segment padded textAlign="center" inverted color='white'>
           <Header as="h1">
             <Logo size='tiny' />
-            HyperAgency Roadmap
+            {conf.app.name} Roadmap
           </Header>
         </Segment>
       </Container>

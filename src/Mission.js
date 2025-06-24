@@ -8,6 +8,7 @@ import {
   // Image,
 } from 'semantic-ui-react'
 
+import conf from './conf'
 import ResponsiveContainer from './components/ResponsiveContainer'
 import Footer from './components/Footer'
 import { Divi, Outter, Inner, Empty } from './components/Design'
@@ -43,7 +44,7 @@ export default function Mission () {
             <Divider />
             <Segment basic>
               <p>
-                At <strong>HyperAgency</strong>, our mission is to empower humanity by providing an autonomous agentic platform that operates businesses 24/7, generating revenue and granting more time to human owners for strategic decision-making.
+                At <strong>{conf.app.name}</strong>, our mission is to empower humanity by providing an autonomous agentic platform that operates businesses 24/7, generating revenue and granting more time to human owners for strategic decision-making.
               </p>
             </Segment>
           </div>

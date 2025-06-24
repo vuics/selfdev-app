@@ -198,7 +198,7 @@ function Heading ({ children }) {
         >
           Autopilot your business. Focus on what you love.
           <br/>
-          Powered by Self-developing HyperAgency.
+          Powered by Self-developing {conf.app.name}.
         </Header>
         <div
           style={{ paddingBottom: '3em', }}
@@ -403,7 +403,7 @@ export default function Home() {
           padding: '1rem 2rem 4rem',
           textAlign: 'center',
         }}>
-          HyperAgency makes it possible.
+          {conf.app.name} makes it possible.
           <br/>
           <br/>
           We're building a future where intelligent AI agents work <em>alongside</em> you,
@@ -447,7 +447,7 @@ export default function Home() {
               and make smarter, more informed decisions.
             </List.Item>
             <List.Item>
-              <strong>Build the Business of Your Dreams:</strong> Focus on your passion, knowing that HyperAgency is always working
+              <strong>Build the Business of Your Dreams:</strong> Focus on your passion, knowing that {conf.app.name} is always working
               in the background to support your vision.
             </List.Item>
           </List>
@@ -570,7 +570,7 @@ export default function Home() {
                 <strong>Free Tier:</strong> Run up to 3 agents simultaneously on our cloud-hosted platform.
               </List.Item>
               <List.Item>
-                <strong>Cloud Deployment:</strong> Hassle-free hosting and management of your HyperAgency platform.
+                <strong>Cloud Deployment:</strong> Hassle-free hosting and management of your {conf.app.name} platform.
               </List.Item>
             </List>
             <Button compact basic as="a" href={conf.contact.github} target="_blank" rel="noreferrer">
@@ -660,7 +660,7 @@ export default function Home() {
               // opacity: 1,
             }}>
               <Header as="h2" textAlign="center" style={{ marginBottom: "1rem" }}>
-                The Future of HyperAgency: A Glimpse into Tomorrow
+                The Future of {conf.app.name}: A Glimpse into Tomorrow
               </Header>
               <List bulleted size="large" style={{ marginTop: "1.5em" }}>
                 <List.Item>
@@ -688,7 +688,7 @@ export default function Home() {
                 Become a Trailblazer in Agentic AI Innovation!
               </Header>
               <p style={{ fontSize: "1.2em", marginBottom: "1.5rem" }}>
-                HyperAgency is more than just a platform; it's a vibrant community of innovators, entrepreneurs, and developers
+                {conf.app.name} is more than just a platform; it's a vibrant community of innovators, entrepreneurs, and developers
                 building the future of work. Connect with like-minded individuals, share ideas, and contribute to the evolution
                 of agentic AI.
               </p>
