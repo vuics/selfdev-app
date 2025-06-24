@@ -34,7 +34,7 @@ const Footer = () => {
               { conf.contact.email && (
                 <List link inverted>
                   <List.Item as='a'>
-                    <a href={`mailto:${conf.contact.email}`}>
+                    <a href={`mailto:${conf.contact.email}`} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='mail' />
                       Contact Us
                     </a>
@@ -44,7 +44,7 @@ const Footer = () => {
               <List link inverted>
                 { conf.contact.github && (
                   <List.Item as='a'>
-                    <a href={conf.contact.github}>
+                    <a href={conf.contact.github} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='github' />
                       GitHub
                     </a>
@@ -52,7 +52,7 @@ const Footer = () => {
                 )}
                 { conf.contact.linkedin && (
                   <List.Item as='a'>
-                    <a href={conf.contact.linkedin}>
+                    <a href={conf.contact.linkedin} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='linkedin' />
                       LinkedIn
                     </a>
@@ -60,7 +60,7 @@ const Footer = () => {
                 )}
                 { conf.contact.discord && (
                   <List.Item as='a'>
-                    <a href={conf.contact.discord}>
+                    <a href={conf.contact.discord} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='discord' />
                       Discord
                     </a>
@@ -68,7 +68,7 @@ const Footer = () => {
                 )}
                 { conf.contact.youtube && (
                   <List.Item as='a'>
-                    <a href={conf.contact.youtube}>
+                    <a href={conf.contact.youtube} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='youtube' />
                       YouTube
                     </a>
@@ -76,7 +76,7 @@ const Footer = () => {
                 )}
                 { conf.contact.x && (
                   <List.Item as='a'>
-                    <a href={conf.contact.x}>
+                    <a href={conf.contact.x} target='_blank' rel='noopener noreferrer'>
                       <Icon link inverted color='grey' name='twitter' />
                       X
                     </a>
