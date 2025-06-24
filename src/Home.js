@@ -76,7 +76,7 @@ const DesktopScrollText = ({ children }) => {
         style={{
           position: 'absolute',
           width: '100%',
-          height: '397vh',
+          height: '420vh',
           backgroundImage: dotsPattern,
           backgroundSize: dotsSize,
         }}
@@ -128,7 +128,7 @@ const MobileScrollText = ({ children }) => {
         style={{
           position: 'absolute',
           width: '100%',
-          height: '100vh',
+          height: '120vh',
           backgroundImage: dotsPattern,
           backgroundSize: dotsSize,
         }}
