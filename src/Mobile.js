@@ -63,7 +63,7 @@ export default function Mobile () {
 
             <Segment basic>
               <Header as='h3' id="native">
-                Native apps
+                Native Mobile Apps
                 <Header.Subheader>
                   Install via Expo
                 </Header.Subheader>
@@ -91,10 +91,26 @@ export default function Mobile () {
 
               <Image src='/images/qr/eas-update.svg' size='small' centered />
               <p style={{ textAlign: 'center' }}>
-                <strong>Runtime Version:</strong> 1.18.3
+                <strong>Runtime Version:</strong> 1.18.4
                 <br />
-                <strong>Published:</strong> Jun 25, 2025 8:00 PM
+                <strong>Published:</strong> Jun 25, 2025 8:53 PM
               </p>
+              <p>
+                If you cannot scan the QR code, click the button:
+              </p>
+              <Button
+                color='gray'
+                icon
+                labelPosition='left'
+                as='a'
+                href='https://expo.dev/preview/update?message=Bump%20version%20to%201.18.4&updateRuntimeVersion=1.18.4&createdAt=2025-06-25T17%3A53%3A36.789Z&slug=exp&projectId=8683a3dc-4412-4b78-a9f5-216dfb43f9c2&group=864e7987-34ec-48ac-b527-f1d5e1344648'
+                target='_blank'
+                rel='noopener noreferrer'
+                style={{ marginBottom: '1em' }}
+              >
+                <Icon name='mobile alternate' />
+                  Install Native Mobile App
+              </Button>
             </Segment>
 
             <Divider section />
@@ -103,7 +119,7 @@ export default function Mobile () {
               <Header as='h3' id="web">
               </Header>
               <Header as='h3'>
-                Mobile Web
+                Mobile Web App
                 <Header.Subheader>
                   Open a Link
                 </Header.Subheader>

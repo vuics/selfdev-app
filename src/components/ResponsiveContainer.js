@@ -187,7 +187,7 @@ const MobileContainer = ({ heading, children }) => {
           )}
           { conf.contact.youtube && (
             <Menu.Item as="a" href={conf.contact.youtube} target="_blank" rel="noreferrer">
-              <Icon name='YouTube' />
+              <Icon name='youtube' />
               YouTube
             </Menu.Item>
           )}
