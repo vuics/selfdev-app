@@ -192,7 +192,7 @@ export default function Footer () {
                 </Header>
                 <Qr src={'/images/qr/qr-home.svg'} modal />
                 <br/>
-                Tap QR for full screen
+                Tap QR for full screen.
               </div>
             </Grid.Column>
           </Grid.Row>

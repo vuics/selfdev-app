@@ -2,11 +2,12 @@ import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Menu,
-  Image,
   Icon,
   Dropdown,
 } from 'semantic-ui-react'
+
 import conf from '../conf.js'
+import Logo from './Logo'
 
 const Menubar = () => {
   const { pathname } = useLocation()
@@ -18,9 +19,9 @@ const Menubar = () => {
   return (
     <Menu size='tiny'>
       <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
-        <Image alt="logo" src='/images/logo192.png' height='32px' />
+        <Logo size='milli' gray />
         {'\u00A0'}
-        <span style={{color: 'grey'}}>Selfdev</span>
+        <span style={{color: 'grey'}}>{conf.app.name}</span>
       </Menu.Item>
       { conf.hive.enable && (
         <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>

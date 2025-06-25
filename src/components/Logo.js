@@ -1,6 +1,6 @@
 import React from 'react'
 
-import OctopusSvg from './octopus.svg'
+import LogoSvg from '../logo.svg'
 
 const sizes = {
   nano: '15px',
@@ -19,8 +19,8 @@ const sizes = {
 export default function Logo ({ children, style, size = 'medium', gray = false } = {}) {
   return (
     <img
-      src={OctopusSvg}
-      alt="Octopus logo"
+      src={LogoSvg}
+      alt="Logo logo"
       style={{
         filter: gray ? 'grayscale(100%)' : null,
         width: sizes[size],

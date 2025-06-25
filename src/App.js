@@ -3,6 +3,7 @@ import { Button } from 'semantic-ui-react'
 
 import logo from './logo.svg';
 import './App.css';
+import conf from './conf'
 
 function App() {
   return (
@@ -18,13 +19,10 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          {conf.app.name}
         </a>
 
-        {/*
-        // <Button as={Link} to='/home'>
-        */}
-        <Button to='/home'>
+        <Button to='/'>
           To homepage
         </Button>
 
