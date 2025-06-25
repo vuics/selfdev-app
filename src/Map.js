@@ -118,7 +118,7 @@ import mermaid from "mermaid";
 import { getCodeString } from "rehype-rewrite";
 
 import Menubar from './components/Menubar'
-import conf from './conf'
+import conf, { bool } from './conf'
 import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
 
@@ -1989,8 +1989,8 @@ function Map () {
   }, [mapId]);
 
   const [ autosave, setAutosave ] = useState(() => {
-    const saved = localStorage.getItem('map.autosave') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.autosave')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.autosave', autosave.toString());
@@ -1998,71 +1998,71 @@ function Map () {
 
   const [ showMenu, setShowMenu ] = useState(() => {
     const saved = localStorage.getItem('map.showMenu') || true
-    return saved === 'true'
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showMenu', showMenu.toString());
   }, [showMenu]);
 
   const [ showOpener, setShowOpener ] = useState(() => {
-    const saved = localStorage.getItem('map.showOpener') || true
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showOpener')
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showOpener', showOpener.toString());
   }, [showOpener]);
 
   const [ showMinimap, setShowMinimap ] = useState(() => {
-    const saved = localStorage.getItem('map.showMinimap') || true
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showMinimap')
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showMinimap', showMinimap.toString());
   }, [showMinimap]);
 
   const [ showPanel, setShowPanel ] = useState(() => {
-    const saved = localStorage.getItem('map.showPanel') || true
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showPanel')
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showPanel', showPanel.toString());
   }, [showPanel]);
 
   const [ showColors, setShowColors ] = useState(() => {
-    const saved = localStorage.getItem('map.showColors') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showColors')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.showColors', showColors.toString());
   }, [showColors]);
 
   const [ showFile, setShowFile ] = useState(() => {
-    const saved = localStorage.getItem('map.showFile') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showFile')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.showFile', showFile.toString());
   }, [showFile]);
 
   const [ showExecution, setShowExecution ] = useState(() => {
-    const saved = localStorage.getItem('map.showExecution') || true
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showExecution')
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showExecution', showExecution.toString());
   }, [showExecution]);
 
   const [ showLayout, setShowLayout ] = useState(() => {
-    const saved = localStorage.getItem('map.showLayout') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showLayout')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.showLayout', showLayout.toString());
   }, [showLayout]);
 
   const [ showSlides, setShowSlides ] = useState(() => {
-    const saved = localStorage.getItem('map.showSlides') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.showSlides')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.showSlides', showSlides.toString());
@@ -2083,8 +2083,8 @@ function Map () {
   }, [viewerTheme]);
 
   const [ vimMode, setVimMode ] = useState(() => {
-    const saved = localStorage.getItem('map.vimMode') || false
-    return saved === 'true'
+    const saved = localStorage.getItem('map.vimMode')
+    return saved !== null ? bool(saved) : false
   })
   useEffect(() => {
     localStorage.setItem('map.vimMode', vimMode);

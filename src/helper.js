@@ -38,4 +38,3 @@ export function hexToRgba({ hexColor = '#ffffff', alpha = 1} = {}) {
   const [r, g, b] = match.map(x => parseInt(x, 16));
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
-
