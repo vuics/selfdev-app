@@ -121,6 +121,7 @@ import Menubar from './components/Menubar'
 import conf, { bool } from './conf'
 import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
+import { texturePattern } from './components/patterns'
 
 const editorThemes = {
   'default': 'light',
@@ -3069,8 +3070,249 @@ function Map () {
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
       setCurrentSlide, attachFile, uploadFile,
     }}>
-      <Container>
-        <Menubar />
+      <Container fluid>
+        <Menubar>
+          <Menu.Item style={{
+            padding: '0 0.7rem 0 0',
+            backgroundImage: texturePattern,
+          }}/>
+          <Menu.Header style={{
+            paddingLeft: '0.5rem',
+            paddingRight: '0.5rem',
+          }}>
+            { !showMenu && (<>
+              <Button.Group>
+                <Popup
+                  content={(!showMenu ? 'Show' : 'Hide') + ' the Map menu' }
+                  trigger={
+                    <Button
+                      icon basic
+                      onClick={(e, data) => setShowMenu(!showMenu)}
+                    >
+                      <Icon name={'bars'}
+                        color={showMenu ? 'grey' : 'standard'}
+                      />
+                    </Button>
+                  }
+                />
+              </Button.Group>
+            </>)}
+            { showMenu && (<>
+              <Menu compact secondary style={{
+                marginLeft: '1rem',
+                display: 'flex',
+                alignItems: 'center',       // vertically center
+              }}>
+                <Menu.Menu>
+                  <Dropdown simple text='File' icon=''>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={postMap}>
+                        <Icon name='file' />
+                        New
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={putMap}>
+                        <Icon name='save' />
+                        Save
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
+                        <Icon name='clone' />
+                        Duplicate
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
+                        <Icon name='text cursor' />
+                        Rename
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+                          <Checkbox
+                            label='Autosave'
+                            onChange={(e, data) => setAutosave(data.checked)}
+                            checked={autosave}
+                          />
+                        } />
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item onClick={downloadMap}>
+                        <Icon name='download' />
+                        Download
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={uploadMapInit}>
+                        <Icon name='upload' />
+                        Upload
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item onClick={() => {
+                        setConfirm({
+                          open: true,
+                          header: 'Confirm Map Delete',
+                          message: 'Are you sure you want to delete your map?',
+                          func: deleteMap,
+                        })
+                      } }>
+                        <Icon name='trash alternative' />
+                        Delete
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Menu>
+
+                <Menu.Menu>
+                  <Dropdown simple text='View' icon=''>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show menu'
+                          onChange={(e, data) => setShowMenu(data.checked)}
+                          checked={showMenu}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show opener'
+                          onChange={(e, data) => setShowOpener(data.checked)}
+                          checked={showOpener}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show file controls'
+                          onChange={(e, data) => setShowFile(data.checked)}
+                          checked={showFile}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show layout controls'
+                          onChange={(e, data) => setShowLayout(data.checked)}
+                          checked={showLayout}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show color controls'
+                          onChange={(e, data) => setShowColors(data.checked)}
+                          checked={showColors}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show execution controls'
+                          onChange={(e, data) => setShowExecution(data.checked)}
+                          checked={showExecution}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show slide controls'
+                          onChange={(e, data) => setShowSlides(data.checked)}
+                          checked={showSlides}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show slides deck sidebar'
+                          checked={deckSidebar}
+                          onChange={(e, data) => setDeckSidebar(data.checked)}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show mini map'
+                          onChange={(e, data) => setShowMinimap(data.checked)}
+                          checked={showMinimap}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label='Show control panel'
+                          onChange={(e, data) => setShowPanel(data.checked)}
+                          checked={showPanel}
+                        />
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Menu>
+
+                <Menu.Menu>
+                  <Dropdown simple text='Settings' icon=''>
+                    <Dropdown.Menu>
+                      <Dropdown text='Code viewer theme' pointing='left' className='link item'>
+                        <Dropdown.Menu>
+                          { Object.keys(editorThemes).map((thm) => {
+                            if (thm === '-' || thm === '--') {
+                              return (
+                                <Dropdown.Divider />
+                              )
+                            }
+                            return (
+                              <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
+                                <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
+                                {thm}
+                              </Dropdown.Item>
+                            )
+                          } ) }
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      <Dropdown text='Code editor theme' pointing='left' className='link item'>
+                        <Dropdown.Menu>
+                          { Object.keys(editorThemes).map((thm) => {
+                            if (thm === '-' || thm === '--') {
+                              return (
+                                <Dropdown.Divider />
+                              )
+                            }
+                            return (
+                              <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
+                                <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
+                                {thm}
+                              </Dropdown.Item>
+                            )
+                          } ) }
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      <Dropdown text='Code editor mode' pointing='left' className='link item'>
+                        <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => { setVimMode(false) } }>
+                            <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
+                            Normal
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => { setVimMode(true) } }>
+                            <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
+                            Vim
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      <Dropdown text='Markdown editor options' pointing='left' className='link item'>
+                        <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
+                            <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
+                            Markdown editor (light)
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
+                            <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
+                            Markdown editor (dark)
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
+                            <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
+                            Code editor
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
+                            <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
+                            Code editor with preview
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Menu>
+              </Menu>
+            </>) }
+          </Menu.Header>
+        </Menubar>
       </Container>
 
       <Modal
@@ -3093,567 +3335,332 @@ function Map () {
         </Modal.Actions>
       </Modal>
 
-      <div style={{ marginLeft: '1em', marginTop: '0.3em' , marginBottom: '0.3em' }}>
+      { showFile && (<>
         {' '} {' '}
-        { !showMenu && (
-          <Button.Group>
-            <Popup
-              content={(!showMenu ? 'Show' : 'Hide') + ' menu' }
-              trigger={
-                <Button
-                  icon basic
-                  onClick={(e, data) => setShowMenu(!showMenu)}
-                >
-                  <Icon name={'bars'}
-                    color={showMenu ? 'grey' : 'standard'}
-                  />
-                </Button>
-              }
-            />
-          </Button.Group>
-        )}
-        { showMenu && (<>
-          <Menu compact secondary>
-            <Menu.Menu>
-              <Dropdown simple text='File' icon=''>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={postMap}>
-                    <Icon name='file' />
-                    New
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={putMap}>
-                    <Icon name='save' />
-                    Save
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
-                    <Icon name='clone' />
-                    Duplicate
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
-                    <Icon name='text cursor' />
-                    Rename
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item>
-                    <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
-                      <Checkbox
-                        label='Autosave'
-                        onChange={(e, data) => setAutosave(data.checked)}
-                        checked={autosave}
-                      />
-                    } />
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={downloadMap}>
-                    <Icon name='download' />
-                    Download
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={uploadMapInit}>
-                    <Icon name='upload' />
-                    Upload
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={() => {
-                    setConfirm({
-                      open: true,
-                      header: 'Confirm Map Delete',
-                      message: 'Are you sure you want to delete your map?',
-                      func: deleteMap,
-                    })
-                  } }>
-                    <Icon name='trash alternative' />
-                    Delete
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
+        <Button.Group>
+          <Popup content='Create a new map' trigger={
+            <Button icon onClick={postMap}>
+              <Icon name='file' />
+            </Button>
+          } />
+          <Popup content='Save the map' trigger={
+            <Button icon onClick={putMap}>
+              <Icon name='save' />
+            </Button>
+          } />
+          } />
+          <Popup content='Duplicate the map' trigger={
+            <Button icon onClick={() => postMap({ duplicate: true })}>
+              <Icon name='clone' />
+            </Button>
+          } />
+          <Popup content='Delete the map' trigger={
+            <Button icon onClick={() => {
+              setConfirm({
+                open: true,
+                header: 'Confirm Map Delete',
+                message: 'Are you sure you want to delete your map?',
+                func: deleteMap,
+              })
+            } }>
+              <Icon name='trash alternate' />
+            </Button>
+          } />
+          <Popup content='Download the map' trigger={
+            <Button icon onClick={downloadMap}>
+              <Icon name='download' />
+            </Button>
+          } />
+          <Popup content='Upload the map' trigger={
+            <Button icon onClick={uploadMapInit}>
+              <Icon name="upload" />
+              <input
+                type="file"
+                accept="application/json"
+                ref={fileInputRef}
+                onChange={uploadMap}
+                style={{ display: 'none' }} // hide input
+              />
+            </Button>
+          } />
+          <Popup content='Rename the map' trigger={
+            <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
+              <Icon name='text cursor' />
+            </Button>
+          } />
+        </Button.Group>
+        {' '}
+      </>)}
 
-            <Menu.Menu>
-              <Dropdown simple text='View' icon=''>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show menu'
-                      onChange={(e, data) => setShowMenu(data.checked)}
-                      checked={showMenu}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show opener'
-                      onChange={(e, data) => setShowOpener(data.checked)}
-                      checked={showOpener}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show file controls'
-                      onChange={(e, data) => setShowFile(data.checked)}
-                      checked={showFile}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show layout controls'
-                      onChange={(e, data) => setShowLayout(data.checked)}
-                      checked={showLayout}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show color controls'
-                      onChange={(e, data) => setShowColors(data.checked)}
-                      checked={showColors}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show execution controls'
-                      onChange={(e, data) => setShowExecution(data.checked)}
-                      checked={showExecution}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show slide controls'
-                      onChange={(e, data) => setShowSlides(data.checked)}
-                      checked={showSlides}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show slides deck sidebar'
-                      checked={deckSidebar}
-                      onChange={(e, data) => setDeckSidebar(data.checked)}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show mini map'
-                      onChange={(e, data) => setShowMinimap(data.checked)}
-                      checked={showMinimap}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Checkbox
-                      label='Show control panel'
-                      onChange={(e, data) => setShowPanel(data.checked)}
-                      checked={showPanel}
-                    />
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
-
-            <Menu.Menu>
-              <Dropdown simple text='Settings' icon=''>
-                <Dropdown.Menu>
-                  <Dropdown text='Code viewer theme' pointing='left' className='link item'>
-                    <Dropdown.Menu>
-                      { Object.keys(editorThemes).map((thm) => {
-                        if (thm === '-' || thm === '--') {
-                          return (
-                            <Dropdown.Divider />
-                          )
-                        }
-                        return (
-                          <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
-                            <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
-                            {thm}
-                          </Dropdown.Item>
-                        )
-                      } ) }
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown text='Code editor theme' pointing='left' className='link item'>
-                    <Dropdown.Menu>
-                      { Object.keys(editorThemes).map((thm) => {
-                        if (thm === '-' || thm === '--') {
-                          return (
-                            <Dropdown.Divider />
-                          )
-                        }
-                        return (
-                          <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
-                            <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
-                            {thm}
-                          </Dropdown.Item>
-                        )
-                      } ) }
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown text='Code editor mode' pointing='left' className='link item'>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => { setVimMode(false) } }>
-                        <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
-                        Normal
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => { setVimMode(true) } }>
-                        <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
-                        Vim
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown text='Markdown editor options' pointing='left' className='link item'>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
-                        <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
-                        Markdown editor (light)
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
-                        <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
-                        Markdown editor (dark)
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
-                        <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
-                        Code editor
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
-                        <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
-                        Code editor with preview
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Menu>
-          </Menu>
-        </>) }
-
-        { showFile && (<>
-          {' '} {' '}
-          <Button.Group>
-            <Popup content='Create a new map' trigger={
-              <Button icon onClick={postMap}>
-                <Icon name='file' />
-              </Button>
-            } />
-            <Popup content='Save the map' trigger={
-              <Button icon onClick={putMap}>
-                <Icon name='save' />
-              </Button>
-            } />
-            } />
-            <Popup content='Duplicate the map' trigger={
-              <Button icon onClick={() => postMap({ duplicate: true })}>
-                <Icon name='clone' />
-              </Button>
-            } />
-            <Popup content='Delete the map' trigger={
-              <Button icon onClick={() => {
-                setConfirm({
-                  open: true,
-                  header: 'Confirm Map Delete',
-                  message: 'Are you sure you want to delete your map?',
-                  func: deleteMap,
-                })
-              } }>
-                <Icon name='trash alternate' />
-              </Button>
-            } />
-            <Popup content='Download the map' trigger={
-              <Button icon onClick={downloadMap}>
-                <Icon name='download' />
-              </Button>
-            } />
-            <Popup content='Upload the map' trigger={
-              <Button icon onClick={uploadMapInit}>
-                <Icon name="upload" />
-                <input
-                  type="file"
-                  accept="application/json"
-                  ref={fileInputRef}
-                  onChange={uploadMap}
-                  style={{ display: 'none' }} // hide input
-                />
-              </Button>
-            } />
-            <Popup content='Rename the map' trigger={
-              <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
-                <Icon name='text cursor' />
-              </Button>
-            } />
-          </Button.Group>
-          {' '}
-        </>)}
-
+      { renaming && (<>
         <span style={{ marginLeft: '1em' }} />
-        { renaming && (<>
-          {' '}
-          <Input
-            iconPosition='left'
-            placeholder='Title...'
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setRenaming(renaming => !renaming)
-              }
-              if (e.key === 'Escape') {
-                setRenaming(renaming => !renaming)
-                setTitle(getMap(mapId).title)
-              }
+        {' '}
+        <Input
+          iconPosition='left'
+          placeholder='Title...'
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setRenaming(renaming => !renaming)
+            }
+            if (e.key === 'Escape') {
+              setRenaming(renaming => !renaming)
+              setTitle(getMap(mapId).title)
+            }
+          }}
+        ><Icon name='map' /><input /></Input>
+        {' '}
+        <Button.Group>
+          <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
+            <Icon name='check' />
+          </Button>
+          <Button.Or />
+          <Button icon
+            onClick={() => {
+              setRenaming(renaming => !renaming)
+              setTitle(getMap(mapId).title)
             }}
-          ><Icon name='map' /><input /></Input>
-          {' '}
-          <Button.Group>
-            <Button icon positive onClick={() => {setRenaming(renaming => !renaming)}}>
-              <Icon name='check' />
-            </Button>
-            <Button.Or />
-            <Button icon
-              onClick={() => {
-                setRenaming(renaming => !renaming)
-                setTitle(getMap(mapId).title)
-              }}
-            >
-              <Icon name='cancel' />
-            </Button>
-          </Button.Group>
-        </>)}
-        { !renaming && showOpener && (<>
-          {' '}
-          <Icon name='folder open outline' />
-          <Popup content='Select a map to open' trigger={
-            <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
-              <Dropdown.Menu>
-                <Input
-                  icon='search' iconPosition='left' className='search'
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => setOpenerSearch(e.target.value)}
-                />
-                <Dropdown.Header icon='map' content='Maps:' />
-                <Dropdown.Menu scrolling>
-                  {maps
-                    .filter(({ title }) => title.includes(openerSearch))
-                    .map(({ _id, title }) => (
-                      <Dropdown.Item
-                        key={_id} value={_id} text={title}
-                        active={_id === mapId}
-                        onClick={(e, { value }) => {
-                          setMapId(value)
-                          const map = getMap(value)
-                          setTitle(map?.title)
-                          const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
-                          setNodes(map.flow.nodes || []);
-                          setEdges(map.flow.edges || []);
-                          setViewport({ x, y, zoom });
-                          console.log(`Map ${map?.title} loaded with flow:`, map.flow);
-                        } }
-                      />
-                    ))
-                  }
-                </Dropdown.Menu>
+          >
+            <Icon name='cancel' />
+          </Button>
+        </Button.Group>
+      </>)}
+      { !renaming && showOpener && (<>
+        {' '}
+        <Icon name='folder open outline' />
+        <Popup content='Select a map to open' trigger={
+          <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
+            <Dropdown.Menu>
+              <Input
+                icon='search' iconPosition='left' className='search'
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => setOpenerSearch(e.target.value)}
+              />
+              <Dropdown.Header icon='map' content='Maps:' />
+              <Dropdown.Menu scrolling>
+                {maps
+                  .filter(({ title }) => title.includes(openerSearch))
+                  .map(({ _id, title }) => (
+                    <Dropdown.Item
+                      key={_id} value={_id} text={title}
+                      active={_id === mapId}
+                      onClick={(e, { value }) => {
+                        setMapId(value)
+                        const map = getMap(value)
+                        setTitle(map?.title)
+                        const { x = 0, y = 0, zoom = 1 } = map.flow.viewport;
+                        setNodes(map.flow.nodes || []);
+                        setEdges(map.flow.edges || []);
+                        setViewport({ x, y, zoom });
+                        console.log(`Map ${map?.title} loaded with flow:`, map.flow);
+                      } }
+                    />
+                  ))
+                }
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown.Menu>
+          </Dropdown>
+        } />
+      </>)}
+
+      { showLayout && (<>
+        {' '}
+        <Button.Group>
+          <Popup content='Top-to-bottom layout' trigger={
+            <Button icon basic onClick={() => onLayout('TB')}>
+              <Icon name='grid layout' />
+            </Button>
           } />
-        </>)}
+          <Popup content='Left-to-right layout' trigger={
+            <Button icon basic onClick={() => onLayout('LR')}>
+              <Icon name='list layout' />
+            </Button>
+          } />
+        </Button.Group>
+      </>)}
 
-        { showLayout && (<>
-          {' '}
-          <Button.Group>
-            <Popup content='Top-to-bottom layout' trigger={
-              <Button icon basic onClick={() => onLayout('TB')}>
-                <Icon name='grid layout' />
-              </Button>
-            } />
-            <Popup content='Left-to-right layout' trigger={
-              <Button icon basic onClick={() => onLayout('LR')}>
-                <Icon name='list layout' />
-              </Button>
-            } />
-          </Button.Group>
-        </>)}
-
-        { showColors && (<>
-          {' '} {' '}
-          <Popup content='Apply text color to selected notes' trigger={
-            <Icon name='font' color='grey' onClick={() => {
+      { showColors && (<>
+        {' '} {' '}
+        <Popup content='Apply text color to selected notes' trigger={
+          <Icon name='font' color='grey' onClick={() => {
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.selected ? { ...node, data: { ...node.data, color } } : node
+              )
+            )
+          }} />
+        } />
+        <Popup content='Select text color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              console.log('color:', e.target.value)
+              setColor(e.target.value)
               setNodes((nodes) =>
                 nodes.map((node) =>
-                  node.selected ? { ...node, data: { ...node.data, color } } : node
+                  node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
                 )
               )
-            }} />
-          } />
-          <Popup content='Select text color' trigger={
-            <input
-              className="nodrag"
-              type="color"
-              onChange={(e) => {
-                console.log('color:', e.target.value)
-                setColor(e.target.value)
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.selected ? { ...node, data: { ...node.data, color: e.target.value } } : node
-                  )
-                )
-              } }
-              value={color}
-            />
-          } />
-          {' '}
-          <Popup content='Apply background color to selected notes' trigger={
-            <Icon name='paint brush' color='grey' onClick={() => {
+            } }
+            value={color}
+          />
+        } />
+        {' '}
+        <Popup content='Apply background color to selected notes' trigger={
+          <Icon name='paint brush' color='grey' onClick={() => {
+            setNodes((nodes) =>
+              nodes.map((node) =>
+                node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
+              )
+            )
+          }} />
+        } />
+        <Popup content='Select background color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              setBackgroundColor(e.target.value)
               setNodes((nodes) =>
                 nodes.map((node) =>
-                  node.selected ? { ...node, data: { ...node.data, backgroundColor } } : node
+                  node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
                 )
               )
-            }} />
-          } />
-          <Popup content='Select background color' trigger={
-            <input
-              className="nodrag"
-              type="color"
-              onChange={(e) => {
-                setBackgroundColor(e.target.value)
-                setNodes((nodes) =>
-                  nodes.map((node) =>
-                    node.selected ? { ...node, data: { ...node.data, backgroundColor: e.target.value } } : node
-                  )
-                )
-              } }
-              value={backgroundColor}
-            />
-          } />
-          {' '}
-          <Popup content='Apply edge color to selected notes' trigger={
-            <Icon name='linkify' color='grey' onClick={() => {
+            } }
+            value={backgroundColor}
+          />
+        } />
+        {' '}
+        <Popup content='Apply edge color to selected notes' trigger={
+          <Icon name='linkify' color='grey' onClick={() => {
+            setEdges((edges) =>
+              edges.map((edge) =>
+                edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+              )
+            );
+          }} />
+        } />
+        <Popup content='Select edge color' trigger={
+          <input
+            className="nodrag"
+            type="color"
+            onChange={(e) => {
+              setStroke(e.target.value)
               setEdges((edges) =>
                 edges.map((edge) =>
-                  edge.selected ? { ...edge, data: { ...edge.data, stroke }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
+                  edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
                 )
               );
-            }} />
-          } />
-          <Popup content='Select edge color' trigger={
-            <input
-              className="nodrag"
-              type="color"
-              onChange={(e) => {
-                setStroke(e.target.value)
-                setEdges((edges) =>
-                  edges.map((edge) =>
-                    edge.selected ? { ...edge, data: { ...edge.data, stroke: e.target.value }, markerEnd: { ...edge.markerEnd, color: stroke } } : edge
-                  )
-                );
-              } }
-              value={stroke}
-            />
-          } />
-          {' '}
-          <Popup content='Select text, background and edge colors by default' trigger={
-            <Icon name='history' color='grey' onClick={() => {
-              setColor(defaultColor)
-              setBackgroundColor(defaultBackgroundColor)
-              setStroke(defaultStroke)
-            }} />
-          } />
-        </>)}
+            } }
+            value={stroke}
+          />
+        } />
+        {' '}
+        <Popup content='Select text, background and edge colors by default' trigger={
+          <Icon name='history' color='grey' onClick={() => {
+            setColor(defaultColor)
+            setBackgroundColor(defaultBackgroundColor)
+            setStroke(defaultStroke)
+          }} />
+        } />
+      </>)}
 
-        { showExecution && (<>
-          {' '} {' '}
-          <Button.Group>
-            <Popup content='Reorder edges' trigger={
-              <Button icon basic onClick={orderEdges}>
-                <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
+      { showExecution && (<>
+        {' '} {' '}
+        <Button.Group>
+          <Popup content='Reorder edges' trigger={
+            <Button icon basic onClick={orderEdges}>
+              <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
+            </Button>
+          } />
+          {playing ? (
+            <>
+              {pausing ? (
+                <Popup content='Resume running the map' trigger={
+                  <Button icon basic onClick={pauseMap}>
+                    <Icon name='play' color='yellow' />
+                  </Button>
+                } />
+              ) : (
+                <Popup content='Pause running the map' trigger={
+                  <Button icon basic onClick={pauseMap}>
+                    <Icon name='pause' color='yellow' />
+                  </Button>
+                } />
+              )}
+            </>
+          ) : (
+            <Popup content='Run the map' trigger={
+              <Button icon basic onClick={playMap}>
+                <Icon name='play' color='green' />
               </Button>
             } />
-            {playing ? (
-              <>
-                {pausing ? (
-                  <Popup content='Resume running the map' trigger={
-                    <Button icon basic onClick={pauseMap}>
-                      <Icon name='play' color='yellow' />
-                    </Button>
-                  } />
-                ) : (
-                  <Popup content='Pause running the map' trigger={
-                    <Button icon basic onClick={pauseMap}>
-                      <Icon name='pause' color='yellow' />
-                    </Button>
-                  } />
-                )}
-              </>
-            ) : (
-              <Popup content='Run the map' trigger={
-                <Button icon basic onClick={playMap}>
-                  <Icon name='play' color='green' />
-                </Button>
-              } />
-            )}
-            <Popup content='Step forward' trigger={
-              <Button icon basic onClick={stepMap}>
-                <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
-              </Button>
-            } />
-            <Popup content='Stop running the map' trigger={
-              <Button icon basic onClick={stopMap} disabled={!playing}>
-                <Icon name='stop' color='red' disabled={!playing} />
-              </Button>
-            } />
-          </Button.Group>
-        </>)}
+          )}
+          <Popup content='Step forward' trigger={
+            <Button icon basic onClick={stepMap}>
+              <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
+            </Button>
+          } />
+          <Popup content='Stop running the map' trigger={
+            <Button icon basic onClick={stopMap} disabled={!playing}>
+              <Icon name='stop' color='red' disabled={!playing} />
+            </Button>
+          } />
+        </Button.Group>
+      </>)}
 
-        { showSlides && (<>
-          {' '} {' '}
-          <Button.Group>
-            <Popup
-              content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
-              trigger={
-                <Button
-                  icon basic
-                  onClick={(e, data) => setDeckSidebar(!deckSidebar)}
-                >
-                  <Icon name={deckSidebar ? 'images' : 'images outline'}
-                    color={deckSidebar ? 'blue' : 'standard'}
-                  />
-                </Button>
-              }
-            />
-            <Popup content='Previous slide' trigger={
-              <Button icon basic onClick={previousSlide}>
-                <Icon name='caret square left outline' color='blue' />
+      { showSlides && (<>
+        {' '} {' '}
+        <Button.Group>
+          <Popup
+            content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
+            trigger={
+              <Button
+                icon basic
+                onClick={(e, data) => setDeckSidebar(!deckSidebar)}
+              >
+                <Icon name={deckSidebar ? 'images' : 'images outline'}
+                  color={deckSidebar ? 'blue' : 'standard'}
+                />
               </Button>
-            } />
-            <Popup content='Next slide' trigger={
-              <Button icon basic onClick={nextSlide}>
-                <Icon name='caret square right outline' color='blue' />
-              </Button>
-            } />
-          </Button.Group>
-        </>)}
-
-      </div>
+            }
+          />
+          <Popup content='Previous slide' trigger={
+            <Button icon basic onClick={previousSlide}>
+              <Icon name='caret square left outline' color='blue' />
+            </Button>
+          } />
+          <Popup content='Next slide' trigger={
+            <Button icon basic onClick={nextSlide}>
+              <Icon name='caret square right outline' color='blue' />
+            </Button>
+          } />
+        </Button.Group>
+      </>)}
 
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
           negative
-          style={{ textAlign: 'left'}}
           icon='exclamation circle'
           header='Error'
           content={responseError}
           onDismiss={() => setResponseError('')}
+          style={{
+            textAlign: 'left',
+          }}
         />
       }
 
-      <Sidebar.Pushable as={Segment}>
+      <Sidebar.Pushable>
         <Sidebar
           as={Menu}
-          // animation='overlay'
-          // animation='push'
-          // animation='scale down'
-          // animation='uncover'
-          // animation='slide out'
-          animation='slide along'
+          animation='overlay'
           icon='labeled'
-          // inverted
-          onHide={() => setDeckSidebar(false)}
+          inverted
+          // onHide={() => setDeckSidebar(false)}
           vertical
           width='thin'
           visible={deckSidebar}

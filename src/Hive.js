@@ -397,10 +397,12 @@ const Hive = () => {
     fileInputRef.current.click(); // triggers hidden input
   };
 
-  return (
-    <Container>
+  return (<>
+    <Container fluid>
       <Menubar />
+    </Container>
 
+    <Container style={{ marginTop: '1rem' }}>
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
@@ -649,7 +651,7 @@ const Hive = () => {
         ))}
       </Grid>
     </Container>
-  )
+  </>)
 }
 
 export default Hive

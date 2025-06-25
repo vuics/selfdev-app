@@ -9,7 +9,7 @@ import {
 import conf from '../conf.js'
 import Logo from './Logo'
 
-const Menubar = () => {
+export default function Menubar ({ children }) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -17,7 +17,7 @@ const Menubar = () => {
     localStorage.getItem('user.lastName')
 
   return (
-    <Menu size='tiny'>
+    <Menu size='tiny' fixed>
       <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
         <Logo size='milli' gray />
         {'\u00A0'}
@@ -96,6 +96,8 @@ const Menubar = () => {
         </Menu.Item>
       ) }
 
+      {children}
+
       <Menu.Menu position='right'>
         <Dropdown item
           text={name+'\u00A0\u00A0'}
@@ -138,4 +140,3 @@ const Menubar = () => {
     </Menu>
   )
 }
-export default Menubar

@@ -33,8 +33,8 @@ const conf = {
   },
 
   iframe: {
-    topOffset: num(process.env.REACT_APP_IFRAME_TOP_OFFSET || 50),
-    bottomOffset: num(process.env.REACT_APP_IFRAME_TOP_OFFSET || 50),
+    topOffset: num(process.env.REACT_APP_IFRAME_TOP_OFFSET || 40),
+    bottomOffset: num(process.env.REACT_APP_IFRAME_BOTTOM_OFFSET || 0),
   },
 
   account: {

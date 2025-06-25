@@ -529,7 +529,7 @@ export default function Chat () {
         </Helmet>
       )}
 
-      <Container>
+      <Container fluid>
         <Menubar />
       </Container>
 
