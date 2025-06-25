@@ -91,8 +91,9 @@ export default function Mobile () {
 
               <Image src='/images/qr/eas-update.svg' size='small' centered />
               <p style={{ textAlign: 'center' }}>
-                <strong>Runtime Version:</strong> 1.0.0<br />
-                <strong>Published:</strong> May 24, 2025 – 4:37 PM
+                <strong>Runtime Version:</strong> 1.18.3
+                <br />
+                <strong>Published:</strong> Jun 25, 2025 8:00 PM
               </p>
             </Segment>
 
