@@ -6,18 +6,21 @@ import {
   Header,
   List,
   Icon,
+  // Divider,
 } from 'semantic-ui-react'
 
 import conf from '../conf.js'
 import Logo from './Logo'
+import Qr from './Qr'
 
-const Footer = () => {
+export default function Footer () {
   return (<>
     <Segment inverted vertical style={{ padding: '5em 0em' }}>
       <Container>
         <Grid divided inverted stackable>
+
           <Grid.Row>
-            <Grid.Column width={5}>
+            <Grid.Column width={4}>
               <Header inverted as='h3' style={{ margin: 0 }}>
                 <div style={{
                   display: 'flex',
@@ -84,11 +87,12 @@ const Footer = () => {
                 )}
               </List>
             </Grid.Column>
-            <Grid.Column width={5}>
+
+            <Grid.Column width={4}>
               <Header inverted as='h4'>
                 <Header.Content>
-                  <Icon inverted color='grey' name='info circle' />
-                  Info
+                  <Icon inverted name='info circle' />
+                  Platform
                 </Header.Content>
               </Header>
               <List link inverted>
@@ -132,14 +136,15 @@ const Footer = () => {
                 )}
               </List>
             </Grid.Column>
-            <Grid.Column width={6}>
+
+            <Grid.Column width={4}>
               <Header inverted as='h4'>
                 <Header.Content>
-                  <Icon inverted color='grey' name='university' />
+                  <Icon inverted name='university' />
                   About Us
                 </Header.Content>
                 <Header.Subheader style={{ color: 'gray' }}>
-                  Self-developing {conf.app.name} is uniquely tailored to your business needs.
+                  Self-developing {conf.app.name} is tailoring to your unique business needs.
                 </Header.Subheader>
               </Header>
               <List link inverted>
@@ -171,7 +176,27 @@ const Footer = () => {
                 )}
               </List>
             </Grid.Column>
+
+            <Grid.Column width={4}>
+              <div style={{ color: 'grey', textAlign: 'center' }}>
+                <Header inverted as='h4'>
+                  <Header.Content>
+                    <Icon link inverted name='qrcode' />
+                    Share
+                  </Header.Content>
+                  <Header.Subheader style={{ color: 'gray' }}>
+                    QR Code for Home
+                    {' '}
+                    <Icon color='gray' name='home' />
+                  </Header.Subheader>
+                </Header>
+                <Qr src={'/images/qr/qr-home.svg'} modal />
+                <br/>
+                Tap QR for full screen
+              </div>
+            </Grid.Column>
           </Grid.Row>
+
         </Grid>
       </Container>
     </Segment>
@@ -197,4 +222,3 @@ const Footer = () => {
     </Segment>
   </>)
 }
-export default Footer

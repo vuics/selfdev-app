@@ -1,11 +1,11 @@
 import {
   Divider,
   Header,
-  Image,
   Segment,
   Icon,
   Button,
   List,
+  // Image,
   // Container,
   // Card,
 } from 'semantic-ui-react'
@@ -19,6 +19,7 @@ import {
   dotsSize,
 } from './components/patterns'
 import { useIsMobile } from './components/Media'
+import Qr from './components/Qr'
 
 export default function Mobile () {
   const isMobile = useIsMobile()
@@ -89,7 +90,7 @@ export default function Mobile () {
                 Then scan the QR code below to open our app in Expo:
               </p>
 
-              <Image src='/images/qr/eas-update.svg' size='small' centered />
+              <Qr src='/images/qr/eas-update.svg' size='medium' modal />
               <p style={{ textAlign: 'center' }}>
                 <strong>Runtime Version:</strong> 1.18.4
                 <br />
