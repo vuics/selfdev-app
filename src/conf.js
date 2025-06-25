@@ -6,7 +6,6 @@ const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 const conf = {
   app: {
     name: process.env.REACT_APP_NAME || 'HyperAgency',
-    // name: process.env.REACT_APP_NAME || 'Selfdev',
   },
 
   contact: {
@@ -20,7 +19,7 @@ const conf = {
 
   api: {
     url: process.env.REACT_APP_API_URL || 'http://localhost:6369/v1',
-    // url: process.env.REACT_APP_API_URL || 'https://api.selfdev.vuics.com/v1',
+    // url: process.env.REACT_APP_API_URL || 'https://api.hyag.org/v1',
     // url: process.env.REACT_APP_API_URL || 'http://localhost:8080/v1',
   },
 
@@ -140,7 +139,7 @@ const conf = {
 
   mobile: {
     enable: bool(process.env.REACT_APP_MOBILE_ENABLE || true),
-    webAppUrl: process.env.REACT_APP_MOBILE_WEB_APP_URL || 'https://mobile.selfdev.vuics.com/',
+    webAppUrl: process.env.REACT_APP_MOBILE_WEB_APP_URL || 'https://m.hyag.org/',
   },
 
   team: {
