@@ -36,7 +36,7 @@ export default function Team () {
               <Header.Content>
                 Team
                 <Header.Subheader>
-                  A solo-founder with very strong business, technology, psychology background.
+                  A diverse leadership team with deep expertise across business, technology, and psychology.
                 </Header.Subheader>
               </Header.Content>
             </Header>
@@ -52,7 +52,7 @@ export default function Team () {
                       Artem Arakcheev, PhD, DBA
                     </Card.Header>
                     <Card.Meta>
-                      Founder
+                      Founder, CTO
                     </Card.Meta>
                     <Card.Description>
                       Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.
@@ -65,6 +65,33 @@ export default function Team () {
                     <a href="https://github.com/alphara">
                       <Icon size='big' name='github' />
                     </a>
+                  </Card.Content>
+                </Card>
+                <Card>
+                  <Image src='/images/team/kate-melnikova.jpg' wrapped />
+                  <Card.Content>
+                    <Card.Header>
+                      Kate Melnikova
+                    </Card.Header>
+                    <Card.Meta>
+                      HR Director
+                    </Card.Meta>
+                    <Card.Description>
+                      Kate Melnikova leads with empathy and vision, bringing together expertise in psychology, human capital strategy, and art direction. She cultivates a strong team culture and actively represents the company at industry events, building meaningful connections.
+                    </Card.Description>
+                  </Card.Content>
+                  <Card.Content extra textAlign='center'>
+                    <a href="">
+                      <Icon size='big' name='star outline' color='grey' disabled/>
+                    </a>
+                    {/*
+                    <a href="">
+                      <Icon size='big' name='linkedin'/>
+                    </a>
+                    <a href="">
+                      <Icon size='big' name='github' />
+                    </a>
+                    */}
                   </Card.Content>
                 </Card>
               </Card.Group>
