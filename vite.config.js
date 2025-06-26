@@ -35,7 +35,7 @@ function devServerPlugin() {
         server: {
           host: HOST || "0.0.0.0",
           port: parseInt(PORT || "3000", 10),
-          open: true,
+          open: false,
           ...(https &&
             SSL_CRT_FILE &&
             SSL_KEY_FILE && {

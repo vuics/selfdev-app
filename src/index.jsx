@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import conf from './conf.js'
+import './i18n'
 import { IndexContext } from './components/IndexContext'
 
 // import App from './App'
