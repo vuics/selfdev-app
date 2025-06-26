@@ -973,7 +973,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
-    const errorHandler = (e: any) => {
+    const errorHandler = (e) => {
       if (e.message.includes("ResizeObserver loop completed with undelivered notifications" || "ResizeObserver loop limit exceeded")) {
         const resizeObserverErr = document.getElementById("webpack-dev-server-client-overlay");
         if (resizeObserverErr) {
@@ -3347,7 +3347,6 @@ function Map () {
             <Button icon onClick={putMap}>
               <Icon name='save' />
             </Button>
-          } />
           } />
           <Popup content='Duplicate the map' trigger={
             <Button icon onClick={() => postMap({ duplicate: true })}>

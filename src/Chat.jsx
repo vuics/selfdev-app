@@ -18,21 +18,21 @@ import conf from './conf'
 import { useWindowDimensions } from './helper.js'
 
 
-function ErrorFallback({ error, resetErrorBoundary }) {
-  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+// function ErrorFallback({ error, resetErrorBoundary }) {
+//   // Call resetErrorBoundary() to reset the error boundary and retry the render.
 
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre style={{ color: "red" }}>{error.message}</pre>
-    </div>
-  );
-}
+//   return (
+//     <div role="alert">
+//       <p>Something went wrong:</p>
+//       <pre style={{ color: "red" }}>{error.message}</pre>
+//     </div>
+//   );
+// }
 
-const logError = (error: Error, info: { componentStack: string }) => {
-  // Do something with the error, e.g. log to an external API
-  console.error("Chat Error Boundary:", error, ', info:', info)
-}
+// const logError = (error: Error, info: { componentStack: string }) => {
+//   // Do something with the error, e.g. log to an external API
+//   console.error("Chat Error Boundary:", error, ', info:', info)
+// }
 
 export function Pane ({ panel, width, height }) {
   // console.log('panel:', panel, ', width:', width, ', height:', height)
@@ -386,8 +386,10 @@ export default function Chat () {
 
 
   console.log('panels:', panels)
-  return (
+  return (<>
+   {/*
     <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+	 */}
       { credentials && (
         <Helmet>
           <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.min.css" />
@@ -557,6 +559,8 @@ export default function Chat () {
           <div ref={ (ref) => setConverseRoot(ref) } />
         )}
       </div>
+    {/*
     </ErrorBoundary>
-  )
+    */}
+  </>)
 }
