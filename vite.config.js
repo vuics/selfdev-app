@@ -12,17 +12,6 @@ export default defineConfig(({ mode }) => {
       react(),
       devServerPlugin(),
       svgr(),
-      // svgr({
-      //   svgo: true,
-      //   svgoConfig: {
-      //     plugins: [
-      //       {
-      //         name: 'removeViewBox',
-      //         active: false,
-      //       },
-      //     ],
-      //   },
-      // }),
     ],
     build: {
       sourcemap: true,
