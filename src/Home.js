@@ -20,11 +20,6 @@ import {
 } from 'semantic-ui-react'
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-// FIXME: delete?
-// import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
-// +    "react-scroll-parallax": "^3.4.5",
-// +    "react-spring": "^10.0.1",
-
 import { useIndexContext } from './components/IndexContext'
 import { MediaContextProvider, Media, useIsMobile } from './components/Media'
 import ResponsiveContainer from './components/ResponsiveContainer'
