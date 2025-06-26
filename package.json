@@ -64,7 +64,6 @@
     "serve:ssl": "serve -s build --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
     "build": "vite build --debug",
     "build:k8s": "vite build --debug --mode k8s",
-    "build:k8s--dotenv": "dotenv -f env.k8s -- vite build --debug",
     "dev": "vite"
   },
   "eslintConfig": {
