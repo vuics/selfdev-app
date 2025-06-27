@@ -2,6 +2,7 @@
   "name": "selfdev-web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@artsy/fresnel": "^8.1.0",
     "@codemirror/lang-markdown": "^6.3.2",
