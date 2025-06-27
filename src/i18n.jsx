@@ -87,7 +87,35 @@ const resources = {
       'Sign Up': 'Sign Up'
     },
     Signup: {
-      // TODO
+      'The password should satisfy the following criteria': 'The password should satisfy the following criteria',
+      'At least one upper case English letter.': 'At least one upper case English letter.',
+      'At least one lower case English letter.': 'At least one lower case English letter.',
+      'At least one digit.': 'At least one digit.',
+      'At least one special character.': 'At least one special character.',
+      'Minimum length is 8 characters.': 'Minimum length is 8 characters.',
+      'Passwords match.': 'Passwords match.',
+      'Please enter a valid first name': 'Please enter a valid first name',
+      'Please enter a valid last name': 'Please enter a valid last name',
+      'Please enter a valid email address': 'Please enter a valid email address',
+      'Please enter a valid phone': 'Please enter a valid phone',
+      'Please enter a valid password': 'Please enter a valid password',
+      'Please enter passwords that match': 'Please enter passwords that match',
+      'Error registering a user account.': 'Error registering a user account.',
+      'Create a New Account': 'Create a New Account',
+      'Error': 'Error',
+      'First Name': 'First Name',
+      'Last Name': 'Last Name',
+      'E-mail address': 'E-mail address',
+      'Phone (optionally)': 'Phone (optionally)',
+      'Password': 'Password',
+      'Repeat Password': 'Repeat Password',
+      'I have read and agree to the': 'I have read and agree to the',
+      'terms of service': 'terms of service',
+      'and': 'and',
+      'privacy policy': 'privacy policy',
+      'Sign Up': 'Sign Up',
+      'Have an existing account?': 'Have an existing account?',
+      'Log In': 'Log In',
     },
     Forgot: {
       'Please enter a valid email address': 'Please enter a valid email address',
@@ -101,7 +129,16 @@ const resources = {
       'Log In': 'Log In'
     },
     Reset: {
-      // TODO
+      'Please enter a valid password': 'Please enter a valid password',
+      'Please enter passwords that match': 'Please enter passwords that match',
+      'Error resetting a password.': 'Error resetting a password.',
+      'Reset Password': 'Reset Password',
+      'Error': 'Error',
+      'New Password': 'New Password',
+      'Repeat Password': 'Repeat Password',
+      'Reset password': 'Reset password',
+      'Remember password?': 'Remember password?',
+      'Log In': 'Log In'
     },
     Menubar: {
       'Hive': 'Hive',
@@ -347,7 +384,35 @@ const resources = {
       'Sign Up': 'Зарегистрироваться'
     },
     Signup: {
-      // TODO
+      'The password should satisfy the following criteria': 'Пароль должен соответствовать следующим требованиям',
+      'At least one upper case English letter.': 'Как минимум одна заглавная английская буква.',
+      'At least one lower case English letter.': 'Как минимум одна строчная английская буква.',
+      'At least one digit.': 'Как минимум одна цифра.',
+      'At least one special character.': 'Как минимум один специальный символ.',
+      'Minimum length is 8 characters.': 'Минимальная длина — 8 символов.',
+      'Passwords match.': 'Пароли совпадают.',
+      'Please enter a valid first name': 'Пожалуйста, введите корректное имя',
+      'Please enter a valid last name': 'Пожалуйста, введите корректную фамилию',
+      'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',
+      'Please enter a valid phone': 'Пожалуйста, введите корректный номер телефона',
+      'Please enter a valid password': 'Пожалуйста, введите корректный пароль',
+      'Please enter passwords that match': 'Пожалуйста, введите совпадающие пароли',
+      'Error registering a user account.': 'Ошибка при регистрации аккаунта.',
+      'Create a New Account': 'Создать новый аккаунт',
+      'Error': 'Ошибка',
+      'First Name': 'Имя',
+      'Last Name': 'Фамилия',
+      'E-mail address': 'Адрес электронной почты',
+      'Phone (optionally)': 'Телефон (необязательно)',
+      'Password': 'Пароль',
+      'Repeat Password': 'Повторите пароль',
+      'I have read and agree to the': 'Я прочитал(а) и согласен(на) с',
+      'terms of service': 'условиями обслуживания',
+      'and': 'и',
+      'privacy policy': 'политикой конфиденциальности',
+      'Sign Up': 'Зарегистрироваться',
+      'Have an existing account?': 'У вас уже есть аккаунт?',
+      'Log In': 'Войти',
     },
     Forgot: {
       'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',
@@ -361,7 +426,16 @@ const resources = {
       'Log In': 'Войти'
     },
     Reset: {
-      // TODO
+      'Please enter a valid password': 'Пожалуйста, введите корректный пароль',
+      'Please enter passwords that match': 'Пожалуйста, введите совпадающие пароли',
+      'Error resetting a password.': 'Ошибка при сбросе пароля.',
+      'Reset Password': 'Сбросить пароль',
+      'Error': 'Ошибка',
+      'New Password': 'Новый пароль',
+      'Repeat Password': 'Повторите пароль',
+      'Reset password': 'Сбросить пароль',
+      'Remember password?': 'Помните пароль?',
+      'Log In': 'Войти'
     },
     Menubar: {
       'Hive': 'Улей',

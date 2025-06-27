@@ -15,41 +15,44 @@ import {
   Divider,
   // Image,
 } from 'semantic-ui-react'
-import { validateEmail, validatePhone, validatePassword } from './validation'
-import { requestLogin } from './Login'
+import { useTranslation } from 'react-i18next'
 
 import conf from './conf'
+import { validateEmail, validatePhone, validatePassword } from './validation'
+import { requestLogin } from './Login'
 import Logo from './components/Logo'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
+  const { t } = useTranslation('Signup')
   return (
     <div style={{ textAlign: 'left' }}>
-      The password should satisfy the following criteria:
+      {t('The password should satisfy the following criteria')}:
       <List bulleted style={{marginTop: '0.5em' }}>
         <List.Item style={{ color: passwordValidation.upperCase ? 'green' : 'red'}}>
-          At least one upper case English letter.
+        {t('At least one upper case English letter.')}
         </List.Item>
         <List.Item style={{ color: passwordValidation.lowerCase ? 'green' : 'red'}}>
-          At least one lower case English letter.
+        {t('At least one lower case English letter.')}
         </List.Item>
         <List.Item style={{ color: passwordValidation.digit ? 'green' : 'red'}}>
-          At least one digit.
+        {t('At least one digit.')}
         </List.Item>
         <List.Item style={{ color: passwordValidation.special ? 'green' : 'red'}}>
-          At least one special character.
+        {t('At least one special character.')}
         </List.Item>
         <List.Item style={{ color: passwordValidation.length ? 'green' : 'red'}}>
-          Minimum length is 8 characters.
+        {t('Minimum length is 8 characters.')}
         </List.Item>
         <List.Item style={{ color: passwordsMatch ? 'green' : 'red'}}>
-          Passwords match.
+        {t('Passwords match.')}
         </List.Item>
       </List>
     </div>
   )
 }
 
-const Signup = () => {
+export default function Signup () {
+  const { t } = useTranslation('Signup')
   const navigate = useNavigate()
 
   const [ firstName, setFirstName ] = useState('')
@@ -74,37 +77,37 @@ const Signup = () => {
     let valid = true
     if (isEmpty(firstName)) {
       valid = false
-      setFirstNameError('Please enter a valid first name')
+      setFirstNameError(t('Please enter a valid first name'))
     } else {
       setFirstNameError('')
     }
     if (isEmpty(lastName)) {
       valid = false
-      setLastNameError('Please enter a valid last name')
+      setLastNameError(t('Please enter a valid last name'))
     } else {
       setLastNameError('')
     }
     if (!validateEmail(email)) {
       valid = false
-      setEmailError('Please enter a valid email address')
+      setEmailError(t('Please enter a valid email address'))
     } else {
       setEmailError('')
     }
     if (phone && !validatePhone(phone)) {
       valid = false
-      setPhoneError('Please enter a valid phone')
+      setPhoneError(t('Please enter a valid phone'))
     } else {
       setPhoneError('')
     }
     if (!(validatePassword(password)).valid) {
       valid = false
-      setPasswordError('Please enter a valid password')
+      setPasswordError(t('Please enter a valid password'))
     } else {
       setPasswordError('')
     }
     if (password !== repassword) {
       valid = false
-      setRepasswordError('Please enter passwords that match')
+      setRepasswordError(t('Please enter passwords that match'))
     } else {
       setRepasswordError('')
     }
@@ -132,7 +135,7 @@ const Signup = () => {
       navigate(conf.account.start)
     } catch (err) {
       console.error('signup error:', err);
-      return setResponseError(err?.response?.data?.message  || 'Error creating a user account.')
+      return setResponseError(err?.response?.data?.message  || t('Error registering a user account.'))
     } finally {
       setLoading(false)
     }
@@ -149,7 +152,9 @@ const Signup = () => {
             gap: '1rem',
           }}>
             <Logo size='tiny' gray />
-            <span>Create a New Account</span>
+            <span>
+              {t('Create a New Account')}
+            </span>
           </div>
         </Header>
 
@@ -159,7 +164,7 @@ const Signup = () => {
             negative
             style={{ textAlign: 'left'}}
             icon='exclamation circle'
-            header='Error'
+            header={t('Error')}
             content={responseError}
             onDismiss={() => setResponseError('')}
           />
@@ -170,7 +175,7 @@ const Signup = () => {
             <Form.Input fluid
               icon='user'
               iconPosition='left'
-              placeholder='First Name'
+              placeholder={t('First Name')}
               name='firstName'
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
@@ -184,7 +189,7 @@ const Signup = () => {
               fluid
               icon='user outline'
               iconPosition='left'
-              placeholder='Last Name'
+              placeholder={t('Last Name')}
               name='lastName'
               value={lastName}
               onChange={e => setLastName(e.target.value)}
@@ -198,7 +203,7 @@ const Signup = () => {
               fluid
               icon='at'
               iconPosition='left'
-              placeholder='E-mail address'
+              placeholder={t('E-mail address')}
               name='email'
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -212,7 +217,7 @@ const Signup = () => {
               fluid
               icon='phone'
               iconPosition='left'
-              placeholder='Phone (optionally)'
+              placeholder={t('Phone (optionally)')}
               name='phone'
               value={phone}
               onChange={e => setPhone(e.target.value)}
@@ -225,7 +230,7 @@ const Signup = () => {
               fluid
               icon='lock'
               iconPosition='left'
-              placeholder='Password'
+              placeholder={t('Password')}
               type='password'
               name='password'
               value={password}
@@ -240,7 +245,7 @@ const Signup = () => {
               fluid
               icon='repeat'
               iconPosition='left'
-              placeholder='Repeat Password'
+              placeholder={t('Repeat Password')}
               type='password'
               name='repassword'
               value={repassword}
@@ -262,10 +267,17 @@ const Signup = () => {
               <Form.Checkbox
                 label={
                   <label style={{ textAlign: 'left' }}>
-                    I have read and agree to the{' '}
-                    <a href="/terms" target="_blank">terms of service</a>
-                    {' '}and{' '}
-                    <a href="/privacy" target="_blank">privacy policy</a>
+                    {t('I have read and agree to the')}
+                    {' '}
+                    <a href="/terms" target="_blank">
+                      {t('terms of service')}
+                    </a>
+                    {' '}
+                    {t('and')}
+                    {' '}
+                    <a href="/privacy" target="_blank">
+                      {t('privacy policy')}
+                    </a>
                     .
                   </label>
                 }
@@ -276,19 +288,23 @@ const Signup = () => {
             </Form.Group>
             <Button color='black' fluid size='large' onClick={handleSubmit} disabled={!agree}>
               <Icon name='user plus' />
-              {' '}Sign Up{' '}
+              {' '}
+              {t('Sign Up')}
+              {' '}
             </Button>
           </Segment>
         </Form>
         <Message>
-          Have an existing account?{' '}
+          {t('Have an existing account?')}
+          {' '}
           <Button
             size='mini'
             style={{ marginLeft: '0.5em' }}
             onClick={() => navigate('/login')}
             icon labelPosition='right'
           >
-            Log In{' '}
+            {t('Log In')}
+            {' '}
             <Icon name='sign-in' />
           </Button>
         </Message>
@@ -296,5 +312,3 @@ const Signup = () => {
     </Grid>
   )
 }
-
-export default Signup

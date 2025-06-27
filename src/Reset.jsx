@@ -14,6 +14,7 @@ import {
   Divider,
   // Image,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
 
 import { validatePassword } from './validation'
 import { PasswordRequirements } from './Signup'
@@ -22,6 +23,7 @@ import conf from './conf'
 import Logo from './components/Logo'
 
 const Reset = () => {
+  const { t } = useTranslation('Reset')
   const [ searchParams, ] = useSearchParams()
   const token = searchParams.get("token")
   // console.log('token:', token)
@@ -41,13 +43,13 @@ const Reset = () => {
     let valid = true
     if (!(validatePassword(password)).valid) {
       valid = false
-      setPasswordError('Please enter a valid password')
+      setPasswordError(t('Please enter a valid password'))
     } else {
       setPasswordError('')
     }
     if (password !== repassword) {
       valid = false
-      setRepasswordError('Please enter passwords that match')
+      setRepasswordError(t('Please enter passwords that match'))
     } else {
       setRepasswordError('')
     }
@@ -74,7 +76,7 @@ const Reset = () => {
       navigate(conf.account.start)
     } catch (err) {
       console.error('reset error:', err);
-      return setResponseError(err?.response?.data?.message  || 'Error resetting a password.')
+      return setResponseError(err?.response?.data?.message  || t('Error resetting a password.'))
     } finally {
       setLoading(false)
     }
@@ -85,7 +87,7 @@ const Reset = () => {
       <Grid.Column style={{ maxWidth: 450 }}>
         <Logo size='large' gray />
         <Header as='h2' color='black' textAlign='center'>
-          Reset Password
+          {t('Reset Password')}
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
@@ -93,7 +95,7 @@ const Reset = () => {
             negative
             style={{ textAlign: 'left'}}
             icon='exclamation circle'
-            header='Error'
+            header={t('Error')}
             content={responseError}
             onDismiss={() => setResponseError('')}
           />
@@ -105,11 +107,14 @@ const Reset = () => {
               fluid
               icon='lock'
               iconPosition='left'
-              placeholder='New Password'
+              placeholder={t('New Password')}
               type='password'
               name='password'
               value={password}
-              onChange={e => { setPassword(e.target.value); setPasswordValidation(validatePassword(e.target.value)); }}
+              onChange={e => {
+                setPassword(e.target.value);
+                setPasswordValidation(validatePassword(e.target.value));
+              }}
               error={ !isEmpty(passwordError) && {
                 content: passwordError,
                 pointing: 'above',
@@ -120,7 +125,7 @@ const Reset = () => {
               fluid
               icon='repeat'
               iconPosition='left'
-              placeholder='Repeat Password'
+              placeholder={t('Repeat Password')}
               type='password'
               name='repassword'
               value={repassword}
@@ -140,19 +145,23 @@ const Reset = () => {
             <Divider />
             <Button color='black' fluid size='large' onClick={handleSubmit}>
               <Icon name='edit outline' />
-              {' '}Reset password{' '}
+              {' '}
+              {t('Reset password')}
+              {' '}
             </Button>
           </Segment>
         </Form>
         <Message>
-          Remember password?{' '}
+          {t('Remember password?')}
+          {' '}
           <Button
             size='mini'
             style={{ marginLeft: '0.5em' }}
             onClick={() => navigate('/login')}
             icon labelPosition='right'
           >
-            Log In{' '}
+            {t('Log In')}
+            {' '}
             <Icon name='sign-in' />
           </Button>
         </Message>
