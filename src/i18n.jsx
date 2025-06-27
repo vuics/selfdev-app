@@ -27,10 +27,10 @@ const resources = {
       "title1": "Supercharges Entrepreneurial Dreams",
       "subtitle": "Autopilot your business. Focus on what you love.",
       "subtitle1": `Powered by Self-developing ${conf.app.name}.`,
-
-      // Footer
+    },
+    Footer: {
       "select language": "Select language",
-    }
+    },
   },
   'ru-RU': {
     translation: {
@@ -41,7 +41,8 @@ const resources = {
       // "subtitle1": `Работает на базе саморазвивающегося ${conf.app.nameRu}.`,
       "subtitle1": `Работает на базе саморазвивающегося ${conf.app.name}.`,
 
-      // Footer
+    },
+    Footer: {
       "select language": "Выберите язык",
     }
   },
