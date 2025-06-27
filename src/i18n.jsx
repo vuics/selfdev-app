@@ -89,10 +89,18 @@ const resources = {
     Signup: {
       // TODO
     },
-    Reset: {
-      // TODO
-    },
     Forgot: {
+      'Please enter a valid email address': 'Please enter a valid email address',
+      'Error sending a reset link.': 'Error sending a reset link.',
+      'Forgot Password?': 'Forgot Password?',
+      'Error': 'Error',
+      'Info': 'Info',
+      'E-mail address': 'E-mail address',
+      'Email Me Reset Password Link': 'Email Me Reset Password Link',
+      'Remember password?': 'Remember password?',
+      'Log In': 'Log In'
+    },
+    Reset: {
       // TODO
     },
     Menubar: {
@@ -229,7 +237,6 @@ const resources = {
       'Microphone access denied or not available.': 'Microphone access denied or not available.',
       'Copy': 'Copy',
       'Paste': 'Paste',
-      'View': 'View',
       'Edit': 'Edit',
       'Attach file': 'Attach file',
       'Stop Recording': 'Stop Recording',
@@ -342,10 +349,18 @@ const resources = {
     Signup: {
       // TODO
     },
-    Reset: {
-      // TODO
-    },
     Forgot: {
+      'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',
+      'Error sending a reset link.': 'Ошибка при отправке ссылки для сброса пароля.',
+      'Forgot Password?': 'Забыли пароль?',
+      'Error': 'Ошибка',
+      'Info': 'Информация',
+      'E-mail address': 'Адрес электронной почты',
+      'Email Me Reset Password Link': 'Отправить ссылку для сброса пароля на почту',
+      'Remember password?': 'Помните пароль?',
+      'Log In': 'Войти'
+    },
+    Reset: {
       // TODO
     },
     Menubar: {
@@ -482,7 +497,6 @@ const resources = {
       'Microphone access denied or not available.': 'Доступ к микрофону запрещен или недоступен.',
       'Copy': 'Копировать',
       'Paste': 'Вставить',
-      // 'View': 'Просмотр',
       'Edit': 'Редактировать',
       'Attach file': 'Прикрепить файл',
       'Stop Recording': 'Остановить запись',

@@ -13,12 +13,14 @@ import {
   Loader,
   // Image,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
 
 import { validateEmail  } from './validation'
 import conf from './conf'
 import Logo from './components/Logo'
 
 const Forgot = () => {
+  const { t } = useTranslation('Forgot')
   const navigate = useNavigate()
 
   const [ email, setEmail ] = useState('')
@@ -32,7 +34,7 @@ const Forgot = () => {
     let valid = true
     if (!validateEmail(email)) {
       valid = false
-      setEmailError('Please enter a valid email address')
+      setEmailError(t('Please enter a valid email address'))
     } else {
       setEmailError('')
     }
@@ -54,7 +56,7 @@ const Forgot = () => {
       setResponseMessage(res.data.message)
     } catch (err) {
       console.error('forgot error:', err);
-      return setResponseError(err?.response?.data?.message  || 'Error sending a reset link.')
+      return setResponseError(err?.response?.data?.message  || t('Error sending a reset link.'))
     } finally {
       setLoading(false)
     }
@@ -65,7 +67,7 @@ const Forgot = () => {
       <Grid.Column style={{ maxWidth: 450 }}>
         <Logo size='large' gray />
         <Header as='h2' color='black' textAlign='center'>
-          Forgot Password?
+          {t('Forgot Password?')}
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
         { responseError &&
@@ -73,7 +75,7 @@ const Forgot = () => {
             negative
             style={{ textAlign: 'left'}}
             icon='exclamation circle'
-            header='Error'
+            header={t('Error')}
             content={responseError}
             onDismiss={() => setResponseError('')}
           />
@@ -83,7 +85,7 @@ const Forgot = () => {
             positive
             style={{ textAlign: 'left'}}
             icon='info circle'
-            header='Info'
+            header={t('Info')}
             content={responseMessage}
             onDismiss={() => setResponseMessage('')}
           />
@@ -95,7 +97,7 @@ const Forgot = () => {
               fluid
               icon='at'
               iconPosition='left'
-              placeholder='E-mail address'
+              placeholder={t('E-mail address')}
               name='email'
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -108,19 +110,23 @@ const Forgot = () => {
 
             <Button color='black' fluid size='large' onClick={handleSubmit}>
               <Icon name='mail' />
-              {' '}Email Me Reset Password Link{' '}
+              {' '}
+              {t('Email Me Reset Password Link')}
+              {' '}
             </Button>
           </Segment>
         </Form>
         <Message>
-          Remember password?{' '}
+          {t('Remember password?')}
+          {' '}
           <Button
             size='mini'
             style={{ marginLeft: '0.5em' }}
             onClick={() => navigate('/login')}
             icon labelPosition='right'
           >
-            Log In{' '}
+            {t('Log In')}
+            {' '}
             <Icon name='sign-in' />
           </Button>
         </Message>
