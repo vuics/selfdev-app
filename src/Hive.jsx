@@ -20,6 +20,7 @@ import {
 import Ajv from 'ajv'
 import { client, xml } from '@xmpp/client'
 import { v4 as uuidv4 } from 'uuid'
+import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -27,7 +28,8 @@ import archetypes, { defaultArchetype } from './archetypes'
 
 const ajv = new Ajv()
 
-const Hive = () => {
+export default function Hive () {
+  const { t } = useTranslation('Hive')
   const [ agents, setAgents ] = useState([])
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
   const [ archetype, setArchetype ] = useState(defaultArchetype.value)
@@ -60,12 +62,12 @@ const Hive = () => {
         setCredentials({ user, password, jid })
       } catch (err) {
         console.error('xmpp/credentials error:', err)
-        setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
+        setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
         setLoading(false)
       }
     }
     fetchCredentials()
-  }, [])
+  }, [t])
 
   useEffect(() => {
     console.log('xmpp client credentials:', credentials)
@@ -236,7 +238,7 @@ const Hive = () => {
       setAgentsImmutable(res?.data || [])
     } catch (err) {
       console.error('indexAgents error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting agents.')
+      return setResponseError(err?.response?.data?.message || t('Error getting agents.'))
     } finally {
       setLoading(false)
     }
@@ -275,7 +277,7 @@ const Hive = () => {
       })
     } catch (err) {
       console.error('post agent error:', err);
-      return setResponseError(err.toString() || 'Error posting agent.')
+      return setResponseError(err.toString() || t('Error posting agent.'))
     } finally {
       setLoading(false)
     }
@@ -313,7 +315,7 @@ const Hive = () => {
       }
     } catch (err) {
       console.error('delete agent error:', err);
-      return setResponseError(err.toString() || 'Error deleting agent.')
+      return setResponseError(err.toString() || t('Error putting agent.'))
     } finally {
       setLoading(false)
     }
@@ -337,7 +339,7 @@ const Hive = () => {
       })
     } catch (err) {
       console.error('delete agent error:', err);
-      return setResponseError(err.toString() || 'Error deleting agent.')
+      return setResponseError(err.toString() || t('Error deleting agent.'))
     } finally {
       setLoading(false)
     }
@@ -358,7 +360,7 @@ const Hive = () => {
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
       console.error('download agents error:', err);
-      return setResponseError(err.toString() || 'Error downloading agents.')
+      return setResponseError(err.toString() || t('Error downloading agents.'))
     } finally {
       setLoading(false)
     }
@@ -378,16 +380,16 @@ const Hive = () => {
             }
             console.log('Agents loaded:', parsedAgents);
           } catch (err) {
-            alert('Invalid JSON file.');
+            alert(`${t('Invalid JSON file')}: ${err}`);
           }
         };
         reader.readAsText(file);
       } else {
-        alert('Please upload a valid JSON file.');
+        alert(t('Please upload a valid JSON file.'))
       }
     } catch (err) {
       console.error('upload agents error:', err);
-      return setResponseError(err.toString() || 'Error uploading map.')
+      return setResponseError(err.toString() || t('Error uploading map.'))
     } finally {
       setLoading(false)
     }
@@ -409,7 +411,7 @@ const Hive = () => {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header='Error'
+          header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
         />
@@ -419,7 +421,7 @@ const Hive = () => {
           positive
           style={{ textAlign: 'left'}}
           icon='info circle'
-          header='Info'
+          header={t('Info')}
           content={responseMessage}
           onDismiss={() => setResponseMessage('')}
         />
@@ -429,7 +431,7 @@ const Hive = () => {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header='Schema Validation Error'
+          header={t('Schema Validation Error')}
           content={validationError}
           onDismiss={() => setValidationError('')}
         />
@@ -442,13 +444,15 @@ const Hive = () => {
             <Icon name='spy' />
             <Icon corner name='add' />
           </Icon.Group>
-          {' '}Add Agent{' '}
+          {' '}
+          {t('Add Agent')}
+          {' '}
         </Button>
         <Button.Group floated='right'>
           <Popup content='Download agents' trigger={
             <Button icon onClick={downloadAgents}>
               <Icon name='download' />
-              Download
+              {t('Download')}
             </Button>
           } />
           <Popup content='Upload agents' trigger={
@@ -461,7 +465,7 @@ const Hive = () => {
                 onChange={uploadAgents}
                 style={{ display: 'none' }} // hide input
               />
-              Upload
+              {t('Upload')}
             </Button>
           } />
         </Button.Group>
@@ -471,12 +475,15 @@ const Hive = () => {
 
       { adding && (
         <Segment stacked>
-          <Header as='h4'>Add Agent</Header>
+          <Header as='h4'>
+            {t('Add Agent')}
+          </Header>
           <span>
-            Archetype:{' '}
+            {t('Archetype')}:
+            {' '}
             <Dropdown
               inline
-              placeholder='Select Archetype'
+              placeholder={t('Select Archetype')}
               search
               options={ Object.values(archetypes) }
               defaultValue={ archetype }
@@ -484,7 +491,9 @@ const Hive = () => {
             />
           </span>
           <br/>
-          <span>Options:</span>
+          <span>
+            {t('Options')}:
+          </span>
           <JsonEditor
             data={ options }
             setData={ setOptions }
@@ -500,9 +509,9 @@ const Hive = () => {
                   ?.map((error) => `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`)
                   .join('\n')
                 setValidationError(
-                  `Not compliant with JSON Schema ${errorMessage}`
+                  `${t('Not compliant with JSON Schema')} ${errorMessage}`
                 )
-                return 'JSON Schema error'
+                return t('JSON Schema error')
               }
             }}
             />
@@ -510,12 +519,16 @@ const Hive = () => {
           <Button.Group>
             <Button onClick={() => setAdding(!adding) }>
               <Icon name='cancel' />
-              {' '}Cancel{' '}
+              {' '}
+              {t('Cancel')}
+              {' '}
             </Button>
             <Button.Or />
             <Button positive onClick={() => { postAgent(); setAdding(!adding) }}>
               <Icon name='save' />
-              {' '}Submit{' '}
+              {' '}
+              {t('Submit')}
+              {' '}
             </Button>
           </Button.Group>
         </Segment>
@@ -566,7 +579,7 @@ const Hive = () => {
                                 }}
                               >
                                 <Icon name='edit' />
-                                Edit
+                                {t('Edit')}
                               </Dropdown.Item>
                               <Dropdown.Item
                                 onClick={() => {
@@ -574,7 +587,7 @@ const Hive = () => {
                                 }}
                               >
                                 <Icon name='delete' />
-                                Delete
+                                {t('Delete')}
                               </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
@@ -586,7 +599,7 @@ const Hive = () => {
                     { archetypes[agent.archetype].text }
                   </Card.Meta>
                   <Card.Description>
-                    {agent.options?.description || '(no description)' }
+                    {agent.options?.description || t('(no description)') }
                   </Card.Description>
                   { agent.options?.joinRooms?.length > 0 && (
                     <List>
@@ -597,7 +610,7 @@ const Hive = () => {
                   ) }
                 </Card.Content>
                 <Card.Content extra>
-                  <Checkbox toggle label='Deployed'
+                  <Checkbox toggle label={t('Deployed')}
                     disabled={agent.editing}
                     onChange={(e, data) => {
                       putAgent({ agent: {...agent, deployed: data.checked } })
@@ -616,7 +629,7 @@ const Hive = () => {
                           ))
                         }}
                       >
-                        Cancel
+                      {t('Cancel')}
                       </Button>
                       { agent.edited && (
                         <Button color='yellow'
@@ -624,7 +637,7 @@ const Hive = () => {
                             putAgent({ agent })
                           }}
                         >
-                          Update
+                        {t('Update')}
                         </Button>
                       )}
                     </div>
@@ -653,5 +666,3 @@ const Hive = () => {
     </Container>
   </>)
 }
-
-export default Hive
