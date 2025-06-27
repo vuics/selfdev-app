@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import { ErrorBoundary } from "react-error-boundary";
 import Iframe from 'react-iframe'
+import i18n from "i18next";
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -276,7 +277,7 @@ export default function Chat () {
             view_mode: 'overlayed',
             // view_mode: 'mobile',
 
-            i18n: 'en',
+            i18n: i18n?.language?.slice(0, 2) || 'en',
             show_controlbox_by_default: true,
             show_client_info: false,
             sticky_controlbox: false, // control box will not be closeable
