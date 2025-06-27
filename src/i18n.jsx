@@ -95,6 +95,25 @@ const resources = {
     Forgot: {
       // TODO
     },
+    Menubar: {
+      'Hive': 'Hive',
+      'Chat': 'Chat',
+      'Talk': 'Talk',
+      'Map': 'Map',
+      'Meet': 'Meet',
+      'Flow': 'Flow',
+      'Node': 'Node',
+      'Code': 'Code',
+      'Note': 'Note',
+      'Sell': 'Sell',
+      'Train': 'Train',
+      'Docs': 'Docs',
+      'Profile': 'Profile',
+      'API Keys': 'API Keys',
+      'Vault': 'Vault',
+      'Subscription': 'Subscription',
+      'Log Out': 'Log Out'
+    },
   },
   'ru-RU': {
     translation: {
@@ -161,6 +180,34 @@ const resources = {
       'Forgot password?': 'Забыли пароль?',
       'New to us?': 'Впервые у нас?',
       'Sign Up': 'Зарегистрироваться'
+    },
+    Signup: {
+      // TODO
+    },
+    Reset: {
+      // TODO
+    },
+    Forgot: {
+      // TODO
+    },
+    Menubar: {
+      'Hive': 'Улей',
+      'Chat': 'Чат',
+      'Talk': 'Разговор',
+      'Map': 'Карта',
+      'Meet': 'Встреча',
+      'Flow': 'Поток',
+      'Node': 'Узел',
+      'Code': 'Код',
+      'Note': 'Заметка',
+      'Sell': 'Продажа',
+      'Train': 'Обучение',
+      'Docs': 'Документация',
+      'Profile': 'Профиль',
+      'API Keys': 'API-ключи',
+      'Vault': 'Сейф',
+      'Subscription': 'Подписка',
+      'Log Out': 'Выйти'
     },
   },
 };
