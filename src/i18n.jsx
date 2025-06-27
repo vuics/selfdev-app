@@ -73,6 +73,28 @@ const resources = {
       'Privacy Policy': 'Privacy Policy',
       'LLMs': 'LLMs',
     },
+    Login: {
+      'Please enter a valid email address': 'Please enter a valid email address',
+      'Please enter a valid password': 'Please enter a valid password',
+      'Error logging in.': 'Error logging in.',
+      'Log-in to Your Account': 'Log-in to Your Account',
+      'E-mail address': 'E-mail address',
+      'Password': 'Password',
+      'Remember Me': 'Remember Me',
+      'Login': 'Login',
+      'Forgot password?': 'Forgot password?',
+      'New to us?': 'New to us?',
+      'Sign Up': 'Sign Up'
+    },
+    Signup: {
+      // TODO
+    },
+    Reset: {
+      // TODO
+    },
+    Forgot: {
+      // TODO
+    },
   },
   'ru-RU': {
     translation: {
@@ -87,7 +109,7 @@ const resources = {
     },
     ResponsiveContainer: {
       'Docs': 'Документация',
-      'Mobile': 'Мобильная версия',
+      'Mobile': 'Мобильное',
       'Pricing': 'Цены',
       'Log In': 'Войти',
       'Sign Up': 'Зарегистрироваться',
@@ -126,6 +148,19 @@ const resources = {
       'Terms of Service': 'Условия использования',
       'Privacy Policy': 'Политика конфиденциальности',
       'LLMs': 'Языковые модели',
+    },
+    Login: {
+      'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',
+      'Please enter a valid password': 'Пожалуйста, введите корректный пароль',
+      'Error logging in.': 'Ошибка входа.',
+      'Log-in to Your Account': 'Вход в ваш аккаунт',
+      'E-mail address': 'Адрес электронной почты',
+      'Password': 'Пароль',
+      'Remember Me': 'Запомнить меня',
+      'Login': 'Войти',
+      'Forgot password?': 'Забыли пароль?',
+      'New to us?': 'Впервые у нас?',
+      'Sign Up': 'Зарегистрироваться'
     },
   },
 };
