@@ -106,6 +106,7 @@ import {
   xcodeLight,
   xcodeDark,
 } from '@uiw/codemirror-themes-all'
+import { useTranslation } from 'react-i18next'
 
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
@@ -667,6 +668,7 @@ const MarkdownEditor = memo(({
 })
 
 const ApplyOrCancel = memo(({ applyText, cancelText }) => {
+  const { t } = useTranslation('Map')
   return (
     <Button.Group floated='right'>
       <Button
@@ -675,7 +677,7 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
         onClick={applyText}
       >
         <Icon name='check' />
-        Apply
+        {t('Apply')}
       </Button>
       <Button.Or />
       <Button
@@ -684,13 +686,14 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
         onClick={cancelText}
       >
         <Icon name='cancel' />
-        Cancel
+        {t('Cancel')}
       </Button>
     </Button.Group>
   )
 })
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
+  const { t } = useTranslation('Map')
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const {
@@ -960,7 +963,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
       setRecording(true);
     } catch (error) {
       console.error('Microphone access failed:', error);
-      alert('Microphone access denied or not available.');
+      alert(t('Microphone access denied or not available.'));
     }
   };
 
@@ -1019,13 +1022,13 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               onClick={copyText}
             >
               <Icon name='copy' />
-              Copy
+              {t('Copy')}
             </Dropdown.Item>
             <Dropdown.Item
               onClick={pasteText}
             >
               <Icon name='paste' />
-              Paste
+              {t('Paste')}
             </Dropdown.Item>
 
             <Dropdown.Divider />
@@ -1034,7 +1037,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               onClick={renameUname}
             >
               <Icon name='i cursor' />
-              Rename
+              {t('Rename')}
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -1046,11 +1049,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name='edit' />
-              { data.editing ? 'View' : 'Edit' }
+              { data.editing ? t('View') : t('Edit') }
             </Dropdown.Item>
             <Dropdown.Item onClick={attachFileInit} >
               <Icon name='attach' />
-              Attach file
+              {t('Attach file')}
               <input
                 type="file"
                 // accept="application/json"
@@ -1061,9 +1064,9 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             </Dropdown.Item>
             <Dropdown.Item onClick={ recording ? stopRecording : startRecording } >
               <Icon name={ recording ? 'microphone slash' : 'microphone' } />
-              {recording ? 'Stop Recording' : 'Record Audio'}
+              {recording ? t('Stop Recording') : t('Record Audio') }
             </Dropdown.Item>
-            <Dropdown text='Diff' pointing='left' className='link item'>
+            <Dropdown text={t('Diff')} pointing='left' className='link item'>
               <Dropdown.Menu>
 
                 { data.diffing && (<>
@@ -1077,7 +1080,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                     }}
                   >
                     <Icon name='window close outline' />
-                    Close diff
+                    {t('Close diff')}
                   </Dropdown.Item>
                   <Dropdown.Divider />
                 </>) }
@@ -1093,7 +1096,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                     }}
                   >
                     <Icon name='caret square right outline' />
-                    Diff stash (view)
+                    {t('Diff stash (view)')}
                   </Dropdown.Item>
                 </>) }
                 { (!data.diffing || !data.editing) && (<>
@@ -1107,7 +1110,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                     }}
                   >
                     <Icon name='caret square left outline' />
-                    Diff restore (edit)
+                    {t('Diff restore (edit)')}
                   </Dropdown.Item>
                 </>) }
 
@@ -1122,7 +1125,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   }}
                 >
                   <Icon name='long arrow alternate right' />
-                  Stash content
+                  {t('Stash content')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1134,7 +1137,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   }}
                 >
                   <Icon name='long arrow alternate left' />
-                  Restore content
+                  {t('Restore content')}
                 </Dropdown.Item>
 
                 <Dropdown.Divider />
@@ -1148,84 +1151,85 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   }}
                 >
                   <Icon name='erase' />
-                  Clear stash
+                  {t('Clear stash')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
             <Dropdown.Divider />
 
-            <Dropdown text='Note kind' pointing='left' className='link item'>
+            <Dropdown text={t('Note kind')} pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => selectKind(undefined)}>
                   <Icon name={ !data.kind ? 'dot circle' : 'circle outline'} />
-                  Plain note
+                  {t('Plain note')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('markdown')}>
                   <Icon name={ (data.kind === 'markdown') ? 'dot circle' : 'circle outline'} />
-                  Markdown
+                  {t('Markdown')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('code')}>
                   <Icon name={ data.kind === 'code' ? 'dot circle' : 'circle outline'} />
-                  Code
+                  {t('Code')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('raw')}>
                   <Icon name={ data.kind === 'raw' ? 'dot circle' : 'circle outline'} />
-                  Raw
+                  {t('Raw')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
-            <Dropdown text='Slide' pointing='left' className='link item'>
+            <Dropdown text={t('Slide')} pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => makeSlide(!data.slide)}>
                   <Icon name={ data.slide ? 'toggle on' : 'toggle off'} />
-                  { data.slide ? 'Remove from slides' : 'Add to slides' }
+                  { data.slide ? t('Remove from slides') : t('Add to slides') }
                 </Dropdown.Item>
                 { data.slide && (<>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={() => setCurrentSlide(data.slideIndex)}>
                     <Icon name='hand pointer outline' />
-                    Activate slide: {data.slideIndex + 1} / {getTotalSlides()}
+                    {t('Activate slide')}:
+                    {data.slideIndex + 1} / {getTotalSlides()}
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(1)}>
                     <Icon name='long arrow alternate up' />
-                    Move slide up
+                    {t('Move slide up')}
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => reorderSlide(-1)}>
                     <Icon name='long arrow alternate down' />
-                    Move slide down
+                    {t('Move slide down')}
                   </Dropdown.Item>
                 </>)}
               </Dropdown.Menu>
             </Dropdown>
 
-            <Dropdown text='Programming language' pointing='left' className='link item'>
+            <Dropdown text={t('Programming language')} pointing='left' className='link item'>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => { selectLang(undefined); selectKind('raw') } }>
                   <Icon name={ !data.lang ? 'dot circle' : 'circle outline'} />
-                  (None)
+                  {t('(None)')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('python'); selectKind('code') } }>
                   <Icon name={ data.lang === 'python' ? 'dot circle' : 'circle outline'} />
-                  Python
+                  {t('Python')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('javascript'); selectKind('code') } }>
                   <Icon name={ data.lang === 'javascript' ? 'dot circle' : 'circle outline'} />
-                  JavaScript
+                  {t('JavaScript')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('json'); selectKind('code') } }>
                   <Icon name={ data.lang === 'json' ? 'dot circle' : 'circle outline'} />
-                  JSON
+                  {t('JSON')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('html'); selectKind('code') } }>
                   <Icon name={ data.lang === 'html' ? 'dot circle' : 'circle outline'} />
-                  HTML
+                  {t('HTML')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
-            <Dropdown text='More programming languages' pointing='left' className='link item'>
+            <Dropdown text={t('More programming languages')} pointing='left' className='link item'>
               <Dropdown.Menu>
                 { langNames.map((lng) => { return (
                   <Dropdown.Item onClick={() => { selectLang(lng); selectKind('code') } }>
@@ -1244,7 +1248,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               }}
             >
               <Icon name='delete' />
-              Delete
+              {t('Delete')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -1253,14 +1257,15 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             size='mini'
             onClick={renameUname}
           >
-            <Icon name='pin' />{data.uname}
+            <Icon name='pin' />
+            {data.uname}
           </Button>
         ) : (
           <>
           <Input
             size='large'
             iconPosition='left'
-            placeholder='Unique name...'
+            placeholder={t('Unique name...')}
             value={newUname}
             onChange={(e) => setNewUname(e.target.value)}
             className="nodrag"
@@ -1295,7 +1300,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
         { data.waitRecipient && (
           <>
             <br />
-            Waiting for a reply from:{' '}
+            {t('Waiting for a reply from')}
+            :{' '}
             <Label as='a' basic color='grey'>
               <Icon name='user' color={ presence[data.waitRecipient] ? 'green' : 'red' }/>
               {(roster.find(r => r.jid === data.waitRecipient))?.name || data.waitRecipient}
@@ -1457,6 +1463,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
 })
 
 const GroupNode = memo(({ id, data, style, selected }) => {
+  const { t } = useTranslation('Map')
   const { setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   // console.log('id:', id, ', data.text:', data.text, ', text:', text, ', setText:', setText)
@@ -1477,7 +1484,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
     let isDuplicate = false
     setNodes((nodes) => {
       isDuplicate = nodes.some((node) => node.id !== id && node.data.uname === newUname);
-      if (isDuplicate) { alert('The name is not unique'); return nodes; }
+      if (isDuplicate) { alert(t('The name is not unique')); return nodes; }
       const updatedNodes = nodes.map((node) =>
         node.id === id ? { ...node, data: { ...node.data, uname: newUname, renaming: false } } : node
       );
@@ -1546,14 +1553,15 @@ const GroupNode = memo(({ id, data, style, selected }) => {
               onClick={renameUname}
             >
               <Icon name='i cursor' />
-              Rename
+              {t('Rename')}
             </Dropdown.Item>
             <Dropdown.Item
               onClick={toggleAnd}
             >
               <Icon name='tasks' />
-              Toggle Loop Exit Operator:{' '}
-              { data.and ? 'OR' : 'AND' }
+              {t('Toggle Loop Exit Operator')}
+              :{' '}
+              { data.and ? t('OR') : t('AND') }
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -1565,7 +1573,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
               }}
             >
               <Icon name='delete' />
-              Delete
+              {t('Delete')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -1581,7 +1589,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
           <Input
             size='large'
             iconPosition='left'
-            placeholder='Unique name...'
+            placeholder={t('Unique name...')}
             value={newUname}
             onChange={(e) => setNewUname(e.target.value)}
             className="nodrag"
@@ -1615,7 +1623,8 @@ const GroupNode = memo(({ id, data, style, selected }) => {
           basic
           onClick={toggleAnd}
         >
-          <Icon name='tasks' />{data.and ? 'AND' : 'OR' }
+          <Icon name='tasks' />
+          {data.and ? t('AND') : t('OR') }
         </Button>
         {/*
         <Loader active={true} inline='centered' size='mini' />
@@ -1681,6 +1690,7 @@ const RequestEdge = memo(({
   id, data, source, target, style, selected,
   sourceX, sourceY, targetX, targetY, markerEnd,
 }) => {
+  const { t } = useTranslation('Map')
   const { setNodes, getNodes } = useReactFlow();
   const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
     sourceX,
@@ -1788,7 +1798,7 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='user plus' />
-                  Set recipient
+                  {t('Set recipient')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1800,7 +1810,7 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='remove user' />
-                  Unset recipient
+                  {t('Unset recipient')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1816,7 +1826,7 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='usb' />
-                  Set condition
+                  {t('Set condition')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1832,11 +1842,11 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='eraser' />
-                  Unset condition
+                  {t('Unset condition')}
                 </Dropdown.Item>
                 <Dropdown.Item onClick={orderEdges}>
                   <Icon name='sort' />
-                  Reorder
+                  {t('Reorder')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1849,7 +1859,7 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='unlinkify' />
-                  Unlink
+                  {t('Unlink')}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
@@ -1857,7 +1867,7 @@ const RequestEdge = memo(({
                   }}
                 >
                   <Icon name='delete' />
-                  Delete
+                  {t('Delete')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -1925,6 +1935,7 @@ const shareUrlRegex = new RegExp(
 );
 
 function Map () {
+  const { t } = useTranslation('Map')
   const { height, width } = useWindowDimensions();
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
@@ -2135,11 +2146,11 @@ function Map () {
       }
     } catch (err) {
       console.error('indexMaps error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting maps.')
+      return setResponseError(err?.response?.data?.message || t('Error getting maps.'))
     } finally {
       setLoading(false)
     }
-  }, [setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
+  }, [setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError, t])
 
   useEffect(() => {
     indexMaps()
@@ -2175,11 +2186,11 @@ function Map () {
       console.log('mapId:', res.data._id)
     } catch (err) {
       console.error('post map error:', err);
-      return setResponseError(err.toString() || 'Error posting map.')
+      return setResponseError(err.toString() || t('Error posting map.'))
     } finally {
       setLoading(false)
     }
-  }, [rfInstance, title, setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError])
+  }, [rfInstance, title, setLoading, setMaps, setMapId, setTitle, setNodes, setEdges, setViewport, setResponseError, t])
 
   const putMap = useCallback(async ({ loader = true } = {}) => {
     if (loader) {
@@ -2209,13 +2220,13 @@ function Map () {
       setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
     } catch (err) {
       console.error('put map error:', err);
-      return setResponseError(err.toString() || 'Error putting map.')
+      return setResponseError(err.toString() || t('Error putting map.'))
     } finally {
       if (loader) {
         setLoading(false)
       }
     }
-  }, [mapId, setLoading, setResponseError, maps, setMaps, getMap, rfInstance, postMap, title])
+  }, [mapId, setLoading, setResponseError, maps, setMaps, getMap, rfInstance, postMap, title, t])
 
   const deleteMap = async () => {
     setLoading(true)
@@ -2240,7 +2251,7 @@ function Map () {
       }
     } catch (err) {
       console.error('delete map error:', err);
-      return setResponseError(err.toString() || 'Error deleting map.')
+      return setResponseError(err.toString() || t('Error deleting map.'))
     } finally {
       setLoading(false)
     }
@@ -2267,7 +2278,7 @@ function Map () {
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
       console.error('download map error:', err);
-      return setResponseError(err.toString() || 'Error downloading map.')
+      return setResponseError(err.toString() || t('Error downloading map.'))
     } finally {
       setLoading(false)
     }
@@ -2290,16 +2301,16 @@ function Map () {
             setViewport({ x, y, zoom });
             console.log(`Map ${parsedMap?.title} loaded with flow:`, parsedMap.flow);
           } catch (err) {
-            alert('Invalid JSON file.');
+            alert(t('Invalid JSON file.'))
           }
         };
         reader.readAsText(file);
       } else {
-        alert('Please upload a valid JSON file.');
+        alert(t('Please upload a valid JSON file.'))
       }
     } catch (err) {
       console.error('upload map error:', err);
-      return setResponseError(err.toString() || 'Error uploading map.')
+      return setResponseError(err.toString() || t('Error uploading map.'))
     } finally {
       setLoading(false)
     }
@@ -2332,12 +2343,12 @@ function Map () {
         setCredentials({ user, password, jid })
       } catch (err) {
         console.error('xmpp/credentials error:', err)
-        setResponseError(err?.response?.data?.message || 'Error retrieving credentials.')
+        setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
         setLoading(false)
       }
     }
     fetchCredentials()
-  }, [])
+  }, [t])
 
   useEffect(() => {
     if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
@@ -2755,7 +2766,7 @@ function Map () {
       );
     } else {
       if (!recipient) {
-        return alert('Please select recipient')
+        return alert(t('Please select recipient'))
       }
 
       const id = getNodeId();
@@ -2805,7 +2816,7 @@ function Map () {
         edgeId, targetId: id,
       })
     }
-  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke]);
+  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke, t]);
 
 
   const playMap = useCallback(async ({ step = false } = {}) => {
@@ -2838,7 +2849,6 @@ function Map () {
     }
     console.log('groupElements:', groupElements)
 
-
     let sequence = 1
     setEdges((edges) =>
       edges.map((edge) => {
@@ -2847,7 +2857,6 @@ function Map () {
     );
     const edges = getEdges()
     // console.log('edges:', edges)
-
 
     const inactiveLoop = {
       active: false,
@@ -3083,7 +3092,7 @@ function Map () {
             { !showMenu && (<>
               <Button.Group>
                 <Popup
-                  content={(!showMenu ? 'Show' : 'Hide') + ' the Map menu' }
+                  content={ !showMenu ? t('Show the Map menu') : t('Hide the Map menu') }
                   trigger={
                     <Button
                       icon basic
@@ -3104,29 +3113,29 @@ function Map () {
                 alignItems: 'center',       // vertically center
               }}>
                 <Menu.Menu>
-                  <Dropdown simple text='File' icon=''>
+                  <Dropdown simple text={t('File')} icon=''>
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={postMap}>
                         <Icon name='file' />
-                        New
+                        {t('New')}
                       </Dropdown.Item>
                       <Dropdown.Item onClick={putMap}>
                         <Icon name='save' />
-                        Save
+                        {t('Save')}
                       </Dropdown.Item>
                       <Dropdown.Item onClick={() => postMap({ duplicate: true })}>
                         <Icon name='clone' />
-                        Duplicate
+                        {t('Duplicate')}
                       </Dropdown.Item>
                       <Dropdown.Item onClick={() => {setRenaming(renaming => !renaming)}}>
                         <Icon name='text cursor' />
-                        Rename
+                        {t('Rename')}
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>
-                        <Popup content={ autosave ? 'Disable autosave' : 'Enable autosave' } trigger={
+                        <Popup content={ autosave ? t('Disable autosave') : t('Enable autosave') } trigger={
                           <Checkbox
-                            label='Autosave'
+                            label={t('Autosave')}
                             onChange={(e, data) => setAutosave(data.checked)}
                             checked={autosave}
                           />
@@ -3135,41 +3144,41 @@ function Map () {
                       <Dropdown.Divider />
                       <Dropdown.Item onClick={downloadMap}>
                         <Icon name='download' />
-                        Download
+                        {t('Download')}
                       </Dropdown.Item>
                       <Dropdown.Item onClick={uploadMapInit}>
                         <Icon name='upload' />
-                        Upload
+                        {t('Upload')}
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item onClick={() => {
                         setConfirm({
                           open: true,
-                          header: 'Confirm Map Delete',
-                          message: 'Are you sure you want to delete your map?',
+                          header: t('Confirm Map Delete'),
+                          message: t('Are you sure you want to delete your map?'),
                           func: deleteMap,
                         })
                       } }>
                         <Icon name='trash alternative' />
-                        Delete
+                        {t('Delete')}
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </Menu.Menu>
 
                 <Menu.Menu>
-                  <Dropdown simple text='View' icon=''>
+                  <Dropdown simple text={t('View')} icon=''>
                     <Dropdown.Menu>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show menu'
+                          label={t('Show menu')}
                           onChange={(e, data) => setShowMenu(data.checked)}
                           checked={showMenu}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show opener'
+                          label={t('Show opener')}
                           onChange={(e, data) => setShowOpener(data.checked)}
                           checked={showOpener}
                         />
@@ -3177,35 +3186,35 @@ function Map () {
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show file controls'
+                          label={t('Show file controls')}
                           onChange={(e, data) => setShowFile(data.checked)}
                           checked={showFile}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show layout controls'
+                          label={t('Show layout controls')}
                           onChange={(e, data) => setShowLayout(data.checked)}
                           checked={showLayout}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show color controls'
+                          label={t('Show color controls')}
                           onChange={(e, data) => setShowColors(data.checked)}
                           checked={showColors}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show execution controls'
+                          label={t('Show execution controls')}
                           onChange={(e, data) => setShowExecution(data.checked)}
                           checked={showExecution}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show slide controls'
+                          label={t('Show slide controls')}
                           onChange={(e, data) => setShowSlides(data.checked)}
                           checked={showSlides}
                         />
@@ -3213,7 +3222,7 @@ function Map () {
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show slides deck sidebar'
+                          label={t('Show slides deck sidebar')}
                           checked={deckSidebar}
                           onChange={(e, data) => setDeckSidebar(data.checked)}
                         />
@@ -3221,14 +3230,14 @@ function Map () {
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show mini map'
+                          label={t('Show mini map')}
                           onChange={(e, data) => setShowMinimap(data.checked)}
                           checked={showMinimap}
                         />
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label='Show control panel'
+                          label={t('Show control panel')}
                           onChange={(e, data) => setShowPanel(data.checked)}
                           checked={showPanel}
                         />
@@ -3238,9 +3247,9 @@ function Map () {
                 </Menu.Menu>
 
                 <Menu.Menu>
-                  <Dropdown simple text='Settings' icon=''>
+                  <Dropdown simple text={t('Settings')} icon=''>
                     <Dropdown.Menu>
-                      <Dropdown text='Code viewer theme' pointing='left' className='link item'>
+                      <Dropdown text={t('Code viewer theme')} pointing='left' className='link item'>
                         <Dropdown.Menu>
                           { Object.keys(editorThemes).map((thm) => {
                             if (thm === '-' || thm === '--') {
@@ -3257,7 +3266,7 @@ function Map () {
                           } ) }
                         </Dropdown.Menu>
                       </Dropdown>
-                      <Dropdown text='Code editor theme' pointing='left' className='link item'>
+                      <Dropdown text={t('Code editor theme')} pointing='left' className='link item'>
                         <Dropdown.Menu>
                           { Object.keys(editorThemes).map((thm) => {
                             if (thm === '-' || thm === '--') {
@@ -3274,35 +3283,35 @@ function Map () {
                           } ) }
                         </Dropdown.Menu>
                       </Dropdown>
-                      <Dropdown text='Code editor mode' pointing='left' className='link item'>
+                      <Dropdown text={t('Code editor mode')} pointing='left' className='link item'>
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => { setVimMode(false) } }>
                             <Icon name={ !vimMode ? 'dot circle' : 'circle outline'} />
-                            Normal
+                            {t('Normal')}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => { setVimMode(true) } }>
                             <Icon name={ vimMode ? 'dot circle' : 'circle outline'} />
-                            Vim
+                            {t('Vim')}
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
-                      <Dropdown text='Markdown editor options' pointing='left' className='link item'>
+                      <Dropdown text={t('Markdown editor options')} pointing='left' className='link item'>
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
                             <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
-                            Markdown editor (light)
+                            {t('Markdown editor (light)')}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => { setMarkdownEditor('markdown-dark') } }>
                             <Icon name={ markdownEditor === 'markdown-dark' ? 'dot circle' : 'circle outline'} />
-                            Markdown editor (dark)
+                            {t('Markdown editor (dark)')}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => { setMarkdownEditor('code') } }>
                             <Icon name={ markdownEditor === 'code' ? 'dot circle' : 'circle outline'} />
-                            Code editor
+                            {t('Code editor')}
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => { setMarkdownEditor('code-preview') } }>
                             <Icon name={ markdownEditor === 'code-preview' ? 'dot circle' : 'circle outline'} />
-                            Code editor with preview
+                            {t('Code editor with preview')}
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
@@ -3324,13 +3333,13 @@ function Map () {
         <Modal.Content>{confirm.message}</Modal.Content>
         <Modal.Actions>
           <Button negative onClick={() => setConfirm(hiddenConfirm)}>
-            Cancel
+            {t('Cancel')}
           </Button>
           <Button positive onClick={() => {
             setConfirm(hiddenConfirm)
             confirm.func()
           }}>
-            Delete
+            {t('Delete')}
           </Button>
         </Modal.Actions>
       </Modal>
@@ -3338,39 +3347,39 @@ function Map () {
       { showFile && (<>
         {' '} {' '}
         <Button.Group>
-          <Popup content='Create a new map' trigger={
+          <Popup content={t('Create a new map')} trigger={
             <Button icon onClick={postMap}>
               <Icon name='file' />
             </Button>
           } />
-          <Popup content='Save the map' trigger={
+          <Popup content={t('Save the map')} trigger={
             <Button icon onClick={putMap}>
               <Icon name='save' />
             </Button>
           } />
-          <Popup content='Duplicate the map' trigger={
+          <Popup content={t('Duplicate the map')} trigger={
             <Button icon onClick={() => postMap({ duplicate: true })}>
               <Icon name='clone' />
             </Button>
           } />
-          <Popup content='Delete the map' trigger={
+          <Popup content={t('Delete the map')} trigger={
             <Button icon onClick={() => {
               setConfirm({
                 open: true,
-                header: 'Confirm Map Delete',
-                message: 'Are you sure you want to delete your map?',
+                header: t('Confirm Map Delete'),
+                message: t('Are you sure you want to delete your map?'),
                 func: deleteMap,
               })
             } }>
               <Icon name='trash alternate' />
             </Button>
           } />
-          <Popup content='Download the map' trigger={
+          <Popup content={t('Download the map')} trigger={
             <Button icon onClick={downloadMap}>
               <Icon name='download' />
             </Button>
           } />
-          <Popup content='Upload the map' trigger={
+          <Popup content={t('Upload the map')} trigger={
             <Button icon onClick={uploadMapInit}>
               <Icon name="upload" />
               <input
@@ -3382,7 +3391,7 @@ function Map () {
               />
             </Button>
           } />
-          <Popup content='Rename the map' trigger={
+          <Popup content={t('Rename the map')} trigger={
             <Button icon onClick={() => {setRenaming(renaming => !renaming)}}>
               <Icon name='text cursor' />
             </Button>
@@ -3396,7 +3405,7 @@ function Map () {
         {' '}
         <Input
           iconPosition='left'
-          placeholder='Title...'
+          placeholder={t('Title...')}
           value={title}
           onChange={e => setTitle(e.target.value)}
           onKeyDown={(e) => {
@@ -3428,7 +3437,7 @@ function Map () {
       { !renaming && showOpener && (<>
         {' '}
         <Icon name='folder open outline' />
-        <Popup content='Select a map to open' trigger={
+        <Popup content={t('Select a map to open')} trigger={
           <Dropdown text={title} icon='caret down' open={opener} onClick={() => setOpener(!opener)}>
             <Dropdown.Menu>
               <Input
@@ -3466,12 +3475,12 @@ function Map () {
       { showLayout && (<>
         {' '}
         <Button.Group>
-          <Popup content='Top-to-bottom layout' trigger={
+          <Popup content={t('Top-to-bottom layout')} trigger={
             <Button icon basic onClick={() => onLayout('TB')}>
               <Icon name='grid layout' />
             </Button>
           } />
-          <Popup content='Left-to-right layout' trigger={
+          <Popup content={t('Left-to-right layout')} trigger={
             <Button icon basic onClick={() => onLayout('LR')}>
               <Icon name='list layout' />
             </Button>
@@ -3481,7 +3490,7 @@ function Map () {
 
       { showColors && (<>
         {' '} {' '}
-        <Popup content='Apply text color to selected notes' trigger={
+        <Popup content={t('Apply text color to selected notes')} trigger={
           <Icon name='font' color='grey' onClick={() => {
             setNodes((nodes) =>
               nodes.map((node) =>
@@ -3490,7 +3499,7 @@ function Map () {
             )
           }} />
         } />
-        <Popup content='Select text color' trigger={
+        <Popup content={t('Select text color')} trigger={
           <input
             className="nodrag"
             type="color"
@@ -3507,7 +3516,7 @@ function Map () {
           />
         } />
         {' '}
-        <Popup content='Apply background color to selected notes' trigger={
+        <Popup content={t('Apply background color to selected notes')} trigger={
           <Icon name='paint brush' color='grey' onClick={() => {
             setNodes((nodes) =>
               nodes.map((node) =>
@@ -3516,7 +3525,7 @@ function Map () {
             )
           }} />
         } />
-        <Popup content='Select background color' trigger={
+        <Popup content={t('Select background color')} trigger={
           <input
             className="nodrag"
             type="color"
@@ -3532,7 +3541,7 @@ function Map () {
           />
         } />
         {' '}
-        <Popup content='Apply edge color to selected notes' trigger={
+        <Popup content={t('Apply edge color to selected notes')} trigger={
           <Icon name='linkify' color='grey' onClick={() => {
             setEdges((edges) =>
               edges.map((edge) =>
@@ -3541,7 +3550,7 @@ function Map () {
             );
           }} />
         } />
-        <Popup content='Select edge color' trigger={
+        <Popup content={t('Select edge color')} trigger={
           <input
             className="nodrag"
             type="color"
@@ -3557,7 +3566,7 @@ function Map () {
           />
         } />
         {' '}
-        <Popup content='Select text, background and edge colors by default' trigger={
+        <Popup content={t('Select text, background and edge colors by default')} trigger={
           <Icon name='history' color='grey' onClick={() => {
             setColor(defaultColor)
             setBackgroundColor(defaultBackgroundColor)
@@ -3569,7 +3578,7 @@ function Map () {
       { showExecution && (<>
         {' '} {' '}
         <Button.Group>
-          <Popup content='Reorder edges' trigger={
+          <Popup content={t('Reorder edges')} trigger={
             <Button icon basic onClick={orderEdges}>
               <Icon name='sort' color={ reordering ? 'blue' : 'grey' } />
             </Button>
@@ -3577,13 +3586,13 @@ function Map () {
           {playing ? (
             <>
               {pausing ? (
-                <Popup content='Resume running the map' trigger={
+                <Popup content={t('Resume running the map')} trigger={
                   <Button icon basic onClick={pauseMap}>
                     <Icon name='play' color='yellow' />
                   </Button>
                 } />
               ) : (
-                <Popup content='Pause running the map' trigger={
+                <Popup content={t('Pause running the map')} trigger={
                   <Button icon basic onClick={pauseMap}>
                     <Icon name='pause' color='yellow' />
                   </Button>
@@ -3591,18 +3600,18 @@ function Map () {
               )}
             </>
           ) : (
-            <Popup content='Run the map' trigger={
+            <Popup content={t('Run the map')} trigger={
               <Button icon basic onClick={playMap}>
                 <Icon name='play' color='green' />
               </Button>
             } />
           )}
-          <Popup content='Step forward' trigger={
+          <Popup content={t('Step forward')} trigger={
             <Button icon basic onClick={stepMap}>
               <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
             </Button>
           } />
-          <Popup content='Stop running the map' trigger={
+          <Popup content={t('Stop running the map')} trigger={
             <Button icon basic onClick={stopMap} disabled={!playing}>
               <Icon name='stop' color='red' disabled={!playing} />
             </Button>
@@ -3614,7 +3623,7 @@ function Map () {
         {' '} {' '}
         <Button.Group>
           <Popup
-            content={(!deckSidebar ? 'Show' : 'Hide') + ' slide deck sidebar' }
+            content={ !deckSidebar ? t('Show slide deck sidebar') : t('Hide slide deck sidebar') }
             trigger={
               <Button
                 icon basic
@@ -3626,12 +3635,12 @@ function Map () {
               </Button>
             }
           />
-          <Popup content='Previous slide' trigger={
+          <Popup content={t('Previous slide')} trigger={
             <Button icon basic onClick={previousSlide}>
               <Icon name='caret square left outline' color='blue' />
             </Button>
           } />
-          <Popup content='Next slide' trigger={
+          <Popup content={t('Next slide')} trigger={
             <Button icon basic onClick={nextSlide}>
               <Icon name='caret square right outline' color='blue' />
             </Button>
@@ -3719,7 +3728,7 @@ function Map () {
               <Background variant="dots" gap={12} size={1} />
               { showPanel && (
                 <Panel position="top-right">
-                  <Popup content='Select recipient' trigger={
+                  <Popup content={t('Select recipient')} trigger={
                     <Dropdown
                       compact
                       fluid
@@ -3754,21 +3763,21 @@ function Map () {
                         })
                       }
                       value={recipient}
-                      placeholder="Recipient"
+                      placeholder={t('Recipient')}
                       onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
                       loading={roster.length === 0}
                     />
                   } />
                   <Input
                     iconPosition='left'
-                    placeholder='/RegExp/ Condition...'
+                    placeholder={t('/RegExp/ Condition...')}
                     value={condition}
                     onChange={e => setCondition(e.target.value)}
                     fluid
                   ><Icon name='usb' /><input /></Input>
                   <Button.Group vertical labeled icon fluid compact>
-                    <Button icon='sticky note outline' content='Add Note' onClick={addNote} />
-                    <Button icon='object group' content='Loop Selected' onClick={groupSelected} />
+                    <Button icon='sticky note outline' content={t('Add Note')} onClick={addNote} />
+                    <Button icon='object group' content={t('Loop Selected')} onClick={groupSelected} />
                   </Button.Group>
                   <br/>
                   {/*
