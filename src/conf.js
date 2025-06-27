@@ -6,7 +6,7 @@ export const arr = (str) => str ? str.split(',') : []
 const conf = {
   app: {
     name: import.meta.env.VITE_NAME || 'HyperAgency',
-    // nameRu: import.meta.env.VITE_NAME_RU || 'ГиперАгентство',
+    company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
   },
 
   contact: {
