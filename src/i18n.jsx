@@ -31,6 +31,21 @@ const resources = {
     app: {
       'name': conf.app.name,
     },
+    ResponsiveContainer: {
+      'Docs': 'Docs',
+      'Mobile': 'Mobile',
+      'Pricing': 'Pricing',
+      'Log In': 'Log In',
+      'Sign Up': 'Sign Up',
+      'Join a Waitlist': 'Join a Waitlist',
+      'Mobile App': 'Mobile App',
+      'Get Started': 'Get Started',
+      'Documentation': 'Documentation',
+      'GitHub': 'GitHub',
+      'YouTube': 'YouTube',
+      'Contact Us': 'Contact Us',
+      'Close Sidebar': 'Close Sidebar'
+    },
     Footer: {
       'Contact Us': 'Contact Us',
       'GitHub': 'GitHub',
@@ -69,6 +84,21 @@ const resources = {
     },
     app: {
       'name': 'ГиперАгентство',
+    },
+    ResponsiveContainer: {
+      'Docs': 'Документация',
+      'Mobile': 'Мобильная версия',
+      'Pricing': 'Цены',
+      'Log In': 'Войти',
+      'Sign Up': 'Зарегистрироваться',
+      'Join a Waitlist': 'Присоединиться к списку ожидания',
+      'Mobile App': 'Мобильное приложение',
+      'Get Started': 'Начать',
+      'Documentation': 'Документация',
+      'GitHub': 'GitHub',
+      'YouTube': 'YouTube',
+      'Contact Us': 'Связаться с нами',
+      'Close Sidebar': 'Закрыть боковую панель'
     },
     Footer: {
       'Contact Us': 'Связаться с нами',
