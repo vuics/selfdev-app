@@ -25,7 +25,6 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       sourcemap: true,
-      outDir: "build",
     },
     server: {
       host: HOST || "0.0.0.0",
