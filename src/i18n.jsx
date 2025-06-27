@@ -316,6 +316,16 @@ const resources = {
       'Reorder': 'Reorder',
       'Unlink': 'Unlink'
     },
+    Profile: {
+      'Error getting user profile.': 'Error getting user profile.',
+      'Error': 'Error',
+      'Profile': 'Profile',
+      'First Name': 'First Name',
+      'Last Name': 'Last Name',
+      'E-mail address': 'E-mail address',
+      'Phone (optionally)': 'Phone (optionally)',
+      'Save': 'Save'
+    },
   },
   'ru-RU': {
     translation: {
@@ -612,7 +622,17 @@ const resources = {
       'Unset condition': 'Удалить условие',
       'Reorder': 'Изменить порядок',
       'Unlink': 'Отсоединить'
-    }
+    },
+    Profile: {
+      'Error getting user profile.': 'Ошибка при получении профиля пользователя.',
+      'Error': 'Ошибка',
+      'Profile': 'Профиль',
+      'First Name': 'Имя',
+      'Last Name': 'Фамилия',
+      'E-mail address': 'Адрес электронной почты',
+      'Phone (optionally)': 'Телефон (необязательно)',
+      'Save': 'Сохранить'
+    },
   },
 };
 

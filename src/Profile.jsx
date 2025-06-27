@@ -11,10 +11,13 @@ import {
   Icon,
   Header,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
 
 const Profile = () => {
+  const { t } = useTranslation('Profile')
   const [ firstName, setFirstName ] = useState(localStorage.getItem('user.firstName'))
   const [ lastName, setLastName ] = useState(localStorage.getItem('user.lastName'))
   const [ email, setEmail ] = useState(localStorage.getItem('user.email'))
@@ -42,7 +45,7 @@ const Profile = () => {
 
     } catch (err) {
       console.error('get profile error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting user profile.')
+      return setResponseError(err?.response?.data?.message || t('Error getting user profile.'))
     } finally {
       setLoading(false)
     }
@@ -65,21 +68,23 @@ const Profile = () => {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header='Error'
+          header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
         />
       }
 
       <Segment secondary>
-        <Header as='h3'>Profile</Header>
+        <Header as='h3'>
+          {t('Profile')}
+        </Header>
 
         <Form onSubmit={handleSubmit}>
           <Segment stacked>
             <Form.Input fluid
               icon='user'
               iconPosition='left'
-              placeholder='First Name'
+              placeholder={t('First Name')}
               name='firstName'
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
@@ -94,7 +99,7 @@ const Profile = () => {
               fluid
               icon='user outline'
               iconPosition='left'
-              placeholder='Last Name'
+              placeholder={t('Last Name')}
               name='lastName'
               value={lastName}
               onChange={e => setLastName(e.target.value)}
@@ -109,7 +114,7 @@ const Profile = () => {
               fluid
               icon='at'
               iconPosition='left'
-              placeholder='E-mail address'
+              placeholder={t('E-mail address')}
               name='email'
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -124,7 +129,7 @@ const Profile = () => {
               fluid
               icon='phone'
               iconPosition='left'
-              placeholder='Phone (optionally)'
+              placeholder={t('Phone (optionally)')}
               name='phone'
               value={phone}
               onChange={e => setPhone(e.target.value)}
@@ -134,9 +139,13 @@ const Profile = () => {
               }}
               readOnly
             />
-            <Button onClick={handleSubmit} disabled>
+            <Button
+              icon labelPosition='left'
+              onClick={handleSubmit}
+              disabled
+            >
               <Icon name='save' />
-              {' '}Save{' '}
+              {t('Save')}
             </Button>
           </Segment>
         </Form>
