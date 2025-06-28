@@ -584,7 +584,38 @@ const resources = {
       webIntro: "You can also use our fully responsive mobile web app, accessible directly in your browser:",
       openWebApp: "Open Mobile Web App",
     },
+    Security: {
+      title: "Security at {{appName}}",
+      intro: "At <1>{{appName}}</1>, the security and privacy of our platform, our users, and your data are our highest priorities. We are committed to building agentic AI systems that are not only powerful and autonomous, but also safe and resilient.",
 
+      disclosureTitle: "Responsible Disclosure",
+      disclosureText: "We deeply appreciate researchers, developers, and users who help us keep {{appName}} secure. If you discover a vulnerability, we encourage responsible disclosure.",
+      emailUs: "Email us",
+
+      disclosureDetailsTitle: "Please include, if possible:",
+      disclosureList: {
+        step: "Steps to reproduce the issue or a working proof-of-concept (PoC).",
+        tools: "Any tools or libraries used, including version numbers.",
+        output: "Tool output or logs related to the vulnerability."
+      },
+
+      commitmentTitle: "Commitment to Security",
+      commitmentList: {
+        sdlc: "Secure software development lifecycle (SSDLC).",
+        scanning: "Regular dependency scanning and patching.",
+        pentesting: "Penetration testing and third-party security audits.",
+        leastPrivilege: "Principle of least privilege across infrastructure.",
+        encryption: "Encryption at rest and in transit."
+      },
+
+      openSourceTitle: "Open Source Security",
+      openSourceText: "For vulnerabilities in our open-source components, please refer to our GitHub repositories. Many have <1>SECURITY.md</1> files with further guidance.",
+      visitGitHub: "Visit GitHub",
+      readSecurityMd: "Read SECURITY.md",
+
+      contactTitle: "Contact",
+      contactText: "Have questions or concerns about security at {{appName}}? Reach out at <1>{{email}}</1>.",
+    },
 
 
 
@@ -1154,7 +1185,38 @@ const resources = {
       webIntro: "Вы также можете использовать наше полностью адаптивное мобильное веб-приложение, доступное прямо в вашем браузере:",
       openWebApp: "Открыть мобильное веб-приложение",
     },
+    Security: {
+      title: "Безопасность в {{appName}}",
+      intro: "В <1>{{appName}}</1> безопасность и конфиденциальность нашей платформы, пользователей и ваших данных — наши главные приоритеты. Мы стремимся создавать агентные ИИ-системы, которые не только мощны и автономны, но и безопасны и устойчивы.",
 
+      disclosureTitle: "Ответственное раскрытие информации",
+      disclosureText: "Мы глубоко ценим исследователей, разработчиков и пользователей, которые помогают нам поддерживать безопасность {{appName}}. Если вы обнаружите уязвимость, мы призываем к ответственному раскрытию.",
+      emailUs: "Напишите нам",
+
+      disclosureDetailsTitle: "Пожалуйста, по возможности укажите:",
+      disclosureList: {
+        step: "Шаги для воспроизведения проблемы или работающий proof-of-concept (PoC).",
+        tools: "Используемые инструменты или библиотеки, включая номера версий.",
+        output: "Вывод инструментов или логи, связанные с уязвимостью."
+      },
+
+      commitmentTitle: "Обязательства по безопасности",
+      commitmentList: {
+        sdlc: "Безопасный жизненный цикл разработки программного обеспечения (SSDLC).",
+        scanning: "Регулярное сканирование зависимостей и установка патчей.",
+        pentesting: "Пентестинг и сторонние аудиты безопасности.",
+        leastPrivilege: "Принцип наименьших привилегий во всей инфраструктуре.",
+        encryption: "Шифрование данных в покое и при передаче."
+      },
+
+      openSourceTitle: "Безопасность открытого кода",
+      openSourceText: "По вопросам уязвимостей в наших открытых компонентах смотрите репозитории на GitHub. Во многих есть файлы <1>SECURITY.md</1> с дополнительными инструкциями.",
+      visitGitHub: "Перейти на GitHub",
+      readSecurityMd: "Читать SECURITY.md",
+
+      contactTitle: "Контакты",
+      contactText: "Есть вопросы или опасения по безопасности в {{appName}}? Свяжитесь с нами по адресу <1>{{email}}</1>.",
+    },
 
 
 
