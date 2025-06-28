@@ -59,7 +59,144 @@ const resources = {
       'Tired of being bogged down in repetitive tasks?': 'Tired of being bogged down in repetitive tasks?',
       'Dreaming of scaling your business without the endless grind?': 'Dreaming of scaling your business without the endless grind?',
       'makes it possible.': 'makes it possible.',
-      'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.': 'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.'
+      'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.': 'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.',
+
+      virtualStartupTeamsTitle: "Virtual Startup Teams",
+      virtualStartupTeamsDesc: "Experience unparalleled growth with virtual teams designed to assist your business in automating workflows and cutting costs.",
+
+      reclaimYourTimeTitle: "Reclaim Your Time",
+      reclaimYourTimeDesc: "Delegate tedious tasks to tireless AI agents, freeing you to focus on strategic vision and high-impact decisions.",
+
+      scaleEffortlesslyTitle: "Scale Effortlessly",
+      scaleEffortlesslyDesc: "Expand your business capabilities without the limitations of traditional hiring. Build virtual teams that work 24/7.",
+
+      reduceCostsTitle: "Reduce Costs & Maximize Efficiency",
+      reduceCostsDesc: "Optimize workflows and eliminate inefficiencies with intelligent automation, boosting your bottom line.",
+
+      unlockInsightsTitle: "Unlock Data-Driven Insights",
+      unlockInsightsDesc: "Leverage AI-powered analytics to understand your business better and make smarter, more informed decisions.",
+
+      buildDreamBusinessTitle: "Build the Business of Your Dreams",
+      buildDreamBusinessDesc: "Focus on your passion, knowing that {{appName}} is always working in the background to support your vision.",
+
+
+      aiDreamTeamTitle: "Meet Your AI Dream Team: Agent Archetypes for Every Task",
+
+      archetypeChat: "Chat",
+      archetypeRAG: "RAG",
+      archetypeSpeech: "Speech <-> Text",
+      archetypeImageGen: "ImageGen",
+      archetypeCode: "Code",
+      archetypeOthers: "Many More",
+
+      archetypeChatDesc: "Interact with leading LLMs from OpenAI, Anthropic, Google, and more.",
+      archetypeRAGDesc: "Train LLMs on your data to create highly specialized knowledge bases.",
+      archetypeSpeechDesc: "Enable voice-powered workflows and accessibility.",
+      archetypeImageGenDesc: "Create stunning visuals with Dalle-2 and Dalle-3.",
+      archetypeCodeDesc: "Automate complex programming tasks and streamline development.",
+      archetypeOthersDesc: "Quantum, Storage, Command, Langflow, Node-RED, Notebook, Avatar.",
+
+
+      scaleWithSecurityTitle: "Scale with security",
+      scaleWithSecurityDesc: "Securely store your API keys and credentials in <strong>Vault</strong> with robust encryption, ensuring the safety of your data and integrations.",
+
+
+      startBuildingTitle: "Start Building Your Autonomous Future Today - It's Free!",
+
+      openSourceTitle: "Open-Source",
+      openSourceDesc: "Self-host the platform and run unlimited agents for free.",
+
+      freeTierTitle: "Free Tier",
+      freeTierDesc: "Run up to 3 agents simultaneously on our cloud-hosted platform.",
+
+      cloudDeploymentTitle: "Cloud Deployment",
+      cloudDeploymentDesc: "Hassle-free hosting and management of your {{appName}} platform.",
+
+      starOnGithub: "Star on GitHub",
+      startForFree: "Start for free",
+      joinWaitlist: "Join a waitlist",
+
+
+      unlockPremiumTitle: "Unlock the Full Potential with Our Premium Cloud Offering",
+
+      syntheticUITitle: "Synthetic UI",
+      syntheticUIDesc: "Dynamically generated and programmatically controlled user interfaces.",
+
+      distributedSystemTitle: "Distributed System",
+      distributedSystemDesc: "Connect humans and agents through a server-to-server network.",
+
+      socialBridgeTitle: "Social Bridge",
+      socialBridgeDesc: "Integrate agents with social networks and messaging platforms.",
+
+      phoneIntegrationTitle: "Phone Integration",
+      phoneIntegrationDesc: "Communicate with agents via phone calls and messages.",
+
+      startForFree: "Start for free",
+      joinWaitlist: "Join a waitlist",
+      seePlans: "See our plans",
+
+
+      futureTitle: "The Future of {{appName}}: A Glimpse into Tomorrow",
+
+      collaborationTitle: "Collaboration & Communication",
+      collaborationDesc: "Meet (Video Conferencing) - Seamlessly connect with agents and humans.",
+
+      workflowTitle: "Workflow Automation",
+      workflowDesc: "Flow, Node - Design and automate complex workflows visually.",
+
+      aiTrainingTitle: "AI Training & Development",
+      aiTrainingDesc: "Train, Note, Code - Empower agents with continuous learning.",
+
+      businessAppsTitle: "Business Applications",
+      businessAppsDesc: "Sell (CRM/ERP), E-commerce, Storefront, Bank - Streamline core business functions.",
+
+      emergingTechTitle: "Emerging Technologies",
+      emergingTechDesc: "Blockchain, Smart Contract, VR/AR integrations.",
+
+
+      trailblazerTitle: "Become a Trailblazer in Agentic AI Innovation!",
+      trailblazerDesc: "{{appName}} is more than just a platform; it's a vibrant community of innovators, entrepreneurs, and developers building the future of work. Connect with like-minded individuals, share ideas, and contribute to the evolution of agentic AI.",
+
+      joinCommunity: "Join our community",
+      viewDocs: "View Documentation",
+      contactUs: "Contact us",
+
+
+      reviewers: {
+        AlexanderPavlov: {
+          name: "Alexander Pavlov",
+          content: "Cool project. The future belongs to these technologies. It solves the tasks in time."
+        },
+        KateMelnikova: {
+          name: "Kate Melnikova",
+          content: "The platform allows entrepreneurs to significantly reduce the time spent on supporting current business issues, and most importantly, using new technologies with HiperAgency is easy and does not require a long study of the issue. And even \"from scratch\" of knowledge and ideas about the benefits of AI in your business, you can start using this platform and programming in a common language. It is great to turn from an individual entrepreneur into a developer for the needs of your business, reducing the time spent on explaining the task to outsourcing contractors. You can do the necessary minimum yourself with the help of this wonderful platform."
+        },
+        DmitriyArakcheev: {
+          name: "Dmitriy Arakcheev",
+          content: "The best multifunctional platform I have ever seen. I especially like the structure when you can gather many agents that will perform processes between themselves."
+        },
+        AlekseyArakcheev: {
+          name: "Aleksey Arakcheev",
+          content: "It helped to solve tasks."
+        },
+        AslanAtemov: {
+          name: "Aslan Atemov",
+          content: "The service is convenient and easy to use. Everything works great!"
+        },
+        JonathanSimons: {
+          name: "Jonathan Simons",
+          content: "I love these agents."
+        },
+        AlexanderLabyrich: {
+          name: "Alexander Labyrich",
+          content: "I tried this system in action. Very convenient interface, which allows you to create different options for executing a request. Lots of possibilities with ease of use!"
+        },
+        AnnaAgeeva: {
+          name: "Anna Ageeva",
+          content: "Powerful application. The functionality is amazing, you can simulate any event, game, debate, negotiations... as limitless as your imagination!"
+        }
+      },
+      empoweringTitle: "Empowering the next generation of entrepreneurs."
     },
     ResponsiveContainer: {
       'Docs': 'Docs',
@@ -436,16 +573,154 @@ const resources = {
       'Access platform features programmatically for advanced customization and seamless integration.': 'Используйте возможности платформы программно для гибкой настройки и интеграции.',
       'Mobile & Desktop Apps': 'Мобильные и десктопные приложения',
       'Stay connected and manage your agents on the go with our iOS, Android, macOS, Linux, and Windows apps.': 'Оставайтесь на связи и управляйте агентами в дороге с помощью приложений для iOS, Android, macOS, Linux и Windows.',
-      'Docs': 'Документация',
+      'Docs': 'Доки',
       'Comprehensive documentation and tutorials to guide you from setup to advanced agentic strategies.': 'Подробная документация и учебные материалы — от настройки до продвинутых агентных стратегий.',
       'Imagine a World Where Your Business Runs Itself': 'Представьте мир, где ваш бизнес работает сам',
       'Tired of being bogged down in repetitive tasks?': 'Устали от рутинных задач?',
       'Dreaming of scaling your business without the endless grind?': 'Мечтаете масштабировать бизнес без бесконечной рутины?',
       'makes it possible.': 'делает это возможным.',
-      'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.': 'Мы создаем будущее, где умные ИИ-агенты работают с вами: автоматизируют рутину, усиливают креативность и открывают путь к росту без ограничений.'
+      'We are building a future where intelligent AI agents work alongside you, automating the mundane, amplifying your creativity, and unlocking unprecedented growth.': 'Мы создаем будущее, где умные ИИ-агенты работают с вами: автоматизируют рутину, усиливают креативность и открывают путь к росту без ограничений.',
+
+
+      virtualStartupTeamsTitle: "Виртуальные стартап-команды",
+      virtualStartupTeamsDesc: "Ощутите беспрецедентный рост с виртуальными командами, созданными для автоматизации рабочих процессов и снижения затрат.",
+
+      reclaimYourTimeTitle: "Верните себе время",
+      reclaimYourTimeDesc: "Делегируйте утомительные задачи неутомимым ИИ-агентам, чтобы сосредоточиться на стратегии и ключевых решениях.",
+
+      scaleEffortlesslyTitle: "Масштабируйтесь без усилий",
+      scaleEffortlesslyDesc: "Расширяйте возможности бизнеса без ограничений традиционного найма. Формируйте виртуальные команды, работающие 24/7.",
+
+      reduceCostsTitle: "Снижайте издержки и повышайте эффективность",
+      reduceCostsDesc: "Оптимизируйте процессы и устраняйте неэффективность с помощью интеллектуальной автоматизации, улучшая финансовые показатели.",
+
+      unlockInsightsTitle: "Откройте доступ к аналитике на основе данных",
+      unlockInsightsDesc: "Используйте аналитику на базе ИИ, чтобы лучше понять бизнес и принимать более умные, обоснованные решения.",
+
+      buildDreamBusinessTitle: "Создайте бизнес своей мечты",
+      buildDreamBusinessDesc: "Занимайтесь любимым делом, зная, что {{appName}} всегда работает в фоновом режиме, поддерживая вашу идею.",
+
+
+      aiDreamTeamTitle: "Познакомьтесь с вашей командой мечты: Архетипы агентов для любых задач",
+
+      archetypeChat: "Чат",
+      archetypeRAG: "RAG",
+      archetypeSpeech: "Речь <-> Текст",
+      archetypeImageGen: "Генерация изображений",
+      archetypeCode: "Код",
+      archetypeOthers: "И многое другое",
+
+      archetypeChatDesc: "Взаимодействуйте с передовыми LLM от OpenAI, Anthropic, Google и других.",
+      archetypeRAGDesc: "Обучайте LLM на ваших данных для создания специализированных баз знаний.",
+      archetypeSpeechDesc: "Создавайте голосовые рабочие процессы и обеспечивайте доступность.",
+      archetypeImageGenDesc: "Создавайте потрясающие визуалы с помощью Dalle-2 и Dalle-3.",
+      archetypeCodeDesc: "Автоматизируйте сложные программные задачи и ускоряйте разработку.",
+      archetypeOthersDesc: "Квант, Хранилище, Команды, Langflow, Node-RED, Блокнот, Аватар.",
+
+
+      scaleWithSecurityTitle: "Масштабируйтесь с безопасностью",
+      scaleWithSecurityDesc: "Безопасно храните свои API-ключи и учётные данные в <strong>Хранилище</strong> с надёжным шифрованием, гарантируя защиту ваших данных и интеграций.",
+
+
+      startBuildingTitle: "Начните строить своё автономное будущее уже сегодня — это бесплатно!",
+
+      openSourceTitle: "Открытый исходный код",
+      openSourceDesc: "Развёртывайте платформу самостоятельно и запускайте неограниченное количество агентов бесплатно.",
+
+      freeTierTitle: "Бесплатный тариф",
+      freeTierDesc: "Запускайте до 3 агентов одновременно на нашей облачной платформе.",
+
+      cloudDeploymentTitle: "Облачное развёртывание",
+      cloudDeploymentDesc: "Простое размещение и управление вашей платформой {{appName}}.",
+
+      starOnGithub: "Отметить на GitHub",
+      startForFree: "Начать бесплатно",
+      joinWaitlist: "Присоединиться к листу ожидания",
+
+
+      unlockPremiumTitle: "Откройте полный потенциал с нашим премиальным облачным решением",
+
+      syntheticUITitle: "Синтетический интерфейс",
+      syntheticUIDesc: "Динамически создаваемые и программно управляемые пользовательские интерфейсы.",
+
+      distributedSystemTitle: "Распределённая система",
+      distributedSystemDesc: "Связывайте людей и агентов через серверные сети.",
+
+      socialBridgeTitle: "Социальный мост",
+      socialBridgeDesc: "Интегрируйте агентов с социальными сетями и мессенджерами.",
+
+      phoneIntegrationTitle: "Интеграция с телефонией",
+      phoneIntegrationDesc: "Общайтесь с агентами через звонки и сообщения.",
+
+      startForFree: "Начать бесплатно",
+      joinWaitlist: "Присоединиться к листу ожидания",
+      seePlans: "Посмотреть планы",
+
+
+      futureTitle: "Будущее {{appName}}: взгляд в завтра",
+
+      collaborationTitle: "Сотрудничество и коммуникация",
+      collaborationDesc: "Meet (видеоконференции) — бесшовное общение с агентами и людьми.",
+
+      workflowTitle: "Автоматизация рабочих процессов",
+      workflowDesc: "Flow, Node — визуальное проектирование и автоматизация сложных процессов.",
+
+      aiTrainingTitle: "Обучение и развитие ИИ",
+      aiTrainingDesc: "Train, Note, Code — наделяйте агентов непрерывным обучением.",
+
+      businessAppsTitle: "Бизнес-приложения",
+      businessAppsDesc: "Sell (CRM/ERP), E-commerce, Storefront, Bank — оптимизация ключевых бизнес-функций.",
+
+      emergingTechTitle: "Перспективные технологии",
+      emergingTechDesc: "Интеграции с блокчейном, смарт-контрактами, VR/AR.",
+
+
+      trailblazerTitle: "Станьте первопроходцем в инновациях агентного ИИ!",
+      trailblazerDesc: "{{appName}} — это не просто платформа; это живое сообщество новаторов, предпринимателей и разработчиков, создающих будущее труда. Общайтесь с единомышленниками, делитесь идеями и вносите вклад в развитие агентного ИИ.",
+
+      joinCommunity: "Присоединиться к сообществу",
+      viewDocs: "Посмотреть документацию",
+      contactUs: "Связаться с нами",
+
+
+      reviewers: {
+        AlexanderPavlov: {
+          name: "Александр Павлов",
+          content: "Классный проект. Будущее принадлежит таким технологиям. Задачи решаются вовремя."
+        },
+        KateMelnikova: {
+          name: "Екатерина Мельникова",
+          content: "Платформа позволяет предпринимателям значительно сократить время, затрачиваемое на решение текущих бизнес-задач. А главное — использовать новые технологии с HiperAgency легко и не требует длительного изучения вопроса. Даже с нуля знаний и представлений о пользе ИИ в бизнесе, можно начать пользоваться платформой и программировать на понятном языке. Здорово превращаться из индивидуального предпринимателя в разработчика под нужды своего бизнеса, уменьшая время на объяснение задач подрядчикам. Необходимый минимум можно сделать самому с помощью этой замечательной платформы."
+        },
+        DmitriyArakcheev: {
+          name: "Дмитрий Аракчеев",
+          content: "Лучшая многофункциональная платформа, которую я видел. Особенно нравится структура, когда можно собрать много агентов, выполняющих процессы между собой."
+        },
+        AlekseyArakcheev: {
+          name: "Алексей Аракчеев",
+          content: "Помогло решить задачи."
+        },
+        AslanAtemov: {
+          name: "Аслан Атемов",
+          content: "Сервис удобный и простой в использовании. Всё отлично работает!"
+        },
+        JonathanSimons: {
+          name: "Jonathan Simons",
+          content: "Обожаю этих агентов."
+        },
+        AlexanderLabyrich: {
+          name: "Александр Лабырич",
+          content: "Пробовал эту систему в действии. Очень удобный интерфейс, который позволяет создавать разные варианты выполнения запроса. Много возможностей при простоте использования!"
+        },
+        AnnaAgeeva: {
+          name: "Анна Агеева",
+          content: "Мощное приложение. Функциональность потрясающая — можно смоделировать любое событие, игру, дебаты, переговоры... всё ограничено только воображением!"
+        }
+      },
+      empoweringTitle: "Даем силы новому поколению предпринимателей."
     },
     ResponsiveContainer: {
-      'Docs': 'Документация',
+      'Docs': 'Доки',
       'Mobile': 'Мобильное',
       'Pricing': 'Цены',
       'Log In': 'Войти',

@@ -5,7 +5,7 @@ export const arr = (str) => str ? str.split(',') : []
 
 const conf = {
   app: {
-    name: import.meta.env.VITE_NAME || 'HyperAgency',
+    name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
     company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
   },
 
@@ -20,8 +20,6 @@ const conf = {
 
   api: {
     url: import.meta.env.VITE_API_URL || 'http://localhost:6369/v1',
-    // url: import.meta.env.VITE_API_URL || 'https://api.hyag.org/v1',
-    // url: import.meta.env.VITE_API_URL || 'http://localhost:8080/v1',
   },
 
   interestForm: {
