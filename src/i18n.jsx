@@ -616,9 +616,13 @@ const resources = {
       contactTitle: "Contact",
       contactText: "Have questions or concerns about security at {{appName}}? Reach out at <1>{{email}}</1>.",
     },
+    Pricing: {
+      journeyTitle: "From zero to IPO",
+      journeyText: "Designed for every stage of your journey. Start today, no credit card required.",
 
-
-
+      pricingTitle: "Pricing",
+      pricingPlaceholder: "...",
+    },
   },
   'ru-RU': {
     translation: {
@@ -1217,9 +1221,13 @@ const resources = {
       contactTitle: "Контакты",
       contactText: "Есть вопросы или опасения по безопасности в {{appName}}? Свяжитесь с нами по адресу <1>{{email}}</1>.",
     },
+    Pricing: {
+      journeyTitle: "От нуля до IPO",
+      journeyText: "Создано для каждого этапа вашего пути. Начните сегодня — без необходимости вводить данные карты.",
 
-
-
+      pricingTitle: "Цены",
+      pricingPlaceholder: "...",
+    },
   },
 };
 
