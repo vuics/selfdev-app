@@ -326,6 +326,28 @@ const resources = {
       'Phone (optionally)': 'Phone (optionally)',
       'Save': 'Save'
     },
+    Keys: {
+      'Error getting keys.': 'Error getting keys.',
+      'Error posting a key.': 'Error posting a key.',
+      'Error deleting key.': 'Error deleting key.',
+      'Error': 'Error',
+      'Info': 'Info',
+      'API Keys': 'API Keys',
+      'Name': 'Name',
+      'Key': 'Key',
+      'Created At': 'Created At',
+      'Last Used At': 'Last Used At',
+      'Actions': 'Actions',
+      'Copied': 'Copied',
+      'Add Key': 'Add Key',
+      'Key Name': 'Key Name',
+      'Cancel': 'Cancel',
+      'Submit': 'Submit',
+      'You can read the': 'You can read the',
+      'document to learn more about the Self-developing API.': 'document to learn more about the Self-developing API.',
+      'Check the': 'Check the',
+      'tool on GitHub to use the Self-developing AI from command line.': 'tool on GitHub to use the Self-developing AI from command line.'
+    },
   },
   'ru-RU': {
     translation: {
@@ -633,6 +655,28 @@ const resources = {
       'Phone (optionally)': 'Телефон (необязательно)',
       'Save': 'Сохранить'
     },
+    Keys: {
+      'Error getting keys.': 'Ошибка при получении ключей.',
+      'Error posting a key.': 'Ошибка при добавлении ключа.',
+      'Error deleting key.': 'Ошибка при удалении ключа.',
+      'Error': 'Ошибка',
+      'Info': 'Информация',
+      'API Keys': 'API-ключи',
+      'Name': 'Название',
+      'Key': 'Ключ',
+      'Created At': 'Создан',
+      'Last Used At': 'Последнее использование',
+      'Actions': 'Действия',
+      'Copied': 'Скопировано',
+      'Add Key': 'Добавить ключ',
+      'Key Name': 'Название ключа',
+      'Cancel': 'Отмена',
+      'Submit': 'Отправить',
+      'You can read the': 'Вы можете прочитать',
+      'document to learn more about the Self-developing API.': 'документ, чтобы узнать больше о Self-developing API.',
+      'Check the': 'Посмотрите',
+      'tool on GitHub to use the Self-developing AI from command line.': 'инструмент на GitHub, чтобы использовать Self-developing AI через командную строку.'
+    }
   },
 };
 

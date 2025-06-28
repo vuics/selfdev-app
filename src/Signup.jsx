@@ -291,7 +291,7 @@ export default function Signup () {
               {' '}
               {t('Sign Up')}
               {' '}
-            </Button>
+             </Button>
           </Segment>
         </Form>
         <Message>

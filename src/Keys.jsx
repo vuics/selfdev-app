@@ -14,10 +14,13 @@ import {
   Popup,
   Input,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
 
-const Keys = () => {
+export default function Keys () {
+  const { t } = useTranslation('Keys')
   const [ keys, setKeys ] = useState([])
   const [ name, setName ] = useState('')
   const [ visible, setVisible ] = useState(null)
@@ -38,7 +41,7 @@ const Keys = () => {
       setKeys(res?.data || [])
     } catch (err) {
       console.error('getKeys error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting keys.')
+      return setResponseError(err?.response?.data?.message || t('Error getting keys.'))
     } finally {
       setLoading(false)
     }
@@ -46,7 +49,7 @@ const Keys = () => {
 
   useEffect(() => {
     getKeys()
-  }, [])
+  })
 
   const handleSubmit = async () => {
     setLoading(true)
@@ -64,7 +67,7 @@ const Keys = () => {
       setName('')
     } catch (err) {
       console.error('post key error:', err);
-      return setResponseError(err.toString() || 'Error posting key.')
+      return setResponseError(err.toString() || t('Error posting a key.'))
     } finally {
       setLoading(false)
     }
@@ -82,7 +85,7 @@ const Keys = () => {
       setKeys(keys.filter(obj => obj._id !== _id))
     } catch (err) {
       console.error('delete key error:', err);
-      return setResponseError(err.toString() || 'Error deleting key.')
+      return setResponseError(err.toString() || t('Error deleting key.'))
     } finally {
       setLoading(false)
     }
@@ -98,7 +101,7 @@ const Keys = () => {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header='Error'
+          header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
         />
@@ -108,23 +111,35 @@ const Keys = () => {
           positive
           style={{ textAlign: 'left'}}
           icon='info circle'
-          header='Info'
+          header={t('Info')}
           content={responseMessage}
           onDismiss={() => setResponseMessage('')}
         />
       }
 
       <Segment secondary>
-        <Header as='h3'>API Keys</Header>
+        <Header as='h3'>
+          {t('API Keys')}
+        </Header>
 
         <Table striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Key</Table.HeaderCell>
-              <Table.HeaderCell>Created At</Table.HeaderCell>
-              <Table.HeaderCell>Last Used At</Table.HeaderCell>
-              <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Name')}
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Key')}
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Created At')}
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Last Used At')}
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='right'>
+                {t('Actions')}
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -143,7 +158,7 @@ const Keys = () => {
                       <Icon name='eye' />
                     </Button>
                     <Popup
-                      content='Copied'
+                      content={t('Copied')}
                       on='click'
                       pinned
                       trigger={
@@ -167,9 +182,12 @@ const Keys = () => {
         </Table>
 
         { !adding && (
-          <Button onClick={() => setAdding(!adding) }>
+            <Button
+              icon labelPosition='left'
+              onClick={() => setAdding(!adding) }
+            >
             <Icon name='add' />
-            {' '}Add Key{' '}
+            {t('Add Key')}
           </Button>
         )}
 
@@ -180,7 +198,7 @@ const Keys = () => {
               <Form.Input fluid
                 icon='key'
                 iconPosition='left'
-                placeholder='Key Name'
+                placeholder={t('Key Name')}
                 name='name'
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -191,14 +209,21 @@ const Keys = () => {
                 required
               />
               <Button.Group>
-                <Button onClick={() => setAdding(!adding) }>
+                <Button
+                  icon labelPosition='left'
+                  onClick={() => setAdding(!adding) }
+                >
                   <Icon name='cancel' />
-                  {' '}Cancel{' '}
+                  {t('Cancel')}
                 </Button>
                 <Button.Or />
-                <Button positive onClick={() => { handleSubmit(); setAdding(!adding) }}>
+                <Button
+                  positive
+                  icon labelPosition='left'
+                  onClick={() => { handleSubmit(); setAdding(!adding) }}
+                >
                   <Icon name='save' />
-                  {' '}Submit{' '}
+                  {t('Submit')}
                 </Button>
               </Button.Group>
             </Segment>
@@ -207,18 +232,16 @@ const Keys = () => {
       </Segment>
 
       <Segment>
-        You can read the
+        {t('You can read the')}
         {' '}<a href='https://github.com/vuics/selfdev-js/blob/main/API.md' target='_blank'>API.md</a>{' '}
-        document to learn more about the Self-developing API.
+        {t('document to learn more about the Self-developing API.')}
       </Segment>
 
       <Segment>
-        Check the
+        {t('Check the')}
         {' '}<a href='https://github.com/vuics/selfdev-js' target='_blank'>selfdev-js</a>{' '}
-        tool on GitHub to use the Self-developing AI from command line.
+        {t('tool on GitHub to use the Self-developing AI from command line.')}
       </Segment>
     </Container>
   )
 }
-
-export default Keys
