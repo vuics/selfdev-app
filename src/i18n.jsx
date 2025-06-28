@@ -559,9 +559,31 @@ const resources = {
 
       visionTitle: "Visionary Foundations",
       visionParagraph1: "Envision a future where intelligent agentic teams drive business forward — teams that are <1>self-developing</1>, <3>self-selling</3>, and <5>self-finding</5>.",
-      visionParagraph2: "Built on these three foundational pillars, our platform empowers agentic AI to collaborate on every aspect of business development — from discovering and funding startups to marketing, sales, research, development, and administration. These teams work alongside humans, learning from human creativity, behavior, and strategy — with the ultimate goal of autonomously evolving to handle the full spectrum of business operations."
+      visionParagraph2: "Built on these three foundational pillars, our platform empowers agentic AI to collaborate on every aspect of business development — from discovering and funding startups to marketing, sales, research, development, and administration. These teams work alongside humans, learning from human creativity, behavior, and strategy — with the ultimate goal of autonomously evolving to handle the full spectrum of business operations.",
     },
+    Mobile: {
+      title: "Mobile Apps",
+      optionsTitle: "Options",
+      optionsIntro: "There are 2 options for mobile apps available:",
+      optionNative: "Native iOS and Android apps.",
+      optionWeb: "Mobile web app.",
 
+      nativeTitle: "Native Mobile Apps",
+      nativeSubheader: "Install via Expo",
+      nativeIntro: "You can experience our mobile app instantly using <1>Expo Go</1>. First, download the Expo Go app from the app store:",
+      getExpoGo: "Get Expo Go",
+      scanQr: "Then scan the QR code below to open our app in Expo:",
+      runtimeVersion: "Runtime Version",
+      published: "Published",
+      qrAlt: "Install via link",
+      nativeFallback: "If you cannot scan the QR code, click the button:",
+      installNative: "Install Native Mobile App",
+
+      webTitle: "Mobile Web App",
+      webSubheader: "Open a Link",
+      webIntro: "You can also use our fully responsive mobile web app, accessible directly in your browser:",
+      openWebApp: "Open Mobile Web App",
+    },
 
 
 
@@ -1107,9 +1129,31 @@ const resources = {
 
       visionTitle: "Видение",
       visionParagraph1: "Представьте будущее, где интеллектуальные агентные команды двигают бизнес вперёд — команды, которые <1>саморазвиваются</1>, <3>самостоятельно продают</3> и <5>сами находят возможности</5>.",
-      visionParagraph2: "Построенная на этих трёх фундаментальных принципах, наша платформа даёт агентному ИИ возможность сотрудничать во всех аспектах развития бизнеса — от поиска и финансирования стартапов до маркетинга, продаж, исследований, разработки и администрирования. Эти команды работают бок о бок с людьми, обучаясь у человеческого творчества, поведения и стратегии — с конечной целью автономно эволюционировать и охватить весь спектр бизнес-процессов."
-    }
+      visionParagraph2: "Построенная на этих трёх фундаментальных принципах, наша платформа даёт агентному ИИ возможность сотрудничать во всех аспектах развития бизнеса — от поиска и финансирования стартапов до маркетинга, продаж, исследований, разработки и администрирования. Эти команды работают бок о бок с людьми, обучаясь у человеческого творчества, поведения и стратегии — с конечной целью автономно эволюционировать и охватить весь спектр бизнес-процессов.",
+    },
+    Mobile: {
+      title: "Мобильные приложения",
+      optionsTitle: "Варианты",
+      optionsIntro: "Доступно 2 варианта мобильных приложений:",
+      optionNative: "Нативные приложения для iOS и Android.",
+      optionWeb: "Мобильное веб-приложение.",
 
+      nativeTitle: "Нативные мобильные приложения",
+      nativeSubheader: "Установка через Expo",
+      nativeIntro: "Вы можете сразу протестировать наше мобильное приложение с помощью <1>Expo Go</1>. Сначала скачайте приложение Expo Go из магазина приложений:",
+      getExpoGo: "Скачать Expo Go",
+      scanQr: "Затем отсканируйте QR-код ниже, чтобы открыть наше приложение в Expo:",
+      runtimeVersion: "Версия среды выполнения",
+      published: "Опубликовано",
+      qrAlt: "Установить по ссылке",
+      nativeFallback: "Если вы не можете отсканировать QR-код, нажмите на кнопку:",
+      installNative: "Установить нативное мобильное приложение",
+
+      webTitle: "Мобильное веб-приложение",
+      webSubheader: "Открыть ссылку",
+      webIntro: "Вы также можете использовать наше полностью адаптивное мобильное веб-приложение, доступное прямо в вашем браузере:",
+      openWebApp: "Открыть мобильное веб-приложение",
+    },
 
 
 
