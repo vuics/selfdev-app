@@ -348,6 +348,30 @@ const resources = {
       'Check the': 'Check the',
       'tool on GitHub to use the Self-developing AI from command line.': 'tool on GitHub to use the Self-developing AI from command line.'
     },
+    Vault: {
+      'Error getting vault.': 'Error getting vault.',
+      'Error posting vault.': 'Error posting vault.',
+      'Key is empty': 'Key is empty',
+      'The key already exists': 'The key already exists',
+      'Error deleting vault.': 'Error deleting vault.',
+      'Error': 'Error',
+      'Info': 'Info',
+      'Vault': 'Vault',
+      'Key': 'Key',
+      'Value': 'Value',
+      'Actions': 'Actions',
+      'Expose the secret value': 'Expose the secret value',
+      'Copy the secret value': 'Copy the secret value',
+      'Delete the key-value secret': 'Delete the key-value secret',
+      'Add Key/Value': 'Add Key/Value',
+      'Cancel': 'Cancel',
+      'Submit': 'Submit',
+      'Your keys are safely protected and securely stored.': 'Your keys are safely protected and securely stored.',
+      'We use advanced encryption methods...': 'We use advanced encryption methods to ensure that your keys are never exposed in plain text. They are encrypted before storage and kept protected by industry-leading security protocols, so only you and authorized systems have access. Your privacy and security are our top priorities.',
+    },
+    Subscription: {
+      // TODO
+    },
   },
   'ru-RU': {
     translation: {
@@ -676,7 +700,31 @@ const resources = {
       'document to learn more about the Self-developing API.': 'документ, чтобы узнать больше о Self-developing API.',
       'Check the': 'Посмотрите',
       'tool on GitHub to use the Self-developing AI from command line.': 'инструмент на GitHub, чтобы использовать Self-developing AI через командную строку.'
-    }
+    },
+    Vault: {
+      'Error getting vault.': 'Ошибка при получении хранилища.',
+      'Error posting vault.': 'Ошибка при добавлении в хранилище.',
+      'Key is empty': 'Ключ пустой',
+      'The key already exists': 'Ключ уже существует',
+      'Error deleting vault.': 'Ошибка при удалении из хранилища.',
+      'Error': 'Ошибка',
+      'Info': 'Информация',
+      'Vault': 'Сейф',
+      'Key': 'Ключ',
+      'Value': 'Значение',
+      'Actions': 'Действия',
+      'Expose the secret value': 'Показать секретное значение',
+      'Copy the secret value': 'Скопировать секретное значение',
+      'Delete the key-value secret': 'Удалить пару ключ/значение',
+      'Add Key/Value': 'Добавить ключ/значение',
+      'Cancel': 'Отмена',
+      'Submit': 'Отправить',
+      'Your keys are safely protected and securely stored.': 'Ваши ключи надежно защищены и безопасно хранятся.',
+      'We use advanced encryption methods...': 'Мы используем передовые методы шифрования, чтобы гарантировать, что ваши ключи никогда не будут храниться в открытом виде. Они шифруются перед сохранением и защищаются с помощью лучших отраслевых протоколов безопасности, поэтому доступ имеют только вы и авторизованные системы. Ваша конфиденциальность и безопасность — наш главный приоритет.',
+    },
+    Subscription: {
+      // TODO
+    },
   },
 };
 

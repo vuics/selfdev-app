@@ -14,11 +14,13 @@ import {
   Popup,
   Input,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 
-const Vault = () => {
+export default function Vault () {
+  const { t } = useTranslation('Vault')
   const [ vault, setVault ] = useState({})
   const [ key, setKey ] = useState('')
   const [ keyError, setKeyError ] = useState('')
@@ -42,7 +44,7 @@ const Vault = () => {
       setVault(res?.data || {})
     } catch (err) {
       console.error('getVault error:', err);
-      return setResponseError(err?.response?.data?.message || 'Error getting vault.')
+      return setResponseError(err?.response?.data?.message || t('Error getting vault.'))
     } finally {
       setLoading(false)
     }
@@ -50,7 +52,7 @@ const Vault = () => {
 
   useEffect(() => {
     getVault()
-  }, [])
+  })
 
   const exposeSecret = async ({ key, copy = false } = {}) => {
     setLoading(true)
@@ -72,7 +74,7 @@ const Vault = () => {
       }
     } catch (err) {
       console.error('post vault error:', err);
-      return setResponseError(err.toString() || 'Error posting vault.')
+      return setResponseError(err.toString() || t('Error posting vault.'))
     } finally {
       setLoading(false)
     }
@@ -81,10 +83,10 @@ const Vault = () => {
   const addSecret = async () => {
     setVisibles([])
     if (!key) {
-      return setKeyError('Key is empty')
+      return setKeyError(t('Key is empty'))
     }
     if (has(vault, key)) {
-      return setKeyError('The key already exists')
+      return setKeyError(t('The key already exists'))
     }
     setLoading(true)
     try {
@@ -105,7 +107,7 @@ const Vault = () => {
       setAdding(!adding)
     } catch (err) {
       console.error('post vault error:', err);
-      return setResponseError(err.toString() || 'Error posting vault.')
+      return setResponseError(err.toString() || t('Error posting vault.'))
     } finally {
       setLoading(false)
     }
@@ -126,7 +128,7 @@ const Vault = () => {
       setVault(res?.data || {})
     } catch (err) {
       console.error('delete vault error:', err);
-      return setResponseError(err.toString() || 'Error deleting vault.')
+      return setResponseError(err.toString() || t('Error deleting vault.'))
     } finally {
       setLoading(false)
     }
@@ -142,7 +144,7 @@ const Vault = () => {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header='Error'
+          header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
         />
@@ -152,21 +154,29 @@ const Vault = () => {
           positive
           style={{ textAlign: 'left'}}
           icon='info circle'
-          header='Info'
+          header={t('Info')}
           content={responseMessage}
           onDismiss={() => setResponseMessage('')}
         />
       }
 
       <Segment secondary>
-        <Header as='h3'>Vault</Header>
+        <Header as='h3'>
+          {t('Vault')}
+        </Header>
 
         <Table striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Key</Table.HeaderCell>
-              <Table.HeaderCell>Value</Table.HeaderCell>
-              <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Key')}
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                {t('Value')}
+              </Table.HeaderCell>
+              <Table.HeaderCell textAlign='right'>
+                {t('Actions')}
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
@@ -182,7 +192,7 @@ const Vault = () => {
                     fluid
                   >
                     <input />
-                      <Popup content='Expose the secret value' trigger={
+                      <Popup content={t('Expose the secret value')} trigger={
                         <Button
                           icon
                           onClick={() => {
@@ -197,7 +207,7 @@ const Vault = () => {
                           <Icon name={ visibles.includes(key) ? 'eye slash' : 'eye' } />
                         </Button>
                       } />
-                      <Popup content='Copy the secret value' trigger={
+                      <Popup content={t('Copy the secret value')} trigger={
                         <Button icon onClick={async () => { exposeSecret({ key, copy: true });  }}>
                           <Icon name='copy' />
                         </Button>
@@ -205,7 +215,7 @@ const Vault = () => {
                   </Input>
                 </Table.Cell>
                 <Table.Cell width={1} textAlign='right'>
-                  <Popup content='Delete the key-value secret' trigger={
+                  <Popup content={t('Delete the key-value secret')} trigger={
                     <Button icon onClick={() => { deleteSecret({ key }) }}>
                       <Icon name='trash' />
                     </Button>
@@ -217,9 +227,12 @@ const Vault = () => {
         </Table>
 
         { !adding && (
-          <Button onClick={() => setAdding(!adding) }>
+          <Button
+            icon labelPosition='left'
+            onClick={() => setAdding(!adding) }
+          >
             <Icon name='add' />
-            {' '}Add Key/Value{' '}
+            {t('Add Key/Value')}
           </Button>
         )}
 
@@ -230,7 +243,7 @@ const Vault = () => {
               <Form.Input fluid
                 icon='key'
                 iconPosition='left'
-                placeholder='Key'
+                placeholder={t('Key')}
                 name='key'
                 value={key}
                 onChange={e => setKey(e.target.value)}
@@ -243,7 +256,7 @@ const Vault = () => {
               <Form.Input fluid
                 icon='envelope'
                 iconPosition='left'
-                placeholder='Value'
+                placeholder={t('Value')}
                 name='value'
                 value={value}
                 onChange={e => setValue(e.target.value)}
@@ -253,14 +266,21 @@ const Vault = () => {
                 }}
               />
               <Button.Group>
-                <Button onClick={() => setAdding(!adding) }>
+                <Button
+                  icon labelPosition='left'
+                  onClick={() => setAdding(!adding) }
+                >
                   <Icon name='cancel' />
-                  {' '}Cancel{' '}
+                  {t('Cancel')}
                 </Button>
                 <Button.Or />
-                <Button positive onClick={() => { addSecret() }}>
+                <Button
+                  positive
+                  icon labelPosition='left'
+                  onClick={() => { addSecret() }}
+                >
                   <Icon name='save' />
-                  {' '}Submit{' '}
+                  {t('Submit')}
                 </Button>
               </Button.Group>
             </Segment>
@@ -270,12 +290,12 @@ const Vault = () => {
 
       <Message info>
         <Message.Header>
-          Your keys are safely protected and securely stored.
+          {t('Your keys are safely protected and securely stored.')}
         </Message.Header>
-        <p>We use advanced encryption methods to ensure that your keys are never exposed in plain text. They are encrypted before storage and kept protected by industry-leading security protocols, so only you and authorized systems have access. Your privacy and security are our top priorities.</p>
+        <p>
+          {t('We use advanced encryption methods...')}
+        </p>
       </Message>
     </Container>
   )
 }
-
-export default Vault
