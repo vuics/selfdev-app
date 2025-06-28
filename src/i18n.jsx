@@ -131,8 +131,6 @@ const resources = {
       phoneIntegrationTitle: "Phone Integration",
       phoneIntegrationDesc: "Communicate with agents via phone calls and messages.",
 
-      startForFree: "Start for free",
-      joinWaitlist: "Join a waitlist",
       seePlans: "See our plans",
 
 
@@ -736,8 +734,6 @@ const resources = {
       phoneIntegrationTitle: "Интеграция с телефонией",
       phoneIntegrationDesc: "Общайтесь с агентами через звонки и сообщения.",
 
-      startForFree: "Начать бесплатно",
-      joinWaitlist: "Присоединиться к листу ожидания",
       seePlans: "Посмотреть планы",
 
 
