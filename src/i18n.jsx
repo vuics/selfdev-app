@@ -539,6 +539,21 @@ const resources = {
     Subscription: {
       // TODO
     },
+    Team: {
+      sectionTitle: "Team",
+      sectionSubtitle: "A diverse leadership team with deep expertise across business, technology, and psychology.",
+
+      artemName: "Artem Arakcheev, PhD, DBA",
+      artemRole: "Founder, CTO",
+      artemDescription:
+        "Artem Arakcheev drives innovation as a technology leader and entrepreneur, specializing in AI, quantum computing, and SaaS/PaaS startups. He architects cutting-edge solutions, excelling in smart contracts, cloud, and full-stack development.",
+
+      kateName: "Kate Melnikova",
+      kateRole: "HR Director",
+      kateDescription:
+        "Kate Melnikova leads with empathy and vision, bringing together expertise in psychology, human capital strategy, and art direction. She cultivates a strong team culture and actively represents the company at industry events, building meaningful connections.",
+    },
+
   },
   'ru-RU': {
     translation: {
@@ -1059,6 +1074,20 @@ const resources = {
     },
     Subscription: {
       // TODO
+    },
+    Team: {
+      sectionTitle: "Команда",
+      sectionSubtitle: "Разнообразная команда лидеров с глубокими знаниями в бизнесе, технологиях и психологии.",
+
+      artemName: "Артем Аракчеев, PhD, DBA",
+      artemRole: "Основатель, технический директор",
+      artemDescription:
+        "Артем Аракчеев продвигает инновации как технологический лидер и предприниматель, специализируясь на ИИ, квантовых вычислениях и стартапах в области SaaS/PaaS. Он разрабатывает передовые решения, преуспевая в области смарт-контрактов, облачных технологий и full-stack разработки.",
+
+      kateName: "Екатерина Мельникова",
+      kateRole: "Директор по персоналу",
+      kateDescription:
+        "Екатерина Мельникова руководит с эмпатией и видением, сочетая знания в психологии, стратегии управления человеческим капиталом и арт-дирекшне. Она формирует сильную командную культуру и активно представляет компанию на отраслевых мероприятиях, выстраивая значимые связи.",
     },
   },
 };
