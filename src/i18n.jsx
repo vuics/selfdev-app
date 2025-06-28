@@ -553,6 +553,18 @@ const resources = {
       kateDescription:
         "Kate Melnikova leads with empathy and vision, bringing together expertise in psychology, human capital strategy, and art direction. She cultivates a strong team culture and actively represents the company at industry events, building meaningful connections.",
     },
+    Mission: {
+      missionTitle: "Mission Statement",
+      missionText: "At <1>{{appName}}</1>, our mission is to empower humanity by providing an autonomous agentic platform that operates businesses 24/7, generating revenue and granting more time to human owners for strategic decision-making.",
+
+      visionTitle: "Visionary Foundations",
+      visionParagraph1: "Envision a future where intelligent agentic teams drive business forward — teams that are <1>self-developing</1>, <3>self-selling</3>, and <5>self-finding</5>.",
+      visionParagraph2: "Built on these three foundational pillars, our platform empowers agentic AI to collaborate on every aspect of business development — from discovering and funding startups to marketing, sales, research, development, and administration. These teams work alongside humans, learning from human creativity, behavior, and strategy — with the ultimate goal of autonomously evolving to handle the full spectrum of business operations."
+    },
+
+
+
+
 
   },
   'ru-RU': {
@@ -1089,6 +1101,19 @@ const resources = {
       kateDescription:
         "Екатерина Мельникова руководит с эмпатией и видением, сочетая знания в психологии, стратегии управления человеческим капиталом и арт-дирекшне. Она формирует сильную командную культуру и активно представляет компанию на отраслевых мероприятиях, выстраивая значимые связи.",
     },
+    Mission: {
+      missionTitle: "Миссия",
+      missionText: "В <1>{{appName}}</1> наша миссия — расширять возможности человечества, предоставляя автономную агентную платформу, которая управляет бизнесом 24/7, генерирует доход и освобождает больше времени для людей на стратегические решения.",
+
+      visionTitle: "Видение",
+      visionParagraph1: "Представьте будущее, где интеллектуальные агентные команды двигают бизнес вперёд — команды, которые <1>саморазвиваются</1>, <3>самостоятельно продают</3> и <5>сами находят возможности</5>.",
+      visionParagraph2: "Построенная на этих трёх фундаментальных принципах, наша платформа даёт агентному ИИ возможность сотрудничать во всех аспектах развития бизнеса — от поиска и финансирования стартапов до маркетинга, продаж, исследований, разработки и администрирования. Эти команды работают бок о бок с людьми, обучаясь у человеческого творчества, поведения и стратегии — с конечной целью автономно эволюционировать и охватить весь спектр бизнес-процессов."
+    }
+
+
+
+
+
   },
 };
 
