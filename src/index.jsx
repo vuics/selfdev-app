@@ -5,6 +5,9 @@ import './index.css';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
 import conf from './conf.js'
 import './i18n'
 import { IndexContext } from './components/IndexContext'
@@ -45,11 +48,7 @@ import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
-import Account from './Account';
-import Cancel from './Cancel';
-import Prices from './Prices';
-import Register from './Register';
-import Subscribe from './Subscribe';
+import { Account, Cancel, Prices, Register, Subscribe } from './Subscribe';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -72,6 +71,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
+  // const [ stripePromise, setStripePromise ] = useState(null)
+
   const logIn = (openLogin) => {
     if (available) {
       if (openLogin) {
@@ -105,6 +106,19 @@ function Index () {
         setAvailable(false)
       })
   }, []);
+
+  // useEffect(() => {
+  //   async function configStripe() {
+  //     try {
+  //       const response = await fetch(`${conf.api.url}/subscriptions/config`)
+  //       const data = response.json()
+  //       setStripePromise(loadStripe(data.publishableKey))
+  //     } catch (err) {
+  //       console.error('Error on subscriptions/config:', err);
+  //     }
+  //   }
+  //   configStripe()
+  // }, [])
 
   return (
   <IndexContext.Provider value={{
@@ -204,11 +218,23 @@ function Index () {
   </IndexContext.Provider>
   )
 }
-root.render(
-  <BrowserRouter>
-    <Index/>
-  </BrowserRouter>
-);
+
+fetch(`${conf.api.url}/subscriptions/config`)
+  .then((response) => response.json())
+  .then((data) => {
+    const stripePromise = loadStripe(data.publishableKey);
+
+    root.render(
+      <Elements stripe={stripePromise}>
+        <BrowserRouter>
+          <Index/>
+        </BrowserRouter>
+      </Elements>
+    );
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
