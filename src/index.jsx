@@ -45,6 +45,12 @@ import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
+import Account from './Account';
+import Cancel from './Cancel';
+import Prices from './Prices';
+import Register from './Register';
+import Subscribe from './Subscribe';
+
 import reportWebVitals from './reportWebVitals';
 
 const Test = () => (<div>Test</div>)
@@ -182,9 +188,17 @@ function Index () {
       { conf.vault.enable && (
         <Route path='/vault' element={(<Private> <Vault /> </Private>)}/>
       )}
-      { conf.subscription.enable && (
+      { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
-      )}
+
+        <Route path="/register" element={<Register />} />
+        <Route path="/prices" element={<Prices />} />
+        <Route path="/subscribe" element={<Subscribe />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/cancel" element={<Cancel />} />
+      </>)}
+
+
       <Route path="*" element={<Error />}/>
     </Routes>
   </IndexContext.Provider>
