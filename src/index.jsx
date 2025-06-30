@@ -48,7 +48,7 @@ import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
-import { Prices, Subscribe } from './Subscribe';
+import Subscribe from './Subscribe';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -205,7 +205,6 @@ function Index () {
       { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
 
-        <Route path="/prices" element={<Prices />} />
         <Route path="/subscribe" element={<Subscribe />} />
       </>)}
 
