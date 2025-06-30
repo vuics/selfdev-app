@@ -5,9 +5,6 @@ import './index.css';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import {Elements} from '@stripe/react-stripe-js';
-import {loadStripe} from '@stripe/stripe-js';
-
 import conf from './conf.js'
 import './i18n'
 import { IndexContext } from './components/IndexContext'
@@ -215,22 +212,11 @@ function Index () {
   )
 }
 
-fetch(`${conf.api.url}/subscriptions/config`)
-  .then((response) => response.json())
-  .then((data) => {
-    const stripePromise = loadStripe(data.publishableKey);
-
-    root.render(
-      <Elements stripe={stripePromise}>
-        <BrowserRouter>
-          <Index/>
-        </BrowserRouter>
-      </Elements>
-    );
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+root.render(
+  <BrowserRouter>
+    <Index/>
+  </BrowserRouter>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
