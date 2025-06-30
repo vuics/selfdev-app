@@ -66,7 +66,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
-  // const [ stripePromise, setStripePromise ] = useState(null)
 
   const logIn = (openLogin) => {
     if (available) {
@@ -101,19 +100,6 @@ function Index () {
         setAvailable(false)
       })
   }, []);
-
-  // useEffect(() => {
-  //   async function configStripe() {
-  //     try {
-  //       const response = await fetch(`${conf.api.url}/subscriptions/config`)
-  //       const data = response.json()
-  //       setStripePromise(loadStripe(data.publishableKey))
-  //     } catch (err) {
-  //       console.error('Error on subscriptions/config:', err);
-  //     }
-  //   }
-  //   configStripe()
-  // }, [])
 
   return (
   <IndexContext.Provider value={{
