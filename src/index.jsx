@@ -48,7 +48,7 @@ import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
-import { Account, Prices, Subscribe } from './Subscribe';
+import { Prices, Subscribe } from './Subscribe';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -207,7 +207,6 @@ function Index () {
 
         <Route path="/prices" element={<Prices />} />
         <Route path="/subscribe" element={<Subscribe />} />
-        <Route path="/account" element={<Account />} />
       </>)}
 
 
