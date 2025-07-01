@@ -19,7 +19,7 @@ export default function Menubar ({ children }) {
     localStorage.getItem('user.lastName')
 
   return (
-    <Menu size='tiny' fixed>
+    <Menu size='tiny'>
       <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
         <Logo size='milli' gray />
         {'\u00A0'}
