@@ -642,6 +642,60 @@ const resources = {
       cancelConfirm: "Are you sure you want to cancel your subscription?",
       cancelStop: "Stop",
       cancelYes: "Yes, cancel",
+
+      comparison: {
+        header: "Pricing Comparison",
+        plans: {
+          explorer: "Explorer",
+          operator: "Operator",
+          strategist: "Strategist",
+          director: "Director"
+        },
+        popularPlan: "strategist",
+
+        ariaLabel: "Subscription plans feature comparison table",
+        features: "Features",
+        mostPopularLabel: "Most Popular",
+
+        accessLimits: "Pricing",
+        price: "Price",
+        free: "Free",
+        customQuote: "Custom Quote",
+        mostPopular: "Most Popular",
+
+        accessAndLimits: "Access & Limits",
+        maps: "Maps",
+        deployedAgents: "Deployed Agents",
+        virtualAgentsCreated: "Virtual Agents (Created)",
+        apiCliAccess: "API / CLI Access",
+        selfHosting: "Self-hosting (optional)",
+
+        agentTypes: "Agent Archetypes",
+        humanAgents: "Human Agents",
+        chatRagStorage: "Chat, RAG, Storage Agents",
+        speechTtsImageGen: "Speech-to-Text, Text-to-Speech, ImageGen Agents",
+        codeQuantumAvatar: "Code, Quantum, Avatar Agents",
+        specializedAgents: "Specialized Agents (3dGen, CRM, Blockchain, etc.)",
+
+        modelProviders: "Model Providers",
+        openAIChatGPT: "OpenAI (ChatGPT)",
+        googleGenAI: "Google GenAI (Gemini)",
+        extendedProviders: "Extended Providers (Anthropic, Cohere, Ollama, etc.)",
+
+        integrationsDeployment: "Integrations & Deployment",
+        useYourLlmKeys: "Use Your LLM API Keys",
+        useOurLlmKeys: "Use Our LLM API Keys (pay-as-you-go)",
+        zapierWebhooksCli: "Zapier / Webhooks / CLI Tools",
+        distributedSystems: "Distributed Systems & Orchestration",
+        privateCloud: "Private Cloud / On-Prem Deployment",
+        socialPhoneIntegration: "Social Messenger & Phone-line Integration",
+        unlimited: "Unlimited",
+
+        common: {
+          included: "Included",
+          notIncluded: "Not included"
+        },
+      },
     },
     Team: {
       sectionTitle: "Team",
@@ -1277,7 +1331,7 @@ const resources = {
             "-",
             "Самостоятельный хостинг нашего open-source кода",
           ],
-          button: "Звезда на GitHub",
+          button: "Поставить звезду на GitHub",
         },
         basic: {
           name: "Оператор (Базовый)",
@@ -1331,7 +1385,7 @@ const resources = {
             "-",
             "Приватное облако / локальное развёртывание",
           ],
-          button: "Связаться с отделом продаж",
+          button: "Связаться с продажниками",
         },
       },
 
@@ -1351,6 +1405,60 @@ const resources = {
       cancelConfirm: "Вы уверены, что хотите отменить подписку?",
       cancelStop: "Прекратить",
       cancelYes: "Да, отменить",
+
+      comparison: {
+        header: "Сравнение тарифов",
+        plans: {
+          explorer: "Исследователь",
+          operator: "Оператор",
+          strategist: "Стратег",
+          director: "Директор"
+        },
+        popularPlan: "strategist",
+
+        ariaLabel: "Таблица сравнения функций подписок",
+        features: "Функции",
+        mostPopularLabel: "Самый популярный",
+
+        accessLimits: "Цена и ограничения",
+        price: "Цена",
+        free: "Бесплатно",
+        customQuote: "Индивидуальный расчёт",
+        mostPopular: "Самый популярный",
+
+        accessAndLimits: "Доступ и лимиты",
+        maps: "Карты",
+        deployedAgents: "Активные агенты",
+        virtualAgentsCreated: "Виртуальные агенты (созданные)",
+        apiCliAccess: "Доступ к API / CLI",
+        selfHosting: "Самостоятельный хостинг (опционально)",
+
+        agentTypes: "Типы агентов",
+        humanAgents: "Человеческие агенты",
+        chatRagStorage: "Агенты Чат, RAG, Хранилище",
+        speechTtsImageGen: "Агенты Речь→Текст, Текст→Речь, Генерация изображений",
+        codeQuantumAvatar: "Агенты Код, Квант, Аватар",
+        specializedAgents: "Специализированные агенты (3dGen, CRM, Блокчейн и др.)",
+
+        modelProviders: "Провайдеры моделей",
+        openAIChatGPT: "OpenAI (ChatGPT)",
+        googleGenAI: "Google GenAI (Gemini)",
+        extendedProviders: "Дополнительные провайдеры (Anthropic, Cohere, Ollama и др.)",
+
+        integrationsDeployment: "Интеграции и развёртывание",
+        useYourLlmKeys: "Использование собственных API-ключей LLM",
+        useOurLlmKeys: "Использование наших API-ключей LLM (оплата по мере использования)",
+        zapierWebhooksCli: "Zapier / Webhooks / CLI инструменты",
+        distributedSystems: "Распределённые системы и оркестрация",
+        privateCloud: "Приватное облако / локальное развёртывание",
+        socialPhoneIntegration: "Интеграция с соцмессенджерами и телефонией",
+        unlimited: "Неограниченно",
+
+        common: {
+          included: "Включено",
+          notIncluded: "Не включено"
+        },
+      },
     },
     Team: {
       sectionTitle: "Команда",
