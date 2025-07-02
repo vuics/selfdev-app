@@ -769,21 +769,21 @@ const UsageBasedSubscriptionFlow = () => {
 
   const buildSteps = () => {
     return [
-      {
-        title: 'Customer',
-        content: <CreateCustomerForm />,
-        task: performCreateCustomer,
-      },
-      {
-        title: 'Meter',
-        content: <CreateMeterForm />,
-        task: performCreateMeter,
-      },
-      {
-        title: 'Price',
-        content: <CreatePriceForm />,
-        task: performCreatePrice,
-      },
+//      {
+//        title: 'Customer',
+//        content: <CreateCustomerForm />,
+//        task: performCreateCustomer,
+//      },
+//      {
+//        title: 'Meter',
+//        content: <CreateMeterForm />,
+//        task: performCreateMeter,
+//      },
+//      {
+//        title: 'Price',
+//        content: <CreatePriceForm />,
+//        task: performCreatePrice,
+//      },
       {
         title: 'Subscription',
         content: <CreateSubscriptionForm />,
