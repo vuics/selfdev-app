@@ -779,7 +779,7 @@ const resources = {
       journeyText: "Designed for every stage of your journey. Start today, no credit card required.",
 
       pricingTitle: "Pricing",
-      pricingPlaceholder: "...",
+      comparisonTitle: "Pricing Comparison",
     },
   },
   'ru-RU': {
