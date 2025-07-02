@@ -540,7 +540,7 @@ const resources = {
         subscribe: "Subscribe"
       },
       heading: "Subscribe to {{productName}}",
-      pricing: "{{currency}} {{amount}} / {{interval}}",
+      pricing: "Price: {{currency}} {{amount}} / {{interval}}",
       form: {
         name: "Full name:",
         card: "Card details:"
@@ -572,6 +572,7 @@ const resources = {
         },
         basic: {
           name: "Operator (Basic)",
+          price: "USD 6.99 / month",
           title: "Deploy agents. Solve tasks. Use your own API keys.",
           description: "Everything in Free, plus:",
           values: [
@@ -587,6 +588,7 @@ const resources = {
         },
         premium: {
           name: "Strategist (Premium)",
+          price: "USD 19.99 / month",
           title: "Automate smarter. Design systems. Gain insights.",
           description: "Everything in Basic, plus:",
           values: [
@@ -595,9 +597,8 @@ const resources = {
             "Voice notes & file attachments on Map",
             "Advanced agents: Speech, TTS, ImageGen",
             "Model providers: OpenAI (ChatGPT), Google GenAI (Gemini)",
-            "API access + CLI tools",
             "-",
-            "Zapier* / Webhooks* / Integrations* (optional, coming soon)",
+            "API access + CLI tools",
             "Agent analytics* & logs* (coming soon)",
           ],
           button: "Upgrade to Strategist",
@@ -685,7 +686,6 @@ const resources = {
         integrationsDeployment: "Integrations & Deployment",
         useYourLlmKeys: "Use Your LLM API Keys",
         useOurLlmKeys: "Use Our LLM API Keys (pay-as-you-go)",
-        zapierWebhooksCli: "Zapier / Webhooks / CLI Tools",
         distributedSystems: "Distributed Systems & Orchestration",
         privateCloud: "Private Cloud / On-Prem Deployment",
         socialPhoneIntegration: "Social Messenger & Phone-line Integration",
@@ -1303,7 +1303,7 @@ const resources = {
         subscribe: "Оформить"
       },
       heading: "Оформить подписку на {{productName}}",
-      pricing: "{{currency}} {{amount}} / {{interval}}",
+      pricing: "Цена: {{currency}} {{amount}} / {{interval}}",
       form: {
         name: "Полное имя:",
         card: "Данные карты:"
@@ -1335,6 +1335,7 @@ const resources = {
         },
         basic: {
           name: "Оператор (Базовый)",
+          price: "USD 6.99 / месяц",
           title: "Развёртывайте агентов. Решайте задачи. Используйте свои API-ключи.",
           description: "Всё из Бесплатного тарифа, плюс:",
           values: [
@@ -1350,6 +1351,7 @@ const resources = {
         },
         premium: {
           name: "Стратег (Премиум)",
+          price: "USD 19.99 / месяц",
           title: "Автоматизируйте умнее. Проектируйте системы. Получайте инсайты.",
           description: "Всё из Базового тарифа, плюс:",
           values: [
@@ -1358,9 +1360,8 @@ const resources = {
             "Голосовые заметки и вложения файлов на карте",
             "Продвинутые агенты: Речь, TTS, Генерация изображений",
             "Провайдеры моделей: OpenAI (ChatGPT), Google GenAI (Gemini)",
-            "Доступ к API и CLI-инструментам",
             "-",
-            "Интеграции Zapier* / Webhooks* (скоро)",
+            "Доступ к API и CLI-инструментам",
             "Аналитика агентов* и логи* (скоро)",
           ],
           button: "Обновиться до Стратега",
@@ -1448,7 +1449,6 @@ const resources = {
         integrationsDeployment: "Интеграции и развёртывание",
         useYourLlmKeys: "Использование собственных API-ключей LLM",
         useOurLlmKeys: "Использование наших API-ключей LLM (оплата по мере использования)",
-        zapierWebhooksCli: "Zapier / Webhooks / CLI инструменты",
         distributedSystems: "Распределённые системы и оркестрация",
         privateCloud: "Приватное облако / локальное развёртывание",
         socialPhoneIntegration: "Интеграция с соцмессенджерами и телефонией",
