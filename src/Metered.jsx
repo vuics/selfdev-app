@@ -233,7 +233,8 @@ const SetupForm = () => {
     const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:1234',
+        // return_url: `${conf.app.url}/subscription`,  // FIXME
+        return_url: `${conf.app.url}/metered`,
       },
       redirect: 'if_required',
     });

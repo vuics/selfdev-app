@@ -7,6 +7,7 @@ const conf = {
   app: {
     name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
     company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
+    url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
   },
 
   contact: {
@@ -126,6 +127,7 @@ const conf = {
 
   subscription: {
     enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || true),
+    stripePaymentElement: 'PaymentElement',  // 'CardElement' or 'PaymentElement'
   },
 
   pricing: {
