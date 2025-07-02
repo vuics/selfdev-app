@@ -36,77 +36,6 @@ const retrievePublishableKey = async () => {
     return { error };
   }
 };
-{/* const createCustomer = async (name, email) => { */}
-{/*   try { */}
-{/*     const res = await fetch(`${conf.api.url}/subscriptions/create-customer`, { */}
-{/*       method: 'POST', */}
-{/*       headers: { */}
-{/*         'Content-Type': 'application/json', */}
-{/*         accepts: 'application/json', */}
-{/*       }, */}
-{/*       body: JSON.stringify({ name, email }), */}
-{/*     }); */}
-{/*     return await res.json(); */}
-{/*   } catch (error) { */}
-{/*     return { error }; */}
-{/*   } */}
-{/* }; */}
-
-const createMeter = async (displayName, eventName, aggregationFormula) => {
-  try {
-    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-meter`, { */}
-    {/*   method: 'POST', */}
-    {/*   headers: { */}
-    {/*     'Content-Type': 'application/json', */}
-    {/*     accepts: 'application/json', */}
-    {/*   }, */}
-    {/*   body: JSON.stringify({ */}
-    {/*     displayName, eventName, aggregationFormula */}
-    {/*   }), */}
-    {/* }); */}
-    {/* return await res.json(); */}
-
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter`, {
-      displayName, eventName, aggregationFormula
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        accepts: 'application/json',
-      },
-      withCredentials: true,
-    })
-    return response.data
-  } catch (error) {
-    return { error };
-  }
-};
-
-const createPrice = async (meterId, currency, amount, productName) => {
-  try {
-    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-price`, { */}
-    {/*   method: 'POST', */}
-    {/*   headers: { */}
-    {/*     'Content-Type': 'application/json', */}
-    {/*     accepts: 'application/json', */}
-    {/*   }, */}
-    {/*   body: JSON.stringify({ meterId, currency, amount, productName }), */}
-    {/* }); */}
-    {/* return await res.json(); */}
-
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-price`, {
-      meterId, currency, amount, productName,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        accepts: 'application/json',
-      },
-      withCredentials: true,
-    })
-    return response.data
-  } catch (error) {
-    return { error };
-  }
-};
 
 const createSubscription = async (customerId, priceId) => {
   try {
@@ -139,18 +68,7 @@ const createSubscription = async (customerId, priceId) => {
 
 const createMeterEvent = async (eventName, customerId, value) => {
   try {
-    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-meter-event`, { */}
-    {/*   method: 'POST', */}
-    {/*   headers: { */}
-    {/*     'Content-Type': 'application/json', */}
-    {/*     accepts: 'application/json', */}
-    {/*   }, */}
-    {/*   body: JSON.stringify({ eventName, customerId, value }), */}
-    {/* }); */}
-    {/* return await res.json(); */}
-
     const response = await axios.post(`${conf.api.url}/subscriptions/create-meter-event`, {
-      eventName, customerId, value,
     }, {
       headers: {
         'Content-Type': 'application/json',
@@ -272,203 +190,22 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
   );
 };
 
-
-
-const CreateCustomerForm = () => {
-  const { name, setName, email, setEmail } = useSession();
-
-  return (
-    <>
-      <Title level={4}>Create a Customer</Title>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Customer name</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </Row>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Customer email</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </Row>
-    </>
-  );
-};
-
-
-
-const CreateMeterForm = () => {
-  const {
-    displayName,
-    setDisplayName,
-    eventName,
-    setEventName,
-    aggregationFormula,
-    setAggregationFormula,
-  } = useSession();
-
-  return (
-    <>
-      <Title level={4}>Create a Meter</Title>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Display name</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-        />
-      </Row>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Event name</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-        />
-      </Row>
-      <Row align="middle">
-        <Col span={8}>
-          <Title level={5}>Aggregation formula</Title>
-        </Col>
-        <Select
-          style={{ width: '50%' }}
-          onChange={(newValue) => {
-            setAggregationFormula(newValue);
-          }}
-          value={aggregationFormula}
-        >
-          {['sum', 'count'].map((aggregationFormula) => (
-            <Option key={aggregationFormula} value={aggregationFormula}>
-              {aggregationFormula}
-            </Option>
-          ))}
-        </Select>
-      </Row>
-    </>
-  );
-};
-
-const CreatePriceForm = () => {
-  const {
-    currency,
-    setCurrency,
-    amount,
-    setAmount,
-    productName,
-    setProductName,
-  } = useSession();
-
-  return (
-    <>
-      <Title level={4}>Create a Price</Title>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Product name</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
-      </Row>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Currency</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-        />
-      </Row>
-      <Row align="middle">
-        <Col span={8}>
-          <Title level={5}>Unit amount (in cents)</Title>
-        </Col>
-        <InputNumber
-          style={{
-            width: '50%',
-          }}
-          value={amount}
-          onChange={(value) => setAmount(value)}
-        />
-      </Row>
-    </>
-  );
-};
-
-
 const CreateSubscriptionForm = () => {
   const { customerId, priceId } = useSession();
 
   return (
     <>
       <Title level={4}>Create a Subscription</Title>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Customer</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          disabled
-          value={customerId}
-        />
-      </Row>
-      <Row align="middle">
-        <Col span={8}>
-          <Title level={5}>Price</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          disabled
-          value={priceId}
-        />
-      </Row>
     </>
   );
 };
 
-
-
 const CreateMeterEventForm = () => {
-  const { eventName, customerId, addMessage } = useSession();
+  const { addMessage } = useSession();
   const [meterEventValue, setMeterEventValue] = React.useState(0);
   const performCreateMeterEvent = async () => {
     addMessage('🔄 Creating a meter event...');
-    const response = await createMeterEvent(
-      eventName,
-      customerId,
-      meterEventValue
-    );
+    const response = await createMeterEvent();
     const { meterEvent, error } = response;
     if (meterEvent) {
       addMessage(`✅ Created meter event: ${meterEvent.identifier}`);
@@ -483,31 +220,6 @@ const CreateMeterEventForm = () => {
   return (
     <>
       <Title level={4}>Create a Meter Event</Title>
-      <Row align="middle" style={{ marginBottom: 8 }}>
-        <Col span={8}>
-          <Title level={5}>Event name</Title>
-        </Col>
-        <Input
-          style={{
-            width: '50%',
-          }}
-          disabled
-          value={eventName}
-        />
-      </Row>
-
-      <Row align="middle">
-        <Col span={8}>
-          <Title level={5}>Value</Title>
-        </Col>
-        <InputNumber
-          style={{
-            width: '50%',
-          }}
-          value={meterEventValue}
-          onChange={(value) => setMeterEventValue(value)}
-        />
-      </Row>
       <Row align="middle">
         <Col span={8}>
           <Button onClick={performCreateMeterEvent}>Submit event</Button>
@@ -685,66 +397,6 @@ const UsageBasedSubscriptionFlow = () => {
 
   const [currentStep, setCurrentStep] = React.useState(0);
 
-  const performCreateCustomer = async () => {
-    addMessage('OK')
-    setCustomerId('customer-id')
-    return true
-    {/* addMessage('🔄 Creating a Customer...'); */}
-    {/* const response = await createCustomer(name, email); */}
-    {/* const { customer, error } = response; */}
-    {/* if (customer) { */}
-    {/*   addMessage(`✅ Created customer: ${customer.id}`); */}
-    {/*   setCustomerId(customer.id); */}
-    {/*   return true; */}
-    {/* } */}
-    {/* if (error) { */}
-    {/*   addMessage(`❌ Error creating customer: ${error.message}`); */}
-    {/*   return false; */}
-    {/* } */}
-  };
-
-  const performCreateMeter = async () => {
-    addMessage(`✅`);
-    setMeterId('meter-id');
-    return true
-
-    {/* addMessage('🔄 Creating a Meter...'); */}
-    {/* const response = await createMeter( */}
-    {/*   displayName, */}
-    {/*   eventName, */}
-    {/*   aggregationFormula */}
-    {/* ); */}
-    {/* const { meter, error } = response; */}
-    {/* if (meter) { */}
-    {/*   addMessage(`✅ Created meter: ${meter.id}`); */}
-    {/*   setMeterId(meter.id); */}
-    {/*   return true; */}
-    {/* } */}
-    {/* if (error) { */}
-    {/*   addMessage(`❌ Error creating meter: ${error.message}`); */}
-    {/*   return false; */}
-    {/* } */}
-  };
-
-  const performCreatePrice = async () => {
-    addMessage(`✅`);
-    setPriceId('price-id');
-    return true
-
-    {/* addMessage('🔄 Creating a Price...'); */}
-    {/* const response = await createPrice(meterId, currency, amount, productName); */}
-    {/* const { price, error } = response; */}
-    {/* if (price) { */}
-    {/*   addMessage(`✅ Created price: ${price.id}`); */}
-    {/*   setPriceId(price.id); */}
-    {/*   return true; */}
-    {/* } */}
-    {/* if (error) { */}
-    {/*   addMessage(`❌ Error creating price: ${error.message}`); */}
-    {/*   return false; */}
-    {/* } */}
-  };
-
   const performCreateSubscription = async () => {
     addMessage('🔄 Creating a Subscription...');
     const response = await createSubscription(customerId, priceId);
@@ -769,21 +421,6 @@ const UsageBasedSubscriptionFlow = () => {
 
   const buildSteps = () => {
     return [
-//      {
-//        title: 'Customer',
-//        content: <CreateCustomerForm />,
-//        task: performCreateCustomer,
-//      },
-//      {
-//        title: 'Meter',
-//        content: <CreateMeterForm />,
-//        task: performCreateMeter,
-//      },
-//      {
-//        title: 'Price',
-//        content: <CreatePriceForm />,
-//        task: performCreatePrice,
-//      },
       {
         title: 'Subscription',
         content: <CreateSubscriptionForm />,
