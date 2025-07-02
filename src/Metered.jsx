@@ -12,7 +12,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios'
 
 // TODO: Uninstall antd
-import 'antd/dist/antd.min.css';
+// import 'antd/dist/antd.min.css';
 import {
   Typography, Steps, Button, message,
   Input, Row, Col, Select, InputNumber,
@@ -37,23 +37,9 @@ const retrievePublishableKey = async () => {
   }
 };
 
-const createSubscription = async (customerId, priceId) => {
+const createSubscription = async () => {
   try {
-    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-subscription`, { */}
-    {/*   method: 'POST', */}
-    {/*   headers: { */}
-    {/*     'Content-Type': 'application/json', */}
-    {/*     accepts: 'application/json', */}
-    {/*   }, */}
-    {/*   body: JSON.stringify({ customerId, priceId }), */}
-    {/* }); */}
-    {/* const json = await res.json(); */}
-    {/* console.log('res:', res, ', json:', json) */}
-    {/* return json */}
-
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-subscription`, {
-      // customerId, priceId,
-    }, {
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-subscription`, { }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
@@ -66,10 +52,9 @@ const createSubscription = async (customerId, priceId) => {
   }
 };
 
-const createMeterEvent = async (eventName, customerId, value) => {
+const createMeterEvent = async () => {
   try {
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter-event`, {
-    }, {
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter-event`, { }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
@@ -81,11 +66,6 @@ const createMeterEvent = async (eventName, customerId, value) => {
     return { error };
   }
 };
-
-
-
-
-
 
 const StatusMessages = ({ messages }) => {
   const scrollRef = useRef(null);
@@ -135,10 +115,6 @@ const useMessages = () => {
     return [...messages, message];
   }, []);
 };
-
-
-
-
 
 const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
   const next = async () => {
@@ -191,8 +167,6 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
 };
 
 const CreateSubscriptionForm = () => {
-  const { customerId, priceId } = useSession();
-
   return (
     <>
       <Title level={4}>Create a Subscription</Title>
@@ -238,24 +212,9 @@ const SessionProvider = ({ children }) => {
   const [publishableKey, setPublishableKey] = useState(null);
 
   // For customer creation
-  const [name, setName] = useState(null);
-  const [email, setEmail] = useState(null);
   const [customerId, setCustomerId] = useState(null);
 
-  // For meter creation
-  const [displayName, setDisplayName] = useState(null);
-  const [eventName, setEventName] = useState(null);
-  const [aggregationFormula, setAggregationFormula] = useState('sum');
-  const [meterId, setMeterId] = useState(null);
-
-  // For price creation
-  const [currency, setCurrency] = useState('usd');
-  const [amount, setAmount] = useState(null);
-  const [productName, setProductName] = useState(null);
-  const [priceId, setPriceId] = useState(null);
-
   // For subscription creation
-  const [subscriptionId, setSubscriptionId] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
 
   return (
@@ -263,37 +222,11 @@ const SessionProvider = ({ children }) => {
       value={{
         messages,
         addMessage,
-        //publishable key
         publishableKey,
         setPublishableKey,
-        // customer
         name,
-        setName,
-        email,
-        setEmail,
         customerId,
         setCustomerId,
-        // meter
-        displayName,
-        setDisplayName,
-        eventName,
-        setEventName,
-        aggregationFormula,
-        setAggregationFormula,
-        meterId,
-        setMeterId,
-        // price
-        currency,
-        setCurrency,
-        amount,
-        setAmount,
-        productName,
-        setProductName,
-        priceId,
-        setPriceId,
-        // subscription
-        subscriptionId,
-        setSubscriptionId,
         clientSecret,
         setClientSecret,
       }}
@@ -360,22 +293,9 @@ const CollectPaymentMethodForm = () => {
 const UsageBasedSubscriptionFlow = () => {
   const {
     setPublishableKey,
-    displayName,
-    eventName,
-    aggregationFormula,
-    setMeterId,
-    setEventName,
-    meterId,
     name,
-    email,
     customerId,
     setCustomerId,
-    currency,
-    amount,
-    productName,
-    priceId,
-    setPriceId,
-    setSubscriptionId,
     setClientSecret,
     addMessage,
     messages,
@@ -399,17 +319,13 @@ const UsageBasedSubscriptionFlow = () => {
 
   const performCreateSubscription = async () => {
     addMessage('🔄 Creating a Subscription...');
-    const response = await createSubscription(customerId, priceId);
+    const response = await createSubscription();
     const { meter, price, subscription, error } = response;
     console.log('meter:', meter)
     console.log('price:', price)
     console.log('subscription:', subscription)
     if (subscription) {
       addMessage(`✅ Created subscription: ${subscription.id}`);
-      setMeterId(meter.id);
-      setEventName(meter.event_name);
-      setPriceId(price.id);
-      setSubscriptionId(subscription.id);
       setClientSecret(subscription.pending_setup_intent.client_secret);
       return true;
     }
