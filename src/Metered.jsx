@@ -3,22 +3,10 @@ import React, {
   useReducer, useRef, useLayoutEffect
 } from 'react';
 import {
-  PaymentElement,
-  Elements,
-  useStripe,
-  useElements,
+  PaymentElement, Elements, useStripe, useElements,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios'
-
-// TODO: Uninstall antd
-// import 'antd/dist/antd.min.css';
-import {
-  Typography, Steps, Button, message,
-  Input, Row, Col, Select, InputNumber,
- } from 'antd';
-const { Title } = Typography;
-const { Option } = Select;
 
 import conf from './conf'
 
@@ -135,29 +123,28 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
 
   return (
     <>
-      <Steps current={currentStep} items={steps} />
       <div className="steps-content">{steps[currentStep].content}</div>
       <div className="steps-action">
-        <Button onClick={() => prev()} disabled={currentStep == 0}>
+        <button onClick={() => prev()} disabled={currentStep == 0}>
           Previous
-        </Button>
+        </button>
         {currentStep < steps.length - 1 && (
-          <Button
+          <button
             style={{ margin: '0 8px' }}
             type="primary"
             onClick={() => next()}
           >
             Next
-          </Button>
+          </button>
         )}
         {currentStep === steps.length - 1 && (
-          <Button
+          <button
             type="primary"
             style={{ margin: '0 8px' }}
-            onClick={() => message.success('Processing complete!')}
+            onClick={() => alert('Processing complete!')}
           >
             Done
-          </Button>
+          </button>
         )}
       </div>
 
@@ -169,7 +156,7 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
 const CreateSubscriptionForm = () => {
   return (
     <>
-      <Title level={4}>Create a Subscription</Title>
+      <h1 level={4}>Create a Subscription</h1>
     </>
   );
 };
@@ -193,12 +180,8 @@ const CreateMeterEventForm = () => {
 
   return (
     <>
-      <Title level={4}>Create a Meter Event</Title>
-      <Row align="middle">
-        <Col span={8}>
-          <Button onClick={performCreateMeterEvent}>Submit event</Button>
-        </Col>
-      </Row>
+      <h1 level={4}>Create a Meter Event</h1>
+      <button onClick={performCreateMeterEvent}>Submit event</button>
     </>
   );
 };
@@ -263,13 +246,9 @@ const SetupForm = () => {
 
   return (
     <>
-      <Title level={4}>Collect a Payment Method</Title>
+      <h1 level={4}>Collect a Payment Method</h1>
       <PaymentElement />
-      <Row align="middle">
-        <Col span={8}>
-          <Button onClick={performConfirmSetup}>Confirm</Button>
-        </Col>
-      </Row>
+      <button onClick={performConfirmSetup}>Confirm</button>
     </>
   );
 };
@@ -355,7 +334,7 @@ const UsageBasedSubscriptionFlow = () => {
 
   return (
     <>
-      <Title>Usage Based Subscription Demo</Title>
+      <h1>Usage Based Subscription Demo</h1>
       <FlowContainer
         steps={buildSteps()}
         messages={messages}
