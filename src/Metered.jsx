@@ -9,6 +9,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios'
 
 // TODO: Uninstall antd
 import 'antd/dist/antd.min.css';
@@ -35,33 +36,46 @@ const retrievePublishableKey = async () => {
     return { error };
   }
 };
-const createCustomer = async (name, email) => {
-  try {
-    const res = await fetch(`${conf.api.url}/subscriptions/create-customer`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        accepts: 'application/json',
-      },
-      body: JSON.stringify({ name, email }),
-    });
-    return await res.json();
-  } catch (error) {
-    return { error };
-  }
-};
+{/* const createCustomer = async (name, email) => { */}
+{/*   try { */}
+{/*     const res = await fetch(`${conf.api.url}/subscriptions/create-customer`, { */}
+{/*       method: 'POST', */}
+{/*       headers: { */}
+{/*         'Content-Type': 'application/json', */}
+{/*         accepts: 'application/json', */}
+{/*       }, */}
+{/*       body: JSON.stringify({ name, email }), */}
+{/*     }); */}
+{/*     return await res.json(); */}
+{/*   } catch (error) { */}
+{/*     return { error }; */}
+{/*   } */}
+{/* }; */}
 
 const createMeter = async (displayName, eventName, aggregationFormula) => {
   try {
-    const res = await fetch(`${conf.api.url}/subscriptions/create-meter`, {
-      method: 'POST',
+    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-meter`, { */}
+    {/*   method: 'POST', */}
+    {/*   headers: { */}
+    {/*     'Content-Type': 'application/json', */}
+    {/*     accepts: 'application/json', */}
+    {/*   }, */}
+    {/*   body: JSON.stringify({ */}
+    {/*     displayName, eventName, aggregationFormula */}
+    {/*   }), */}
+    {/* }); */}
+    {/* return await res.json(); */}
+
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter`, {
+      displayName, eventName, aggregationFormula
+    }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
       },
-      body: JSON.stringify({ displayName, eventName, aggregationFormula }),
-    });
-    return await res.json();
+      withCredentials: true,
+    })
+    return response.data
   } catch (error) {
     return { error };
   }
@@ -69,15 +83,26 @@ const createMeter = async (displayName, eventName, aggregationFormula) => {
 
 const createPrice = async (meterId, currency, amount, productName) => {
   try {
-    const res = await fetch(`${conf.api.url}/subscriptions/create-price`, {
-      method: 'POST',
+    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-price`, { */}
+    {/*   method: 'POST', */}
+    {/*   headers: { */}
+    {/*     'Content-Type': 'application/json', */}
+    {/*     accepts: 'application/json', */}
+    {/*   }, */}
+    {/*   body: JSON.stringify({ meterId, currency, amount, productName }), */}
+    {/* }); */}
+    {/* return await res.json(); */}
+
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-price`, {
+      meterId, currency, amount, productName,
+    }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
       },
-      body: JSON.stringify({ meterId, currency, amount, productName }),
-    });
-    return await res.json();
+      withCredentials: true,
+    })
+    return response.data
   } catch (error) {
     return { error };
   }
@@ -85,18 +110,28 @@ const createPrice = async (meterId, currency, amount, productName) => {
 
 const createSubscription = async (customerId, priceId) => {
   try {
-    console.log('createSubscription:', `${conf.api.url}/subscriptions/create-subscription`)
-    const res = await fetch(`${conf.api.url}/subscriptions/create-subscription`, {
-      method: 'POST',
+    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-subscription`, { */}
+    {/*   method: 'POST', */}
+    {/*   headers: { */}
+    {/*     'Content-Type': 'application/json', */}
+    {/*     accepts: 'application/json', */}
+    {/*   }, */}
+    {/*   body: JSON.stringify({ customerId, priceId }), */}
+    {/* }); */}
+    {/* const json = await res.json(); */}
+    {/* console.log('res:', res, ', json:', json) */}
+    {/* return json */}
+
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-subscription`, {
+      // customerId, priceId,
+    }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
       },
-      body: JSON.stringify({ customerId, priceId }),
-    });
-    const json = await res.json();
-    console.log('res:', res, ', json:', json)
-    return json
+      withCredentials: true,
+    })
+    return response.data
   } catch (error) {
     return { error };
   }
@@ -104,15 +139,26 @@ const createSubscription = async (customerId, priceId) => {
 
 const createMeterEvent = async (eventName, customerId, value) => {
   try {
-    const res = await fetch(`${conf.api.url}/subscriptions/create-meter-event`, {
-      method: 'POST',
+    {/* const res = await fetch(`${conf.api.url}/subscriptions/create-meter-event`, { */}
+    {/*   method: 'POST', */}
+    {/*   headers: { */}
+    {/*     'Content-Type': 'application/json', */}
+    {/*     accepts: 'application/json', */}
+    {/*   }, */}
+    {/*   body: JSON.stringify({ eventName, customerId, value }), */}
+    {/* }); */}
+    {/* return await res.json(); */}
+
+    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter-event`, {
+      eventName, customerId, value,
+    }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
       },
-      body: JSON.stringify({ eventName, customerId, value }),
-    });
-    return await res.json();
+      withCredentials: true,
+    })
+    return response.data
   } catch (error) {
     return { error };
   }
@@ -606,6 +652,7 @@ const UsageBasedSubscriptionFlow = () => {
     eventName,
     aggregationFormula,
     setMeterId,
+    setEventName,
     meterId,
     name,
     email,
@@ -639,60 +686,77 @@ const UsageBasedSubscriptionFlow = () => {
   const [currentStep, setCurrentStep] = React.useState(0);
 
   const performCreateCustomer = async () => {
-    addMessage('🔄 Creating a Customer...');
-    const response = await createCustomer(name, email);
-    const { customer, error } = response;
-    if (customer) {
-      addMessage(`✅ Created customer: ${customer.id}`);
-      setCustomerId(customer.id);
-      return true;
-    }
-    if (error) {
-      addMessage(`❌ Error creating customer: ${error.message}`);
-      return false;
-    }
+    addMessage('OK')
+    setCustomerId('customer-id')
+    return true
+    {/* addMessage('🔄 Creating a Customer...'); */}
+    {/* const response = await createCustomer(name, email); */}
+    {/* const { customer, error } = response; */}
+    {/* if (customer) { */}
+    {/*   addMessage(`✅ Created customer: ${customer.id}`); */}
+    {/*   setCustomerId(customer.id); */}
+    {/*   return true; */}
+    {/* } */}
+    {/* if (error) { */}
+    {/*   addMessage(`❌ Error creating customer: ${error.message}`); */}
+    {/*   return false; */}
+    {/* } */}
   };
 
   const performCreateMeter = async () => {
-    addMessage('🔄 Creating a Meter...');
-    const response = await createMeter(
-      displayName,
-      eventName,
-      aggregationFormula
-    );
-    const { meter, error } = response;
-    if (meter) {
-      addMessage(`✅ Created meter: ${meter.id}`);
-      setMeterId(meter.id);
-      return true;
-    }
-    if (error) {
-      addMessage(`❌ Error creating meter: ${error.message}`);
-      return false;
-    }
+    addMessage(`✅`);
+    setMeterId('meter-id');
+    return true
+
+    {/* addMessage('🔄 Creating a Meter...'); */}
+    {/* const response = await createMeter( */}
+    {/*   displayName, */}
+    {/*   eventName, */}
+    {/*   aggregationFormula */}
+    {/* ); */}
+    {/* const { meter, error } = response; */}
+    {/* if (meter) { */}
+    {/*   addMessage(`✅ Created meter: ${meter.id}`); */}
+    {/*   setMeterId(meter.id); */}
+    {/*   return true; */}
+    {/* } */}
+    {/* if (error) { */}
+    {/*   addMessage(`❌ Error creating meter: ${error.message}`); */}
+    {/*   return false; */}
+    {/* } */}
   };
 
   const performCreatePrice = async () => {
-    addMessage('🔄 Creating a Price...');
-    const response = await createPrice(meterId, currency, amount, productName);
-    const { price, error } = response;
-    if (price) {
-      addMessage(`✅ Created price: ${price.id}`);
-      setPriceId(price.id);
-      return true;
-    }
-    if (error) {
-      addMessage(`❌ Error creating price: ${error.message}`);
-      return false;
-    }
+    addMessage(`✅`);
+    setPriceId('price-id');
+    return true
+
+    {/* addMessage('🔄 Creating a Price...'); */}
+    {/* const response = await createPrice(meterId, currency, amount, productName); */}
+    {/* const { price, error } = response; */}
+    {/* if (price) { */}
+    {/*   addMessage(`✅ Created price: ${price.id}`); */}
+    {/*   setPriceId(price.id); */}
+    {/*   return true; */}
+    {/* } */}
+    {/* if (error) { */}
+    {/*   addMessage(`❌ Error creating price: ${error.message}`); */}
+    {/*   return false; */}
+    {/* } */}
   };
 
   const performCreateSubscription = async () => {
     addMessage('🔄 Creating a Subscription...');
     const response = await createSubscription(customerId, priceId);
-    const { subscription, error } = response;
+    const { meter, price, subscription, error } = response;
+    console.log('meter:', meter)
+    console.log('price:', price)
+    console.log('subscription:', subscription)
     if (subscription) {
       addMessage(`✅ Created subscription: ${subscription.id}`);
+      setMeterId(meter.id);
+      setEventName(meter.event_name);
+      setPriceId(price.id);
       setSubscriptionId(subscription.id);
       setClientSecret(subscription.pending_setup_intent.client_secret);
       return true;
