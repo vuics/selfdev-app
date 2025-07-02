@@ -27,7 +27,7 @@ const retrievePublishableKey = async () => {
 
 const createSubscription = async () => {
   try {
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-subscription`, { }, {
+    const response = await axios.post(`${conf.api.url}/subscriptions/metered/create`, { }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
@@ -42,7 +42,7 @@ const createSubscription = async () => {
 
 const createMeterEvent = async () => {
   try {
-    const response = await axios.post(`${conf.api.url}/subscriptions/create-meter-event`, { }, {
+    const response = await axios.post(`${conf.api.url}/subscriptions/metered/meter`, { }, {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
