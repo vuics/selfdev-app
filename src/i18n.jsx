@@ -566,7 +566,7 @@ const resources = {
             "Unlimited personal & group chats",
             "Human agents",
             "-",
-            "Self-host our open-source code",
+            "Self-host our open-source software",
            ],
           button: "Star on GitHub",
         },
@@ -1329,7 +1329,7 @@ const resources = {
             "Неограниченные личные и групповые чаты",
             "Агенты-люди",
             "-",
-            "Самостоятельный хостинг нашего open-source кода",
+            "Самостоятельный хостинг нашего программного обеспечения с открытым исходным кодом",
           ],
           button: "Поставить звезду на GitHub",
         },
@@ -1542,7 +1542,7 @@ const resources = {
       journeyText: "Создано для каждого этапа вашего пути. Начните сегодня — без необходимости вводить данные карты.",
 
       pricingTitle: "Цены",
-      pricingPlaceholder: "...",
+      comparisonTitle: "Сравнение Цен",
     },
   },
 };
