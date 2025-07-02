@@ -130,6 +130,10 @@ const conf = {
     stripePaymentElement: 'PaymentElement',  // 'CardElement' or 'PaymentElement'
   },
 
+  metered: {
+    enable: bool(import.meta.env.VITE_METERED_ENABLE || true),
+  },
+
   pricing: {
     enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
   },

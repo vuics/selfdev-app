@@ -7,8 +7,26 @@ import {
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios'
+import {
+  Container,
+  Header,
+  Button,
+//  Segment,
+//  Loader,
+//  Message,
+//  Icon,
+//  Card,
+//  List,
+//  Modal,
+//  Form,
+//  Breadcrumb,
+//  Label,
+//  Divider,
+//  Table,
+} from 'semantic-ui-react'
 
 import conf from './conf'
+import Menubar from './components/Menubar'
 
 const retrievePublishableKey = async () => {
   try {
@@ -125,26 +143,26 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
     <>
       <div className="steps-content">{steps[currentStep].content}</div>
       <div className="steps-action">
-        <button onClick={() => prev()} disabled={currentStep == 0}>
+        <Button onClick={() => prev()} disabled={currentStep == 0}>
           Previous
-        </button>
+        </Button>
         {currentStep < steps.length - 1 && (
-          <button
+          <Button
             style={{ margin: '0 8px' }}
             type="primary"
             onClick={() => next()}
           >
             Next
-          </button>
+          </Button>
         )}
         {currentStep === steps.length - 1 && (
-          <button
+          <Button
             type="primary"
             style={{ margin: '0 8px' }}
             onClick={() => alert('Processing complete!')}
           >
             Done
-          </button>
+          </Button>
         )}
       </div>
 
@@ -156,7 +174,9 @@ const FlowContainer = ({ steps, messages, currentStep, setCurrentStep }) => {
 const CreateSubscriptionForm = () => {
   return (
     <>
-      <h1 level={4}>Create a Subscription</h1>
+      <Header as='h2'>
+        Create a Subscription
+      </Header>
     </>
   );
 };
@@ -180,8 +200,10 @@ const CreateMeterEventForm = () => {
 
   return (
     <>
-      <h1 level={4}>Create a Meter Event</h1>
-      <button onClick={performCreateMeterEvent}>Submit event</button>
+      <Header as='h2'>
+        Create a Meter Event
+      </Header>
+      <Button onClick={performCreateMeterEvent}>Submit event</Button>
     </>
   );
 };
@@ -249,7 +271,7 @@ const SetupForm = () => {
     <>
       <h1 level={4}>Collect a Payment Method</h1>
       <PaymentElement />
-      <button onClick={performConfirmSetup}>Confirm</button>
+      <Button onClick={performConfirmSetup}>Confirm</Button>
     </>
   );
 };
@@ -333,17 +355,21 @@ const UsageBasedSubscriptionFlow = () => {
     ];
   };
 
-  return (
-    <>
-      <h1>Usage Based Subscription Demo</h1>
+  return (<>
+    <Container>
+      <Menubar />
+
+      <Header as='h1' textAlign='center'>
+        Usage Based Subscription
+      </Header>
       <FlowContainer
         steps={buildSteps()}
         messages={messages}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
       />
-    </>
-  );
+    </Container>
+  </>);
 };
 
 const Metered = () => {

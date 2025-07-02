@@ -43,9 +43,9 @@ import Profile from './Profile'
 import Keys from './Keys'
 import Vault from './Vault'
 import Subscription from './Subscription'
+import Metered from './Metered'
 import Landing from './Landing'
 
-import Metered from './Metered'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -187,7 +187,8 @@ function Index () {
       )}
       { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
-
+      </>)}
+      { conf.metered.enable && (<>
         <Route path='/metered' element={(<Private> <Metered/> </Private>)}/>
       </>)}
 
