@@ -45,6 +45,8 @@ import Vault from './Vault'
 import Subscription from './Subscription'
 import Landing from './Landing'
 
+import Metered from './Metered'
+
 import reportWebVitals from './reportWebVitals';
 
 const Test = () => (<div>Test</div>)
@@ -185,6 +187,8 @@ function Index () {
       )}
       { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
+
+        <Route path='/metered' element={(<Private> <Metered/> </Private>)}/>
       </>)}
 
       <Route path="*" element={<Error />}/>
