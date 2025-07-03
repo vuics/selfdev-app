@@ -542,7 +542,8 @@ const resources = {
       heading: "Subscribe to {{productName}}",
       promotionCode: "Promotion code",
       pricing: "Price: {{currency}} {{amount}} / {{interval}}",
-      couponApplied: "Coupon applied.",
+      coupon: "Coupon:",
+      couponApplied: 'Coupon {{couponName}} applied.',
       amountDue: "Amount due: {{currency}} {{amount}}",
       form: {
         name: "Full name:",
@@ -553,8 +554,11 @@ const resources = {
         cancel: "Cancel",
         subscribe: "Subscribe"
       },
-      error: "Stripe Elements did not get loaded",
       emptyPromotionCodeError: "The empty promotion code cannot be applied.",
+      applyingPromotionError: "Error applying promotion code",
+      subscribingError: "Error subscribing",
+      subscriptionCancelingError: "Error canceling subscribing",
+      stripeElementsError: "Stripe Elements has not loaded",
 
       plansHeader: "Subscription Plans",
 
@@ -643,6 +647,9 @@ const resources = {
       createdAt: "Created at: {{created}}",
       canceledAt: ", canceled at: {{canceled}}",
       period: "Current period start: {{start}}, end: {{end}}",
+      couponPercent: "Coupon: {{percentOff}}% off",
+      couponAmount: "Coupon: {{currency}} {{amountOff}} off",
+      forMonths: "for {{months}} months",
       cancelButton: "Cancel",
       cancelHeader: 'Cancel "{{productName}}" Subscription',
       cancelConfirm: "Are you sure you want to cancel your subscription?",
@@ -1310,7 +1317,8 @@ const resources = {
       heading: "Подписка на {{productName}}",
       promotionCode: "Промокод",
       pricing: "Цена: {{currency}} {{amount}} / {{interval}}",
-      couponApplied: "Промокод применён.",
+      coupon: "Купон:",
+      couponApplied: "Промокод {{couponName}} применён.",
       amountDue: "К оплате: {{currency}} {{amount}}",
       form: {
         name: "Полное имя:",
@@ -1321,8 +1329,11 @@ const resources = {
         cancel: "Отмена",
         subscribe: "Подписаться"
       },
-      error: "Stripe Elements не загрузился",
-      emptyPromotionCodeError: "Нельзя применить пустой промокод.",
+      emptyPromotionCodeError: "Промокод не может быть пустым",
+      applyingPromotionError: "Ошибка при применении промокода",
+      subscribingError: "Ошибка при оформлении подписки",
+      subscriptionCancelingError: "Ошибка при отмене подписки",
+      stripeElementsError: "Stripe Elements не загружены",
 
       plansHeader: "Тарифные планы",
 
@@ -1411,6 +1422,9 @@ const resources = {
       createdAt: "Создана: {{created}}",
       canceledAt: ", отменена: {{canceled}}",
       period: "Текущий период: с {{start}} по {{end}}",
+      couponPercent: "Купон: {{percentOff}}%",
+      couponAmount: "Купон: {{currency}} {{amountOff}}",
+      forMonths: "на {{months}} мес.",
       cancelButton: "Отменить",
       cancelHeader: 'Отмена подписки "{{productName}}"',
       cancelConfirm: "Вы уверены, что хотите отменить подписку?",
