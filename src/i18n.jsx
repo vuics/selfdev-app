@@ -540,16 +540,21 @@ const resources = {
         subscribe: "Subscribe"
       },
       heading: "Subscribe to {{productName}}",
+      promotionCode: "Promotion code",
       pricing: "Price: {{currency}} {{amount}} / {{interval}}",
+      couponApplied: "Coupon applied.",
+      amountDue: "Amount due: {{currency}} {{amount}}",
       form: {
         name: "Full name:",
-        card: "Card details:"
+        paymentMethod: "Payment method:"
       },
       button: {
+        apply: "Apply",
         cancel: "Cancel",
         subscribe: "Subscribe"
       },
       error: "Stripe Elements did not get loaded",
+      emptyPromotionCodeError: "The empty promotion code cannot be applied.",
 
       plansHeader: "Subscription Plans",
 
@@ -1302,17 +1307,22 @@ const resources = {
         subscription: "Подписка",
         subscribe: "Оформить"
       },
-      heading: "Оформить подписку на {{productName}}",
+      heading: "Подписка на {{productName}}",
+      promotionCode: "Промокод",
       pricing: "Цена: {{currency}} {{amount}} / {{interval}}",
+      couponApplied: "Промокод применён.",
+      amountDue: "К оплате: {{currency}} {{amount}}",
       form: {
         name: "Полное имя:",
-        card: "Данные карты:"
+        paymentMethod: "Способ оплаты:"
       },
       button: {
+        apply: "Применить",
         cancel: "Отмена",
-        subscribe: "Оформить подписку"
+        subscribe: "Подписаться"
       },
-      error: "Stripe Elements не загрузились",
+      error: "Stripe Elements не загрузился",
+      emptyPromotionCodeError: "Нельзя применить пустой промокод.",
 
       plansHeader: "Тарифные планы",
 
