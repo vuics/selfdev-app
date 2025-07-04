@@ -277,7 +277,7 @@ export default function Hive () {
       })
     } catch (err) {
       console.error('post agent error:', err);
-      return setResponseError(err.toString() || t('Error posting agent.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error posting agent.'))
     } finally {
       setLoading(false)
     }
@@ -315,7 +315,7 @@ export default function Hive () {
       }
     } catch (err) {
       console.error('delete agent error:', err);
-      return setResponseError(err.toString() || t('Error putting agent.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting agent.'))
     } finally {
       setLoading(false)
     }
@@ -339,7 +339,7 @@ export default function Hive () {
       })
     } catch (err) {
       console.error('delete agent error:', err);
-      return setResponseError(err.toString() || t('Error deleting agent.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting agent.'))
     } finally {
       setLoading(false)
     }
