@@ -13,11 +13,12 @@ import {
 import { ErrorBoundary } from "react-error-boundary";
 import Iframe from 'react-iframe'
 import i18n from "i18next";
+import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 import { useWindowDimensions } from './helper.js'
-
+import { useIndexContext } from './components/IndexContext'
 
 // function ErrorFallback({ error, resetErrorBoundary }) {
 //   // Call resetErrorBoundary() to reset the error boundary and retry the render.
@@ -173,6 +174,8 @@ export function SplitLayout ({ panels }) {
 }
 
 export default function Chat () {
+  const { t } = useTranslation('Map')
+  const { user } = useIndexContext()
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ converseRoot, setConverseRoot ] = useState(null)
@@ -203,49 +206,54 @@ export default function Chat () {
 
   useEffect(() => {
     if (converseRoot && credentials) {
-      console.log('converseRoot:', converseRoot)
+      // console.log('converseRoot:', converseRoot)
       window.addEventListener("converse-loaded", async (event) => {
         const { converse } = event.detail;
-        console.log('converse:', converse)
+        // console.log('converse:', converse)
         try {
           if (conf.synthetic.enable) {
-            converse.plugins.add('synthetic-ui-plugin', {
-              initialize: function () {
-                // console.log('this._converse:', this._converse)
-                this._converse.api.listen.on('callButtonClicked', function(data) {
-                  console.log('callButtonClicked data:', data)
-                  // console.log('Strophe connection is', data.connection);
-                  // console.log('Bare buddy JID is', data.model.get('jid'));
-                });
+            // console.log('user:', user)
+            if (user?.limits?.synthetic != null && !user.limits.synthetic) {
+              console.warn(t('Synthetic UI is not allowed for this account'))
+            } else {
+              converse.plugins.add('synthetic-ui-plugin', {
+                initialize: function () {
+                  // console.log('this._converse:', this._converse)
+                  this._converse.api.listen.on('callButtonClicked', function(data) {
+                    console.log('callButtonClicked data:', data)
+                    // console.log('Strophe connection is', data.connection);
+                    // console.log('Bare buddy JID is', data.model.get('jid'));
+                  });
 
-                // NOTE: The Synthetic UI depends on the system components.
-                //       See: ../synthetic-ui.md
-                //
-                this._converse.api.listen.on('message', function (data) {
-                  console.log('converse api message> data:', data)
-                  if (data && data.stanza) {
-                    console.log('data.attrs:', data.attrs)
-                    const { body } = data.attrs
-                    if (!body) {
-                      return
-                    }
-                    if (body.includes("[[synthetic-ui:hide('all')]]")) {
-                      setPanels([])
-                    } else {
-                      for (const component in conf.synthetic.components) {
-                        if (body.includes(`[[synthetic-ui:hide('${component}')]]`)) {
-                          // remove element
-                          setPanels(prevPanels => prevPanels.filter(panel => panel !== component));
-                        } else if (body.includes(`[[synthetic-ui:show('${component}')]]`)) {
-                          // prepend element
-                          setPanels(prevPanels => [...prevPanels, component])
+                  // NOTE: The Synthetic UI depends on the system components.
+                  //       See: ../synthetic-ui.md
+                  //
+                  this._converse.api.listen.on('message', function (data) {
+                    console.log('converse api message> data:', data)
+                    if (data && data.stanza) {
+                      console.log('data.attrs:', data.attrs)
+                      const { body } = data.attrs
+                      if (!body) {
+                        return
+                      }
+                      if (body.includes("[[synthetic-ui:hide('all')]]")) {
+                        setPanels([])
+                      } else {
+                        for (const component in conf.synthetic.components) {
+                          if (body.includes(`[[synthetic-ui:hide('${component}')]]`)) {
+                            // remove element
+                            setPanels(prevPanels => prevPanels.filter(panel => panel !== component));
+                          } else if (body.includes(`[[synthetic-ui:show('${component}')]]`)) {
+                            // prepend element
+                            setPanels(prevPanels => [...prevPanels, component])
+                          }
                         }
                       }
                     }
-                  }
-                });
-              },
-            });
+                  });
+                },
+              });
+            }
           }
 
           const converseOptions = {

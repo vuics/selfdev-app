@@ -324,6 +324,8 @@ const resources = {
       'Subscription': 'Subscription',
       'Log Out': 'Log Out'
     },
+    Chat: {
+    },
     Hive: {
       'Error retrieving credentials.': 'Error retrieving credentials.',
       'Error getting agents.': 'Error getting agents.',
@@ -1098,6 +1100,8 @@ const resources = {
       'Vault': 'Сейф',
       'Subscription': 'Подписка',
       'Log Out': 'Выйти'
+    },
+    Chat: {
     },
     Hive: {
       'Error retrieving credentials.': 'Ошибка при получении учетных данных.',
