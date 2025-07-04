@@ -2186,7 +2186,7 @@ function Map () {
       console.log('mapId:', res.data._id)
     } catch (err) {
       console.error('post map error:', err);
-      return setResponseError(err.toString() || t('Error posting map.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error posting map.'))
     } finally {
       setLoading(false)
     }
@@ -2220,7 +2220,7 @@ function Map () {
       setMaps(maps.map(a => a._id === res.data._id ? res.data : a))
     } catch (err) {
       console.error('put map error:', err);
-      return setResponseError(err.toString() || t('Error putting map.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting map.'))
     } finally {
       if (loader) {
         setLoading(false)
@@ -2251,7 +2251,7 @@ function Map () {
       }
     } catch (err) {
       console.error('delete map error:', err);
-      return setResponseError(err.toString() || t('Error deleting map.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting map.'))
     } finally {
       setLoading(false)
     }
@@ -2278,7 +2278,7 @@ function Map () {
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
       console.error('download map error:', err);
-      return setResponseError(err.toString() || t('Error downloading map.'))
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error downloading map.'))
     } finally {
       setLoading(false)
     }
