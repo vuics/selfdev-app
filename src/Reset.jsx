@@ -21,9 +21,11 @@ import { PasswordRequirements } from './Signup'
 import { requestLogin } from './Login'
 import conf from './conf'
 import Logo from './components/Logo'
+import { useIndexContext } from './components/IndexContext'
 
 const Reset = () => {
   const { t } = useTranslation('Reset')
+  const { setUser } = useIndexContext()
   const [ searchParams, ] = useSearchParams()
   const token = searchParams.get("token")
   // console.log('token:', token)
@@ -72,7 +74,7 @@ const Reset = () => {
 
       const email = res.data.email
       console.log('email:', email)
-      await requestLogin({ email, password, rememberme: false })
+      await requestLogin({ email, password, rememberme: false, setUser })
       navigate(conf.account.start)
     } catch (err) {
       console.error('reset error:', err);

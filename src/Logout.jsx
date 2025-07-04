@@ -8,10 +8,13 @@ import {
   Message,
   Loader,
 } from 'semantic-ui-react'
+
 import conf from './conf'
+import { useIndexContext } from './components/IndexContext'
 
 const Logout = () => {
   const navigate = useNavigate()
+  const { clearUser } = useIndexContext()
 
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -19,6 +22,7 @@ const Logout = () => {
   const logOut = async () => {
     setLoading(true)
     try {
+      clearUser()
       localStorage.clear()
 
       const res = await axios.get(`${conf.api.url}/logout`, {

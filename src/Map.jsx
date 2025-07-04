@@ -123,6 +123,7 @@ import conf, { bool } from './conf'
 import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
 import { texturePattern } from './components/patterns'
+import { useIndexContext } from './components/IndexContext'
 
 const editorThemes = {
   'default': 'light',
@@ -694,6 +695,7 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { t } = useTranslation('Map')
+  const { user } = useIndexContext()
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const {
@@ -892,6 +894,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   }, [allNodes])
 
   const attachFileInit = () => {
+    // console.log('user:', user)
     attachFileInputRef.current.click(); // triggers hidden input
   };
 
@@ -1051,7 +1054,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Icon name='edit' />
               { data.editing ? t('View') : t('Edit') }
             </Dropdown.Item>
-            <Dropdown.Item onClick={attachFileInit} >
+            <Dropdown.Item
+              onClick={attachFileInit}
+              disabled={user?.limits?.fileAttachments != null && !user.limits.fileAttachments}
+            >
               <Icon name='attach' />
               {t('Attach file')}
               <input
@@ -1062,7 +1068,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 style={{ display: 'none' }} // hide input
               />
             </Dropdown.Item>
-            <Dropdown.Item onClick={ recording ? stopRecording : startRecording } >
+            <Dropdown.Item
+              onClick={recording ? stopRecording : startRecording}
+              disabled={user?.limits?.audioRecordings != null && !user.limits.audioRecordings}
+            >
               <Icon name={ recording ? 'microphone slash' : 'microphone' } />
               {recording ? t('Stop Recording') : t('Record Audio') }
             </Dropdown.Item>

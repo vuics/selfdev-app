@@ -18,8 +18,9 @@ import { useTranslation } from 'react-i18next'
 
 import conf from './conf'
 import Logo from './components/Logo'
+import { useIndexContext } from './components/IndexContext'
 
-export const requestLogin = async ({ email, password, rememberme }) => {
+export const requestLogin = async ({ email, password, rememberme, setUser }) => {
   try {
     const res = await axios.post(`${conf.api.url}/login`, {
       email,
@@ -36,6 +37,7 @@ export const requestLogin = async ({ email, password, rememberme }) => {
     localStorage.setItem('user.email', res.data.user.email)
     localStorage.setItem('user.phone', res.data.user.phone)
     localStorage.setItem('user.roles', res.data.user.roles)
+    setUser(res.data.user)
   } catch (err) {
     console.log('Error requesting login:', err)
     throw err
@@ -44,6 +46,7 @@ export const requestLogin = async ({ email, password, rememberme }) => {
 
 export default function Login () {
   const { t } = useTranslation('Login')
+  const { setUser } = useIndexContext()
   const navigate = useNavigate()
 
   const [ email, setEmail ] = useState('')
@@ -74,7 +77,7 @@ export default function Login () {
 
     setLoading(true)
     try {
-      await requestLogin({ email, password, rememberme })
+      await requestLogin({ email, password, rememberme, setUser })
       navigate(conf.account.start)
     } catch (err) {
       console.error('login error:', err);

@@ -7,7 +7,7 @@ import axios from 'axios'
 
 import conf from './conf.js'
 import './i18n'
-import { IndexContext } from './components/IndexContext'
+import { IndexContext, usePersistentState } from './components/IndexContext'
 
 // import App from './App'
 import Home from './Home'
@@ -68,6 +68,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
+  const [user, setUser, clearUser] = usePersistentState('user', {});
 
   const logIn = (openLogin) => {
     if (available) {
@@ -105,7 +106,7 @@ function Index () {
 
   return (
   <IndexContext.Provider value={{
-    available, logIn
+    available, logIn, user, setUser, clearUser,
   }}>
     <Routes>
       <Route path="/" element={<Home />}/>

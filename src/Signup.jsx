@@ -21,6 +21,7 @@ import conf from './conf'
 import { validateEmail, validatePhone, validatePassword } from './validation'
 import { requestLogin } from './Login'
 import Logo from './components/Logo'
+import { useIndexContext } from './components/IndexContext'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   const { t } = useTranslation('Signup')
@@ -53,6 +54,7 @@ export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => 
 
 export default function Signup () {
   const { t } = useTranslation('Signup')
+  const { setUser } = useIndexContext()
   const navigate = useNavigate()
 
   const [ firstName, setFirstName ] = useState('')
@@ -131,7 +133,7 @@ export default function Signup () {
       })
       // console.log('signup res:', res)
 
-      await requestLogin({ email, password, rememberme: false })
+      await requestLogin({ email, password, rememberme: false, setUser })
       navigate(conf.account.start)
     } catch (err) {
       console.error('signup error:', err);
