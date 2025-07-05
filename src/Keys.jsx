@@ -91,10 +91,12 @@ export default function Keys () {
     }
   }
 
-  return (
-    <Container>
+  return (<>
+    <Container fluid>
       <Menubar />
+    </Container>
 
+    <Container style={{ marginTop: '1rem' }}>
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
@@ -243,5 +245,5 @@ export default function Keys () {
         {t('tool on GitHub to use the Self-developing AI from command line.')}
       </Segment>
     </Container>
-  )
+  </>)
 }

@@ -58,9 +58,12 @@ const Profile = () => {
   const handleSubmit = async () => {
   }
 
-  return (
-    <Container>
+  return (<>
+    <Container fluid>
       <Menubar />
+    </Container>
+
+    <Container style={{ marginTop: '1rem' }}>
 
       <Loader active={loading} inline='centered' />
       { responseError &&
@@ -151,7 +154,7 @@ const Profile = () => {
         </Form>
       </Segment>
     </Container>
-  )
+  </>)
 }
 
 export default Profile

@@ -134,9 +134,12 @@ export default function Vault () {
     }
   }
 
-  return (
-    <Container>
+  return (<>
+    <Container fluid>
       <Menubar />
+    </Container>
+
+    <Container style={{ marginTop: '1rem' }}>
 
       <Loader active={loading} inline='centered' />
       { responseError &&
@@ -297,5 +300,5 @@ export default function Vault () {
         </p>
       </Message>
     </Container>
-  )
+  </>)
 }
