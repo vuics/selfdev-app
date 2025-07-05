@@ -638,16 +638,29 @@ const resources = {
         },
 
 
-//        test1: {
-//          name: "Test",
-//          price: "Priceless",
-//          title: "Just for testing.",
-//          description: "Nothing is included, plus:",
-//          values: [
-//            "Something",
-//          ],
-//          button: "Call yourself",
-//        },
+        // NOTE: this is for the test of adding subscription plans
+        /*
+        test1: {
+          name: "Test1",
+          price: "Priceless",
+          title: "Just for testing.",
+          description: "Nothing is included, plus:",
+          values: [
+            "Something",
+          ],
+          button: "Call yourself",
+        },
+        test2: {
+          name: "Test2",
+          price: "Pricefull",
+          title: "Only for testing.",
+          description: "Everything is included, plus:",
+          values: [
+            "Nothing more than you need",
+          ],
+          button: "Test it",
+        },
+        */
 
       },
 
