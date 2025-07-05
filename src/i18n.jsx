@@ -639,7 +639,7 @@ const resources = {
 
 
         // NOTE: this is for the test of adding subscription plans
-        /*
+        /**/
         test1: {
           name: "Test1",
           price: "Priceless",
@@ -660,7 +660,7 @@ const resources = {
           ],
           button: "Test it",
         },
-        */
+        /**/
 
       },
 
