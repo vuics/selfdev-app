@@ -636,6 +636,19 @@ const resources = {
           ],
           button: "Contact Sales",
         },
+
+
+//        test1: {
+//          name: "Test",
+//          price: "Priceless",
+//          title: "Just for testing.",
+//          description: "Nothing is included, plus:",
+//          values: [
+//            "Something",
+//          ],
+//          button: "Call yourself",
+//        },
+
       },
 
       currentSubscriptions: "Subscriptions",
