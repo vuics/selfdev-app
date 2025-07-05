@@ -52,7 +52,7 @@ export default function Vault () {
 
   useEffect(() => {
     getVault()
-  })
+  }, [])
 
   const exposeSecret = async ({ key, copy = false } = {}) => {
     setLoading(true)

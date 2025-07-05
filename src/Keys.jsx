@@ -49,7 +49,7 @@ export default function Keys () {
 
   useEffect(() => {
     getKeys()
-  })
+  }, [])
 
   const handleSubmit = async () => {
     setLoading(true)
