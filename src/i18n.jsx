@@ -499,6 +499,13 @@ const resources = {
       state: 'State',
       postalCode: 'Postal Code',
       country: 'Country',
+
+      'Avatar': 'Avatar',
+      'Loading...': 'Loading...',
+      'Uploading...': 'Uploading...',
+      'Upload': 'Upload',
+
+      'Cancel': 'Cancel',
       'Save': 'Save'
     },
     Keys: {
@@ -1326,7 +1333,14 @@ const resources = {
       state: 'Штат / Область',
       postalCode: 'Почтовый индекс',
       country: 'Страна',
-      'Save': 'Сохранить'
+
+      'Avatar': 'Аватар',
+      'Loading...': 'Загрузка...',
+      'Uploading...': 'Загрузка...',
+      'Upload': 'Загрузить',
+
+      'Cancel': 'Отмена',
+      'Save': 'Сохранить',
     },
     Keys: {
       'Error getting keys.': 'Ошибка при получении ключей.',
