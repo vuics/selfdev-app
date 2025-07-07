@@ -492,6 +492,13 @@ const resources = {
       'Last Name': 'Last Name',
       'E-mail address': 'E-mail address',
       'Phone (optionally)': 'Phone (optionally)',
+      'Address': 'Address',
+      line1: 'Line 1',
+      line2: 'Line 2',
+      city: 'City',
+      state: 'State',
+      postalCode: 'Postal Code',
+      country: 'Country',
       'Save': 'Save'
     },
     Keys: {
@@ -1312,6 +1319,13 @@ const resources = {
       'Last Name': 'Фамилия',
       'E-mail address': 'Адрес электронной почты',
       'Phone (optionally)': 'Телефон (необязательно)',
+      'Address': 'Адрес',
+      line1: 'Улица, дом',
+      line2: 'Квартира, корпус (необязательно)',
+      city: 'Город',
+      state: 'Штат / Область',
+      postalCode: 'Почтовый индекс',
+      country: 'Страна',
       'Save': 'Сохранить'
     },
     Keys: {
