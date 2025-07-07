@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next'
 import conf from './conf'
 import Logo from './components/Logo'
 import { useIndexContext } from './components/IndexContext'
+import { setI18nLanguage } from './i18n'
 
 export const requestLogin = async ({ email, password, rememberme, setUser }) => {
   try {
@@ -38,6 +39,9 @@ export const requestLogin = async ({ email, password, rememberme, setUser }) => 
     localStorage.setItem('user.phone', res.data.user.phone)
     localStorage.setItem('user.roles', res.data.user.roles)
     setUser(res.data.user)
+    if (res.data.user.settings?.language) {
+      setI18nLanguage(res.data.user.settings.language)
+    }
   } catch (err) {
     console.log('Error requesting login:', err)
     throw err

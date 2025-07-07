@@ -134,6 +134,13 @@ export default function Menubar ({ children }) {
               </Dropdown.Item>
             )}
             <Dropdown.Divider />
+            { conf.settings.enable && (
+            <Dropdown.Item onClick={() => navigate('/settings')}>
+              <Icon name='settings' />
+              {t('Settings')}
+            </Dropdown.Item>
+            )}
+            <Dropdown.Divider />
             <Dropdown.Item onClick={() => navigate('/logout')}>
               <Icon name='sign-out' />
               {t('Log Out')}

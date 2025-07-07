@@ -322,6 +322,7 @@ const resources = {
       'API Keys': 'API Keys',
       'Vault': 'Vault',
       'Subscription': 'Subscription',
+      'Settings': 'Settings',
       'Log Out': 'Log Out'
     },
     Chat: {
@@ -747,6 +748,12 @@ const resources = {
         },
       },
     },
+    Settings: {
+      settings: 'Settings',
+      language: 'Language',
+      save: 'Save',
+      error: 'Error',
+    },
     Team: {
       sectionTitle: "Team",
       sectionSubtitle: "A diverse leadership team with deep expertise across business, technology, and psychology.",
@@ -1135,6 +1142,7 @@ const resources = {
       'API Keys': 'API-ключи',
       'Vault': 'Сейф',
       'Subscription': 'Подписка',
+      'Settings': 'Настройки',
       'Log Out': 'Выйти'
     },
     Chat: {
@@ -1524,6 +1532,12 @@ const resources = {
         },
       },
     },
+    Settings: {
+      settings: 'Настройки',
+      language: 'Язык',
+      save: 'Сохранить',
+      error: 'Ошибка',
+    },
     Team: {
       sectionTitle: "Команда",
       sectionSubtitle: "Разнообразная команда лидеров с глубокими знаниями в бизнесе, технологиях и психологии.",
@@ -1641,19 +1655,23 @@ i18n
 
 export default i18n;
 
+export function setI18nLanguage (language) {
+  i18n
+    .changeLanguage(language)
+    .then((t) => {
+      localStorage.setItem('i18n.language', language);
+      // console.log('Language changed to:', language, ', title:', t('title'))
+    })
+    .catch((err) => {
+      console.error('Error changing language:', err)
+    })
+}
+
 export function LanguageSelector () {
   const [ language, setLanguage ] = useState(i18n.language)
 
   useEffect(() => {
-    i18n
-      .changeLanguage(language)
-      .then((t) => {
-        localStorage.setItem('i18n.language', language);
-        // console.log('Language changed to:', language, ', title:', t('title'))
-      })
-      .catch((err) => {
-        console.error('Error changing language:', err)
-      })
+    setI18nLanguage(language)
   }, [language]);
 
   // console.log('i18n.language:', i18n.language)

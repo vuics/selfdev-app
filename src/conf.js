@@ -135,6 +135,10 @@ const conf = {
     enable: bool(import.meta.env.VITE_METERED_ENABLE || true),
   },
 
+  settings: {
+    enable: bool(import.meta.env.VITE_SETTINGS_ENABLE || true),
+  },
+
   pricing: {
     enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
   },
