@@ -10,6 +10,7 @@ import {
   Button,
   Icon,
   Header,
+  Divider,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 
@@ -22,10 +23,6 @@ const Profile = () => {
   const [ lastName, setLastName ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ phone, setPhone ] = useState('')
-  {/* const [ firstName, setFirstName ] = useState(localStorage.getItem('user.firstName')) */}
-  {/* const [ lastName, setLastName ] = useState(localStorage.getItem('user.lastName')) */}
-  {/* const [ email, setEmail ] = useState(localStorage.getItem('user.email')) */}
-  {/* const [ phone, setPhone ] = useState(localStorage.getItem('user.phone')) */}
   const [ firstNameError, setFirstNameError ] = useState('')
   const [ lastNameError, setLastNameError ] = useState('')
   const [ emailError, setEmailError ] = useState('')
@@ -165,6 +162,7 @@ const Profile = () => {
               }}
               // readOnly
             />
+            <Divider/>
             <Button
               icon labelPosition='left'
               type='submit'

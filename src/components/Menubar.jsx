@@ -9,14 +9,14 @@ import { useTranslation } from 'react-i18next'
 
 import conf from '../conf.js'
 import Logo from './Logo'
+import { useIndexContext } from './IndexContext'
 
 export default function Menubar ({ children }) {
+  const { user } = useIndexContext()
   const { t } = useTranslation('Menubar')
   const { pathname } = useLocation()
   const navigate = useNavigate()
-
-  const name = localStorage.getItem('user.firstName') + ' ' +
-    localStorage.getItem('user.lastName')
+  const name = `${user.firstName} ${user.lastName}`
 
   return (
     <Menu size='tiny'>

@@ -23,7 +23,6 @@ const Logout = () => {
     setLoading(true)
     try {
       clearUser()
-      localStorage.clear()
 
       const res = await axios.get(`${conf.api.url}/logout`, {
         headers: { 'Content-Type': 'application/json' },

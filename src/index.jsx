@@ -4,6 +4,7 @@ import 'semantic-ui-css/semantic.min.css'
 import './index.css';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { Loader, } from 'semantic-ui-react'
 
 import conf from './conf.js'
 import './i18n'
@@ -47,22 +48,38 @@ import Metered from './Metered'
 import Settings from './Settings'
 import Landing from './Landing'
 
-
 import reportWebVitals from './reportWebVitals';
+import { useIndexContext } from './components/IndexContext'
 
 const Test = () => (<div>Test</div>)
 
 const Private = ({ children }) => {
+  const { user } = useIndexContext()
   const navigate = useNavigate()
+
   useEffect(() => {
-    console.log('Checking authentication')
-    if(!localStorage.getItem('user.email')) {
-      console.error('Unauthorized. Redirect to /')
-      navigate('/login')
+    if (!user || !user.email) {
+      console.error('Unauthorized. Redirecting to /login')
+      navigate('/login', { replace: true })
     }
-  })
+  }, [user, navigate])
+
+  if (!user || !user.email) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'  // full viewport height
+      }}>
+        <Loader active inline='centered' size='large' />
+      </div>
+    )
+  }
+
   return children
 }
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

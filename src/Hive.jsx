@@ -25,10 +25,12 @@ import { useTranslation } from 'react-i18next'
 import Menubar from './components/Menubar'
 import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
+import { useIndexContext } from './components/IndexContext'
 
 const ajv = new Ajv()
 
 export default function Hive () {
+  const { user } = useIndexContext()
   const { t } = useTranslation('Hive')
   const [ agents, setAgents ] = useState([])
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
@@ -248,7 +250,6 @@ export default function Hive () {
     setOptions(archetypes[archetype].defaultOptions())
   }, [archetype])
 
-
   useEffect(() => {
     indexAgents()
   }, [])
@@ -353,9 +354,7 @@ export default function Hive () {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      const firstName = localStorage.getItem('user.firstName')
-      const lastName = localStorage.getItem('user.lastName')
-      link.download = `${firstName}${lastName}.sda.json`;
+      link.download = `${user.firstName}-${user.lastName}.sda.json`;
       link.click();
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {

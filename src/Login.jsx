@@ -33,11 +33,6 @@ export const requestLogin = async ({ email, password, rememberme, setUser }) => 
       crossOrigin: { mode: 'cors' },
     })
     // console.log('res:', res)
-    localStorage.setItem('user.firstName', res.data.user.firstName)
-    localStorage.setItem('user.lastName', res.data.user.lastName)
-    localStorage.setItem('user.email', res.data.user.email)
-    localStorage.setItem('user.phone', res.data.user.phone)
-    localStorage.setItem('user.roles', res.data.user.roles)
     setUser(res.data.user)
     if (res.data.user.settings?.language) {
       setI18nLanguage(res.data.user.settings.language)

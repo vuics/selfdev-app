@@ -6,18 +6,21 @@ import {
   Loader,
   Message,
 } from 'semantic-ui-react'
+
 import Menubar from './components/Menubar'
 import conf from './conf'
 import { useWindowDimensions } from './helper.js'
+import { useIndexContext } from './components/IndexContext'
 
 
 const Meet = () => {
+  const { user } = useIndexContext()
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
-  const displayName = localStorage.getItem('user.firstName') + ' ' +
-    localStorage.getItem('user.lastName')
   const { height, width } = useWindowDimensions();
   console.log('width:', width, ' height:', height)
+
+  const displayName = `${user.firstName} ${user.lastName}`
 
   // useEffect(async () => {
   // }, [])

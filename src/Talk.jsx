@@ -13,11 +13,10 @@ import {
 import { TextAuto, QCMarkdown } from './components/Text'
 import Menubar from './components/Menubar'
 import conf from './conf'
+import { useIndexContext } from './components/IndexContext'
 
 export default function Talk () {
-  const name = localStorage.getItem('user.firstName') + ' ' +
-    localStorage.getItem('user.lastName')
-
+  const { user } = useIndexContext()
   const [ prompt, setPrompt ] = useState('')
   const [ promptError, setPromptError ] = useState('')
   const [ messages, setMessages ] = useState([])
@@ -25,6 +24,7 @@ export default function Talk () {
   const [ markdown, setMarkdown ] = useState(true)
   const [ skip, setSkip ] = useState(0)
   const [ loadDisabled, setLoadDisabled ] = useState(false)
+  const name = `${user.firstName} ${user.lastName}`
 
   const handleSubmit = async () => {
     if (isEmpty(prompt)) {
