@@ -1,67 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Message, Button, Checkbox, Container } from 'semantic-ui-react'
 
-import { usePersistentState } from './IndexContext'
-
-/*
-export default function CookieBanner() {
-  const [cookieConsent, setCookieConsent] = usePersistentState('cookieConsent', null)
-
-  const handleAccept = () => setCookieConsent('accepted')
-  const handleReject = () => setCookieConsent('rejected')
-
-  if (cookieConsent === 'accepted' || cookieConsent === 'rejected') {
-    return null
-  }
-
-  return (
-    <div style={{
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      zIndex: 9999,
-      pointerEvents: 'none', // Prevents blocking of page interaction except inside banner
-      display: 'flex',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        pointerEvents: 'auto',
-        maxWidth: 800,
-        width: '100%',
-        margin: '1em',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        background: 'white',
-        borderRadius: 8
-      }}>
-        <Message style={{ margin: 0, padding: '1em 1.5em' }}>
-          <Message.Content>
-            <Message.Header>We use cookies</Message.Header>
-            This website uses cookies to ensure basic functionality like login. You can accept or reject their use.
-            <div style={{ marginTop: '1em', display: 'flex', gap: '1em' }}>
-              <Button onClick={handleAccept} primary size="small">
-                Accept
-              </Button>
-              <Button onClick={handleReject} secondary size="small">
-                Reject
-              </Button>
-            </div>
-          </Message.Content>
-        </Message>
-      </div>
-    </div>
-  )
-}
-*/
-
-
+import { useIndexContext } from './IndexContext'
 
 /*
 function ThirdPartyScriptsLoader() {
-  const [consent] = usePersistentState('cookieConsent', null)
+  const [cookieConsent] = usePersistentState('cookieConsent', null)
 
   useEffect(() => {
-    if (consent?.functional) {
+    if (cookieConsent?.functional) {
       // Load Tawk.to chat widget
       const tawkScript = document.createElement('script')
       tawkScript.src = 'https://embed.tawk.to/YOUR_TAWK_ID/default'
@@ -69,7 +16,7 @@ function ThirdPartyScriptsLoader() {
       document.body.appendChild(tawkScript)
     }
 
-    if (consent?.marketing) {
+    if (cookieConsent?.marketing) {
       // Load Google Analytics or other marketing scripts here
       // Example GA snippet:
       window.dataLayer = window.dataLayer || []
@@ -77,7 +24,7 @@ function ThirdPartyScriptsLoader() {
       gtag('js', new Date())
       gtag('config', 'GA_TRACKING_ID')
     }
-  }, [consent])
+  }, [cookieConsent])
 
   return null
 }
@@ -102,26 +49,27 @@ const COOKIE_CATEGORIES = {
 
 const DEFAULT_CONSENT = {
   necessary: true,
-  functional: false,
-  marketing: false,
+  functional: true,
+  marketing: true,
 }
 
-export default function CookieConsentBanner() {
-  const [consent, setConsent] = usePersistentState('cookieConsent', null)
+export default function CookieBanner() {
+  const { cookieConsent, setCookieConsent } = useIndexContext()
+  // const [cookieConsent, setCookieConsent] = usePersistentState('cookieConsent', null)
   const [showDetails, setShowDetails] = useState(false)
   const [tempConsent, setTempConsent] = useState(DEFAULT_CONSENT)
 
   useEffect(() => {
     // On opening details, initialize tempConsent from stored consent or defaults
     if (showDetails) {
-      setTempConsent(consent || DEFAULT_CONSENT)
+      setTempConsent(cookieConsent || DEFAULT_CONSENT)
     }
-  }, [showDetails, consent])
+  }, [showDetails, cookieConsent])
 
-  if (consent !== null) return null // Hide banner once consent given
+  if (cookieConsent !== null) return null // Hide banner once consent given
 
   const handleAcceptAll = () => {
-    setConsent({
+    setCookieConsent({
       necessary: true,
       functional: true,
       marketing: true,
@@ -142,7 +90,7 @@ export default function CookieConsentBanner() {
 
   const handleSavePreferences = () => {
     // Always keep necessary true
-    setConsent({
+    setCookieConsent({
       ...tempConsent,
       necessary: true,
     })

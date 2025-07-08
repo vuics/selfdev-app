@@ -10,6 +10,7 @@ import conf from './conf.js'
 import './i18n'
 import { IndexContext, usePersistentState } from './components/IndexContext'
 import CookieBanner from './components/CookieBanner'
+import TawkLoader from './components/TawkLoader'
 
 // import App from './App'
 import Home from './Home'
@@ -88,6 +89,7 @@ function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
   const [user, setUser, clearUser] = usePersistentState('user', {});
+  const [cookieConsent, setCookieConsent] = usePersistentState('cookieConsent', null)
 
   const logIn = (openLogin) => {
     if (available) {
@@ -126,6 +128,7 @@ function Index () {
   return (
   <IndexContext.Provider value={{
     available, logIn, user, setUser, clearUser,
+    cookieConsent, setCookieConsent,
   }}>
     <Routes>
       <Route path="/" element={<Home />}/>
@@ -219,6 +222,7 @@ function Index () {
     </Routes>
 
     <CookieBanner />
+    <TawkLoader />
   </IndexContext.Provider>
   )
 }
