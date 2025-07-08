@@ -142,10 +142,22 @@ export default function Menubar ({ children }) {
               <span style={{ marginLeft: '0.5rem' }}>
                 {name}
               </span>
+              { user.roles.includes('admin') && (
+                <span style={{ marginLeft: '0.3rem' }}>
+                  ({t('Admin')})
+                </span>
+              )}
             </span>
           }
         >
           <Dropdown.Menu>
+            { conf.admin.enable && user.roles.includes('admin') && (<>
+              <Dropdown.Item onClick={() => navigate('/admin')}>
+                <Icon name='wrench' />
+                {t('Admin')}
+              </Dropdown.Item>
+              <Dropdown.Divider />
+            </>)}
             { conf.profile.enable && (
               <Dropdown.Item onClick={() => navigate('/profile')}>
                 <Icon name='address card outline' />

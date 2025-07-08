@@ -344,12 +344,13 @@ const resources = {
       'Sell': 'Sell',
       'Train': 'Train',
       'Docs': 'Docs',
+      'Admin': 'Admin',
       'Profile': 'Profile',
       'API Keys': 'API Keys',
       'Vault': 'Vault',
       'Subscription': 'Subscription',
       'Settings': 'Settings',
-      'Log Out': 'Log Out'
+      'Log Out': 'Log Out',
     },
     Chat: {
     },
@@ -778,6 +779,13 @@ const resources = {
       save: 'Save',
       error: 'Error',
     },
+    Admin: {
+      'Admin': 'Admin',
+      'Subscriptions': 'Subscriptions',
+      'Init Subscriptions': 'Init Subscriptions',
+      'Subscriptions data': 'Subscriptions data',
+      'Other Options': 'Other Options',
+    },
     Team: {
       sectionTitle: "Team",
       sectionSubtitle: "A diverse leadership team with deep expertise across business, technology, and psychology.",
@@ -1188,6 +1196,7 @@ const resources = {
       'Sell': 'Продажа',
       'Train': 'Обучение',
       'Docs': 'Документация',
+      'Admin': 'Админ',
       'Profile': 'Профиль',
       'API Keys': 'API-ключи',
       'Vault': 'Сейф',
@@ -1606,6 +1615,13 @@ const resources = {
       language: 'Язык',
       save: 'Сохранить',
       error: 'Ошибка',
+    },
+    Admin: {
+      'Admin': 'Админ',
+      'Subscriptions': 'Подписки',
+      'Init Subscriptions': 'Инициализировать подписки',
+      'Subscriptions data': 'Данные подписок',
+      'Other Options': 'Другие опции',
     },
     Team: {
       sectionTitle: "Команда",
