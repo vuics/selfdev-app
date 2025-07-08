@@ -726,6 +726,16 @@ const resources = {
           ],
           button: "Test it",
         },
+        test8: {
+          name: "Test8",
+          price: "Pricefull",
+          title: "Only for testing.",
+          description: "Everything is included, plus:",
+          values: [
+            "Nothing more than you need",
+          ],
+          button: "Test it",
+        },
         /**/
 
       },
