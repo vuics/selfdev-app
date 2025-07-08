@@ -9,6 +9,7 @@ import { Loader, } from 'semantic-ui-react'
 import conf from './conf.js'
 import './i18n'
 import { IndexContext, usePersistentState } from './components/IndexContext'
+import CookieBanner from './components/CookieBanner'
 
 // import App from './App'
 import Home from './Home'
@@ -216,6 +217,8 @@ function Index () {
 
       <Route path="*" element={<Error />}/>
     </Routes>
+
+    <CookieBanner />
   </IndexContext.Provider>
   )
 }
