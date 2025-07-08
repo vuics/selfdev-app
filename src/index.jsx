@@ -49,6 +49,8 @@ import Subscription from './Subscription'
 import Settings from './Settings'
 import Landing from './Landing'
 
+import Admin from './Admin'
+
 import reportWebVitals from './reportWebVitals';
 import { useIndexContext } from './components/IndexContext'
 
@@ -66,6 +68,33 @@ const Private = ({ children }) => {
   }, [user, navigate])
 
   if (!user || !user.email) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'  // full viewport height
+      }}>
+        <Loader active inline='centered' size='large' />
+      </div>
+    )
+  }
+
+  return children
+}
+
+const Secret = ({ children }) => {
+  const { user } = useIndexContext()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user || !user.roles.includes('admin')) {
+      console.error('Unauthorized. Redirecting to /login')
+      navigate('/login', { replace: true })
+    }
+  }, [user, navigate])
+
+  if (!user || !user.roles.includes('admin')) {
     return (
       <div style={{
         display: 'flex',
@@ -211,6 +240,10 @@ function Index () {
       </>)}
       { conf.settings.enable && (<>
         <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>
+      </>)}
+
+      { conf.admin.enable && (<>
+        <Route path='/admin' element={(<Private><Secret> <Admin/> </Secret></Private>)}/>
       </>)}
 
       <Route path="*" element={<Error />}/>

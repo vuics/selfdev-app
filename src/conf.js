@@ -139,6 +139,10 @@ const conf = {
     enable: bool(import.meta.env.VITE_SETTINGS_ENABLE || true),
   },
 
+  admin: {
+    enable: bool(import.meta.env.VITE_ADMIN_ENABLE || true),
+  },
+
   pricing: {
     enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
   },
