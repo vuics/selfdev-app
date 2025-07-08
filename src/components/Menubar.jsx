@@ -152,32 +152,39 @@ export default function Menubar ({ children }) {
                 {t('Profile')}
               </Dropdown.Item>
             )}
-            { conf.keys.enable && (
-            <Dropdown.Item onClick={() => navigate('/keys')}>
-              <Icon name='key' />
-              {t('API Keys')}
-            </Dropdown.Item>
-            )}
-            { conf.vault.enable && (
-            <Dropdown.Item onClick={() => navigate('/vault')}>
-              <Icon name='shield alternate' />
-              {t('Vault')}
-            </Dropdown.Item>
-            )}
+
+            <Dropdown.Divider />
+
             { conf.subscription.enable && (
               <Dropdown.Item onClick={() => navigate('/subscription')}>
                 <Icon name='handshake' />
                 {t('Subscription')}
               </Dropdown.Item>
             )}
+
             <Dropdown.Divider />
+
+            { conf.vault.enable && (
+            <Dropdown.Item onClick={() => navigate('/vault')}>
+              <Icon name='shield alternate' />
+              {t('Vault')}
+            </Dropdown.Item>
+            )}
+            { conf.keys.enable && (
+            <Dropdown.Item onClick={() => navigate('/keys')}>
+              <Icon name='key' />
+              {t('API Keys')}
+            </Dropdown.Item>
+            )}
             { conf.settings.enable && (
             <Dropdown.Item onClick={() => navigate('/settings')}>
               <Icon name='settings' />
               {t('Settings')}
             </Dropdown.Item>
             )}
+
             <Dropdown.Divider />
+
             <Dropdown.Item onClick={() => navigate('/logout')}>
               <Icon name='sign-out' />
               {t('Log Out')}
