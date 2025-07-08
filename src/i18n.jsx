@@ -344,12 +344,12 @@ const resources = {
       'Sell': 'Sell',
       'Train': 'Train',
       'Docs': 'Docs',
-      'Admin': 'Admin',
       'Profile': 'Profile',
       'API Keys': 'API Keys',
       'Vault': 'Vault',
       'Subscription': 'Subscription',
       'Settings': 'Settings',
+      'Admin': 'Admin',
       'Log Out': 'Log Out',
     },
     Chat: {
@@ -1196,12 +1196,12 @@ const resources = {
       'Sell': 'Продажа',
       'Train': 'Обучение',
       'Docs': 'Документация',
-      'Admin': 'Админ',
       'Profile': 'Профиль',
       'API Keys': 'API-ключи',
       'Vault': 'Сейф',
       'Subscription': 'Подписка',
       'Settings': 'Настройки',
+      'Admin': 'Админ',
       'Log Out': 'Выйти'
     },
     Chat: {

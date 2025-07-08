@@ -151,13 +151,6 @@ export default function Menubar ({ children }) {
           }
         >
           <Dropdown.Menu>
-            { conf.admin.enable && user.roles.includes('admin') && (<>
-              <Dropdown.Item onClick={() => navigate('/admin')}>
-                <Icon name='wrench' />
-                {t('Admin')}
-              </Dropdown.Item>
-              <Dropdown.Divider />
-            </>)}
             { conf.profile.enable && (
               <Dropdown.Item onClick={() => navigate('/profile')}>
                 <Icon name='address card outline' />
@@ -191,6 +184,14 @@ export default function Menubar ({ children }) {
               {t('Settings')}
             </Dropdown.Item>
             )}
+
+            { conf.admin.enable && user.roles.includes('admin') && (<>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={() => navigate('/admin')}>
+                <Icon name='wrench' />
+                {t('Admin')}
+              </Dropdown.Item>
+            </>)}
 
             <Dropdown.Divider />
 
