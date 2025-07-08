@@ -251,6 +251,9 @@ const resources = {
       'New to us?': 'New to us?',
       'Sign Up': 'Sign Up'
     },
+    Logout: {
+      'Log Out': 'Log Out',
+    },
     Signup: {
       'The password should satisfy the following criteria': 'The password should satisfy the following criteria',
       'At least one upper case English letter.': 'At least one upper case English letter.',
@@ -1084,6 +1087,9 @@ const resources = {
       'Forgot password?': 'Забыли пароль?',
       'New to us?': 'Впервые у нас?',
       'Sign Up': 'Зарегистрироваться'
+    },
+    Logout: {
+      'Log Out': 'Выход',
     },
     Signup: {
       'The password should satisfy the following criteria': 'Пароль должен соответствовать следующим требованиям',

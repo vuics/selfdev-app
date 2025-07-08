@@ -8,11 +8,14 @@ import {
   Message,
   Loader,
 } from 'semantic-ui-react'
+import { useTranslation } from 'react-i18next'
 
 import conf from './conf'
 import { useIndexContext } from './components/IndexContext'
+import Logo from './components/Logo'
 
 const Logout = () => {
+  const { t } = useTranslation('Logout')
   const navigate = useNavigate()
   const { clearUser } = useIndexContext()
 
@@ -47,8 +50,9 @@ const Logout = () => {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/images/logo192.png' /> Log Out
+        <Logo size='large' gray />
+        <Header as='h2' color='black' textAlign='center'>
+          {t('Log Out')}
         </Header>
         <Loader active={loading} inline='centered' />
         { responseError &&
