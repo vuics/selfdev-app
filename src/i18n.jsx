@@ -627,9 +627,9 @@ const resources = {
            ],
           button: "Star on GitHub",
         },
-        basic: {
+        basic1: {
           name: "Operator (Basic)",
-          price: "USD 6.99 / month",
+          price: "USD 39.99 / month",
           title: "Deploy agents. Solve tasks. Use your own API keys.",
           description: "Everything in Free, plus:",
           values: [
@@ -643,9 +643,9 @@ const resources = {
           ],
           button: "Get Operator",
         },
-        premium: {
+        premium1: {
           name: "Strategist (Premium)",
-          price: "USD 19.99 / month",
+          price: "USD 96.99 / month",
           title: "Automate smarter. Design systems. Gain insights.",
           description: "Everything in Basic, plus:",
           values: [
@@ -683,49 +683,8 @@ const resources = {
           button: "Contact Sales",
         },
 
-
         // NOTE: this is for the test of adding subscription plans
-        /**/
-        test1: {
-          name: "Test1",
-          price: "Priceless",
-          title: "Just for testing.",
-          description: "Nothing is included, plus:",
-          values: [
-            "Something",
-          ],
-          button: "Call yourself",
-        },
-        test2: {
-          name: "Test2",
-          price: "Pricefull",
-          title: "Only for testing.",
-          description: "Everything is included, plus:",
-          values: [
-            "Nothing more than you need",
-          ],
-          button: "Test it",
-        },
-        test5: {
-          name: "Test5",
-          price: "Pricefull",
-          title: "Only for testing.",
-          description: "Everything is included, plus:",
-          values: [
-            "Nothing more than you need",
-          ],
-          button: "Test it",
-        },
-        test6: {
-          name: "Test6",
-          price: "Pricefull",
-          title: "Only for testing.",
-          description: "Everything is included, plus:",
-          values: [
-            "Nothing more than you need",
-          ],
-          button: "Test it",
-        },
+        /* /
         test8: {
           name: "Test8",
           price: "Pricefull",
@@ -1512,9 +1471,9 @@ const resources = {
           ],
           button: "Поставить звезду на GitHub",
         },
-        basic: {
+        basic1: {
           name: "Оператор (Базовый)",
-          price: "USD 6.99 / месяц",
+          price: "USD 39.99 / месяц",
           title: "Развёртывайте агентов. Решайте задачи. Используйте свои API-ключи.",
           description: "Всё из Бесплатного тарифа, плюс:",
           values: [
@@ -1528,9 +1487,9 @@ const resources = {
           ],
           button: "Получить Оператора",
         },
-        premium: {
+        premium1: {
           name: "Стратег (Премиум)",
-          price: "USD 19.99 / месяц",
+          price: "USD 96.99 / месяц",
           title: "Автоматизируйте умнее. Проектируйте системы. Получайте инсайты.",
           description: "Всё из Базового тарифа, плюс:",
           values: [
