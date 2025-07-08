@@ -46,7 +46,6 @@ import Profile from './Profile'
 import Keys from './Keys'
 import Vault from './Vault'
 import Subscription from './Subscription'
-import Metered from './Metered'
 import Settings from './Settings'
 import Landing from './Landing'
 
@@ -209,9 +208,6 @@ function Index () {
       )}
       { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
-      </>)}
-      { conf.metered.enable && (<>
-        <Route path='/metered' element={(<Private> <Metered/> </Private>)}/>
       </>)}
       { conf.settings.enable && (<>
         <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>
