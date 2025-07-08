@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Menu,
   Icon,
   Dropdown,
+  Image,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 
 import conf from '../conf.js'
 import Logo from './Logo'
@@ -17,6 +19,26 @@ export default function Menubar ({ children }) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const name = `${user.firstName} ${user.lastName}`
+  const [avatar, setAvatar] = useState(null);
+
+  // console.log('avatar:', avatar)
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      try {
+        const res = await axios.get(`${conf.api.url}/profile/avatar`, {
+          withCredentials: true,
+        });
+        if (res.data?.avatar) {
+          setAvatar(res.data.avatar);
+        }
+      } catch (err) {
+        console.error('Failed to load avatar', err);
+      }
+    };
+
+    fetchAvatar();
+  }, []);
 
   return (
     <Menu size='tiny'>
@@ -103,10 +125,25 @@ export default function Menubar ({ children }) {
       {children}
 
       <Menu.Menu position='right'>
-        <Dropdown item
-          text={name+'\u00A0\u00A0'}
-          className='icon'
-          icon='user'
+        <Dropdown
+          item
+          trigger={
+            <span>
+              { avatar ? (
+                <Image
+                  avatar
+                  // inline
+                  src={avatar}
+                  style={{ width: '1.2rem', height: '1.2rem' }}
+                />
+              ): (
+                <Icon name='user' />
+              )}
+              <span style={{ marginLeft: '0.5rem' }}>
+                {name}
+              </span>
+            </span>
+          }
         >
           <Dropdown.Menu>
             { conf.profile.enable && (
