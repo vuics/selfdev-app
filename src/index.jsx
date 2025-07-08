@@ -82,7 +82,6 @@ const Private = ({ children }) => {
   return children
 }
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function Index () {
@@ -221,7 +220,9 @@ function Index () {
       <Route path="*" element={<Error />}/>
     </Routes>
 
-    <CookieBanner />
+    { conf.cookie.banner && (
+      <CookieBanner />
+    )}
     <TawkLoader />
   </IndexContext.Provider>
   )

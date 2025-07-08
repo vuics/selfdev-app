@@ -152,9 +152,6 @@ export default function Menubar ({ children }) {
                 {t('Profile')}
               </Dropdown.Item>
             )}
-
-            <Dropdown.Divider />
-
             { conf.subscription.enable && (
               <Dropdown.Item onClick={() => navigate('/subscription')}>
                 <Icon name='handshake' />

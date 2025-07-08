@@ -27,6 +27,10 @@ const conf = {
     url: import.meta.env.VITE_INTEREST_FORM_URL || 'https://forms.gle/927RwUdTpSwc6EbE7',
   },
 
+  cookie: {
+    banner: bool(import.meta.env.VITE_COOKIE_BANNER || true),
+  },
+
   synthetic: {
     enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || false),
     // enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || true),
