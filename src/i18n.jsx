@@ -238,6 +238,29 @@ const resources = {
       'Privacy Policy': 'Privacy Policy',
       'LLMs': 'LLMs',
     },
+    CookieBanner: {
+      "header": "We use cookies",
+      "description": "This website uses cookies to ensure basic functionality like login, and to enhance your experience.",
+      "selectPreferences": "Select Preferences",
+      "acceptAll": "Accept All",
+      "preferences": "Cookie Preferences",
+      "back": "Back",
+      "save": "Save Preferences",
+      "categories": {
+        "necessary": {
+          "label": "Necessary Cookies",
+          "description": "Required for essential website functionality."
+        },
+        "functional": {
+          "label": "Functional Cookies",
+          "description": "Enable features like chat widgets."
+        },
+        "marketing": {
+          "label": "Marketing Cookies",
+          "description": "Used for analytics, advertising, and tracking."
+        },
+      },
+    },
     Login: {
       'Please enter a valid email address': 'Please enter a valid email address',
       'Please enter a valid password': 'Please enter a valid password',
@@ -1074,6 +1097,29 @@ const resources = {
       'Terms of Service': 'Условия использования',
       'Privacy Policy': 'Политика конфиденциальности',
       'LLMs': 'Языковые модели',
+    },
+    CookieBanner: {
+      "header": "Мы используем файлы cookie",
+      "description": "Этот сайт использует файлы cookie для обеспечения базовой функциональности, такой как вход в систему, и для улучшения вашего опыта.",
+      "selectPreferences": "Выбрать настройки",
+      "acceptAll": "Принять все",
+      "preferences": "Настройки файлов cookie",
+      "back": "Назад",
+      "save": "Сохранить настройки",
+      "categories": {
+        "necessary": {
+          "label": "Необходимые файлы cookie",
+          "description": "Требуются для базовой работы сайта."
+        },
+        "functional": {
+          "label": "Функциональные файлы cookie",
+          "description": "Активируют функции, такие как виджеты чата."
+        },
+        "marketing": {
+          "label": "Маркетинговые файлы cookie",
+          "description": "Используются для аналитики, рекламы и отслеживания."
+        },
+      },
     },
     Login: {
       'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',

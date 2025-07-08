@@ -1,26 +1,10 @@
+
 import React, { useEffect, useState } from 'react'
 import {
-  Message, Button, Checkbox, Container,
-  Icon,
+  Message, Button, Checkbox, Icon
 } from 'semantic-ui-react'
-
+import { useTranslation } from 'react-i18next'
 import { useIndexContext } from './IndexContext'
-
-const COOKIE_CATEGORIES = {
-  necessary: {
-    label: 'Necessary Cookies',
-    description: 'Required for essential website functionality.',
-    alwaysEnabled: true,
-  },
-  functional: {
-    label: 'Functional Cookies',
-    description: 'Enable features like chat widgets.',
-  },
-  marketing: {
-    label: 'Marketing Cookies',
-    description: 'Used for analytics, advertising, and tracking.',
-  },
-}
 
 const DEFAULT_CONSENT = {
   necessary: true,
@@ -29,35 +13,28 @@ const DEFAULT_CONSENT = {
 }
 
 export default function CookieBanner() {
+  const { t, i18n } = useTranslation('CookieBanner')
+  const categories = Object.keys(i18n.getResourceBundle(i18n.language, 'CookieBanner')?.categories || []);
   const { cookieConsent, setCookieConsent } = useIndexContext()
   const [showDetails, setShowDetails] = useState(false)
   const [tempConsent, setTempConsent] = useState(DEFAULT_CONSENT)
 
   useEffect(() => {
-    // On opening details, initialize tempConsent from stored consent or defaults
     if (showDetails) {
       setTempConsent(cookieConsent || DEFAULT_CONSENT)
     }
   }, [showDetails, cookieConsent])
 
   if (cookieConsent !== null) {
-    return null // Hide banner once consent given
+    return null
   }
 
   const handleAcceptAll = () => {
-    setCookieConsent({
-      necessary: true,
-      functional: true,
-      marketing: true,
-    })
-  }
-
-  const handleSelect = () => {
-    setShowDetails(true)
+    setCookieConsent(DEFAULT_CONSENT)
   }
 
   const handleToggle = (key) => {
-    if (COOKIE_CATEGORIES[key].alwaysEnabled) return
+    if (key === 'necessary') return
     setTempConsent(prev => ({
       ...prev,
       [key]: !prev[key],
@@ -65,7 +42,6 @@ export default function CookieBanner() {
   }
 
   const handleSavePreferences = () => {
-    // Always keep necessary true
     setCookieConsent({
       ...tempConsent,
       necessary: true,
@@ -79,7 +55,7 @@ export default function CookieBanner() {
       left: 0,
       width: '100%',
       zIndex: 9999,
-      pointerEvents: 'none', // Prevents blocking of page interaction except inside banner
+      pointerEvents: 'none',
       display: 'flex',
       justifyContent: 'center'
     }}>
@@ -94,24 +70,24 @@ export default function CookieBanner() {
       }}>
         {!showDetails ? (
           <Message warning style={{ margin: 0 }}>
-            <Message.Content>
-              <Message.Header>We use cookies</Message.Header>
-              This website uses cookies to ensure basic functionality like login, and to enhance your experience.
+            <Message.Content aria-live="polite">
+              <Message.Header>{t('header')}</Message.Header>
+              {t('description')}
               <div style={{ marginTop: '1em', display: 'flex', gap: '1em', flexWrap: 'wrap' }}>
                 <Button
                   icon labelPosition='left'
                   basic
-                  onClick={handleSelect}
+                  onClick={() => setShowDetails(true)}
                 >
                   <Icon name='options' />
-                  Select Preferences
+                  {t('selectPreferences')}
                 </Button>
                 <Button
                   color='black'
                   icon labelPosition='right'
                   onClick={handleAcceptAll}
                 >
-                  Accept All
+                  {t('acceptAll')}
                   <Icon name='checkmark' />
                 </Button>
               </div>
@@ -119,19 +95,19 @@ export default function CookieBanner() {
           </Message>
         ) : (
           <Message warning style={{ margin: 0 }}>
-            <Message.Header>Cookie Preferences</Message.Header>
+            <Message.Header>{t('preferences')}</Message.Header>
             <div>
-              {Object.entries(COOKIE_CATEGORIES).map(([key, { label, description, alwaysEnabled }]) => (<>
+              {categories.map((key) => (
                 <Checkbox
                   key={key}
                   toggle
                   checked={tempConsent[key]}
                   onChange={() => handleToggle(key)}
-                  disabled={alwaysEnabled}
-                  label={`${label}: ${description}`}
+                  disabled={key === 'necessary'}
+                  label={`${t(`categories.${key}.label`)}: ${t(`categories.${key}.description`)}`}
                   style={{ display: 'block', marginTop: '0.5em' }}
                 />
-              </>))}
+              ))}
             </div>
             <div style={{ marginTop: '1em', display: 'flex', gap: '1em', flexWrap: 'wrap' }}>
               <Button
@@ -140,14 +116,14 @@ export default function CookieBanner() {
                 onClick={() => setShowDetails(false)}
               >
                 <Icon name='left arrow' />
-                Back
+                {t('back')}
               </Button>
               <Button
                 color='black'
                 icon labelPosition='right'
                 onClick={handleSavePreferences}
               >
-                Save Preferences
+                {t('save')}
                 <Icon name='checkmark' />
               </Button>
             </div>
