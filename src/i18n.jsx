@@ -107,7 +107,7 @@ const resources = {
       openSourceDesc: "Self-host the platform and run unlimited agents for free.",
 
       freeTierTitle: "Free Tier",
-      freeTierDesc: "Run up to 3 agents simultaneously on our cloud-hosted platform.",
+      freeTierDesc: "Communicate to human agents on our cloud-hosted platform. Upgrade to run virtual agents.",
 
       cloudDeploymentTitle: "Cloud Deployment",
       cloudDeploymentDesc: "Hassle-free hosting and management of your {{appName}} platform.",
@@ -959,7 +959,7 @@ const resources = {
       openSourceDesc: "Развёртывайте платформу самостоятельно и запускайте неограниченное количество агентов бесплатно.",
 
       freeTierTitle: "Бесплатный тариф",
-      freeTierDesc: "Запускайте до 3 агентов одновременно на нашей облачной платформе.",
+      freeTierDesc: "Общайтесь с человеческими агентами на нашей платформе в облаке. Используйте план, чтобы запускать виртуальных агентов.",
 
       cloudDeploymentTitle: "Облачное развёртывание",
       cloudDeploymentDesc: "Простое размещение и управление вашей платформой {{appName}}.",
