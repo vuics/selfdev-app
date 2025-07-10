@@ -85,7 +85,7 @@ const resources = {
       archetypeChat: "Chat",
       archetypeRAG: "RAG",
       archetypeSpeech: "Speech <-> Text",
-      archetypeImageGen: "ImageGen",
+      archetypeImageGen: "Image <-> Text",
       archetypeCode: "Code",
       archetypeOthers: "Many More",
 
@@ -937,7 +937,7 @@ const resources = {
       archetypeChat: "Чат",
       archetypeRAG: "RAG",
       archetypeSpeech: "Речь <-> Текст",
-      archetypeImageGen: "Генерация изображений",
+      archetypeImageGen: "Изображения <-> Текст",
       archetypeCode: "Код",
       archetypeOthers: "И многое другое",
 
