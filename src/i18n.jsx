@@ -881,7 +881,7 @@ const resources = {
       'Open-source Agentic AI': 'Агентный ИИ с открытым исходным кодом',
       'Supercharges Entrepreneurial Dreams': 'Ускоряет предпринимательские мечты',
       'Autopilot your business. Focus on what you love.': 'Переведите бизнес на автопилот. Займитесь тем, что любите.',
-      'Powered by Self-developing': 'Работает на Self-developing',
+      'Powered by Self-developing': 'Наслаждайтесь само-развивающейся платформой',
       'Start for free': 'Начать бесплатно',
       'Join a waitlist': 'Присоединиться к листу ожидания',
       'Star on GitHub': 'Отметить звёздочкой на GitHub',
