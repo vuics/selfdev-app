@@ -65,20 +65,21 @@ The synthetic UI depends on the agent that will translate commands. The agent ca
 Hive agent:
 ```json
 {
-  "name": "synthetic-ui-executor",
-  "description": "Triggers actions to synthesize UI elements by sending commands: /show docs, /show flow, /show hive, /hide flow, /hide all",
+  "name": "synthetic-ui",
+  "description": "Synthetic-UI command translator.",
   "joinRooms": [
     "synthetic-ui"
   ],
-  "loaders": [],
-  "webhook": {
-    "method": "POST",
-    "route": "/synthetic-ui-webhook",
-    "payload": {
-      "prompt": ""
+  "chat": {
+    "systemMessage": "You are a synthetic UI executor. The users will pass you commands to show the UI component or hide it. Your role is to translate user commands to commands that synthetic ui will understand.\nIf you receive a command `/hide all`, you output: `[[synthetic-ui:hide('all')]]` without back ticks.\nWhen you receive a command `/hide ${component}`, you output: `[[synthetic-ui:hide('${component}')]]`.\nWhen you receive a command `/show ${component}`, you output: `[[synthetic-ui:show('${component}')]]`.\n\nExamples of components are: chat,meet,hive,flow,node,code,build,open,note,sell,train,docs and others.\n\nOutput only a command for synthetic ui and do not output anything else.\n",
+    "model": {
+      "provider": "openai",
+      "name": "gpt-4o-mini",
+      "apiKey": {
+        "valueFromVault": "OPENAI_API_KEY"
+      }
     },
-    "parseJson": true,
-    "promptKey": "prompt"
+    "session": ""
   }
 }
 ```
