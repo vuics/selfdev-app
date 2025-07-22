@@ -299,7 +299,7 @@ async function playEdge ({
             return { ...node, data: { ...node.data, attachments } }
           } else {
             // unlinkEdge({ edge, getNodes, setNodes })
-            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`), attachments: node.data.attachments.filter(item => !sourceNode.data.attachments.includes(item)) } }
+            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`), attachments: node.data.attachments?.filter(item => !sourceNode.data.attachments.includes(item)) } }
           }
         }
         return node
