@@ -21,7 +21,7 @@ export default function Logo ({ children, style, size = 'medium', gray = conf.st
   return (
     <img
       src={LogoSvg}
-      alt="Logo logo"
+      alt="Our logo"
       style={{
         filter: gray ? 'grayscale(100%)' : null,
         width: sizes[size],
