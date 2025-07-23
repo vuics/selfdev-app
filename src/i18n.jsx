@@ -261,6 +261,45 @@ const resources = {
         },
       },
     },
+    BlueprintFlow: {
+      common: {
+        audioNotSupported: "Your browser does not support the audio element."
+      },
+      chatBlueprint: {
+        prompt: "What model are you?",
+        answerChatGPT: "I am ChatGPT by OpenAI.",
+        answerGemini: "I am Gemini by Google.",
+        answerClaude: "I am Claude by Anthropic.",
+      },
+      ragBlueprint: {
+        loader: "//LOAD_URL https://en.wikipedia.org/wiki/Intelligent_agent",
+        done: "Loaded",
+        question: "What is intelligent agent?",
+        answer: "An intelligent agent is an entity that autonomously perceives its environment, takes actions to achieve goals, and can improve its performance through learning.",
+      },
+      speechBlueprint: {
+        transcribedText: "This is a text transcribed from speech.",
+        speechSourceText: "The audio contains a synthesized speech from this text."
+      },
+      imageBlueprint: {
+        promptText: "Friendly octopus similar to a Tesla plasma ball.",
+        generatedImage: "![Generated Image](/demo/plasma-octopus-0.png)",
+        recognitionPrompt: "Recognize what is on the attached image.<br/><br/>![Generated Image](/demo/plasma-octopus-3.png)",
+        description: "A vibrant, digitally created octopus with glowing tentacles and body. Artistic interpretation rather than a depiction of a real octopus."
+      },
+      codeBlueprint: {
+        jsCode: `console.log("Hello, World!")`,
+        output: "Hello, World!",
+        pythonCode: `import matplotlib.pyplot as plt<br/>
+    x = [1, 2, 3, 4, 5, 6, 7, 8]; y = [2, 3, 5, 7, 11, 21, 34, 108]<br/>
+    plt.plot(x, y, marker='o', linestyle='-', color='b', label='Sample Data')<br/>
+    plt.title('Simple Line Graph'); plt.xlabel('X-axis'); plt.ylabel('Y-axis')<br/>
+    plt.legend(); plt.show()`,
+        graphImage: "![Generated Image](/demo/matplotlib-graph.png)"
+      },
+      otherBlueprint: {
+      }
+    },
     Login: {
       'Please enter a valid email address': 'Please enter a valid email address',
       'Please enter a valid password': 'Please enter a valid password',
@@ -1112,6 +1151,45 @@ const resources = {
           "description": "Используются для аналитики, рекламы и отслеживания."
         },
       },
+    },
+    BlueprintFlow: {
+      common: {
+        audioNotSupported: "Ваш браузер не поддерживает элемент аудио."
+      },
+      chatBlueprint: {
+        prompt: "Какая у тебя модель?",
+        answerChatGPT: "Я — ChatGPT от OpenAI.",
+        answerGemini: "Я — Gemini от Google.",
+        answerClaude: "Я — Claude от Anthropic."
+      },
+      ragBlueprint: {
+        loader: "//LOAD_URL https://en.wikipedia.org/wiki/Intelligent_agent",
+        done: "Загружено",
+        question: "Что такое интеллектуальный агент?",
+        answer: "Интеллектуальный агент — это объект, который автономно воспринимает свою среду, предпринимает действия для достижения целей и может улучшать свою работу посредством обучения."
+      },
+      speechBlueprint: {
+        transcribedText: "Это текст, полученный из речи.",
+        speechSourceText: "Аудио содержит синтезированную речь из этого текста."
+      },
+      imageBlueprint: {
+        promptText: "Дружелюбный осьминог, похожий на плазменный шар Тесла.",
+        generatedImage: "![Сгенерированное изображение](/demo/plasma-octopus-0.png)",
+        recognitionPrompt: "Распознайте, что изображено на прикреплённой картинке.<br/><br/>![Сгенерированное изображение](/demo/plasma-octopus-3.png)",
+        description: "Яркий, созданный цифровым способом осьминог с светящимися щупальцами и телом. Художественная интерпретация, а не изображение настоящего осьминога."
+      },
+      codeBlueprint: {
+        jsCode: `console.log("Привет, мир!")`,
+        output: "Привет, мир!",
+        pythonCode: `import matplotlib.pyplot as plt<br/>
+    x = [1, 2, 3, 4, 5, 6, 7, 8]; y = [2, 3, 5, 7, 11, 21, 34, 108]<br/>
+    plt.plot(x, y, marker='o', linestyle='-', color='b', label='Пример данных')<br/>
+    plt.title('Простой линейный график'); plt.xlabel('Ось X'); plt.ylabel('Ось Y')<br/>
+    plt.legend(); plt.show()`,
+        graphImage: "![Сгенерированное изображение](/demo/matplotlib-graph.png)"
+      },
+      otherBlueprint: {
+      }
     },
     Login: {
       'Please enter a valid email address': 'Пожалуйста, введите корректный адрес электронной почты',
