@@ -89,8 +89,8 @@ export default function Login () {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Logo size='large' gray />
-        <Header as='h2' color='black' textAlign='center'>
+        <Logo size='large' />
+        <Header as='h2' color={conf.style.color0} textAlign='center'>
           {t('Log-in to Your Account')}
         </Header>
         <Loader active={loading} inline='centered' style={{ marginBottom: '1em' }}/>
@@ -141,7 +141,7 @@ export default function Login () {
               onChange={(e, data) => setRememberme(data.checked)}
             />
 
-            <Button color='black' fluid size='large' onClick={handleSubmit}>
+            <Button color={conf.style.color0} fluid size='large' onClick={handleSubmit}>
               <Icon name='sign-in' />
               {' '}
               {t('Login')}

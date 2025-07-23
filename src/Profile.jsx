@@ -219,7 +219,7 @@ export function AvatarUploader() {
         onClick={() => fileInputRef.current && fileInputRef.current.inputRef.current.click()}
         loading={uploading}
         disabled={uploading}
-        color='black'
+        color={conf.style.color0}
         icon labelPosition='left'
       >
         <Icon name="upload" />
@@ -536,7 +536,7 @@ export default function Profile () {
               <Button.Or/>
               <Button
                 icon labelPosition='right' type='submit'
-                color='black'
+                color={conf.style.color0}
               >
                 <Icon name='save' />
                 {t('Save')}

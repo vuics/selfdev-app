@@ -146,14 +146,14 @@ export default function Signup () {
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='black' textAlign='center'>
+        <Header as='h2' color={conf.style.color0} textAlign='center'>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '1rem',
           }}>
-            <Logo size='tiny' gray />
+            <Logo size='tiny' />
             <span>
               {t('Create a New Account')}
             </span>
@@ -288,7 +288,7 @@ export default function Signup () {
               >
               </Form.Checkbox>
             </Form.Group>
-            <Button color='black' fluid size='large' onClick={handleSubmit} disabled={!agree}>
+            <Button color={conf.style.color0} fluid size='large' onClick={handleSubmit} disabled={!agree}>
               <Icon name='user plus' />
               {' '}
               {t('Sign Up')}

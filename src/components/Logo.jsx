@@ -1,6 +1,7 @@
 import React from 'react'
 
 import LogoSvg from '../logo.svg'
+import conf from '../conf'
 
 const sizes = {
   nano: '15px',
@@ -16,7 +17,7 @@ const sizes = {
   massive: '450px'
 }
 
-export default function Logo ({ children, style, size = 'medium', gray = false } = {}) {
+export default function Logo ({ children, style, size = 'medium', gray = conf.style.grayLogo } = {}) {
   return (
     <img
       src={LogoSvg}

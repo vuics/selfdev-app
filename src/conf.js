@@ -10,6 +10,13 @@ const conf = {
     url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
   },
 
+  style: {
+    // color0: 'black',
+    color0: 'teal',
+    // grayLogo: true,
+    grayLogo: false,
+  },
+
   contact: {
     email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@vuics.com',
     github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/hyag',

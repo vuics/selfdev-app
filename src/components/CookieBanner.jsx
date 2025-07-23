@@ -1,10 +1,11 @@
-
 import React, { useEffect, useState } from 'react'
 import {
   Message, Button, Checkbox, Icon
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
+
 import { useIndexContext } from './IndexContext'
+import conf from '../conf'
 
 const DEFAULT_CONSENT = {
   necessary: true,
@@ -83,7 +84,7 @@ export default function CookieBanner() {
                   {t('selectPreferences')}
                 </Button>
                 <Button
-                  color='black'
+                  color={conf.style.color0}
                   icon labelPosition='right'
                   onClick={handleAcceptAll}
                 >
@@ -119,7 +120,7 @@ export default function CookieBanner() {
                 {t('back')}
               </Button>
               <Button
-                color='black'
+                color={conf.style.color0}
                 icon labelPosition='right'
                 onClick={handleSavePreferences}
               >

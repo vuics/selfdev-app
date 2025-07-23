@@ -51,7 +51,7 @@ const Logout = () => {
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
         <Logo size='large' gray />
-        <Header as='h2' color='black' textAlign='center'>
+        <Header as='h2' color={conf.style.color0} textAlign='center'>
           {t('Log Out')}
         </Header>
         <Loader active={loading} inline='centered' />
