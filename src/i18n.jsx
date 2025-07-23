@@ -300,6 +300,362 @@ const resources = {
       otherBlueprint: {
       }
     },
+    DiagramFlow: {
+      "PillarsDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "The orchestrator of all autonomous activity",
+          "caption": "Autonomous control core"
+        },
+        "selfFinding": {
+          "text": "Self-finding",
+          "tooltip": "Agents explore goals, APIs, and opportunities autonomously",
+          "caption": "Exploration engine"
+        },
+        "selfDeveloping": {
+          "text": "Self-developing",
+          "tooltip": "Agents evolve themselves through data, models, and logic",
+          "caption": "Evolution engine"
+        },
+        "selfSelling": {
+          "text": "Self-selling",
+          "tooltip": "Agents package and market their value autonomously",
+          "caption": "Monetization engine"
+        },
+        "edges": {
+          "finds": "discovers opportunities for",
+          "grows": "delegates growth to",
+          "monetizes": "enables monetization through"
+        }
+      },
+      "InterfacesDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Autonomous system that powers all interfaces",
+          "caption": "AI control core"
+        },
+        "webApp": {
+          "text": "Web App",
+          "tooltip": "Browser-based dashboard for human interaction",
+          "caption": "Interactive UI"
+        },
+        "mobile": {
+          "text": "Mobile Apps",
+          "tooltip": "Access agents from anywhere",
+          "caption": "On-the-go access"
+        },
+        "desktop": {
+          "text": "Desktop App",
+          "tooltip": "Full-featured local control",
+          "caption": "Power user interface"
+        },
+        "api": {
+          "text": "API",
+          "tooltip": "Programmatic access to agents",
+          "caption": "Developer interface"
+        },
+        "cli": {
+          "text": "CLI",
+          "tooltip": "Command-line control",
+          "caption": "Power tool"
+        },
+        "social": {
+          "text": "Social Messengers",
+          "tooltip": "Integrate with WhatsApp, Telegram, and others",
+          "caption": "Conversational interface"
+        },
+        "phone": {
+          "text": "Phone Line",
+          "tooltip": "Voice-based interaction with agents",
+          "caption": "Human fallback"
+        },
+        "edges": {
+          "web": "interacts with",
+          "mobile": "connects to",
+          "desktop": "controls",
+          "api": "sends requests to",
+          "cli": "executes commands on",
+          "social": "communicates with",
+          "phone": "talks to"
+        }
+      },
+      "InteractionDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "AI orchestrator coordinating all interactions",
+          "caption": "Interaction orchestrator"
+        },
+        "chat": {
+          "text": "Chat",
+          "tooltip": "Conversational text interfaces with agents",
+          "caption": "Text interaction"
+        },
+        "groups": {
+          "text": "Groups",
+          "tooltip": "Multi-user collaborative agent sessions",
+          "caption": "Shared context"
+        },
+        "voice": {
+          "text": "Voice",
+          "tooltip": "Voice-based control or conversational input",
+          "caption": "Speech interface"
+        },
+        "arvr": {
+          "text": "AR/VR",
+          "tooltip": "Immersive spatial interaction with agents",
+          "caption": "Spatial interface"
+        },
+        "video": {
+          "text": "Video Meetings",
+          "tooltip": "Face-to-face collaboration with agent assistance",
+          "caption": "Visual collaboration"
+        },
+        "synthetic": {
+          "text": "Synthetic UI",
+          "tooltip": "Fully AI-generated user interfaces",
+          "caption": "Autonomous rendering"
+        },
+        "edges": {
+          "chat": "communicates with",
+          "groups": "collaborates via",
+          "voice": "voices commands to",
+          "arvr": "interacts spatially with",
+          "video": "meets visually with",
+          "synthetic": "renders UI for"
+        }
+      },
+      "ActorsDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Central autonomous system coordinating all actors",
+          "caption": "System orchestrator"
+        },
+        "humans": {
+          "text": "Humans",
+          "tooltip": "End-users and operators interacting with agents",
+          "caption": "Users & admins"
+        },
+        "agents": {
+          "text": "Agents",
+          "tooltip": "Autonomous digital workers executing tasks",
+          "caption": "Intelligent executors"
+        },
+        "iot": {
+          "text": "IoT",
+          "tooltip": "Internet of Things devices interfaced with the system",
+          "caption": "Physical endpoints"
+        },
+        "apis": {
+          "text": "APIs",
+          "tooltip": "External systems and services integrated via APIs",
+          "caption": "System interfaces"
+        },
+        "data": {
+          "text": "Data Sources",
+          "tooltip": "Knowledge bases and data pipelines",
+          "caption": "Information providers"
+        },
+        "models": {
+          "text": "LLMs, Models",
+          "tooltip": "Language models and AI models powering cognition",
+          "caption": "Cognitive engines"
+        },
+        "edges": {
+          "humans": "guided by",
+          "agents": "executed by",
+          "iot": "connected via",
+          "apis": "integrated through",
+          "data": "fed by",
+          "models": "powered by"
+        }
+      },
+      "ArchetypesDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "Central orchestrator of all archetypes",
+            "caption": "System orchestrator"
+          },
+          "chat": {
+            "title": "Chat",
+            "tooltip": "Conversational agents for dialogue",
+            "caption": "Conversational AI"
+          },
+          "rag": {
+            "title": "RAG",
+            "tooltip": "Retrieval-augmented generation agents",
+            "caption": "Grounded reasoning"
+          },
+          "storage": {
+            "title": "Storage",
+            "tooltip": "Long-term memory and file persistence",
+            "caption": "Agent memory"
+          },
+          "speech": {
+            "title": "Speech",
+            "tooltip": "Text-to-speech and voice control",
+            "caption": "Speech interface"
+          },
+          "image": {
+            "title": "Image",
+            "tooltip": "Image generation and processing",
+            "caption": "Visual AI"
+          },
+          "avatar": {
+            "title": "Avatar",
+            "tooltip": "Embodied agent persona",
+            "caption": "Agent presence"
+          },
+          "quantum": {
+            "title": "Quantum",
+            "tooltip": "Quantum computing interface",
+            "caption": "Next-gen compute"
+          },
+          "notebook": {
+            "title": "Notebook",
+            "tooltip": "Jupyter-style generative execution",
+            "caption": "Computational notebook"
+          },
+          "code": {
+            "title": "Code",
+            "tooltip": "Autonomous software generation",
+            "caption": "Dev automation"
+          },
+          "command": {
+            "title": "Command",
+            "tooltip": "CLI command composition & execution",
+            "caption": "Shell interface"
+          },
+          "langflow": {
+            "title": "LangFlow",
+            "tooltip": "Visual LangChain interface",
+            "caption": "Flow editor"
+          },
+          "nodered": {
+            "title": "Node-RED",
+            "tooltip": "IoT & process automation interface",
+            "caption": "Low-code tooling"
+          }
+        },
+        "edges": {
+          "chat": "communicates with",
+          "rag": "queries",
+          "storage": "stores to",
+          "speech": "speaks through",
+          "image": "renders",
+          "avatar": "represents",
+          "quantum": "runs quantum tasks",
+          "notebook": "executes via",
+          "code": "executes notebooks",
+          "command": "builds for",
+          "langflow": "programs flows for",
+          "nodered": "connects systems"
+        }
+      },
+      "BusinessDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "AI-powered orchestrator of business systems",
+            "caption": "Autonomous core"
+          },
+          "crm": {
+            "title": "CRM / ERP",
+            "tooltip": "Automated customer and resource management",
+            "caption": "Enterprise backbone"
+          },
+          "banking": {
+            "title": "Banking Software",
+            "tooltip": "Financial account and transaction automation",
+            "caption": "Finance integration"
+          },
+          "blockchain": {
+            "title": "Blockchain",
+            "tooltip": "Decentralized infrastructure & verification",
+            "caption": "Immutable backend"
+          },
+          "smartContracts": {
+            "title": "Smart Contracts",
+            "tooltip": "Autonomous on-chain business logic",
+            "caption": "Self-executing rules"
+          },
+          "ecommerce": {
+            "title": "E-commerce",
+            "tooltip": "Online business platforms and automation",
+            "caption": "Sales engine"
+          },
+          "storefront": {
+            "title": "Storefront",
+            "tooltip": "Interface for buyers & sellers",
+            "caption": "Consumer-facing UI"
+          }
+        },
+        "edges": {
+          "crm": "integrates with",
+          "banking": "connects to",
+          "blockchain": "verifies operations of",
+          "smartContracts": "executes automation for",
+          "ecommerce": "sells through",
+          "storefront": "front-ends for"
+        }
+      },
+      "DistributedDiagram": {
+        "nodes": {
+          "a": {
+            "title": "HyperAgency A",
+            "tooltip": "This instance is part of the distributed network",
+            "caption": "Primary Node"
+          },
+          "b": {
+            "title": "HyperAgency B",
+            "tooltip": "Remote agentic node with sync capabilities",
+            "caption": "Cloud Instance"
+          },
+          "c": {
+            "title": "HyperAgency C",
+            "tooltip": "On-premise agentic system",
+            "caption": "Edge Node"
+          },
+          "d": {
+            "title": "HyperAgency D",
+            "tooltip": "Federated agent instance",
+            "caption": "Federated Node"
+          },
+          "e": {
+            "title": "HyperAgency E",
+            "tooltip": "Interoperable node in the ecosystem",
+            "caption": "Bridge Node"
+          },
+          "f": {
+            "title": "HyperAgency F",
+            "tooltip": "Specialized data-centric instance",
+            "caption": "Data Node"
+          },
+          "g": {
+            "title": "HyperAgency G",
+            "tooltip": "Syncs data with cloud-based knowledge hub",
+            "caption": "Uploader Node"
+          },
+          "h": {
+            "title": "HyperAgency H",
+            "tooltip": "Manages cross-node coordination",
+            "caption": "Coordinator Node"
+          }
+        },
+        "edges": {
+          "b_to_a": "connected to",
+          "c_to_a": "syncs with",
+          "d_to_a": "joins network of",
+          "e_to_a": "bridges to",
+          "f_to_a": "exchanges data with",
+          "g_to_a": "uploads to",
+          "h_to_a": "coordinates with",
+          "b_to_c": "federates",
+          "d_to_e": "relays to",
+          "g_to_h": "notifies"
+        }
+      },
+    },
     Login: {
       'Please enter a valid email address': 'Please enter a valid email address',
       'Please enter a valid password': 'Please enter a valid password',
@@ -1189,6 +1545,362 @@ const resources = {
         graphImage: "![Сгенерированное изображение](/demo/matplotlib-graph.png)"
       },
       otherBlueprint: {
+      }
+    },
+    DiagramFlow: {
+      "PillarsDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Оркестратор всей автономной деятельности",
+          "caption": "Ядро автономного управления"
+        },
+        "selfFinding": {
+          "text": "Самоисследование",
+          "tooltip": "Агенты самостоятельно изучают цели, API и возможности",
+          "caption": "Двигатель исследований"
+        },
+        "selfDeveloping": {
+          "text": "Саморазвитие",
+          "tooltip": "Агенты эволюционируют через данные, модели и логику",
+          "caption": "Двигатель эволюции"
+        },
+        "selfSelling": {
+          "text": "Самопродажа",
+          "tooltip": "Агенты упаковывают и продвигают свою ценность автономно",
+          "caption": "Двигатель монетизации"
+        },
+        "edges": {
+          "finds": "обнаруживает возможности для",
+          "grows": "делегирует развитие",
+          "monetizes": "обеспечивает монетизацию через"
+        }
+      },
+      "InterfacesDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Автономная система, управляющая всеми интерфейсами",
+          "caption": "Ядро управления ИИ"
+        },
+        "webApp": {
+          "text": "Веб-приложение",
+          "tooltip": "Панель управления в браузере для взаимодействия с пользователем",
+          "caption": "Интерактивный интерфейс"
+        },
+        "mobile": {
+          "text": "Мобильные приложения",
+          "tooltip": "Доступ к агентам из любого места",
+          "caption": "Доступ на ходу"
+        },
+        "desktop": {
+          "text": "Десктоп-приложение",
+          "tooltip": "Полнофункциональное локальное управление",
+          "caption": "Интерфейс продвинутого пользователя"
+        },
+        "api": {
+          "text": "API",
+          "tooltip": "Программный доступ к агентам",
+          "caption": "Интерфейс для разработчиков"
+        },
+        "cli": {
+          "text": "CLI",
+          "tooltip": "Управление через командную строку",
+          "caption": "Инструмент для профессионалов"
+        },
+        "social": {
+          "text": "Социальные мессенджеры",
+          "tooltip": "Интеграция с WhatsApp, Telegram и другими",
+          "caption": "Разговорный интерфейс"
+        },
+        "phone": {
+          "text": "Телефонная линия",
+          "tooltip": "Голосовое взаимодействие с агентами",
+          "caption": "Резервное общение с человеком"
+        },
+        "edges": {
+          "web": "взаимодействует с",
+          "mobile": "подключается к",
+          "desktop": "управляет",
+          "api": "отправляет запросы к",
+          "cli": "выполняет команды на",
+          "social": "обменивается сообщениями с",
+          "phone": "общается с"
+        }
+      },
+      "InteractionDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Оркестратор ИИ, координирующий все взаимодействия",
+          "caption": "Оркестратор взаимодействий"
+        },
+        "chat": {
+          "text": "Чат",
+          "tooltip": "Текстовые разговорные интерфейсы с агентами",
+          "caption": "Текстовое взаимодействие"
+        },
+        "groups": {
+          "text": "Группы",
+          "tooltip": "Совместные сессии агентов с несколькими пользователями",
+          "caption": "Общий контекст"
+        },
+        "voice": {
+          "text": "Голос",
+          "tooltip": "Голосовое управление или ввод",
+          "caption": "Голосовой интерфейс"
+        },
+        "arvr": {
+          "text": "AR/VR",
+          "tooltip": "Погружение в пространственное взаимодействие с агентами",
+          "caption": "Пространственный интерфейс"
+        },
+        "video": {
+          "text": "Видеовстречи",
+          "tooltip": "Личное сотрудничество с помощью агентов",
+          "caption": "Визуальное сотрудничество"
+        },
+        "synthetic": {
+          "text": "Синтетический UI",
+          "tooltip": "Полностью ИИ-сгенерированные пользовательские интерфейсы",
+          "caption": "Автономная отрисовка"
+        },
+        "edges": {
+          "chat": "общается с",
+          "groups": "сотрудничает через",
+          "voice": "голосовые команды для",
+          "arvr": "взаимодействует пространственно с",
+          "video": "встречается визуально с",
+          "synthetic": "отрисовывает интерфейс для"
+        }
+      },
+      "ActorsDiagram": {
+        "hyperAgency": {
+          "text": "HyperAgency",
+          "tooltip": "Центральная автономная система, координирующая всех участников",
+          "caption": "Оркестратор системы"
+        },
+        "humans": {
+          "text": "Люди",
+          "tooltip": "Конечные пользователи и операторы, взаимодействующие с агентами",
+          "caption": "Пользователи и администраторы"
+        },
+        "agents": {
+          "text": "Агенты",
+          "tooltip": "Автономные цифровые работники, выполняющие задачи",
+          "caption": "Интеллектуальные исполнители"
+        },
+        "iot": {
+          "text": "Интернет вещей (IoT)",
+          "tooltip": "Устройства IoT, подключённые к системе",
+          "caption": "Физические конечные точки"
+        },
+        "apis": {
+          "text": "API",
+          "tooltip": "Внешние системы и сервисы, интегрированные через API",
+          "caption": "Интерфейсы системы"
+        },
+        "data": {
+          "text": "Источники данных",
+          "tooltip": "Базы знаний и каналы данных",
+          "caption": "Поставщики информации"
+        },
+        "models": {
+          "text": "ЯМП, Модели",
+          "tooltip": "Языковые модели и ИИ, обеспечивающие когницию",
+          "caption": "Когнитивные движки"
+        },
+        "edges": {
+          "humans": "руководствуются",
+          "agents": "выполняются",
+          "iot": "подключены через",
+          "apis": "интегрированы через",
+          "data": "питаются от",
+          "models": "работают на"
+        }
+      },
+      "ArchetypesDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "Центральный оркестратор всех архетипов",
+            "caption": "Оркестратор системы"
+          },
+          "chat": {
+            "title": "Чат",
+            "tooltip": "Разговорные агенты для диалога",
+            "caption": "Разговорный ИИ"
+          },
+          "rag": {
+            "title": "RAG",
+            "tooltip": "Агенты генерации с поддержкой поиска",
+            "caption": "Обоснованное рассуждение"
+          },
+          "storage": {
+            "title": "Хранение",
+            "tooltip": "Долговременная память и сохранение файлов",
+            "caption": "Память агента"
+          },
+          "speech": {
+            "title": "Речь",
+            "tooltip": "Преобразование текста в речь и голосовое управление",
+            "caption": "Голосовой интерфейс"
+          },
+          "image": {
+            "title": "Изображение",
+            "tooltip": "Генерация и обработка изображений",
+            "caption": "Визуальный ИИ"
+          },
+          "avatar": {
+            "title": "Аватар",
+            "tooltip": "Персонификация агента",
+            "caption": "Присутствие агента"
+          },
+          "quantum": {
+            "title": "Квантовый",
+            "tooltip": "Интерфейс квантовых вычислений",
+            "caption": "Вычисления следующего поколения"
+          },
+          "notebook": {
+            "title": "Блокнот",
+            "tooltip": "Генеративное выполнение в стиле Jupyter",
+            "caption": "Вычислительный блокнот"
+          },
+          "code": {
+            "title": "Код",
+            "tooltip": "Автономная генерация программного обеспечения",
+            "caption": "Автоматизация разработки"
+          },
+          "command": {
+            "title": "Команда",
+            "tooltip": "Создание и выполнение команд CLI",
+            "caption": "Оболочка"
+          },
+          "langflow": {
+            "title": "LangFlow",
+            "tooltip": "Визуальный интерфейс LangChain",
+            "caption": "Редактор потоков"
+          },
+          "nodered": {
+            "title": "Node-RED",
+            "tooltip": "Интерфейс автоматизации IoT и процессов",
+            "caption": "Low-code инструменты"
+          }
+        },
+        "edges": {
+          "chat": "общается с",
+          "rag": "запрашивает",
+          "storage": "сохраняет в",
+          "speech": "говорит через",
+          "image": "отрисовывает",
+          "avatar": "представляет",
+          "quantum": "запускает квантовые задачи",
+          "notebook": "исполняет через",
+          "code": "исполняет блокноты",
+          "command": "создаёт для",
+          "langflow": "программирует потоки для",
+          "nodered": "подключает системы"
+        }
+      },
+      "BusinessDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "Оркестратор бизнес-систем с ИИ",
+            "caption": "Автономное ядро"
+          },
+          "crm": {
+            "title": "CRM / ERP",
+            "tooltip": "Автоматизированное управление клиентами и ресурсами",
+            "caption": "Основная система предприятия"
+          },
+          "banking": {
+            "title": "Банковское ПО",
+            "tooltip": "Автоматизация финансовых счетов и транзакций",
+            "caption": "Интеграция финансов"
+          },
+          "blockchain": {
+            "title": "Блокчейн",
+            "tooltip": "Децентрализованная инфраструктура и проверка",
+            "caption": "Незыблемая основа"
+          },
+          "smartContracts": {
+            "title": "Смарт-контракты",
+            "tooltip": "Автономная бизнес-логика в блокчейне",
+            "caption": "Самоисполняемые правила"
+          },
+          "ecommerce": {
+            "title": "Электронная коммерция",
+            "tooltip": "Онлайн-платформы и автоматизация бизнеса",
+            "caption": "Двигатель продаж"
+          },
+          "storefront": {
+            "title": "Магазин",
+            "tooltip": "Интерфейс для покупателей и продавцов",
+            "caption": "Пользовательский интерфейс"
+          }
+        },
+        "edges": {
+          "crm": "интегрируется с",
+          "banking": "подключается к",
+          "blockchain": "проверяет операции",
+          "smartContracts": "исполняет автоматизацию",
+          "ecommerce": "продаёт через",
+          "storefront": "представляет"
+        }
+      },
+      "DistributedDiagram": {
+        "nodes": {
+          "a": {
+            "title": "HyperAgency A",
+            "tooltip": "Этот экземпляр — часть распределённой сети",
+            "caption": "Основной узел"
+          },
+          "b": {
+            "title": "HyperAgency B",
+            "tooltip": "Удалённый агентский узел с возможностью синхронизации",
+            "caption": "Облачный экземпляр"
+          },
+          "c": {
+            "title": "HyperAgency C",
+            "tooltip": "Локальная агентская система",
+            "caption": "Пограничный узел"
+          },
+          "d": {
+            "title": "HyperAgency D",
+            "tooltip": "Федеративный агентский экземпляр",
+            "caption": "Федеративный узел"
+          },
+          "e": {
+            "title": "HyperAgency E",
+            "tooltip": "Интероперабельный узел в экосистеме",
+            "caption": "Мостовой узел"
+          },
+          "f": {
+            "title": "HyperAgency F",
+            "tooltip": "Специализированный экземпляр, ориентированный на данные",
+            "caption": "Узел данных"
+          },
+          "g": {
+            "title": "HyperAgency G",
+            "tooltip": "Синхронизирует данные с облачным хранилищем знаний",
+            "caption": "Узел загрузки"
+          },
+          "h": {
+            "title": "HyperAgency H",
+            "tooltip": "Управляет координацией между узлами",
+            "caption": "Узел координации"
+          }
+        },
+        "edges": {
+          "b_to_a": "подключён к",
+          "c_to_a": "синхронизируется с",
+          "d_to_a": "входит в сеть",
+          "e_to_a": "соединяется с",
+          "f_to_a": "обменивается данными с",
+          "g_to_a": "загружает в",
+          "h_to_a": "координирует с",
+          "b_to_c": "федеративный узел для",
+          "d_to_e": "передаёт данные в",
+          "g_to_h": "уведомляет"
+        }
       }
     },
     Login: {
