@@ -38,6 +38,8 @@ const resources = {
       'Map': 'Map',
       'Hive': 'Hive',
       'Chat': 'Chat',
+      'API & CLI': 'API & CLI',
+
       'Many More': 'Many More',
       'The Visual Command Center for Agentic Collaboration. Visually orchestrate agents and human resources, design complex workflows, connect prompts, control execution, and create compelling presentations—all within a user-friendly, no-code/low-code environment.': 'The Visual Command Center for Agentic Collaboration. Visually orchestrate agents and human resources, design complex workflows, connect prompts, control execution, and create compelling presentations—all within a user-friendly, no-code/low-code environment.',
       'LLM Power': 'LLM Power',
@@ -151,6 +153,16 @@ const resources = {
       emergingTechTitle: "Emerging Technologies",
       emergingTechDesc: "Blockchain, Smart Contract, VR/AR integrations.",
 
+      frameworkAutonomousCompany: "Framework for Building a Fully Autonomous Software Company",
+      DiagramCarousel: {
+        "pillars": "Visionary Pillars",
+        "interfaces": "Interfaces",
+        "interaction": "Interaction",
+        "actors": "Actors",
+        "archetypes": "Agent Archetypes",
+        "business": "Business Engine",
+        "distributed": "Distributed System"
+      },
 
       trailblazerTitle: "Become a Trailblazer in Agentic AI Innovation!",
       trailblazerDesc: "{{appName}} is more than just a platform; it's a vibrant community of innovators, entrepreneurs, and developers building the future of work. Connect with like-minded individuals, share ideas, and contribute to the evolution of agentic AI.",
@@ -1284,6 +1296,8 @@ const resources = {
       'Map': 'Карта',
       'Hive': 'Улей',
       'Chat': 'Чат',
+      'API & CLI': 'API и CLI',
+
       'Many More': 'И многое другое',
       'The Visual Command Center for Agentic Collaboration. Visually orchestrate agents and human resources, design complex workflows, connect prompts, control execution, and create compelling presentations—all within a user-friendly, no-code/low-code environment.': 'Визуальный командный центр для агентного взаимодействия. Управляйте агентами и людьми, проектируйте сложные рабочие процессы, соединяйте подсказки, контролируйте выполнение и создавайте презентации — всё это в удобной среде без кода или с минимальным кодом.',
       'LLM Power': 'Мощь языковых моделей',
@@ -1398,6 +1412,16 @@ const resources = {
       emergingTechTitle: "Перспективные технологии",
       emergingTechDesc: "Интеграции с блокчейном, смарт-контрактами, VR/AR.",
 
+      frameworkAutonomousCompany: "Фреймворк для создания полностью автономной софтверной компании",
+      DiagramCarousel: {
+        "pillars": "Визионерские столпы",
+        "interfaces": "Интерфейсы",
+        "interaction": "Взаимодействие",
+        "actors": "Акторы",
+        "archetypes": "Архетипы агентов",
+        "business": "Бизнес-двигатель",
+        "distributed": "Распределённая система"
+      },
 
       trailblazerTitle: "Станьте первопроходцем в инновациях агентного ИИ!",
       trailblazerDesc: "{{appName}} — это не просто платформа; это живое сообщество новаторов, предпринимателей и разработчиков, создающих будущее труда. Общайтесь с единомышленниками, делитесь идеями и вносите вклад в развитие агентного ИИ.",
