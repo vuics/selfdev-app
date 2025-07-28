@@ -3,13 +3,15 @@ import {
   Container,
   Divider,
   Segment,
+  Loader,
 } from 'semantic-ui-react'
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
 import { QCMarkdown } from './Text'
+import { useIndexContext } from './IndexContext'
 
-export const loadLegal = async (docType, lang, country) => {
+export const loadLegal = async ({ docType, lang, country, t }) => {
   const normalizedLang = lang.split('-')[0].toLowerCase();
   const normalizedCountry = country.toUpperCase();
 
@@ -46,33 +48,25 @@ export const loadLegal = async (docType, lang, country) => {
     console.warn(`Failed to load fallback markdown: ${fallbackUrl}`, e);
   }
 
-  return null;
+  // return null;
+  return t('Error loading the legal document.');
 };
 
-// Simple stub (replace with IP-based logic if needed)
-const getUserCountry = () => '';
-// const getUserCountry = () => 'US';
-// const getUserCountry = () => 'RU';
-
 export default function Legal ({ docType }) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('Legal');
+  const { country } = useIndexContext()
   const [ legal, setLegal ] = useState(null);
+  const [ loading, setLoading ] = useState(true);
+
   console.log('legal:', legal)
 
   useEffect(() => {
     const load = async () => {
+      setLoading(true)
       const lang = i18n.language || 'en';
-      const country = getUserCountry();
-
-      // Use for testing
-      // const lang = 'ru'
-      // const country = 'RU'
-      // const lang = 'en'
-      // const country = 'US'
-      // const country = ''
-
-      const legal = await loadLegal(docType, lang, country);
+      const legal = await loadLegal({ docType, lang, country, t });
       setLegal(legal);
+      setLoading(false)
     };
 
     load();
@@ -82,9 +76,13 @@ export default function Legal ({ docType }) {
     <Container>
       <Divider hidden />
       <Segment>
-        <QCMarkdown dark>
-          {legal || `*Loading ${docType}...*`}
-        </QCMarkdown>
+        { loading ? (
+          <Loader active inline="centered" content={t("Loading...")} />
+        ) : (
+          <QCMarkdown dark>
+            {legal || t('Loading the legal document...')}
+          </QCMarkdown>
+        )}
       </Segment>
       <Divider hidden />
     </Container>

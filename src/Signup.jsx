@@ -13,6 +13,8 @@ import {
   Icon,
   Loader,
   Divider,
+  Dropdown,
+  Label,
   // Image,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +24,8 @@ import { validateEmail, validatePhone, validatePassword } from './validation'
 import { requestLogin } from './Login'
 import Logo from './components/Logo'
 import { useIndexContext } from './components/IndexContext'
+import { LanguageSelector } from './i18n'
+import { countries } from './components/countries'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   const { t } = useTranslation('Signup')
@@ -53,8 +57,8 @@ export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => 
 }
 
 export default function Signup () {
-  const { t } = useTranslation('Signup')
-  const { setUser } = useIndexContext()
+  const { t, i18n } = useTranslation('Signup')
+  const { setUser, country, setCountry } = useIndexContext()
   const navigate = useNavigate()
 
   const [ firstName, setFirstName ] = useState('')
@@ -64,6 +68,7 @@ export default function Signup () {
   const [ password, setPassword ] = useState('')
   const [ repassword, setRepassword ] = useState('')
   const [ passwordValidation, setPasswordValidation ] = useState(validatePassword(''))
+  // const [ country, setCountry ] = useState('')
   const [ firstNameError, setFirstNameError ] = useState('')
   const [ lastNameError, setLastNameError ] = useState('')
   const [ emailError, setEmailError ] = useState('')
@@ -71,6 +76,7 @@ export default function Signup () {
   const [ passwordError, setPasswordError ] = useState('')
   const [ repasswordError, setRepasswordError ] = useState('')
   const [ responseError, setResponseError ] = useState('')
+  const [ countryError, setCountryError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ agree, setAgree ] = useState(false)
 
@@ -113,6 +119,12 @@ export default function Signup () {
     } else {
       setRepasswordError('')
     }
+    if (isEmpty(country)) {
+      valid = false
+      setCountryError(t('Please select your country'))
+    } else {
+      setCountryError('')
+    }
     if (!valid) {
       return
     }
@@ -126,6 +138,8 @@ export default function Signup () {
         email,
         phone,
         password,
+        country,
+        language: i18n.language,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -133,7 +147,7 @@ export default function Signup () {
       })
       // console.log('signup res:', res)
 
-      await requestLogin({ email, password, rememberme: false, setUser })
+      await requestLogin({ email, password, rememberme: false, setUser, setCountry })
       navigate(conf.account.start)
     } catch (err) {
       console.error('signup error:', err);
@@ -228,6 +242,7 @@ export default function Signup () {
                 pointing: 'above',
               }}
             />
+
             <Form.Input
               fluid
               icon='lock'
@@ -263,6 +278,28 @@ export default function Signup () {
               passwordValidation={passwordValidation}
               passwordsMatch={ password === repassword }
             />
+
+            <Divider />
+
+            <LanguageSelector fluid />
+            <br />
+
+            <Form.Field error={!isEmpty(countryError)}>
+              <Dropdown
+                placeholder='Select Country'
+                fluid
+                search
+                selection
+                options={countries}
+                value={country}
+                onChange={(e, { value }) => setCountry(value)}
+              />
+              {!isEmpty(countryError) && (
+                <Label basic color='red' pointing>
+                  {countryError}
+                </Label>
+              )}
+            </Form.Field>
 
             <Divider />
             <Form.Group>

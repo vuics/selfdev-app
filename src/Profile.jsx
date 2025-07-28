@@ -15,11 +15,15 @@ import {
   Image,
   Input,
   Modal,
-  Progress,
+  Dropdown,
+  Label
+  // Progress,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
+import { useIndexContext } from './components/IndexContext'
+import { countries } from './components/countries'
 import conf from './conf'
 
 /**
@@ -255,6 +259,7 @@ export function AvatarUploader() {
 
 export default function Profile () {
   const { t } = useTranslation('Profile')
+  const { country, setCountry } = useIndexContext()
 
   const [ firstName, setFirstName ] = useState('')
   const [ lastName, setLastName ] = useState('')
@@ -265,7 +270,7 @@ export default function Profile () {
   const [ city, setCity ] = useState('')
   const [ state, setState ] = useState('')
   const [ postalCode, setPostalCode ] = useState('')
-  const [ country, setCountry ] = useState('')
+  // const [ country, setCountry ] = useState('')
 
   const [ firstNameError, setFirstNameError ] = useState('')
   const [ lastNameError, setLastNameError ] = useState('')
@@ -508,6 +513,7 @@ export default function Profile () {
                   pointing: 'above',
                 }}
               />
+              {/*
               <Form.Input
                 fluid
                 icon='globe'
@@ -521,6 +527,25 @@ export default function Profile () {
                   pointing: 'above',
                 }}
               />
+              */}
+              <Form.Field error={!isEmpty(countryError)}>
+                <Dropdown
+                  placeholder='Select Country'
+                  fluid
+                  search
+                  selection
+                  options={countries}
+                  value={country}
+                  onChange={(e, { value }) => setCountry(value)}
+                  // disabled
+                />
+                {!isEmpty(countryError) && (
+                  <Label basic color='red' pointing>
+                    {countryError}
+                  </Label>
+                )}
+              </Form.Field>
+
             </Form.Group>
 
             <Divider />

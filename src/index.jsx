@@ -121,6 +121,7 @@ function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
   const [user, setUser, clearUser] = usePersistentState('user', {});
+  const [country, setCountry, clearCountry] = usePersistentState('country', '');
   const [cookieConsent, setCookieConsent] = usePersistentState('cookieConsent', null)
 
   const logIn = (openLogin) => {
@@ -159,7 +160,9 @@ function Index () {
 
   return (
   <IndexContext.Provider value={{
-    available, logIn, user, setUser, clearUser,
+    available, logIn,
+    user, setUser, clearUser,
+    country, setCountry, clearCountry,
     cookieConsent, setCookieConsent,
   }}>
     <Routes>

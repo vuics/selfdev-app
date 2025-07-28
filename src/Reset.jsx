@@ -25,7 +25,7 @@ import { useIndexContext } from './components/IndexContext'
 
 const Reset = () => {
   const { t } = useTranslation('Reset')
-  const { setUser } = useIndexContext()
+  const { setUser, setCountry } = useIndexContext()
   const [ searchParams, ] = useSearchParams()
   const token = searchParams.get("token")
   // console.log('token:', token)
@@ -74,7 +74,7 @@ const Reset = () => {
 
       const email = res.data.email
       console.log('email:', email)
-      await requestLogin({ email, password, rememberme: false, setUser })
+      await requestLogin({ email, password, rememberme: false, setUser, setCountry })
       navigate(conf.account.start)
     } catch (err) {
       console.error('reset error:', err);

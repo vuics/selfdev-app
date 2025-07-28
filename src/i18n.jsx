@@ -276,6 +276,11 @@ const resources = {
         },
       },
     },
+    Legal: {
+      "Loading...": "Loading...",
+      "Loading the legal document...": "Loading the legal document...",
+      "Error loading the legal document.": "Error loading the legal document.",
+    },
     BlueprintFlow: {
       common: {
         audioNotSupported: "Your browser does not support the audio element."
@@ -1538,6 +1543,11 @@ const resources = {
         },
       },
     },
+    Legal: {
+      "Loading...": "Загрузка...",
+      "Loading the legal document...": "Загрузка юридического документа...",
+      "Error loading the legal document.": "Ошибка при загрузке юридического документа.",
+    },
     BlueprintFlow: {
       common: {
         audioNotSupported: "Ваш браузер не поддерживает элемент аудио."
@@ -2572,7 +2582,7 @@ export function setI18nLanguage (language) {
     })
 }
 
-export function LanguageSelector () {
+export function LanguageSelector ({ fluid = false } = {}) {
   const [ language, setLanguage ] = useState(i18n.language)
 
   useEffect(() => {
@@ -2590,8 +2600,9 @@ export function LanguageSelector () {
       compact
       options={languageOptions}
       value={language}
-      defaultValue='en-US'
+      // defaultValue='en-US'
       onChange={(e, { value }) => setLanguage(value) }
+      fluid={fluid}
     />
   )
 }

@@ -21,7 +21,7 @@ import Logo from './components/Logo'
 import { useIndexContext } from './components/IndexContext'
 import { setI18nLanguage } from './i18n'
 
-export const requestLogin = async ({ email, password, rememberme, setUser }) => {
+export const requestLogin = async ({ email, password, rememberme, setUser, setCountry }) => {
   try {
     const res = await axios.post(`${conf.api.url}/login`, {
       email,
@@ -37,6 +37,9 @@ export const requestLogin = async ({ email, password, rememberme, setUser }) => 
     if (res.data.user.settings?.language) {
       setI18nLanguage(res.data.user.settings.language)
     }
+    if (res.data.user.address?.country) {
+      setCountry(res.data.user.address.country)
+    }
   } catch (err) {
     console.log('Error requesting login:', err)
     throw err
@@ -45,7 +48,7 @@ export const requestLogin = async ({ email, password, rememberme, setUser }) => 
 
 export default function Login () {
   const { t } = useTranslation('Login')
-  const { setUser } = useIndexContext()
+  const { setUser, setCountry } = useIndexContext()
   const navigate = useNavigate()
 
   const [ email, setEmail ] = useState('')
@@ -76,7 +79,7 @@ export default function Login () {
 
     setLoading(true)
     try {
-      await requestLogin({ email, password, rememberme, setUser })
+      await requestLogin({ email, password, rememberme, setUser, setCountry })
       navigate(conf.account.start)
     } catch (err) {
       console.error('login error:', err);
