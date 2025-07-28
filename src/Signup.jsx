@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import axios from 'axios'
@@ -25,7 +25,7 @@ import { requestLogin } from './Login'
 import Logo from './components/Logo'
 import { useIndexContext } from './components/IndexContext'
 import { LanguageSelector } from './i18n'
-import { countries } from './components/countries'
+import { useCountries } from './components/countries'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   const { t } = useTranslation('Signup')
@@ -60,6 +60,7 @@ export default function Signup () {
   const { t, i18n } = useTranslation('Signup')
   const { setUser, country, setCountry } = useIndexContext()
   const navigate = useNavigate()
+  const countries = useCountries()
 
   const [ firstName, setFirstName ] = useState('')
   const [ lastName, setLastName ] = useState('')

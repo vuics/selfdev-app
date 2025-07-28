@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import { useIndexContext } from './components/IndexContext'
-import { countries } from './components/countries'
+import { useCountries } from './components/countries'
 import conf from './conf'
 
 /**
@@ -258,8 +258,9 @@ export function AvatarUploader() {
 }
 
 export default function Profile () {
-  const { t } = useTranslation('Profile')
+  const { t, i18n } = useTranslation('Profile')
   const { country, setCountry } = useIndexContext()
+  const countries = useCountries()
 
   const [ firstName, setFirstName ] = useState('')
   const [ lastName, setLastName ] = useState('')
