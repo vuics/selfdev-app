@@ -14,8 +14,13 @@ import TawkLoader from './components/TawkLoader'
 
 // import App from './App'
 import Home from './Home'
+
 import Terms from './Terms'
 import Privacy from './Privacy'
+import Cookies from './Cookies'
+import Disclaimer from './Disclaimer'
+import Acceptable from './Acceptable'
+
 import Signup from './Signup'
 import Login from './Login'
 import Forgot from './Forgot'
@@ -160,8 +165,13 @@ function Index () {
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/test" element={<Test />}/>
+
       <Route path="/terms" element={<Terms />}/>
       <Route path="/privacy" element={<Privacy />}/>
+      <Route path="/cookies" element={<Cookies />}/>
+      <Route path="/disclaimer" element={<Disclaimer />}/>
+      <Route path="/acceptable" element={<Acceptable />}/>
+
       <Route path="/signup" element={<Signup />}/>
       <Route path="/login" element={<Login />}/>
       <Route path="/forgot" element={<Forgot />}/>

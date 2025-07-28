@@ -248,6 +248,9 @@ const resources = {
       'copyright': `© 2024-2025 ${conf.app.company}. All rights reserved.`,
       'Terms of Service': 'Terms of Service',
       'Privacy Policy': 'Privacy Policy',
+      'Cookies': 'Cookie Policy',
+      'Disclaimer': 'Disclaimer',
+      'Acceptable': 'Acceprable Use Policy',
       'LLMs': 'LLMs',
     },
     CookieBanner: {
@@ -1507,6 +1510,9 @@ const resources = {
       'copyright': `© 2024–2025 ${conf.app.company}. Все права защищены.`,
       'Terms of Service': 'Условия использования',
       'Privacy Policy': 'Политика конфиденциальности',
+      'Cookies': 'Политика использования файлов cookie',
+      'Disclaimer': 'Отказ от ответственности',
+      'Acceptable': 'Политика допустимого использования',
       'LLMs': 'Языковые модели',
     },
     CookieBanner: {
