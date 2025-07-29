@@ -21,6 +21,7 @@ const conf = {
     email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@vuics.com',
     github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/hyag',
     linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/showcase/hyag/',
+    // linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/hyag-ai/',
     discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
     youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
     x: import.meta.env.VITE_CONTACT_X || '',
