@@ -5,6 +5,11 @@ import {
   Segment,
   Loader,
   Message,
+  Header,
+  Sidebar,
+  Menu,
+  Icon,
+  Button,
 } from 'semantic-ui-react'
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +66,7 @@ export default function Legal ({ docType }) {
   const { country } = useIndexContext()
   const [ legal, setLegal ] = useState(null);
   const [ loading, setLoading ] = useState(true);
+  const [ visible, setVisible ] = useState(false)
 
   console.log('legal:', legal)
 
@@ -77,32 +83,106 @@ export default function Legal ({ docType }) {
   }, [i18n.language, country]);
 
   return (<>
-    <Container>
-      <Divider hidden />
-      <LanguageSelector />
-      {' '}
-      <CountrySelector />
-      <Divider hidden />
-      <Message info>
-        <Message.Header>
-          {t('noteHeader')}
-        </Message.Header>
-        <p>
-          {t('noteBody')}
-        </p>
-      </Message>
-      <Divider hidden />
-      <Segment>
-        { loading ? (
-          <Loader active inline="centered" content={t("loading")} />
-        ) : (
-          <QCMarkdown dark>
-            {legal || t("loadingLegal")}
-          </QCMarkdown>
-        )}
-      </Segment>
-      <Divider hidden />
-    </Container>
+    <Sidebar.Pushable
+      as={Segment.Group}
+      // as={Segment}
+      // style={{ overflow: 'hidden' }}
+      // raised
+    >
+      <Sidebar
+        as={Menu}
+        animation='overlay'
+        // animation='push'
+        // animation='scale down'
+        // animation='slide along'
+        direction='left'
+        icon='labeled'
+        inverted
+        onHide={() => setVisible(false)}
+        vertical
+        visible={visible}
+        width='thin'
+        // width='wide'
+      >
+        <Menu.Item
+          onClick={() => setVisible(false)}
+          as='h3'
+        >
+          {/*
+          <Icon name='list' />
+          */}
+          Legal Documents
+        </Menu.Item>
+        <Menu.Item as='a' href='/terms'>
+          <Icon name='file alternate outline' />
+          Terms of Service
+        </Menu.Item>
+        <Menu.Item as='a' href='/privacy'>
+          <Icon name='shield alternate' />
+          Privacy Policy
+        </Menu.Item>
+        <Menu.Item as='a' href='/cookies'>
+          <Icon name='privacy' />
+          Cookie Policy
+        </Menu.Item>
+        <Menu.Item as='a' href='/disclaimer'>
+          <Icon name='exclamation triangle' />
+          Disclaimer
+        </Menu.Item>
+        <Menu.Item as='a' href='/acceptable'>
+          <Icon name='ban' />
+          Acceptable Use Policy
+        </Menu.Item>
+        <Menu.Item onClick={() => setVisible(false)}>
+          <Icon name='close' />
+          Close Sidebar
+        </Menu.Item>
+      </Sidebar>
+
+      <Sidebar.Pusher>
+        <Container>
+          <Segment secondary>
+            <Header as='h3'>
+              Legal Center
+            </Header>
+            <Button
+              icon
+              labelPosition='left'
+              onClick={() => setVisible(!visible)}
+              aria-expanded={visible}
+              aria-controls="legal-sidebar"
+            >
+              <Icon name={visible ? 'close' : 'sidebar'} />
+              {' '}
+              {visible ? 'Hide Documents' : 'Browse Documents'}
+            </Button>
+            {' '}
+            <LanguageSelector />
+            {' '}
+            <CountrySelector />
+
+            <Message info>
+              <Message.Header>
+                {t('noteHeader')}
+              </Message.Header>
+              <p>
+                {t('noteBody')}
+              </p>
+            </Message>
+          </Segment>
+
+          <Segment>
+            { loading ? (
+              <Loader active inline="centered" content={t("loading")} />
+            ) : (
+              <QCMarkdown dark>
+                {legal || t("loadingLegal")}
+              </QCMarkdown>
+            )}
+          </Segment>
+        </Container>
+      </Sidebar.Pusher>
+    </Sidebar.Pushable>
     <FooterLegal />
   </>);
 };

@@ -3,6 +3,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import remarkSlug from 'remark-slug';
 import rehypeMathjax from 'rehype-mathjax'
 import rehypeRaw from 'rehype-raw'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -57,11 +58,12 @@ const MarkdownHighlighterDark = {
 
 export const QCMarkdown = ({ children, dark }) => (
   <ReactMarkdown
-    children={children}
-    remarkPlugins={[remarkGfm, remarkMath]}
+    remarkPlugins={[remarkGfm, remarkMath, remarkSlug]}
     rehypePlugins={[rehypeMathjax]}
     components={dark ? MarkdownHighlighterDark : MarkdownHighlighter}
-  />
+  >
+    {children}
+  </ReactMarkdown>
 )
 
 const Mermaid = memo(({ chart }) => {
