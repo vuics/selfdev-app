@@ -13,6 +13,7 @@ import { QCMarkdown } from './Text'
 import { useIndexContext } from './IndexContext'
 import { CountrySelector } from './Countries'
 import { LanguageSelector } from '../i18n'
+import { FooterLegal } from './Footer'
 
 export const loadLegal = async ({ docType, lang, country, t }) => {
   const normalizedLang = lang.split('-')[0].toLowerCase();
@@ -75,7 +76,7 @@ export default function Legal ({ docType }) {
     load();
   }, [i18n.language, country]);
 
-  return (
+  return (<>
     <Container>
       <Divider hidden />
       <LanguageSelector />
@@ -102,5 +103,6 @@ export default function Legal ({ docType }) {
       </Segment>
       <Divider hidden />
     </Container>
-  );
+    <FooterLegal />
+  </>);
 };
