@@ -3,6 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "rm -rf node_modules/.vite && vite",
+    "build": "vite build --debug",
+    "build:k8s": "vite build --debug --mode k8s",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "serve": "serve -s build",
+    "serve:ssl": "serve -s build --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
+    "test": ""
+  },
   "dependencies": {
     "@artsy/fresnel": "^8.1.0",
     "@codemirror/lang-markdown": "^6.3.2",
@@ -63,17 +74,6 @@
     "serve": "^14.2.4",
     "uuid": "^11.1.0",
     "web-vitals": "^4.2.4"
-  },
-  "scripts": {
-    "start": "vite",
-    "dev": "vite",
-    "build": "vite build --debug",
-    "build:k8s": "vite build --debug --mode k8s",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "serve": "serve -s build",
-    "serve:ssl": "serve -s build --ssl-cert /opt/ssl/tls.crt --ssl-key /opt/ssl/tls.key",
-    "test": ""
   },
   "browserslist": {
     "production": [

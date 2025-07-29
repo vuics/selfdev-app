@@ -250,7 +250,7 @@ const resources = {
       'Privacy Policy': 'Privacy Policy',
       'Cookies': 'Cookie Policy',
       'Disclaimer': 'Disclaimer',
-      'Acceptable': 'Acceprable Use Policy',
+      'Acceptable': 'Acceptable Use Policy',
       'LLMs': 'LLMs',
     },
     CookieBanner: {
@@ -277,9 +277,11 @@ const resources = {
       },
     },
     Legal: {
-      "Loading...": "Loading...",
-      "Loading the legal document...": "Loading the legal document...",
-      "Error loading the legal document.": "Error loading the legal document.",
+      loading: "Loading...",
+      loadingLegal: "Loading the legal document...",
+      errorNotFound: "The legal document is not found.",
+      noteHeader: "Note",
+      noteBody: "This document is available in multiple languages for your convenience. The English version is the official, legally binding version. In case of any discrepancy, the English version shall prevail.",
     },
     BlueprintFlow: {
       common: {
@@ -1285,6 +1287,9 @@ const resources = {
       pricingTitle: "Pricing",
       comparisonTitle: "Pricing Comparison",
     },
+    CountrySelector: {
+      'Select Country': 'Select Country',
+    },
     Countries: {
       "Afghanistan": "Afghanistan",
       "Albania": "Albania",
@@ -1795,9 +1800,11 @@ const resources = {
       },
     },
     Legal: {
-      "Loading...": "Загрузка...",
-      "Loading the legal document...": "Загрузка юридического документа...",
-      "Error loading the legal document.": "Ошибка при загрузке юридического документа.",
+      loading: "Загрузка...",
+      loadingLegal: "Загрузка юридического документа...",
+      errorNotFound: "Юридический документ не найден.",
+      noteHeader: "Примечание",
+      noteBody: "Этот документ доступен на нескольких языках для вашего удобства. Английская версия является официальной и имеет юридическую силу. В случае расхождений приоритет имеет английская версия.",
     },
     BlueprintFlow: {
       common: {
@@ -2787,6 +2794,9 @@ const resources = {
 
       pricingTitle: "Цены",
       comparisonTitle: "Сравнение Цен",
+    },
+    CountrySelector: {
+      'Select Country': 'Выберите страну',
     },
     Countries: {
       "Afghanistan": "Афганистан",

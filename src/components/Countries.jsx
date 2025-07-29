@@ -1,4 +1,13 @@
+import React, { useState } from 'react'
+import { isEmpty } from 'lodash'
+import {
+  Form,
+  Dropdown,
+  Label,
+} from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
+
+import { useIndexContext } from './IndexContext'
 
 export function useCountries() {
   const { t } = useTranslation('Countries')
@@ -1499,4 +1508,34 @@ export function useCountries() {
       "text": t("Åland Islands"),
     }
   ];
+}
+
+export function CountrySelector ({ fluid = false } = {}) {
+  const { t } = useTranslation('CountrySelector')
+  const { country, setCountry } = useIndexContext()
+  const countries = useCountries()
+  return (
+    <Dropdown
+      placeholder={t('Select Country')}
+      fluid={fluid}
+      search
+      selection
+      options={countries}
+      value={country}
+      onChange={(e, { value }) => setCountry(value)}
+    />
+  )
+}
+
+export function CountryFormField ({ fluid = false, countryError = '' } = {}) {
+  return (
+    <Form.Field error={!isEmpty(countryError)}>
+      <CountrySelector fluid={fluid}/>
+      {!isEmpty(countryError) && (
+        <Label basic color='red' pointing>
+          {countryError}
+        </Label>
+      )}
+    </Form.Field>
+  )
 }

@@ -4,12 +4,15 @@ import {
   Divider,
   Segment,
   Loader,
+  Message,
 } from 'semantic-ui-react'
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
 import { QCMarkdown } from './Text'
 import { useIndexContext } from './IndexContext'
+import { CountrySelector } from './Countries'
+import { LanguageSelector } from '../i18n'
 
 export const loadLegal = async ({ docType, lang, country, t }) => {
   const normalizedLang = lang.split('-')[0].toLowerCase();
@@ -49,7 +52,7 @@ export const loadLegal = async ({ docType, lang, country, t }) => {
   }
 
   // return null;
-  return t('Error loading the legal document.');
+  return t('errorNotFound');
 };
 
 export default function Legal ({ docType }) {
@@ -70,17 +73,30 @@ export default function Legal ({ docType }) {
     };
 
     load();
-  }, [i18n.language]);
+  }, [i18n.language, country]);
 
   return (
     <Container>
       <Divider hidden />
+      <LanguageSelector />
+      {' '}
+      <CountrySelector />
+      <Divider hidden />
+      <Message info>
+        <Message.Header>
+          {t('noteHeader')}
+        </Message.Header>
+        <p>
+          {t('noteBody')}
+        </p>
+      </Message>
+      <Divider hidden />
       <Segment>
         { loading ? (
-          <Loader active inline="centered" content={t("Loading...")} />
+          <Loader active inline="centered" content={t("loading")} />
         ) : (
           <QCMarkdown dark>
-            {legal || t('Loading the legal document...')}
+            {legal || t("loadingLegal")}
           </QCMarkdown>
         )}
       </Segment>

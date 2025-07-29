@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import axios from 'axios'
@@ -13,8 +13,8 @@ import {
   Icon,
   Loader,
   Divider,
-  Dropdown,
-  Label,
+  // Label,
+  // Dropdown,
   // Image,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +25,7 @@ import { requestLogin } from './Login'
 import Logo from './components/Logo'
 import { useIndexContext } from './components/IndexContext'
 import { LanguageSelector } from './i18n'
-import { useCountries } from './components/countries'
+import { CountryFormField } from './components/Countries'
 
 export const PasswordRequirements = ({ passwordValidation, passwordsMatch }) => {
   const { t } = useTranslation('Signup')
@@ -60,7 +60,6 @@ export default function Signup () {
   const { t, i18n } = useTranslation('Signup')
   const { setUser, country, setCountry } = useIndexContext()
   const navigate = useNavigate()
-  const countries = useCountries()
 
   const [ firstName, setFirstName ] = useState('')
   const [ lastName, setLastName ] = useState('')
@@ -69,7 +68,6 @@ export default function Signup () {
   const [ password, setPassword ] = useState('')
   const [ repassword, setRepassword ] = useState('')
   const [ passwordValidation, setPasswordValidation ] = useState(validatePassword(''))
-  // const [ country, setCountry ] = useState('')
   const [ firstNameError, setFirstNameError ] = useState('')
   const [ lastNameError, setLastNameError ] = useState('')
   const [ emailError, setEmailError ] = useState('')
@@ -133,6 +131,7 @@ export default function Signup () {
     setLoading(true)
     try {
       let res
+      // eslint-disable-next-line no-unused-vars
       res = await axios.post(`${conf.api.url}/signup`, {
         firstName,
         lastName,
@@ -284,23 +283,7 @@ export default function Signup () {
 
             <LanguageSelector fluid />
             <br />
-
-            <Form.Field error={!isEmpty(countryError)}>
-              <Dropdown
-                placeholder='Select Country'
-                fluid
-                search
-                selection
-                options={countries}
-                value={country}
-                onChange={(e, { value }) => setCountry(value)}
-              />
-              {!isEmpty(countryError) && (
-                <Label basic color='red' pointing>
-                  {countryError}
-                </Label>
-              )}
-            </Form.Field>
+            <CountryFormField fluid countryError={countryError} />
 
             <Divider />
             <Form.Group>

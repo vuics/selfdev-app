@@ -15,15 +15,15 @@ import {
   Image,
   Input,
   Modal,
-  Dropdown,
-  Label
+  // Dropdown,
+  // Label
   // Progress,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import { useIndexContext } from './components/IndexContext'
-import { useCountries } from './components/countries'
+import { CountryFormField } from './components/Countries'
 import conf from './conf'
 
 /**
@@ -258,9 +258,8 @@ export function AvatarUploader() {
 }
 
 export default function Profile () {
-  const { t, i18n } = useTranslation('Profile')
+  const { t } = useTranslation('Profile')
   const { country, setCountry } = useIndexContext()
-  const countries = useCountries()
 
   const [ firstName, setFirstName ] = useState('')
   const [ lastName, setLastName ] = useState('')
@@ -271,7 +270,6 @@ export default function Profile () {
   const [ city, setCity ] = useState('')
   const [ state, setState ] = useState('')
   const [ postalCode, setPostalCode ] = useState('')
-  // const [ country, setCountry ] = useState('')
 
   const [ firstNameError, setFirstNameError ] = useState('')
   const [ lastNameError, setLastNameError ] = useState('')
@@ -529,23 +527,7 @@ export default function Profile () {
                 }}
               />
               */}
-              <Form.Field error={!isEmpty(countryError)}>
-                <Dropdown
-                  placeholder='Select Country'
-                  fluid
-                  search
-                  selection
-                  options={countries}
-                  value={country}
-                  onChange={(e, { value }) => setCountry(value)}
-                  // disabled
-                />
-                {!isEmpty(countryError) && (
-                  <Label basic color='red' pointing>
-                    {countryError}
-                  </Label>
-                )}
-              </Form.Field>
+              <CountryFormField fluid countryError={countryError} />
 
             </Form.Group>
 
