@@ -40,7 +40,6 @@ export const loadLegal = async ({ docType, lang, country, t }) => {
 
   try {
     const res = await axios.get(url, {
-      baseURL: window.location.origin, // Ensures it hits the correct dev server
       headers: { 'Accept': 'text/plain', },
     });
     return res.data;
@@ -50,7 +49,6 @@ export const loadLegal = async ({ docType, lang, country, t }) => {
 
   try {
     const res = await axios.get(defaultUrl, {
-      baseURL: window.location.origin,
       headers: { 'Accept': 'text/plain', },
     });
     return res.data;
@@ -60,7 +58,6 @@ export const loadLegal = async ({ docType, lang, country, t }) => {
 
   try {
     const res = await axios.get(fallbackUrl, {
-      baseURL: window.location.origin,
       headers: { 'Accept': 'text/plain', },
     });
     return res.data;
