@@ -104,7 +104,7 @@ export default function Legal ({ docType }) {
         width='thin'
         // width='wide'
       >
-        <Menu.Item
+        <Menu.Item header
           onClick={() => setVisible(false)}
           as='h3'
         >
@@ -113,30 +113,32 @@ export default function Legal ({ docType }) {
           */}
           Legal Documents
         </Menu.Item>
-        <Menu.Item as='a' href='/terms'>
+        <Menu.Item link as='a' href='/terms'>
           <Icon name='file alternate outline' />
           Terms of Service
         </Menu.Item>
-        <Menu.Item as='a' href='/privacy'>
+        <Menu.Item link as='a' href='/privacy'>
           <Icon name='shield alternate' />
           Privacy Policy
         </Menu.Item>
-        <Menu.Item as='a' href='/cookies'>
+        <Menu.Item link as='a' href='/cookies'>
           <Icon name='privacy' />
           Cookie Policy
         </Menu.Item>
-        <Menu.Item as='a' href='/disclaimer'>
+        <Menu.Item link as='a' href='/disclaimer'>
           <Icon name='exclamation triangle' />
           Disclaimer
         </Menu.Item>
-        <Menu.Item as='a' href='/acceptable'>
+        <Menu.Item link as='a' href='/acceptable'>
           <Icon name='ban' />
           Acceptable Use Policy
         </Menu.Item>
-        <Menu.Item onClick={() => setVisible(false)}>
-          <Icon name='close' />
-          Close Sidebar
-        </Menu.Item>
+        <Menu.Menu>
+          <Menu.Item color='yellow' onClick={() => setVisible(false)}>
+            <Icon name='close' />
+            Close Sidebar
+          </Menu.Item>
+        </Menu.Menu>
       </Sidebar>
 
       <Sidebar.Pusher>
