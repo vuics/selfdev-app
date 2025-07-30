@@ -78,6 +78,7 @@ export default function Signup () {
   const [ countryError, setCountryError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ agree, setAgree ] = useState(false)
+  const [ marketing, setMarketing ] = useState(false)
 
   const handleSubmit = async () => {
     setResponseError('')
@@ -140,6 +141,7 @@ export default function Signup () {
         password,
         country,
         language: i18n.language,
+        marketing,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -306,6 +308,18 @@ export default function Signup () {
                 }
                 checked={agree}
                 onChange={(e, data) => setAgree(data.checked)}
+              >
+              </Form.Checkbox>
+            </Form.Group>
+            <Form.Group>
+              <Form.Checkbox
+                label={
+                  <label style={{ textAlign: 'left' }}>
+                    {t('marketingAgree')}
+                  </label>
+                }
+                checked={marketing}
+                onChange={(e, data) => setMarketing(data.checked)}
               >
               </Form.Checkbox>
             </Form.Group>

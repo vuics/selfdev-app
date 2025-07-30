@@ -23,6 +23,7 @@ export default function Settings () {
   const { t } = useTranslation('Settings')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
+  const [ marketing, setMarketing ] = useState(false)
 
   const getSettings = async () => {
     setLoading(true)
@@ -34,6 +35,7 @@ export default function Settings () {
       })
       console.log('res:', res)
       setI18nLanguage(res?.data?.language || i18n.language)
+      setMarketing(res?.data?.marketing)
     } catch (err) {
       console.error('get settings error:', err);
       return setResponseError(err?.response?.data?.message || t('Error getting user settings.'))
@@ -53,6 +55,7 @@ export default function Settings () {
       console.log('postSettings language:', i18n.language)
       const res = await axios.post(`${conf.api.url}/settings`, {
         language: i18n.language,
+        marketing,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -96,6 +99,23 @@ export default function Settings () {
               <label>{t('language')}:</label>
               <LanguageSelector />
             </Form.Field>
+
+            <Divider hidden />
+            <Form.Field>
+              <label>{t('Marketing')}:</label>
+              <Form.Checkbox
+                label={
+                  <label style={{ textAlign: 'left' }}>
+                    {t('marketingAgree')}
+                  </label>
+                }
+                checked={marketing}
+                onChange={(e, data) => setMarketing(data.checked)}
+              >
+              </Form.Checkbox>
+            </Form.Field>
+
+            <Divider hidden />
             <Button
               icon labelPosition='left'
               onClick={(e) => postSettings(e)}

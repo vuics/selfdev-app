@@ -732,6 +732,7 @@ const resources = {
       'terms of service': 'terms of service',
       'and': 'and',
       'privacy policy': 'privacy policy',
+      marketingAgree: 'I agree to receive marketing emails and SMS (optional).',
       'Sign Up': 'Sign Up',
       'Have an existing account?': 'Have an existing account?',
       'Log In': 'Log In',
@@ -1204,6 +1205,8 @@ const resources = {
     Settings: {
       settings: 'Settings',
       language: 'Language',
+      'Marketing': 'Marketing',
+      marketingAgree: 'I agree to receive marketing emails and SMS.',
       save: 'Save',
       error: 'Error',
     },
@@ -2266,6 +2269,7 @@ const resources = {
       'terms of service': 'условиями обслуживания',
       'and': 'и',
       'privacy policy': 'политикой конфиденциальности',
+      marketingAgree: 'Я согласен(а) получать маркетинговые электронные письма и SMS (необязательно).',
       'Sign Up': 'Зарегистрироваться',
       'Have an existing account?': 'У вас уже есть аккаунт?',
       'Log In': 'Войти',
@@ -2723,6 +2727,8 @@ const resources = {
     Settings: {
       settings: 'Настройки',
       language: 'Язык',
+      'Marketing': 'Маркетинг',
+      marketingAgree: 'Я согласен(а) получать маркетинговые электронные письма и SMS (необязательно).',
       save: 'Сохранить',
       error: 'Ошибка',
     },
