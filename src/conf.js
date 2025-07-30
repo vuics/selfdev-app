@@ -11,9 +11,7 @@ const conf = {
   },
 
   style: {
-    // color0: 'black',
     color0: 'teal',
-    // grayLogo: true,
     grayLogo: false,
   },
 
@@ -25,6 +23,11 @@ const conf = {
     discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
     youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
     x: import.meta.env.VITE_CONTACT_X || '',
+  },
+
+  legal: {
+    dir: import.meta.env.VITE_LEGAL_DIR || 'legal',
+    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
   },
 
   api: {

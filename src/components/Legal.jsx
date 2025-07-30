@@ -18,27 +18,30 @@ import { QCMarkdown } from './Text'
 import { useIndexContext } from './IndexContext'
 import { CountrySelector } from './Countries'
 import { LanguageSelector } from '../i18n'
-import { FooterLegal } from './Footer'
+import Footer from './Footer'
+import conf from '../conf'
 
 export const loadLegal = async ({ docType, lang, country, t }) => {
   const normalizedLang = lang.split('-')[0].toLowerCase();
   const normalizedCountry = country.toUpperCase();
 
   const key = `${normalizedLang}-${normalizedCountry}`;
-  const url = `/legal/${docType}/${key}.md`;
+  const url = `/${conf.legal.dir}/${docType}/${key}.md`;
 
-  const fallbackKey = `${normalizedLang}_default`;
-  const fallbackUrl = `/legal/${docType}/${fallbackKey}.md`;
+  const defaultKey = `${normalizedLang}_default`;
+  const defaultUrl = `/${conf.legal.dir}/${docType}/${defaultKey}.md`;
+
+  const fallbackKey = conf.legal.fallbackKey
+  const fallbackUrl = `/${conf.legal.dir}/${docType}/${fallbackKey}.md`;
 
   console.log('url:', url);
+  console.log('defaultUrl:', defaultUrl);
   console.log('fallbackUrl:', fallbackUrl);
 
   try {
     const res = await axios.get(url, {
       baseURL: window.location.origin, // Ensures it hits the correct dev server
-      headers: {
-        'Accept': 'text/plain',
-      },
+      headers: { 'Accept': 'text/plain', },
     });
     return res.data;
   } catch (e) {
@@ -46,18 +49,25 @@ export const loadLegal = async ({ docType, lang, country, t }) => {
   }
 
   try {
+    const res = await axios.get(defaultUrl, {
+      baseURL: window.location.origin,
+      headers: { 'Accept': 'text/plain', },
+    });
+    return res.data;
+  } catch (e) {
+    console.warn(`Failed to load default markdown: ${defaultUrl}`, e);
+  }
+
+  try {
     const res = await axios.get(fallbackUrl, {
       baseURL: window.location.origin,
-      headers: {
-        'Accept': 'text/plain',
-      },
+      headers: { 'Accept': 'text/plain', },
     });
     return res.data;
   } catch (e) {
     console.warn(`Failed to load fallback markdown: ${fallbackUrl}`, e);
   }
 
-  // return null;
   return t('errorNotFound');
 };
 
@@ -96,13 +106,13 @@ export default function Legal ({ docType }) {
         // animation='scale down'
         // animation='slide along'
         direction='left'
-        icon='labeled'
+        // icon='labeled'
         inverted
         onHide={() => setVisible(false)}
         vertical
         visible={visible}
-        width='thin'
-        // width='wide'
+        // width='thin'
+        width='wide'
       >
         <Menu.Item header
           onClick={() => setVisible(false)}
@@ -111,42 +121,59 @@ export default function Legal ({ docType }) {
           {/*
           <Icon name='list' />
           */}
-          Legal Documents
+          {t('Legal Documents')}
         </Menu.Item>
+
+        <Menu.Item />
+
         <Menu.Item link as='a' href='/terms'>
           <Icon name='file alternate outline' />
-          Terms of Service
+          {t('Terms of Service')}
         </Menu.Item>
         <Menu.Item link as='a' href='/privacy'>
           <Icon name='shield alternate' />
-          Privacy Policy
+          {t('Privacy Policy')}
         </Menu.Item>
         <Menu.Item link as='a' href='/cookies'>
           <Icon name='privacy' />
-          Cookie Policy
+          {t('Cookie Policy')}
         </Menu.Item>
         <Menu.Item link as='a' href='/disclaimer'>
           <Icon name='exclamation triangle' />
-          Disclaimer
+          {t('Disclaimer')}
         </Menu.Item>
         <Menu.Item link as='a' href='/acceptable'>
           <Icon name='ban' />
-          Acceptable Use Policy
+          {t('Acceptable Use Policy')}
         </Menu.Item>
-        <Menu.Menu>
-          <Menu.Item color='yellow' onClick={() => setVisible(false)}>
-            <Icon name='close' />
-            Close Sidebar
-          </Menu.Item>
-        </Menu.Menu>
+
+        <Menu.Item />
+
+        <Menu.Item onClick={() => setVisible(false)}>
+          <Icon name='close' />
+          {t('Close Sidebar')}
+        </Menu.Item>
       </Sidebar>
 
       <Sidebar.Pusher>
         <Container>
           <Segment secondary>
             <Header as='h3'>
-              Legal Center
+              {t('Legal Center')}
             </Header>
+            {/*
+            <Button
+              icon
+              labelPosition='left'
+              as='a'
+              href='/'
+            >
+              <Icon name='home' />
+              {' '}
+              Home
+            </Button>
+            {' '}
+            */}
             <Button
               icon
               labelPosition='left'
@@ -156,7 +183,7 @@ export default function Legal ({ docType }) {
             >
               <Icon name={visible ? 'close' : 'sidebar'} />
               {' '}
-              {visible ? 'Hide Documents' : 'Browse Documents'}
+              {visible ? t('Hide Documents') : t('Browse Documents')}
             </Button>
             {' '}
             <LanguageSelector />
@@ -185,6 +212,6 @@ export default function Legal ({ docType }) {
         </Container>
       </Sidebar.Pusher>
     </Sidebar.Pushable>
-    <FooterLegal />
+    <Footer />
   </>);
 };
