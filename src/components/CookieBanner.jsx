@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Message, Button, Checkbox, Icon
 } from 'semantic-ui-react'
@@ -74,6 +75,10 @@ export default function CookieBanner() {
             <Message.Content aria-live="polite">
               <Message.Header>{t('header')}</Message.Header>
               {t('description')}
+              {' '}
+              <Link to="/cookies">
+                {t('learnMore')}
+              </Link>
               <div style={{ marginTop: '1em', display: 'flex', gap: '1em', flexWrap: 'wrap' }}>
                 <Button
                   icon labelPosition='left'

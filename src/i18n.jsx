@@ -257,6 +257,7 @@ const resources = {
     CookieBanner: {
       "header": "We use cookies",
       "description": "This website uses cookies to ensure basic functionality like login, and to enhance your experience.",
+      "learnMore": "Learn more.",
       "selectPreferences": "Select Preferences",
       "acceptAll": "Accept All",
       "preferences": "Cookie Preferences",
@@ -1794,6 +1795,7 @@ const resources = {
     CookieBanner: {
       "header": "Мы используем файлы cookie",
       "description": "Этот сайт использует файлы cookie для обеспечения базовой функциональности, такой как вход в систему, и для улучшения вашего опыта.",
+      "learnMore": "Узнать больше.",
       "selectPreferences": "Выбрать настройки",
       "acceptAll": "Принять все",
       "preferences": "Настройки файлов cookie",
