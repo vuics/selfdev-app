@@ -26,8 +26,10 @@ const conf = {
   },
 
   legal: {
-    dir: import.meta.env.VITE_LEGAL_DIR || 'legal',
-    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
+    // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
+    // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
+    dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
+    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'ru_default',
   },
 
   api: {

@@ -77,8 +77,9 @@ export default function Signup () {
   const [ responseError, setResponseError ] = useState('')
   const [ countryError, setCountryError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  const [ agree, setAgree ] = useState(false)
-  const [ marketing, setMarketing ] = useState(false)
+  const [ termsConsent, setTermsConsent ] = useState(false)
+  const [ privacyConsent, setPrivacyConsent ] = useState(false)
+  const [ marketingConsent, setMarketingConsent ] = useState(false)
 
   const handleSubmit = async () => {
     setResponseError('')
@@ -141,7 +142,9 @@ export default function Signup () {
         password,
         country,
         language: i18n.language,
-        marketing,
+        termsConsent,
+        privacyConsent,
+        marketingConsent,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -297,8 +300,19 @@ export default function Signup () {
                     <a href="/terms" target="_blank">
                       {t('terms of service')}
                     </a>
-                    {' '}
-                    {t('and')}
+                    .
+                  </label>
+                }
+                checked={termsConsent}
+                onChange={(e, data) => setTermsConsent(data.checked)}
+              >
+              </Form.Checkbox>
+            </Form.Group>
+            <Form.Group>
+              <Form.Checkbox
+                label={
+                  <label style={{ textAlign: 'left' }}>
+                    {t('I have read and agree to the')}
                     {' '}
                     <a href="/privacy" target="_blank">
                       {t('privacy policy')}
@@ -306,8 +320,8 @@ export default function Signup () {
                     .
                   </label>
                 }
-                checked={agree}
-                onChange={(e, data) => setAgree(data.checked)}
+                checked={privacyConsent}
+                onChange={(e, data) => setPrivacyConsent(data.checked)}
               >
               </Form.Checkbox>
             </Form.Group>
@@ -318,12 +332,18 @@ export default function Signup () {
                     {t('marketingAgree')}
                   </label>
                 }
-                checked={marketing}
-                onChange={(e, data) => setMarketing(data.checked)}
+                checked={marketingConsent}
+                onChange={(e, data) => setMarketingConsent(data.checked)}
               >
               </Form.Checkbox>
             </Form.Group>
-            <Button color={conf.style.color0} fluid size='large' onClick={handleSubmit} disabled={!agree}>
+            <Button
+              color={conf.style.color0}
+              fluid
+              size='large'
+              onClick={handleSubmit}
+              disabled={!termsConsent || !privacyConsent}
+            >
               <Icon name='user plus' />
               {' '}
               {t('Sign Up')}
