@@ -26,6 +26,7 @@ const conf = {
   },
 
   legal: {
+    // FIXME: set org by default:
     // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
     // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
     dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
