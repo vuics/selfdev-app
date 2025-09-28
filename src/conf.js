@@ -16,7 +16,7 @@ const conf = {
   },
 
   contact: {
-    email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@vuics.com',
+    email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@hyag.org',
     github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/hyag',
     linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/showcase/hyag/',
     // linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/hyag-ai/',

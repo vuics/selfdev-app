@@ -1785,7 +1785,7 @@ const resources = {
       'copyright': `© 2024–2025 ${conf.app.company}. Все права защищены.`,
       'Legal': 'Право',
       'Terms of Service': 'Условия использования',
-      'Privacy Policy': 'Политика конфиденциальности',
+      'Privacy Policy': 'Политика персональных данных',
       'Cookie Policy': 'Политика использования файлов cookie',
       'Disclaimer': 'Отказ от ответственности',
       'Acceptable Use Policy': 'Политика допустимого использования',
