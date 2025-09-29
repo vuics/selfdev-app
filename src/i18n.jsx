@@ -86,9 +86,10 @@ const resources = {
 
       archetypeChat: "Chat",
       archetypeRAG: "RAG",
-      archetypeSpeech: "Speech <-> Text",
-      archetypeImageGen: "Image <-> Text",
+      archetypeSpeech: "Speech/Text",
+      archetypeImageGen: "Image/Text",
       archetypeCode: "Code",
+      archetypeAvatar: "Avatar",
       archetypeOthers: "Many More",
 
       archetypeChatDesc: "Interact with leading LLMs from OpenAI, Anthropic, Google, and more.",
@@ -96,6 +97,7 @@ const resources = {
       archetypeSpeechDesc: "Enable voice-powered workflows and accessibility.",
       archetypeImageGenDesc: "Create stunning visuals with Dalle-2 and Dalle-3.",
       archetypeCodeDesc: "Automate complex programming tasks and streamline development.",
+      archetypeAvatarDesc: "Synthesize LipSync videos from speech audios and face images.",
       archetypeOthersDesc: "Quantum, Storage, Command, Langflow, Node-RED, Notebook, Avatar.",
 
 
@@ -331,6 +333,9 @@ const resources = {
     plt.title('Simple Line Graph'); plt.xlabel('X-axis'); plt.ylabel('Y-axis')<br/>
     plt.legend(); plt.show()`,
         graphImage: "![Generated Image](/demo/matplotlib-graph.png)"
+      },
+      avatarBlueprint: {
+        speechSourceText: "Hello! How can I assist you today?"
       },
       otherBlueprint: {
       }
@@ -1624,9 +1629,10 @@ const resources = {
 
       archetypeChat: "Чат",
       archetypeRAG: "RAG",
-      archetypeSpeech: "Речь <-> Текст",
-      archetypeImageGen: "Изображения <-> Текст",
+      archetypeSpeech: "Речь/Текст",
+      archetypeImageGen: "Изображения/Текст",
       archetypeCode: "Код",
+      archetypeAvatar: "Аватар",
       archetypeOthers: "И многое другое",
 
       archetypeChatDesc: "Взаимодействуйте с передовыми LLM от OpenAI, Anthropic, Google и других.",
@@ -1634,6 +1640,7 @@ const resources = {
       archetypeSpeechDesc: "Создавайте голосовые рабочие процессы и обеспечивайте доступность.",
       archetypeImageGenDesc: "Создавайте потрясающие визуалы с помощью Dalle-2 и Dalle-3.",
       archetypeCodeDesc: "Автоматизируйте сложные программные задачи и ускоряйте разработку.",
+      archetypeAvatarDesc: "Создавайте LipSync-видео из аудиозаписей речи и изображений лиц.",
       archetypeOthersDesc: "Квант, Хранилище, Команды, Langflow, Node-RED, Блокнот, Аватар.",
 
 
@@ -1869,6 +1876,9 @@ const resources = {
     plt.title('Простой линейный график'); plt.xlabel('Ось X'); plt.ylabel('Ось Y')<br/>
     plt.legend(); plt.show()`,
         graphImage: "![Сгенерированное изображение](/demo/matplotlib-graph.png)"
+      },
+      avatarBlueprint: {
+        speechSourceText: "Hello! How can I assist you today?"
       },
       otherBlueprint: {
       }
