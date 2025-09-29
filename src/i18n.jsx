@@ -293,7 +293,8 @@ const resources = {
       loadingLegal: "Loading the legal document...",
       errorNotFound: "The legal document is not found.",
       noteHeader: "Note",
-      noteBody: "This document is available in multiple languages for your convenience. The English version is the official, legally binding version. In case of any discrepancy, the English version shall prevail.",
+      noteBodyOrg: "This document is available in multiple languages for your convenience. The English version is the official, legally binding version. In case of any discrepancy, the English version shall prevail.",
+      noteBodyRu: "This document is available in multiple languages for your convenience. The Russian version is the official, legally binding version. In case of any discrepancy, the Russian version shall prevail.",
     },
     BlueprintFlow: {
       common: {
@@ -1830,7 +1831,8 @@ const resources = {
       loadingLegal: "Загрузка юридического документа...",
       errorNotFound: "Юридический документ не найден.",
       noteHeader: "Примечание",
-      noteBody: "Этот документ доступен на нескольких языках для вашего удобства. Английская версия является официальной и имеет юридическую силу. В случае расхождений приоритет имеет английская версия.",
+      noteBodyOrg: "Этот документ доступен на нескольких языках для вашего удобства. Английская версия является официальной и имеет юридическую силу. В случае расхождений приоритет имеет английская версия.",
+      noteBodyRu: "Этот документ доступен на нескольких языках для вашего удобства. Русская версия является официальной и имеет юридическую силу. В случае расхождений приоритет имеет русская версия.",
     },
     BlueprintFlow: {
       common: {

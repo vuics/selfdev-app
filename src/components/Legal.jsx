@@ -187,14 +187,16 @@ export default function Legal ({ docType }) {
             {' '}
             <CountrySelector />
 
-            <Message info>
-              <Message.Header>
-                {t('noteHeader')}
-              </Message.Header>
-              <p>
-                {t('noteBody')}
-              </p>
-            </Message>
+            { conf.legal.noteKey && (
+              <Message info>
+                <Message.Header>
+                  {t('noteHeader')}
+                </Message.Header>
+                <p>
+                  {t(conf.legal.noteKey)}
+                </p>
+              </Message>
+            )}
           </Segment>
 
           <Segment>
