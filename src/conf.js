@@ -30,12 +30,11 @@ const conf = {
   legal: {
     dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
     fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
-    noteKey: import.meta.env.VITE_LEGAL_NOTE || 'noteBodyOrg',
-
+    noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || 'noteBodyOrg',
     // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
     // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'ru_default',
-    // noteKey: import.meta.env.VITE_LEGAL_NOTE || '',
-    // noteKey: import.meta.env.VITE_LEGAL_NOTE || 'noteBodyRu'
+    // noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || '',
+    // noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || 'noteBodyRu'
   },
 
   api: {
