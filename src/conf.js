@@ -28,14 +28,13 @@ const conf = {
   },
 
   legal: {
-    // FIXME: set org by default:
-    // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
-    // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
-    // noteKey: import.meta.env.VITE_LEGAL_NOTE || 'noteBodyOrg',
+    dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
+    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
+    noteKey: import.meta.env.VITE_LEGAL_NOTE || 'noteBodyOrg',
 
-    dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
-    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'ru_default',
-    noteKey: import.meta.env.VITE_LEGAL_NOTE || '',
+    // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
+    // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'ru_default',
+    // noteKey: import.meta.env.VITE_LEGAL_NOTE || '',
     // noteKey: import.meta.env.VITE_LEGAL_NOTE || 'noteBodyRu'
   },
 
