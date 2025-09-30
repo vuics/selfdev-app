@@ -51,6 +51,7 @@ import Profile from './Profile'
 import Keys from './Keys'
 import Vault from './Vault'
 import Subscription from './Subscription'
+import Subscribe from './Subscribe'
 import Settings from './Settings'
 import Landing from './Landing'
 
@@ -250,6 +251,9 @@ function Index () {
       )}
       { conf.subscription.enable && (<>
         <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
+      </>)}
+      { conf.subscribe.enable && (<>
+        <Route path='/subscribe' element={(<Private> <Subscribe/> </Private>)}/>
       </>)}
       { conf.settings.enable && (<>
         <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>

@@ -163,6 +163,12 @@ export default function Menubar ({ children }) {
                 {t('Subscription')}
               </Dropdown.Item>
             )}
+            { conf.subscribe.enable && (
+              <Dropdown.Item onClick={() => navigate('/subscribe')}>
+                <Icon name='handshake' />
+                {t('Subscribe')}
+              </Dropdown.Item>
+            )}
 
             <Dropdown.Divider />
 

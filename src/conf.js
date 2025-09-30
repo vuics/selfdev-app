@@ -153,6 +153,10 @@ const conf = {
     stripePaymentElement: 'PaymentElement',  // 'CardElement' or 'PaymentElement'
   },
 
+  subscribe: {
+    enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || true),
+  },
+
   settings: {
     enable: bool(import.meta.env.VITE_SETTINGS_ENABLE || true),
   },
