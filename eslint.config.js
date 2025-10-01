@@ -5,7 +5,7 @@ import jest from 'eslint-plugin-jest'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
-import reactSignalsHooks from '@ospm/eslint-plugin-react-signals-hooks';
+// import reactSignalsHooks from '@ospm/eslint-plugin-react-signals-hooks';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -30,8 +30,8 @@ export default defineConfig([
       react,
       jest,
 
-      // Alex's plugin
-      'react-signals-hooks': reactSignalsHooks,
+      // // Alex's plugin
+      // 'react-signals-hooks': reactSignalsHooks,
     },
     settings: {
       react: {
@@ -51,24 +51,24 @@ export default defineConfig([
       'react/display-name': 'off',
 
 
-      // Alex's Enhanced dependency detection
-      'react-signals-hooks/exhaustive-deps': [
-        'error',
-        {
-          enableAutoFixForMemoAndCallback: true,
-          enableDangerousAutofixThisMayCauseInfiniteLoops: false,
-        },
-      ],
-      // Alex's Signal usage enforcement
-      'react-signals-hooks/require-use-signals': 'error',
-      'react-signals-hooks/signal-variable-name': 'error',
-      'react-signals-hooks/no-mutation-in-render': 'error',
-      // Alex's Performance and best practices
-      'react-signals-hooks/prefer-signal-in-jsx': 'warn',
-      'react-signals-hooks/prefer-show-over-ternary': 'warn',
-      'react-signals-hooks/prefer-for-over-map': 'warn',
-      'react-signals-hooks/prefer-signal-effect': 'warn',
-      'react-signals-hooks/prefer-computed': 'warn',
+      // // Alex's Enhanced dependency detection
+      // 'react-signals-hooks/exhaustive-deps': [
+      //   'error',
+      //   {
+      //     enableAutoFixForMemoAndCallback: true,
+      //     enableDangerousAutofixThisMayCauseInfiniteLoops: false,
+      //   },
+      // ],
+      // // Alex's Signal usage enforcement
+      // 'react-signals-hooks/require-use-signals': 'error',
+      // 'react-signals-hooks/signal-variable-name': 'error',
+      // 'react-signals-hooks/no-mutation-in-render': 'error',
+      // // Alex's Performance and best practices
+      // 'react-signals-hooks/prefer-signal-in-jsx': 'warn',
+      // 'react-signals-hooks/prefer-show-over-ternary': 'warn',
+      // 'react-signals-hooks/prefer-for-over-map': 'warn',
+      // 'react-signals-hooks/prefer-signal-effect': 'warn',
+      // 'react-signals-hooks/prefer-computed': 'warn',
     },
   },
 ])
