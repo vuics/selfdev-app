@@ -1050,6 +1050,7 @@ const resources = {
         free: {
           name: "Explorer (Free)",
           price: "Free",
+          priceRu: "Free",
           title: "Discover & self-host AI. For curious minds and indie tinkerers.",
           description: "For people getting started:",
           values: [
@@ -1066,6 +1067,7 @@ const resources = {
         basic1: {
           name: "Operator (Basic)",
           price: "USD 39.99 / month",
+          priceRu: "3299 ₽ / month",
           title: "Deploy agents. Solve tasks. Use your own API keys.",
           description: "Everything in Free, plus:",
           values: [
@@ -1082,6 +1084,7 @@ const resources = {
         premium1: {
           name: "Strategist (Premium)",
           price: "USD 96.99 / month",
+          priceRu: "7999 ₽ / month",
           title: "Automate smarter. Design systems. Gain insights.",
           description: "Everything in Basic, plus:",
           values: [
@@ -1099,6 +1102,7 @@ const resources = {
         enterprise: {
           name: "Director (Enterprise)",
           price: "Custom Quote",
+          priceRu: "Custom Quote",
           title: "Full-scale orchestration. Private deployments. Enterprise-grade intelligence.",
           description: "Everything in Premium, plus:",
           values: [
@@ -1120,10 +1124,10 @@ const resources = {
         },
 
         // NOTE: this is for the test of adding subscription plans
-        /* /
         test8: {
           name: "Test8",
           price: "Pricefull",
+          priceRu: "Priceless",
           title: "Only for testing.",
           description: "Everything is included, plus:",
           values: [
@@ -1131,7 +1135,6 @@ const resources = {
           ],
           button: "Test it",
         },
-        /**/
 
       },
 
@@ -1157,13 +1160,6 @@ const resources = {
 
       comparison: {
         header: "Pricing Comparison",
-        plans: {
-          explorer: "Explorer",
-          operator: "Operator",
-          strategist: "Strategist",
-          director: "Director"
-        },
-        popularPlan: "strategist",
 
         ariaLabel: "Subscription plans feature comparison table",
         features: "Features",
@@ -1171,8 +1167,6 @@ const resources = {
 
         accessLimits: "Pricing",
         price: "Price",
-        free: "Free",
-        customQuote: "Custom Quote",
         mostPopular: "Most Popular",
 
         accessAndLimits: "Access & Limits",
@@ -2593,6 +2587,7 @@ const resources = {
         free: {
           name: "Исследователь (Бесплатно)",
           price: "Бесплатно",
+          priceRu: "Бесплатно",
           title: "Исследуйте и размещайте ИИ самостоятельно. Для любознательных и энтузиастов.",
           description: "Для начинающих:",
           values: [
@@ -2609,6 +2604,7 @@ const resources = {
         basic1: {
           name: "Оператор (Базовый)",
           price: "USD 39.99 / месяц",
+          priceRu: "3299 ₽ / месяц",
           title: "Развёртывайте агентов. Решайте задачи. Используйте свои API-ключи.",
           description: "Всё из Бесплатного тарифа, плюс:",
           values: [
@@ -2625,6 +2621,7 @@ const resources = {
         premium1: {
           name: "Стратег (Премиум)",
           price: "USD 96.99 / месяц",
+          priceRu: "7999 ₽ / месяц",
           title: "Автоматизируйте умнее. Проектируйте системы. Получайте инсайты.",
           description: "Всё из Базового тарифа, плюс:",
           values: [
@@ -2642,6 +2639,7 @@ const resources = {
         enterprise: {
           name: "Директор (Корпоративный)",
           price: "Индивидуальный расчёт",
+          priceRu: "Индивидуальный расчёт",
           title: "Полная оркестрация. Приватное развёртывание. Интеллект на уровне предприятия.",
           description: "Всё из Премиум-тарифа, плюс:",
           values: [
@@ -2685,22 +2683,12 @@ const resources = {
 
       comparison: {
         header: "Сравнение тарифов",
-        plans: {
-          explorer: "Исследователь",
-          operator: "Оператор",
-          strategist: "Стратег",
-          director: "Директор"
-        },
-        popularPlan: "strategist",
-
         ariaLabel: "Таблица сравнения функций подписок",
         features: "Функции",
         mostPopularLabel: "Самый популярный",
 
         accessLimits: "Цена и ограничения",
         price: "Цена",
-        free: "Бесплатно",
-        customQuote: "Индивидуальный расчёт",
         mostPopular: "Самый популярный",
 
         accessAndLimits: "Доступ и лимиты",

@@ -148,13 +148,24 @@ const conf = {
     enable: bool(import.meta.env.VITE_VAULT_ENABLE || true),
   },
 
+  pricing: {
+    enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
+    allowedPlans: arr(import.meta.env.VITE_PRICING_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
+    priceKey: import.meta.env.VITE_PRICING_PRICE_KEY || 'price',   // options: price, priceRu
+  },
+
   subscription: {
     enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || true),
+    allowedPlans: arr(import.meta.env.VITE_SUBSCRIPTION_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
+    priceKey: import.meta.env.VITE_SUBSCRIPTION_PRICE_KEY || 'price',
+
     stripePaymentElement: 'PaymentElement',  // 'CardElement' or 'PaymentElement'
   },
 
   subscribe: {
     enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || true),
+    allowedPlans: arr(import.meta.env.VITE_SUBSCRIBE_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
+    priceKey: import.meta.env.VITE_SUBSCRIBE_PRICE_KEY || 'priceRu',
   },
 
   settings: {
@@ -163,10 +174,6 @@ const conf = {
 
   admin: {
     enable: bool(import.meta.env.VITE_ADMIN_ENABLE || true),
-  },
-
-  pricing: {
-    enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
   },
 
   security: {
