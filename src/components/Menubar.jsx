@@ -165,8 +165,8 @@ export default function Menubar ({ children }) {
             )}
             { conf.subscribe.enable && (
               <Dropdown.Item onClick={() => navigate('/subscribe')}>
-                <Icon name='handshake' />
-                {t('Subscribe')}
+                <Icon name='shopping cart' />
+                {t('Subscription')}
               </Dropdown.Item>
             )}
 

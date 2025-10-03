@@ -1141,6 +1141,7 @@ const resources = {
       currentSubscriptions: "Subscriptions",
       status: {
         active: "Active",
+        inactive: "Inactive",
         incomplete: "Incomplete",
         incomplete_expired: "Incomplete Expired",
         canceled: "Canceled"
@@ -2664,6 +2665,7 @@ const resources = {
       currentSubscriptions: "Подписки",
       status: {
         active: "Активна",
+        inactive: "Неактивна",
         incomplete: "Незавершённая",
         incomplete_expired: "Незавершённая истекла",
         canceled: "Отменена"
