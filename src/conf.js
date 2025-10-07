@@ -213,9 +213,9 @@ const conf = {
   },
 
   unami: {
-    enable: bool(import.meta.env.VITE_UNAMI_ENABLE || true),
+    enable: bool(import.meta.env.VITE_UNAMI_ENABLE || false),
     url: import.meta.env.VITE_UNAMI_URL || 'http://umami.dev.local:3083/script.js',
-    websiteId: import.meta.env.VITE_UNAMI_WEBSITE_ID || 'c6c89c8f-c8f8-413a-8dc5-e637a8187c66',
+    websiteId: import.meta.env.VITE_UNAMI_WEBSITE_ID || 'TBS',
   },
 }
 

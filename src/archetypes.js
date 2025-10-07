@@ -721,6 +721,51 @@ Answer:`,
     }
   },
 
+  'n8n-v1.0': {
+    key: 'n8n-v1.0',
+    value: 'n8n-v1.0',
+    icon: 'code branch',
+    text: 'N8n v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        n8n: {
+          type: 'object',
+          properties: {
+            method: { type: 'string' },
+            url: { type: 'string' },
+            payload: { },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'n8n' ],
+        n8n: {
+          method: 'POST',
+          url: '',
+          payload: {
+            prompt: '',
+          },
+          parseJson: true,
+          promptKey: 'prompt',
+        },
+      }
+    }
+  },
+
+
   'notebook-v1.0': {
     key: 'notebook-v1.0',
     value: 'notebook-v1.0',
