@@ -10,7 +10,7 @@ import {
   Button,
   Icon,
 } from 'semantic-ui-react'
-import { ErrorBoundary } from "react-error-boundary";
+// import { ErrorBoundary } from "react-error-boundary";
 import Iframe from 'react-iframe'
 import i18n from "i18next";
 import { useTranslation } from 'react-i18next'

@@ -11,6 +11,7 @@ import './i18n'
 import { IndexContext, usePersistentState } from './components/IndexContext'
 import CookieBanner from './components/CookieBanner'
 import TawkLoader from './components/TawkLoader'
+import UnamiLoader from './components/UnamiLoader'
 
 // import App from './App'
 import Home from './Home'
@@ -270,6 +271,7 @@ function Index () {
       <CookieBanner />
     )}
     <TawkLoader />
+    <UnamiLoader />
   </IndexContext.Provider>
   )
 }
