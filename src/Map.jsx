@@ -1589,8 +1589,6 @@ const RequestEdge = memo(({
           ...style,
           stroke: data.stroke,
           strokeWidth: selected ? 3 : 1,
-          // pointerEvents: 'auto',
-          // zIndex: '9999',
         }}
       />
       <EdgeLabelRenderer>

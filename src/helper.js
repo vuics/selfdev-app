@@ -23,13 +23,6 @@ export function useWindowDimensions() {
   return windowDimensions;
 }
 
-export function parseRegexString(input) {
-  const match = input.match(/^\/(.*)\/([a-z]*)$/i);
-  if (!match) throw new Error("Invalid regex format");
-  const [, pattern, flags] = match;
-  return { pattern, flags };
-}
-
 export function sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
 
 export function hexToRgba({ hexColor = '#ffffff', alpha = 1} = {}) {

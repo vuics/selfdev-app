@@ -1,15 +1,17 @@
 import safeRegex from "safe-regex";
 
-// TODO: move the parseRegexString to this file or separate from ui
-import { parseRegexString,
-  // useWindowDimensions, sleep, hexToRgba
-} from '../helper.js'
-
 export const variableRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
 export const unameRegex = /\[\[([A-Za-z0-9_-]+)\]\]/;
 export const commentRegex = /(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
 export const ucommentRegex = /\[\/\*\[([A-Za-z0-9_-]+)\]\*\/\]/;
 export const variableOrCommentRegex = /(\[\[[A-Za-z0-9_-]+\]\])|(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
+
+export function parseRegexString(input) {
+  const match = input.match(/^\/(.*)\/([a-z]*)$/i);
+  if (!match) throw new Error("Invalid regex format");
+  const [, pattern, flags] = match;
+  return { pattern, flags };
+}
 
 export function buildSmartText({ text, getNodes }) {
   const allNodes = getNodes()
