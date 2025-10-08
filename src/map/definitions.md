@@ -29,7 +29,7 @@ Definition of the NoteNode is below:
 
 ```json
 {
-  id,                          // mongodb id
+  id: String,                          // mongodb id
   type: String,                // node type, always 'NoteNode'
   position: {
     x: Number,                 // x position on the map
@@ -37,14 +37,31 @@ Definition of the NoteNode is below:
   },
   data: {
     uname: String,             // unique node name
-    text: String,              // note text
+
+    text: String,                           // note text. The text can be smart text when it contains [[node_uname]], then the subsctring [[node_uname]] is substituted with the text of the node_uname. It is possible to disable the smart text substitution by commenting it as [/*[node_uname]*/]. The subsctitution is nested if the node_uname also contains the [[other_node_uname]]. Multiple [[uname1]], [[uname2]], etc. inside one text get all substituted with the texts of those nodes.
+    attachments: [String] | undefined,      // list of urls of attached files
+    stash: String | undefined,              // note stash for text (used for diff text and stash)
+    stashAttachments: [String] | undefined, //  list of urls of attached files in stash
+
+    waitRecipient: String | undefined, // xmpp address of the recipient to which we sent a message and waiting for reply
+    kind: String | undefined,  // kind the node content, one of values: 'markdown', 'code', 'raw' or `undefined` (plain)
     editing: Boolean,          // editing/viewing mode switch
+    diffing: Boolean,          // if the note is in the diff mode (diff of text and stash with their attachemnts)
     renaming: Boolean,         // true when user renaming the note to show name input
+    slide: Boolean,            // if the note is slide in the deck
+    slideIndex: Number,        // number of the slide in the deck
+
     color: String,             // text color
     backgroundColor: String,   // background color
   },
+  style: {
+    width: Number,             //
+    height: Number,            //
+  },
   width: Number,               // note width
   height: Number | undefined,  // note height
+
+  parentId: String | undefined, // id of a GroupNode
 
   measured: {                  // The section gets added by ReactFlow
     width: Number,
@@ -60,6 +77,7 @@ Definition of the GroupNode is below:
 ```json
 {
   id: String,                  // mongodb id
+  type: String,                // always 'group'
   position: {
     x: Number,                 // x position on the map
     y: Number,                 // y position on the map
@@ -75,12 +93,19 @@ Definition of the GroupNode is below:
     //  editing: Boolean,          // editing/viewing mode switch
   },
   style: {
-    width: x1 - (x || 0),
-    height: y1 - (y || 0),
+    width: Number,             //
+    height: Number,            //
   },
-  type: 'group',
 }
 ```
+
+GroupNode has child node ids.
+The GroupNode organizes the execution loops considers the following types of edges:
+* init edges: init loop variables but do not participate in a loop.
+* inner edges: repeats continuously unil one of the exit edges conditinos get satisfied starting with the first edge in array.
+* exit edges: allow exit loop if one of the edge's conditions get satisfied.
+* loop edges:  loop through all inner and exit edges.
+
 
 ## RequestEdge
 
@@ -90,10 +115,23 @@ Definition of the GroupNode is below:
 {
   id: String,            // edge id in format `${sourceNodeId}->${targetNodeId}`
   type: 'RequestEdge',   // edge type, always 'RequestEdge'
+  source: String,        // source node id,
+  target: String,        // target node id,
   data: {
     recipient: String,   // the agent name, xmpp address of the agent, e.g. agentname@username.x.hyag.ru
     condition: String,   // regular expresson, the edge gets executed (message send to recipient if the condition is satisfied when applied to the source edge before sending the message to the recipient
     stroke: String,      // Stroke line color
+
+    satisfied: Boolean,  // if condition is satisfied by applying the condition regex to the source node smart text
+    safe: Boolean,       // if the condition regex is safe
+
+    expecting: Boolean | undefined,  // execution is expected, colors edge label yellow
+    cursor: Boolean | undefinded,    // if this edge is being executed (message send to a recipient and waiting for the answer), colors edge label to olive
+    reordering: Boolean | undefined, // if in reordering mode, colors edge label to blue
+    sequence: Number,    // order number of the edge
+  },
+  style: {
+   ..
   },
   markerEnd: {
     type: String,        // Set to MarkerType.ArrowClosed from ReactFlow
@@ -102,6 +140,11 @@ Definition of the GroupNode is below:
     color: String,       // Stroke line color
   },
   animated: Boolean,     // Mostly true
+  selected: Boolean,     // true if the node is selected
+  sourceX: Number,       // x coordinate of the source point
+  sourceY: Number,       // y coordinate of the source point
+  targetX: Number,       // x coordinate of the target point
+  targetY: Number,       // y coordinate of the target point
 };
 ```
 
@@ -213,10 +256,5 @@ Ensure all required fields are filled. Add optional UI fields as needed.
 * **Front-end:** ReactFlow for visual editing.
 * **Back-end:** Node.js / Python agent server.
 
----
-
-I can **prototype a prompt-to-Map generator agent** that takes any natural-language workflow description and outputs a validated JSON Map automatically.
-
-Do you want me to create that prototype JSON generator workflow for you?
 
 
