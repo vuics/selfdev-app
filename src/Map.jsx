@@ -1825,7 +1825,6 @@ function Map () {
   const [ renaming, setRenaming ] = useState(false)
   const [ opener, setOpener ] = useState(false)
   const [ openerSearch, setOpenerSearch ] = useState('')
-  const [ reordering, setReordering ] = useState(false)
   const [ color, setColor ] = useState(defaultColor)
   const [ backgroundColor, setBackgroundColor ] = useState(defaultBackgroundColor)
   const [ stroke, setStroke ] = useState(defaultStroke)
@@ -1833,6 +1832,7 @@ function Map () {
   const fileInputRef = useRef(null);
   const xmppRef = useRef(null);
 
+  const [ reordering, setReordering ] = useState(false)
   const [ playing, setPlaying ] = useState(false)
   const [ stepping, setStepping ] = useState(false)
   const [ pausing, setPausing ] = useState(false)
