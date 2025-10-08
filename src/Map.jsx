@@ -17,11 +17,11 @@ import {
   Modal,
   Popup,
   Menu,
-  Segment,
   Sidebar,
   Label,
   Grid,
 
+  // Segment,
   // Header,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
@@ -49,7 +49,6 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { client, xml } from '@xmpp/client'
-import safeRegex from "safe-regex";
 import { faker } from '@faker-js/faker'
 import { v4 as uuidv4 } from 'uuid'
 import { nanoid } from 'nanoid'
@@ -120,10 +119,29 @@ import { getCodeString } from "rehype-rewrite";
 
 import Menubar from './components/Menubar'
 import conf, { bool } from './conf'
-import { parseRegexString, useWindowDimensions, sleep, hexToRgba } from './helper.js'
+import {
+  // parseRegexString,
+  useWindowDimensions, sleep, hexToRgba
+} from './helper.js'
 import { MarkdownMermaid } from './components/Text'
 import { texturePattern } from './components/patterns'
 import { useIndexContext } from './components/IndexContext'
+
+import {
+  // variableRegex,
+  unameRegex,
+  // commentRegex,
+  ucommentRegex,
+  variableOrCommentRegex,
+  buildSmartText,
+  checkCondition,
+  playEdge,
+  unlinkEdge,
+
+  // ui
+  startEditing,
+  switchEditing,
+} from './map/map-logic'
 
 const editorThemes = {
   'default': 'light',
@@ -180,145 +198,6 @@ const editorThemes = {
 
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
-
-const variableRegex = /(\[\[[A-Za-z0-9_-]+\]\])/g;
-const unameRegex = /\[\[([A-Za-z0-9_-]+)\]\]/;
-const commentRegex = /(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
-const ucommentRegex = /\[\/\*\[([A-Za-z0-9_-]+)\]\*\/\]/;
-const variableOrCommentRegex = /(\[\[[A-Za-z0-9_-]+\]\])|(\[\/\*\[[A-Za-z0-9_-]+\]\*\/\])/g;
-
-function buildSmartText({ text, getNodes }) {
-  const allNodes = getNodes()
-  let parts = ''
-  let smartText = ''
-  const startTime = Date.now()
-  do {
-    if (Date.now() - startTime > 5000) {
-      console.warn('buildSmartText> Loop timed out after 5 seconds.');
-      break;
-    }
-    parts = text.split(variableOrCommentRegex)
-    smartText = parts.map((part, i) => {
-      if (variableRegex.test(part)) {
-        let uname = part
-        const match = part.match(unameRegex);
-        // console.log('match:', match)
-        if (match) {
-          uname = match[1]
-        }
-        let foundNodes = allNodes.filter((n) => n.data.uname === uname);
-        let nodeText
-        if (foundNodes.length === 1) {
-          nodeText = foundNodes[0].data.text
-        } else {
-          console.warn('buildSmartText> foundNodes for part:', part, 'do not consist of exactly one node, foundNodes:', foundNodes)
-          nodeText = ''
-        }
-        return nodeText
-      } if (commentRegex.test(part)) {
-        return ''
-      } else {
-        return part
-      }
-    } ).join('\n');
-    text = smartText
-  } while (parts.length > 1)
-  return smartText
-}
-
-function checkCondition({ condition, text }) {
-  let satisfied = true
-  let safe = true
-  if (condition) {
-    const { pattern, flags } = parseRegexString(condition);
-    console.log('pattern:', pattern, ', flags:', flags)
-    safe = safeRegex(pattern)
-    if (safe) {
-      const safeRegex = new RegExp(pattern, flags);
-      satisfied = safeRegex.test(text)
-    }
-  }
-  console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
-  return [ satisfied, safe ]
-}
-
-async function playEdge ({
-  sourceNodeData, edgeData,
-  getNodes, setNodes, getEdges, setEdges,
-  credentials, sendPersonalMessage, sendAttachments,
-  edgeId, targetId,
-}) {
-  const { text, attachments } = sourceNodeData
-  const { recipient, condition } = edgeData
-  const smartText = buildSmartText({ text, getNodes })
-  // console.log('smartText:', smartText)
-  const [ satisfied, safe ] = checkCondition({ condition, text: smartText })
-  // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
-
-  setNodes((nodes) =>
-    nodes.map((node) =>
-      node.id === targetId ? {
-        ...node,
-        data: {
-          ...node.data,
-          waitRecipient: (smartText && satisfied) ? recipient : undefined,
-          text: recipient ? '' : node.data.text,
-        }
-      } : node
-    )
-  )
-  setEdges((edges) =>
-    edges.map((edge) =>
-      edge.id === edgeId ? { ...edge, data: { ...edge.data, satisfied, safe, cursor: true } } : edge
-    )
-  )
-
-  if (recipient) {
-    if (attachments && attachments.length > 0) {
-      await sendAttachments({ credentials, recipient, attachments })
-    }
-    await sendPersonalMessage({ credentials, recipient, prompt: smartText });
-  } else {
-    const edges = getEdges()
-    const edge = edges.find(edge => edge.id === edgeId)
-    const nodes = getNodes()
-    const sourceNode = nodes.find(node => node.id === edge.source)
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (node.id === edge.target) {
-          // console.log('+ smartText:', smartText, ', satisfied:', satisfied)
-          if ((smartText || sourceNode.data.attachments?.length > 0) && satisfied) {
-            const attachments = [...new Set([...(node.data.attachments || []), ...(sourceNode.data.attachments || []) ])]
-            // console.log('edge attachments:', attachments)
-            if (!node.data.text.includes(`[[${sourceNode.data.uname}]]`) &&
-                !node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
-              return { ...node, data: { ...node.data, text: node.data.text + `[[${sourceNode.data.uname}]]`, attachments } }
-            } else if (node.data.text.includes(`[/*[${sourceNode.data.uname}]*/]`)) {
-              return { ...node, data: { ...node.data, text: node.data.text.replace(`[/*[${sourceNode.data.uname}]*/]`, `[[${sourceNode.data.uname}]]`), attachments } }
-            }
-            return { ...node, data: { ...node.data, attachments } }
-          } else {
-            // unlinkEdge({ edge, getNodes, setNodes })
-            return { ...node, data: { ...node.data, text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, `[/*[${sourceNode.data.uname}]*/]`), attachments: node.data.attachments?.filter(item => !sourceNode.data.attachments.includes(item)) } }
-          }
-        }
-        return node
-      })
-    );
-  }
-}
-
-function unlinkEdge({ edge, getNodes, setNodes }) {
-  const nodes = getNodes()
-  const sourceNode = nodes.find(node => node.id === edge.source)
-  setNodes((nodes) =>
-    nodes.map((node) =>
-      node.id === edge.target ? { ...node, data: { ...node.data,
-        text: node.data.text.replace(`[[${sourceNode.data.uname}]]`, '').replace(`[/*[${sourceNode.data.uname}]*/]`, '') }
-      } : node
-    )
-  )
-}
 
 const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor }) => {
   const { fitView } = useReactFlow();
@@ -472,15 +351,7 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
       }}
       theme={data.editing ? editorThemes[editorTheme] : editorThemes[viewerTheme] }
       extensions={extensions}
-      onClick={
-        data.editing
-          ? (() => {})
-          : (() => {
-              setNodes((nodes) =>
-                nodes.map((node) =>
-                  node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-              ) ) })
-      }
+      onClick={() => startEditing({ id, data, setNodes })}
       className="nodrag nopan"
     />
   </>)
@@ -534,13 +405,7 @@ const Code = ({ inline, children = [], className, ...props }) => {
 const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
   return (<>
     <div
-      onClick={() => {
-        setNodes((nodes) =>
-          nodes.map((node) =>
-            node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-          )
-        );
-      }}
+      onClick={() => switchEditing({ id, data, setNodes })}
       style={{ cursor: 'pointer' }}
     >
       {text.split(variableOrCommentRegex).map((part, i) => {
