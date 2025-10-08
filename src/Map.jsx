@@ -138,10 +138,9 @@ import {
   playEdge,
   unlinkEdge,
 
-  // ui
   startEditing,
   switchEditing,
-} from './map/map-logic'
+} from './map/mapper'
 
 const editorThemes = {
   'default': 'light',
@@ -2888,6 +2887,22 @@ function Map () {
     );
   }, [setPlaying, setPausing, setReordering, setEdges])
 
+  async function executeMapOnBackend () {
+    try {
+      const response = await axios.post(`${conf.api.url}/executor/map/${mapId}`, { }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('/executor/map response:', response)
+      const { _id, title } = response.data
+      console.log('Result map title:', title, ', _id:', _id)
+    } catch (err) {
+      console.error('executeMapOnBackend error:', err)
+      setResponseError(err?.response?.data?.message || t('Error executing map on backend.'))
+    }
+  }
+
   const orderEdges = useCallback(() => {
     setReordering(reordering => {
       let sequence = 1
@@ -3473,13 +3488,13 @@ function Map () {
                 } />
               )}
             </>
-          ) : (
+          ) : (<>
             <Popup content={t('Run the map')} trigger={
               <Button icon basic onClick={playMap}>
                 <Icon name='play' color='green' />
               </Button>
             } />
-          )}
+          </>)}
           <Popup content={t('Step forward')} trigger={
             <Button icon basic onClick={stepMap}>
               <Icon name='step forward' color={ stepping ? 'olive' : 'yellow' } />
@@ -3488,6 +3503,11 @@ function Map () {
           <Popup content={t('Stop running the map')} trigger={
             <Button icon basic onClick={stopMap} disabled={!playing}>
               <Icon name='stop' color='red' disabled={!playing} />
+            </Button>
+          } />
+          <Popup content={t('Execute the map on backend')} trigger={
+            <Button icon basic onClick={executeMapOnBackend}>
+              <Icon name='rocket' color='violet' />
             </Button>
           } />
         </Button.Group>
