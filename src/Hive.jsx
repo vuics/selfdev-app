@@ -18,15 +18,21 @@ import {
   Popup,
 } from 'semantic-ui-react'
 import Ajv from 'ajv'
-import { xml } from '@xmpp/client'
-import { v4 as uuidv4 } from 'uuid'
+// import { xml } from '@xmpp/client'
+// import { v4 as uuidv4 } from 'uuid'
 import { useTranslation } from 'react-i18next'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useIndexContext } from './components/IndexContext'
-import { initXmppClient, } from './map/mapper'
+import { useXmppContext } from './components/XmppContext'
+import {
+  addToRoster,
+  removeFromRoster,
+  // xmppRef,
+//  initXmppClient,
+} from './map/mapper'
 
 const ajv = new Ajv()
 
@@ -44,85 +50,59 @@ export default function Hive () {
   const [ loading, setLoading ] = useState(true)
   const fileInputRef = useRef(null);
 
-  const xmppRef = useRef(null);
-  const [ credentials, setCredentials ] = useState(null)
-  const [ roster, setRoster ] = useState([])
-  const [ presence, setPresence ] = useState({});
+  // const xmppRef = useRef(null);
+  // const [ credentials, setCredentials ] = useState(null)
+  // const [ roster, setRoster ] = useState([])
+  // const [ presence, setPresence ] = useState({});
+
+  const {
+    credentials, roster, presence, // setRoster, setPresence, // xmppRefCurrent,
+  } = useXmppContext()
+  console.log('credentials:', credentials)
+  console.log('presence:', presence)
+  console.log('roster:', roster)
 
   // console.log('roster:', roster)
   // console.log('presence:', presence)
 
-  useEffect(() =>{
-    async function fetchCredentials () {
-      try {
-        const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-          crossOrigin: { mode: 'cors' },
-        })
-        console.log('fetchCredentials response:', response)
-        const { user, password, jid } = response.data
-        setCredentials({ user, password, jid })
-      } catch (err) {
-        console.error('xmpp/credentials error:', err)
-        setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
-        setLoading(false)
-      }
-    }
-    fetchCredentials()
-  }, [t])
+  // useEffect(() =>{
+  //   async function fetchCredentials () {
+  //     try {
+  //       const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
+  //         headers: { 'Content-Type': 'application/json' },
+  //         withCredentials: true,
+  //         crossOrigin: { mode: 'cors' },
+  //       })
+  //       console.log('fetchCredentials response:', response)
+  //       const { user, password, jid } = response.data
+  //       setCredentials({ user, password, jid })
+  //     } catch (err) {
+  //       console.error('xmpp/credentials error:', err)
+  //       setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchCredentials()
+  // }, [t])
 
 
-  useEffect(() => {
-    const initXmpp = async () => {
-      try {
-        xmppRef.current = await initXmppClient({
-          credentials,
-          service: conf.xmpp.websocketUrl,
-          domain: conf.xmpp.host,
-          setLoading, setResponseError, setRoster, setPresence,
-        })
-        console.log('XMPP initialized:', xmppRef.current);
-      } catch (err) {
-        console.error('Failed to init XMPP:', err);
-      }
-    };
+  // useEffect(() => {
+  //   const initXmpp = async () => {
+  //     try {
+  //       xmppRef.current = await initXmppClient({
+  //         credentials,
+  //         service: conf.xmpp.websocketUrl,
+  //         domain: conf.xmpp.host,
+  //         setLoading, setResponseError, setRoster, setPresence,
+  //       })
+  //       console.log('XMPP initialized:', xmppRef.current);
+  //     } catch (err) {
+  //       console.error('Failed to init XMPP:', err);
+  //     }
+  //   };
 
-    initXmpp();
-  }, [credentials]) // `presense` should not be supplied because it should only connect once
-
-  const addToRoster = ({ jid, name, groups = [] } = {}) => {
-    const iq = xml(
-      'iq',
-      { type: 'set', id: `roster_${uuidv4()}` },
-      xml('query', { xmlns: 'jabber:iq:roster' }, [
-        xml(
-          'item',
-          { jid, name },
-          groups.map(group => xml('group', {}, group))
-        ),
-      ])
-    )
-    xmppRef.current.send(iq)
-    console.log('addToRoster iq:', iq)
-
-    // Send a subscription request
-    const presence = xml('presence', { to: jid, type: 'subscribe' })
-    xmppRef.current.send(presence)
-    console.log('addToRoster subscribe presense:', presence)
-  }
-
-  const removeFromRoster = ({ jid }) => {
-    const iq = xml(
-      'iq',
-      { type: 'set', id: `remove_${uuidv4()}` },
-      xml('query', { xmlns: 'jabber:iq:roster' }, [
-        xml('item', { jid, subscription: 'remove' }),
-      ])
-    )
-
-    xmppRef.current.send(iq)
-  }
+  //   initXmpp();
+  // }, [credentials]) // `presense` should not be supplied because it should only connect once
 
   const sortAgents = (a, b) => {
     // 1. Sort by deployed (true first)

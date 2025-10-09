@@ -8,7 +8,8 @@ import { Loader, } from 'semantic-ui-react'
 
 import conf from './conf.js'
 import './i18n'
-import { IndexContext, usePersistentState } from './components/IndexContext'
+import { IndexContext, usePersistentState, useIndexContext } from './components/IndexContext'
+import { ConditionalXmppProvider } from './components/XmppContext'
 import CookieBanner from './components/CookieBanner'
 import TawkLoader from './components/TawkLoader'
 import UnamiLoader from './components/UnamiLoader'
@@ -59,7 +60,6 @@ import Landing from './Landing'
 import Admin from './Admin'
 
 import reportWebVitals from './reportWebVitals';
-import { useIndexContext } from './components/IndexContext'
 
 const Test = () => (<div>Test</div>)
 
@@ -167,105 +167,107 @@ function Index () {
     country, setCountry, clearCountry,
     cookieConsent, setCookieConsent,
   }}>
-    <Routes>
-      <Route path="/" element={<Home />}/>
-      <Route path="/test" element={<Test />}/>
+    <ConditionalXmppProvider user={user}>
+      <Routes>
+        <Route path="/" element={<Home />}/>
+        <Route path="/test" element={<Test />}/>
 
-      <Route path="/terms" element={<Terms />}/>
-      <Route path="/privacy" element={<Privacy />}/>
-      <Route path="/cookies" element={<Cookies />}/>
-      <Route path="/disclaimer" element={<Disclaimer />}/>
-      <Route path="/acceptable" element={<Acceptable />}/>
+        <Route path="/terms" element={<Terms />}/>
+        <Route path="/privacy" element={<Privacy />}/>
+        <Route path="/cookies" element={<Cookies />}/>
+        <Route path="/disclaimer" element={<Disclaimer />}/>
+        <Route path="/acceptable" element={<Acceptable />}/>
 
-      <Route path="/signup" element={<Signup />}/>
-      <Route path="/login" element={<Login />}/>
-      <Route path="/forgot" element={<Forgot />}/>
-      <Route path="/reset" element={<Reset />}/>
-      <Route path="/logout" element={<Logout />}/>
-      <Route path="/landing/:id" element={<Landing />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/forgot" element={<Forgot />}/>
+        <Route path="/reset" element={<Reset />}/>
+        <Route path="/logout" element={<Logout />}/>
+        <Route path="/landing/:id" element={<Landing />}/>
 
-      { conf.pricing.enable && (
-        <Route path="/pricing" element={<Pricing />}/>
-      )}
-      { conf.security.enable && (
-        <Route path="/security" element={<Security />}/>
-      )}
-      { conf.mobile.enable && (
-        <Route path="/mobile" element={<Mobile />}/>
-      )}
+        { conf.pricing.enable && (
+          <Route path="/pricing" element={<Pricing />}/>
+        )}
+        { conf.security.enable && (
+          <Route path="/security" element={<Security />}/>
+        )}
+        { conf.mobile.enable && (
+          <Route path="/mobile" element={<Mobile />}/>
+        )}
 
-      { conf.team.enable && (
-        <Route path="/team" element={<Team />}/>
-      )}
-      { conf.mission.enable && (
-        <Route path="/mission" element={<Mission />}/>
-      )}
-      { conf.roadmap.enable && (
-        <Route path="/roadmap" element={<Roadmap />}/>
-      )}
+        { conf.team.enable && (
+          <Route path="/team" element={<Team />}/>
+        )}
+        { conf.mission.enable && (
+          <Route path="/mission" element={<Mission />}/>
+        )}
+        { conf.roadmap.enable && (
+          <Route path="/roadmap" element={<Roadmap />}/>
+        )}
 
-      { conf.chat.enable && (
-        <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
-      )}
-      { conf.talk.enable && (
-        <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
-      )}
-      { conf.map.enable && (
-        <Route path="/map" element={(<Private> <Map /> </Private>)}/>
-      )}
-      { conf.meet.enable && (
-        <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
-      )}
-      { conf.hive.enable && (
-        <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
-      )}
-      { conf.flow.enable && (
-        <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>
-      )}
-      { conf.node.enable && (
-        <Route path="/node" element={(<Private> <Node /> </Private>)}/>
-      )}
-      { conf.code.enable && (
-        <Route path="/code" element={(<Private> <Code /> </Private>)}/>
-      )}
-      { conf.note.enable && (
-        <Route path="/note" element={(<Private> <Note /> </Private>)}/>
-      )}
-      { conf.sell.enable && (
-        <Route path="/sell" element={(<Private> <Sell /> </Private>)}/>
-      )}
-      { conf.train.enable && (
-        <Route path="/train" element={(<Private> <Train /> </Private>)}/>
-      )}
-      { conf.docs.enable && (
-        <Route path="/docs" element={(<Private> <Docs /> </Private>)}/>
-      )}
+        { conf.chat.enable && (
+          <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
+        )}
+        { conf.talk.enable && (
+          <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
+        )}
+        { conf.map.enable && (
+          <Route path="/map" element={(<Private> <Map /> </Private>)}/>
+        )}
+        { conf.meet.enable && (
+          <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
+        )}
+        { conf.hive.enable && (
+          <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
+        )}
+        { conf.flow.enable && (
+          <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>
+        )}
+        { conf.node.enable && (
+          <Route path="/node" element={(<Private> <Node /> </Private>)}/>
+        )}
+        { conf.code.enable && (
+          <Route path="/code" element={(<Private> <Code /> </Private>)}/>
+        )}
+        { conf.note.enable && (
+          <Route path="/note" element={(<Private> <Note /> </Private>)}/>
+        )}
+        { conf.sell.enable && (
+          <Route path="/sell" element={(<Private> <Sell /> </Private>)}/>
+        )}
+        { conf.train.enable && (
+          <Route path="/train" element={(<Private> <Train /> </Private>)}/>
+        )}
+        { conf.docs.enable && (
+          <Route path="/docs" element={(<Private> <Docs /> </Private>)}/>
+        )}
 
-      { conf.profile.enable && (
-        <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
-      )}
-      { conf.keys.enable && (
-        <Route path='/keys' element={(<Private> <Keys /> </Private>)}/>
-      )}
-      { conf.vault.enable && (
-        <Route path='/vault' element={(<Private> <Vault /> </Private>)}/>
-      )}
-      { conf.subscription.enable && (<>
-        <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
-      </>)}
-      { conf.subscribe.enable && (<>
-        <Route path='/subscribe' element={(<Private> <Subscribe/> </Private>)}/>
-      </>)}
-      { conf.settings.enable && (<>
-        <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>
-      </>)}
+        { conf.profile.enable && (
+          <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
+        )}
+        { conf.keys.enable && (
+          <Route path='/keys' element={(<Private> <Keys /> </Private>)}/>
+        )}
+        { conf.vault.enable && (
+          <Route path='/vault' element={(<Private> <Vault /> </Private>)}/>
+        )}
+        { conf.subscription.enable && (<>
+          <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
+        </>)}
+        { conf.subscribe.enable && (<>
+          <Route path='/subscribe' element={(<Private> <Subscribe/> </Private>)}/>
+        </>)}
+        { conf.settings.enable && (<>
+          <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>
+        </>)}
 
-      { conf.admin.enable && (<>
-        <Route path='/admin' element={(<Private><Secret> <Admin/> </Secret></Private>)}/>
-      </>)}
+        { conf.admin.enable && (<>
+          <Route path='/admin' element={(<Private><Secret> <Admin/> </Secret></Private>)}/>
+        </>)}
 
-      <Route path="*" element={<Error />}/>
-    </Routes>
+        <Route path="*" element={<Error />}/>
+      </Routes>
+    </ConditionalXmppProvider>
 
     { conf.cookie.banner && (
       <CookieBanner />

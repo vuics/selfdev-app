@@ -207,7 +207,7 @@ export function createOnChatMessage({ getNodes, setNodes, shareUrlPrefix }) {
   }
 }
 
-const xmppRef = {
+export const xmppRef = {
   current: null
 }
 
@@ -344,6 +344,39 @@ export async function initXmppClient({
   });
 
   return ready; // resolves when "online" event fires
+}
+
+export const addToRoster = ({ jid, name, groups = [] } = {}) => {
+  const iq = xml(
+    'iq',
+    { type: 'set', id: `roster_${uuidv4()}` },
+    xml('query', { xmlns: 'jabber:iq:roster' }, [
+      xml(
+        'item',
+        { jid, name },
+        groups.map(group => xml('group', {}, group))
+      ),
+    ])
+  )
+  xmppRef.current.send(iq)
+  console.log('addToRoster iq:', iq)
+
+  // Send a subscription request
+  const presence = xml('presence', { to: jid, type: 'subscribe' })
+  xmppRef.current.send(presence)
+  console.log('addToRoster subscribe presense:', presence)
+}
+
+export const removeFromRoster = ({ jid }) => {
+  const iq = xml(
+    'iq',
+    { type: 'set', id: `remove_${uuidv4()}` },
+    xml('query', { xmlns: 'jabber:iq:roster' }, [
+      xml('item', { jid, subscription: 'remove' }),
+    ])
+  )
+
+  xmppRef.current.send(iq)
 }
 
 export async function sendPersonalMessage ({ credentials, recipient, prompt }) {

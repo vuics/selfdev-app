@@ -69,12 +69,15 @@ import { MarkdownMermaid } from './components/Text'
 import { texturePattern } from './components/patterns'
 import { useIndexContext } from './components/IndexContext'
 
+import { useXmppContext } from './components/XmppContext'
 import {
   unameRegex, ucommentRegex, variableOrCommentRegex,
   buildSmartText, checkCondition, unlinkEdge,
-  initXmppClient, sendPersonalMessage, sendAttachments, uploadFile,
+  sendPersonalMessage, sendAttachments, uploadFile,
   playEdge, playMapCore,
-  createOnChatMessage,
+  // xmppRef,
+  // initXmppClient,
+  // createOnChatMessage,
 } from './map/mapper'
 
 const editorThemes = {
@@ -1764,11 +1767,11 @@ function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
-  const [ credentials, setCredentials ] = useState(null)
+  // const [ credentials, setCredentials ] = useState(null)
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
-  const [ roster, setRoster ] = useState([])
-  const [ presence, setPresence ] = useState({});
+  // const [ roster, setRoster ] = useState([])
+  // const [ presence, setPresence ] = useState({});
   const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
   const [ renaming, setRenaming ] = useState(false)
@@ -1779,7 +1782,7 @@ function Map () {
   const [ stroke, setStroke ] = useState(defaultStroke)
   const [ confirm, setConfirm ] = useState(hiddenConfirm)
   const fileInputRef = useRef(null);
-  const xmppRef = useRef(null);
+  // const xmppRef = useRef(null);
 
   const [ reordering, setReordering ] = useState(false)
   const [ playing, setPlaying ] = useState(false)
@@ -1934,12 +1937,17 @@ function Map () {
     localStorage.setItem('map.markdownEditor', markdownEditor);
   }, [markdownEditor]);
 
+  const {
+    credentials, roster, presence, // setRoster, setPresence, // xmppRefCurrent,
+  } = useXmppContext()
+  console.log('credentials:', credentials)
+  console.log('presence:', presence)
+  console.log('roster:', roster)
+
   // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
   // console.log('title:', title)
   // console.log('condition:', condition)
-  // console.log('presence:', presence)
-  // console.log('roster:', roster)
   // console.log('openerSearch:', openerSearch)
   // console.log('color:', color, 'backgroundColor:', backgroundColor)
 
@@ -2156,47 +2164,47 @@ function Map () {
     return () => clearInterval(interval);
   }, [autosave, putMap]);
 
-  useEffect(() =>{
-    async function fetchCredentials () {
-      try {
-        const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-          crossOrigin: { mode: 'cors' },
-        })
-        console.log('fetchCredentials response:', response)
-        const { user, password, jid } = response.data
-        setCredentials({ user, password, jid })
-      } catch (err) {
-        console.error('xmpp/credentials error:', err)
-        setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
-        setLoading(false)
-      }
-    }
-    fetchCredentials()
-  }, [t])
+  // useEffect(() =>{
+  //   async function fetchCredentials () {
+  //     try {
+  //       const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
+  //         headers: { 'Content-Type': 'application/json' },
+  //         withCredentials: true,
+  //         crossOrigin: { mode: 'cors' },
+  //       })
+  //       console.log('fetchCredentials response:', response)
+  //       const { user, password, jid } = response.data
+  //       setCredentials({ user, password, jid })
+  //     } catch (err) {
+  //       console.error('xmpp/credentials error:', err)
+  //       setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchCredentials()
+  // }, [t])
 
-  useEffect(() => {
-    const initXmpp = async () => {
-      try {
-        const onChatMessage = createOnChatMessage({
-          getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
-        })
-        xmppRef.current = await initXmppClient({
-          credentials,
-          service: conf.xmpp.websocketUrl,
-          domain: conf.xmpp.host,
-          setLoading, setResponseError, setRoster, setPresence,
-          onChatMessage,
-        })
-        console.log('XMPP initialized:', xmppRef.current);
-      } catch (err) {
-        console.error('Failed to init XMPP:', err);
-      }
-    };
+  // useEffect(() => {
+  //   const initXmpp = async () => {
+  //     try {
+  //       const onChatMessage = createOnChatMessage({
+  //         getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
+  //       })
+  //       xmppRef.current = await initXmppClient({
+  //         credentials,
+  //         service: conf.xmpp.websocketUrl,
+  //         domain: conf.xmpp.host,
+  //         setLoading, setResponseError, setRoster, setPresence,
+  //         onChatMessage,
+  //       })
+  //       console.log('XMPP initialized:', xmppRef.current);
+  //     } catch (err) {
+  //       console.error('Failed to init XMPP:', err);
+  //     }
+  //   };
 
-    initXmpp();
-  }, [credentials]) // `presense` should not be supplied because it should only connect once
+  //   initXmpp();
+  // }, [credentials]) // `presense` should not be supplied because it should only connect once
 
 
   const attachFile = async (event) => {
