@@ -74,6 +74,7 @@ import {
   buildSmartText, checkCondition, unlinkEdge,
   initXmppClient, sendPersonalMessage, sendAttachments, uploadFile,
   playEdge, playMapCore,
+  createOnChatMessage,
 } from './map/mapper'
 
 const editorThemes = {
@@ -2178,13 +2179,15 @@ function Map () {
   useEffect(() => {
     const initXmpp = async () => {
       try {
+        const onChatMessage = createOnChatMessage({
+          getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
+        })
         xmppRef.current = await initXmppClient({
           credentials,
           service: conf.xmpp.websocketUrl,
           domain: conf.xmpp.host,
-          shareUrlPrefix: conf.xmpp.shareUrlPrefix,
           setLoading, setResponseError, setRoster, setPresence,
-          getNodes, setNodes,
+          onChatMessage,
         })
         console.log('XMPP initialized:', xmppRef.current);
       } catch (err) {
