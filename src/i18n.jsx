@@ -787,6 +787,10 @@ const resources = {
       'Admin': 'Admin',
       'Log Out': 'Log Out',
     },
+    XmppContext: {
+      'Error retrieving credentials.': 'Error retrieving credentials.',
+      'Error connecting to XMPP.': 'Error connecting to XMPP.',
+    },
     Chat: {
     },
     Hive: {
@@ -2327,6 +2331,10 @@ const resources = {
       'Settings': 'Настройки',
       'Admin': 'Админ',
       'Log Out': 'Выйти'
+    },
+    XmppContext: {
+      'Error retrieving credentials.': 'Ошибка при получении учетных данных.',
+      'Error connecting to XMPP.': 'Ошибка подключения к XMPP.',
     },
     Chat: {
     },

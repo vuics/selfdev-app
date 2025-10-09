@@ -215,9 +215,7 @@ export const xmppRef = {
 }
 
 export async function initXmppClient({
-  credentials, service, domain,
-  setRoster, setPresence,
-  setLoading, setResponseError,
+  credentials, service, domain, setRoster, setPresence,
 }) {
   if (xmppRef.current) {
     console.warn('XMPP was already initialized');
@@ -266,7 +264,7 @@ export async function initXmppClient({
         await xmpp.send(xml('presence'));
         console.log('Sent initial presence');
 
-        setLoading(false);
+        xmppRef.emitter.emit('online', { jid })
         resolve(xmppRef); // ✅ resolve once connected and ready
       } catch (err) {
         reject(err);
@@ -275,14 +273,13 @@ export async function initXmppClient({
 
     xmpp.on('error', (err) => {
       console.error('XMPP error:', err);
-      setLoading(false);
-      setResponseError(`XMPP error: ${err}`);
       reject(err);
+      xmppRef.emitter.emit('error', err)
     });
 
     xmpp.on('close', () => {
       console.log('Connection closed');
-      setLoading(false);
+      xmppRef.emitter.emit('close')
     });
 
     // Handle incoming stanzas

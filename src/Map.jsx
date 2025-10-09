@@ -1945,6 +1945,12 @@ function Map () {
   useEffect(() => {
     if (!xmppRef?.emitter || !onChatMessageRef.current) return;
     xmppRef.emitter.on('chatMessage', onChatMessageRef.current);
+    xmppRef.emitter.on('online', () => setLoading(false))
+    xmppRef.emitter.on('error', (err) => {
+      setLoading(false);
+      setResponseError(`XMPP error: ${err}`);
+    })
+    xmppRef.emitter.on('close', () => setLoading(false))
     return () => xmppRef.emitter.removeListener('chatMessage', onChatMessageRef.current);
   }, [xmppRef]);
 

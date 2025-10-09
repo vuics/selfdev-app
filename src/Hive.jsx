@@ -25,6 +25,8 @@ import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useIndexContext } from './components/IndexContext'
 import { useXmppContext } from './components/XmppContext'
+
+// TODO: move these methods to useXmppContext
 import {
   addToRoster,
   removeFromRoster,
