@@ -20,36 +20,19 @@ import {
   Sidebar,
   Label,
   Grid,
-
   // Segment,
   // Header,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Panel,
-  SelectionMode,
-  useReactFlow,
-  ReactFlowProvider,
-  Handle,
-  Position,
-  BaseEdge,
-  EdgeLabelRenderer,
-  getBezierPath,
-  MarkerType,
-  useNodesData,
-  NodeResizer,
+  ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState,
+  addEdge, Panel, SelectionMode, useReactFlow, ReactFlowProvider, Handle,
+  Position, BaseEdge, EdgeLabelRenderer, getBezierPath, MarkerType,
+  useNodesData, NodeResizer,
   // reconnectEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { faker } from '@faker-js/faker'
-import { v4 as uuidv4 } from 'uuid'
 import { nanoid } from 'nanoid'
 import Dagre from '@dagrejs/dagre';
 
@@ -58,51 +41,14 @@ import { vim } from '@replit/codemirror-vim';
 import { mentions } from '@uiw/codemirror-extensions-mentions'
 import { loadLanguage, langNames } from '@uiw/codemirror-extensions-langs'
 import {
-  abcdef,
-  abyss,
-  androidstudio,
-  andromeda,
-  atomone,
-  aura,
-  basicLight,
-  basicDark,
-  bbedit,
-  bespin,
-  consoleLight,
-  consoleDark,
-  copilot,
-  duotoneLight,
-  duotoneDark,
-  darcula,
-  dracula,
-  eclipse,
-  githubLight,
-  githubDark,
-  gruvboxLight,
-  gruvboxDark,
-  kimbie,
-  materialLight,
-  materialDark,
-  monokai,
-  monokaiDimmed,
-  noctisLilac,
-  nord,
-  okaidia,
-  quietlight,
-  red,
-  solarizedLight,
-  solarizedDark,
-  sublime,
-  tokyoNight,
-  tokyoNightStorm,
-  tokyoNightDay,
-  vscodeLight,
-  vscodeDark,
-  whiteLight,
-  whiteDark,
-  tomorrowNightBlue,
-  xcodeLight,
-  xcodeDark,
+  abcdef, abyss, androidstudio, andromeda, atomone, aura, basicLight,
+  basicDark, bbedit, bespin, consoleLight, consoleDark, copilot, duotoneLight,
+  duotoneDark, darcula, dracula, eclipse, githubLight, githubDark,
+  gruvboxLight, gruvboxDark, kimbie, materialLight, materialDark, monokai,
+  monokaiDimmed, noctisLilac, nord, okaidia, quietlight, red, solarizedLight,
+  solarizedDark, sublime, tokyoNight, tokyoNightStorm, tokyoNightDay,
+  vscodeLight, vscodeDark, whiteLight, whiteDark, tomorrowNightBlue,
+  xcodeLight, xcodeDark,
 } from '@uiw/codemirror-themes-all'
 import { useTranslation } from 'react-i18next'
 
@@ -118,36 +64,16 @@ import { getCodeString } from "rehype-rewrite";
 
 import Menubar from './components/Menubar'
 import conf, { bool } from './conf'
-import {
-  // parseRegexString,
-  useWindowDimensions, sleep, hexToRgba
-} from './helper.js'
+import { useWindowDimensions, sleep, hexToRgba } from './helper.js'
 import { MarkdownMermaid } from './components/Text'
 import { texturePattern } from './components/patterns'
 import { useIndexContext } from './components/IndexContext'
 
 import {
-  // variableRegex,
-  unameRegex,
-  // commentRegex,
-  ucommentRegex,
-  variableOrCommentRegex,
-  buildSmartText,
-  checkCondition,
-  playEdge,
-  unlinkEdge,
-
-  startEditing,
-  switchEditing,
-
-  initXmppClient,
-  sendPersonalMessage,
-  sendAttachments,
-  uploadFile,
-  // joinRoom,
-  // sendRoomMessage,
-
-  playMapCore,
+  unameRegex, ucommentRegex, variableOrCommentRegex,
+  buildSmartText, checkCondition, unlinkEdge,
+  initXmppClient, sendPersonalMessage, sendAttachments, uploadFile,
+  playEdge, playMapCore,
 } from './map/mapper'
 
 const editorThemes = {
@@ -274,7 +200,7 @@ const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor })
   )
 })
 
-const DiffEditor = memo(({ text, setText, stash, setStash, data, setNodes, id }) => {
+const DiffEditor = memo(({ text, setText, stash, setStash, data }) => {
   const { editorTheme } = useMapContext();
 
   const extensions = [
@@ -323,6 +249,17 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
     extensions.push(loadLanguage(data.lang))
   }
 
+  const startEditing = ({ id, data, setNodes }) => {
+    console.log('startEditing')
+    if (!data.editing) {
+      console.log('startEditing: update nodes')
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+      ))
+    }
+  }
+
   // console.log('editorTheme:', editorTheme, ', vimMode:', vimMode, ', viewerTheme:', viewerTheme)
   return (<>
     <CodeMirror
@@ -366,7 +303,7 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
 
 const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
 
-const Code = ({ inline, children = [], className, ...props }) => {
+const Code = ({ children = [], className, ...props }) => {
   const demoid = useRef(`dome${randomid()}`);
   const [container, setContainer] = useState(null);
   const isMermaid =
@@ -410,6 +347,16 @@ const Code = ({ inline, children = [], className, ...props }) => {
 };
 
 const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
+
+  const switchEditing = ({ id, data, setNodes }) => {
+    console.log('switchEditing')
+    setNodes((nodes) =>
+      nodes.map((node) =>
+        node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+      )
+    );
+  }
+
   return (<>
     <div
       onClick={() => switchEditing({ id, data, setNodes })}
@@ -475,8 +422,7 @@ const NoteEditor = memo(({
 })
 
 const MarkdownEditor = memo(({
-  text, setText, applyText, cancelText, data, allNodes, setNodes, id,
-  roster,
+  text, setText, data, allNodes, setNodes, id, roster,
 }) => {
   const { markdownEditor } = useMapContext();
 
@@ -494,7 +440,7 @@ const MarkdownEditor = memo(({
         <div className="wmde-markdown-var"> </div>
         <UiwMarkdownEditor
           value={text}
-          onChange={(value, viewUpdate) => setText(value)}
+          onChange={(value) => setText(value)}
           height="100%"
           enableScroll={true}
           // toolbars={[
@@ -853,7 +799,8 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   // NOTE: The code hides the resizeObserver error
   useEffect(() => {
     const errorHandler = (e) => {
-      if (e.message.includes("ResizeObserver loop completed with undelivered notifications" || "ResizeObserver loop limit exceeded")) {
+      if (e.message.includes("ResizeObserver loop completed with undelivered notifications") ||
+         e.message.includes("ResizeObserver loop limit exceeded")) {
         const resizeObserverErr = document.getElementById("webpack-dev-server-client-overlay");
         if (resizeObserverErr) {
           resizeObserverErr.style.display = "none";
@@ -1114,7 +1061,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             <Dropdown text={t('More programming languages')} pointing='left' className='link item'>
               <Dropdown.Menu>
                 { langNames.map((lng) => { return (
-                  <Dropdown.Item onClick={() => { selectLang(lng); selectKind('code') } }>
+                  <Dropdown.Item key={lng} onClick={() => { selectLang(lng); selectKind('code') } }>
                     <Icon name={ data.lang === lng ? 'dot circle' : 'circle outline'} />
                     {lng}
                   </Dropdown.Item>
@@ -1541,7 +1488,7 @@ const OrderControl = memo(({ id, expecting, sequence, cursor, reordering }) => {
       updatedEdges.splice(newIndex, 0, movedEdge); // Insert at new position
 
       let sequence = 1
-      return updatedEdges.map((edge, i) => ({
+      return updatedEdges.map((edge) => ({
         ...edge, data: { ...edge.data, sequence: sequence++ }
       }));
     });
@@ -1574,7 +1521,7 @@ const RequestEdge = memo(({
 }) => {
   const { t } = useTranslation('Map')
   const { setNodes, getNodes } = useReactFlow();
-  const [edgePath, labelX, labelY, offsetX, offsetY] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     targetX,
@@ -2177,6 +2124,7 @@ function Map () {
             setViewport({ x, y, zoom });
             console.log(`Map ${parsedMap?.title} loaded with flow:`, parsedMap.flow);
           } catch (err) {
+            console.error('Error on uploading map:', err)
             alert(t('Invalid JSON file.'))
           }
         };
@@ -2227,15 +2175,24 @@ function Map () {
   }, [t])
 
   useEffect(() => {
-    xmppRef.current = initXmppClient({
-      credentials,
-      service: conf.xmpp.websocketUrl,
-      domain: conf.xmpp.host,
-      shareUrlPrefix: conf.xmpp.shareUrlPrefix,
-      setLoading, setResponseError, setRoster, setPresence,
-      getNodes, setNodes,
-    })
+    const initXmpp = async () => {
+      try {
+        xmppRef.current = initXmppClient({
+          credentials,
+          service: conf.xmpp.websocketUrl,
+          domain: conf.xmpp.host,
+          shareUrlPrefix: conf.xmpp.shareUrlPrefix,
+          setLoading, setResponseError, setRoster, setPresence,
+          getNodes, setNodes,
+        })
+        console.log('XMPP initialized:', xmppRef.current);
+      } catch (err) {
+        console.error('Failed to init XMPP:', err);
+      }
+    };
+    initXmpp();
   }, [credentials]) // `presense` should not be supplied because it should only connect once
+
 
   const attachFile = async (event) => {
     return new Promise((resolve, reject) => {
@@ -2245,7 +2202,7 @@ function Map () {
           throw new Error(`Error attaching file: ${file}`)
         }
         const reader = new FileReader();
-        reader.onload = async (e) => {
+        reader.onload = async () => {
           // console.log('Loaded file:', e.target.result)
           const getUrl = await uploadFile({
             buffer: reader.result,
@@ -2583,7 +2540,7 @@ function Map () {
                   trigger={
                     <Button
                       icon basic
-                      onClick={(e, data) => setShowMenu(!showMenu)}
+                      onClick={() => setShowMenu(!showMenu)}
                     >
                       <Icon name={'bars'}
                         color={showMenu ? 'grey' : 'standard'}
@@ -2741,11 +2698,11 @@ function Map () {
                           { Object.keys(editorThemes).map((thm) => {
                             if (thm === '-' || thm === '--') {
                               return (
-                                <Dropdown.Divider />
+                                <Dropdown.Divider key={thm} />
                               )
                             }
                             return (
-                              <Dropdown.Item onClick={() => { setViewerTheme(thm) } }>
+                              <Dropdown.Item key={thm} onClick={() => { setViewerTheme(thm) } }>
                                 <Icon name={ viewerTheme === thm ? 'dot circle' : 'circle outline'} />
                                 {thm}
                               </Dropdown.Item>
@@ -2758,11 +2715,11 @@ function Map () {
                           { Object.keys(editorThemes).map((thm) => {
                             if (thm === '-' || thm === '--') {
                               return (
-                                <Dropdown.Divider />
+                                <Dropdown.Divider key={thm} />
                               )
                             }
                             return (
-                              <Dropdown.Item onClick={() => { setEditorTheme(thm) } }>
+                              <Dropdown.Item key={thm} onClick={() => { setEditorTheme(thm) } }>
                                 <Icon name={ editorTheme === thm ? 'dot circle' : 'circle outline'} />
                                 {thm}
                               </Dropdown.Item>
@@ -3119,7 +3076,7 @@ function Map () {
             trigger={
               <Button
                 icon basic
-                onClick={(e, data) => setDeckSidebar(!deckSidebar)}
+                onClick={() => setDeckSidebar(!deckSidebar)}
               >
                 <Icon name={deckSidebar ? 'images' : 'images outline'}
                   color={deckSidebar ? 'blue' : 'standard'}
@@ -3170,6 +3127,7 @@ function Map () {
             .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
             .map(nd => (
               <Menu.Item
+                key={nd.id}
                 active={nd.data.slideIndex === currentSlide}
                 onClick={() => {
                   setTimeout(() => {
