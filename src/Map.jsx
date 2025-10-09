@@ -1762,6 +1762,7 @@ function Map () {
   const { height, width } = useWindowDimensions();
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
+  const [ responseMessage, setResponseMessage ] = useState('')
   const [ credentials, setCredentials ] = useState(null)
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
@@ -2177,7 +2178,7 @@ function Map () {
   useEffect(() => {
     const initXmpp = async () => {
       try {
-        xmppRef.current = initXmppClient({
+        xmppRef.current = await initXmppClient({
           credentials,
           service: conf.xmpp.websocketUrl,
           domain: conf.xmpp.host,
@@ -2190,6 +2191,7 @@ function Map () {
         console.error('Failed to init XMPP:', err);
       }
     };
+
     initXmpp();
   }, [credentials]) // `presense` should not be supplied because it should only connect once
 
@@ -2452,6 +2454,7 @@ function Map () {
       console.log('/executor/map response:', response)
       const { _id, title } = response.data
       console.log('Result map title:', title, ', _id:', _id)
+      setResponseMessage(t('map_executing', { title, _id }));
     } catch (err) {
       console.error('executeMapOnBackend error:', err)
       setResponseError(err?.response?.data?.message || t('Error executing map on backend.'))
@@ -3108,6 +3111,16 @@ function Map () {
           style={{
             textAlign: 'left',
           }}
+        />
+      }
+      { responseMessage &&
+        <Message
+          positive
+          style={{ textAlign: 'left'}}
+          icon='info circle'
+          header='Info'
+          content={responseMessage}
+          onDismiss={() => setResponseMessage('')}
         />
       }
 

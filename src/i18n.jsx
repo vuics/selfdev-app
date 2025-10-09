@@ -819,11 +819,14 @@ const resources = {
       'Update': 'Update'
     },
     Map: {
+      'Execute the map on backend': 'Execute the map on backend',
+      'map_executing': 'The map {{title}} (ID: {{_id}}) is being executed on backend.',
       'Error getting maps.': 'Error getting maps.',
       'Error posting map.': 'Error posting map.',
       'Error putting map.': 'Error putting map.',
       'Error deleting map.': 'Error deleting map.',
       'Error downloading map.': 'Error downloading map.',
+      'Error executing map on backend.': 'Error executing map on backend.',
       'Invalid JSON file.': 'Invalid JSON file.',
       'Please upload a valid JSON file.': 'Please upload a valid JSON file.',
       'Error uploading map.': 'Error uploading map.',
@@ -2357,11 +2360,14 @@ const resources = {
       'Update': 'Обновить'
     },
     Map: {
+      "Execute the map on backend": "Выполнить карту на сервере",
+      'map_executing': 'Карта {{title}} (ID: {{_id}}) выполняется на сервере.',
       'Error getting maps.': 'Ошибка при получении карт.',
       'Error posting map.': 'Ошибка при добавлении карты.',
       'Error putting map.': 'Ошибка при обновлении карты.',
       'Error deleting map.': 'Ошибка при удалении карты.',
       'Error downloading map.': 'Ошибка при загрузке карты.',
+      "Error executing map on backend.": "Ошибка при выполнении карты на сервере.",
       'Invalid JSON file.': 'Недопустимый JSON-файл.',
       'Please upload a valid JSON file.': 'Пожалуйста, загрузите допустимый JSON-файл.',
       'Error uploading map.': 'Ошибка при загрузке карты.',
