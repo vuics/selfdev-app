@@ -7,7 +7,7 @@ const { isEmpty } = lodash
 import { Loader, Message, } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 
-import { XmppClient } from '../map/mapper'
+import { XmppClient } from '../mapper'
 import conf from '../conf'
 
 export const XmppContext = createContext({});
