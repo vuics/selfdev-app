@@ -2,11 +2,10 @@ import React, {
   useEffect, useState, useRef, createContext, useContext
 } from 'react'
 import axios from 'axios'
-import { useLocation } from 'react-router-dom'
 import lodash from 'lodash'
 const { isEmpty } = lodash
 
-import { initXmppClient, createOnChatMessage, } from '../map/mapper'
+import { initXmppClient } from '../map/mapper'
 import conf from '../conf'
 
 export const XmppContext = createContext({});
@@ -40,18 +39,6 @@ export function XmppProvider({ children }) {
     fetchCredentials()
   }, [])
 
-
-  // FIXME: remove
-  const map = {
-    flow: {
-      nodes: [],
-      edges: [],
-    }
-  }
-  const getNodes = () => map.flow.nodes;
-  const setNodes = (updater) => map.flow.nodes = updater(map.flow.nodes);
-  // const getEdges = () => map.flow.edges;
-  // const setEdges = (updater) => map.flow.edges = updater(map.flow.edges);
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
 
@@ -60,15 +47,11 @@ export function XmppProvider({ children }) {
 
     const initXmpp = async () => {
       try {
-        const onChatMessage = createOnChatMessage({
-          getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
-        })
         xmppRef.current = await initXmppClient({
           credentials,
           service: conf.xmpp.websocketUrl,
           domain: conf.xmpp.host,
           setLoading, setResponseError, setRoster, setPresence,
-          onChatMessage,
         })
         console.log('XMPP initialized:', xmppRef.current);
       } catch (err) {
@@ -80,24 +63,14 @@ export function XmppProvider({ children }) {
   }, [credentials]) // `presense` should not be supplied because it should only connect once
 
   return <XmppContext.Provider value={{
-    // xmppRefCurrent: xmppRef.current,
-    credentials, roster, presence, // setRoster, setPresence,
+    xmppRef: xmppRef.current, credentials, roster, presence,
   }}>{children}</XmppContext.Provider>;
 }
 
 export function ConditionalXmppProvider({ children, user }) {
-  const location = useLocation();
-  const shouldUseXmpp = user && !isEmpty(user) // && ["/map", "/hive"].includes(location.pathname);
+  if (!user || isEmpty(user) || !user.email ) {
+    return children;
+  }
 
-  if (!shouldUseXmpp) return children;
-
-  return (
-    <XmppProvider
-      // credentials={user.credentials}
-      // service="wss://your-xmpp-service"
-      // domain="yourdomain.com"
-    >
-      {children}
-    </XmppProvider>
-  );
+  return (<XmppProvider>{children}</XmppProvider>);
 }

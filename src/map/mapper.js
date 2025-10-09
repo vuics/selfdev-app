@@ -15,6 +15,7 @@ import { client, xml } from '@xmpp/client'
 import safeRegex from 'safe-regex'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
+import EventEmitter from 'eventemitter3';
 
 export function sleep (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
 
@@ -168,6 +169,7 @@ export function unlinkEdge({ edge, getNodes, setNodes }) {
 
 export function createOnChatMessage({ getNodes, setNodes, shareUrlPrefix }) {
   return function onChatMessage({ from, body }) {
+    console.log('onChatMessage from:', from, ', body:', body)
     const [updateNode] = getNodes().filter(nd =>
       nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('/')[0]
     );
@@ -208,14 +210,14 @@ export function createOnChatMessage({ getNodes, setNodes, shareUrlPrefix }) {
 }
 
 export const xmppRef = {
-  current: null
+  current: null,
+  emitter: null,
 }
 
 export async function initXmppClient({
   credentials, service, domain,
-  setLoading, setResponseError, setRoster, setPresence,
-  onChatMessage,
-  // getNodes, setNodes, shareUrlPrefix,
+  setRoster, setPresence,
+  setLoading, setResponseError,
 }) {
   if (xmppRef.current) {
     console.warn('XMPP was already initialized');
@@ -245,6 +247,8 @@ export async function initXmppClient({
   });
   xmppRef.current = xmpp;
   // console.log('initXmppClient assign xmppRef.current=', xmppRef.current)
+  xmppRef.emitter = new EventEmitter();
+
 
   // ✅ Wrap connection in a Promise to await readiness
   const ready = new Promise((resolve, reject) => {
@@ -263,7 +267,7 @@ export async function initXmppClient({
         console.log('Sent initial presence');
 
         setLoading(false);
-        resolve(xmpp); // ✅ resolve once connected and ready
+        resolve(xmppRef); // ✅ resolve once connected and ready
       } catch (err) {
         reject(err);
       }
@@ -317,13 +321,9 @@ export async function initXmppClient({
       const from = stanza.attrs.from;
       const type = stanza.attrs.type;
 
-
       if (type === 'chat' || type === 'normal' || !type) {
-        // FIXME: the code {below} is only for map, not for hive
         console.log(`Personal message response from ${from}: ${body}`);
-        if (onChatMessage) {
-          onChatMessage({ from, type, body})
-        }
+        xmppRef.emitter.emit('chatMessage', { from, type, body})
       } else if (type === 'groupchat') {
         // Skip our own messages
         if (from.includes(`/${credentials.user}`)) return; // Skip self
@@ -331,9 +331,7 @@ export async function initXmppClient({
         const delay = stanza.getChild('delay');
         if (delay) { return; }
         console.log(`Group chat message from ${from}: ${body}`);
-        if (onGroupMessage) {
-          onGroupMessage({ from, type, body})
-        }
+        xmppRef.emitter.emit('groupMessage', { from, type, body})
       }
     });
   });

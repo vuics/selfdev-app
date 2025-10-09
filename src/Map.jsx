@@ -73,11 +73,8 @@ import { useXmppContext } from './components/XmppContext'
 import {
   unameRegex, ucommentRegex, variableOrCommentRegex,
   buildSmartText, checkCondition, unlinkEdge,
-  sendPersonalMessage, sendAttachments, uploadFile,
+  createOnChatMessage, sendPersonalMessage, sendAttachments, uploadFile,
   playEdge, playMapCore,
-  // xmppRef,
-  // initXmppClient,
-  // createOnChatMessage,
 } from './map/mapper'
 
 const editorThemes = {
@@ -136,7 +133,7 @@ const editorThemes = {
 const MapContext = createContext({});
 const useMapContext = () => useContext(MapContext);
 
-const ExpandingVariable = memo(({ key, part, allNodes, color, backgroundColor }) => {
+const ExpandingVariable = memo(({ part, allNodes, color, backgroundColor }) => {
   const { fitView } = useReactFlow();
   const [ active, setActive ] = useState(false)
 
@@ -1767,11 +1764,8 @@ function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
-  // const [ credentials, setCredentials ] = useState(null)
   // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
   // const [ room, setRoom ] = useState('matrix')
-  // const [ roster, setRoster ] = useState([])
-  // const [ presence, setPresence ] = useState({});
   const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
   const [ renaming, setRenaming ] = useState(false)
@@ -1782,7 +1776,6 @@ function Map () {
   const [ stroke, setStroke ] = useState(defaultStroke)
   const [ confirm, setConfirm ] = useState(hiddenConfirm)
   const fileInputRef = useRef(null);
-  // const xmppRef = useRef(null);
 
   const [ reordering, setReordering ] = useState(false)
   const [ playing, setPlaying ] = useState(false)
@@ -1937,12 +1930,23 @@ function Map () {
     localStorage.setItem('map.markdownEditor', markdownEditor);
   }, [markdownEditor]);
 
-  const {
-    credentials, roster, presence, // setRoster, setPresence, // xmppRefCurrent,
-  } = useXmppContext()
+  const { xmppRef, credentials, roster, presence, } = useXmppContext()
+
   console.log('credentials:', credentials)
   console.log('presence:', presence)
   console.log('roster:', roster)
+
+  const onChatMessageRef = useRef(null);
+  if (!onChatMessageRef.current) {
+    onChatMessageRef.current = createOnChatMessage({
+      getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
+    });
+  }
+  useEffect(() => {
+    if (!xmppRef?.emitter || !onChatMessageRef.current) return;
+    xmppRef.emitter.on('chatMessage', onChatMessageRef.current);
+    return () => xmppRef.emitter.removeListener('chatMessage', onChatMessageRef.current);
+  }, [xmppRef]);
 
   // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
