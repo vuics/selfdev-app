@@ -7,7 +7,7 @@ const { isEmpty } = lodash
 import { Loader, Message, } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 
-import { initXmppClient } from '../map/mapper'
+import { XmppClient } from '../map/mapper'
 import conf from '../conf'
 
 export const XmppContext = createContext({});
@@ -18,7 +18,7 @@ export function XmppProvider({ children }) {
   const [ credentials, setCredentials ] = useState(null)
   const [ roster, setRoster ] = useState([])
   const [ presence, setPresence ] = useState({});
-  const xmppRef = useRef(null);
+  const xmppClientRef = useRef(null);
 
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
@@ -47,18 +47,19 @@ export function XmppProvider({ children }) {
   }, [t])
 
   useEffect(() => {
-    if (!credentials || xmppRef.current) return;   // prevent re-init
+    if (!credentials || xmppClientRef.current) return;   // prevent re-init
 
     const initXmpp = async () => {
       try {
         setLoading(true)
-        xmppRef.current = await initXmppClient({
+        xmppClientRef.current = new XmppClient()
+        await xmppClientRef.current.connect({
           credentials,
           service: conf.xmpp.websocketUrl,
           domain: conf.xmpp.host,
           setRoster, setPresence,
         })
-        console.log('XMPP initialized:', xmppRef.current);
+        console.log('XMPP initialized:', xmppClientRef.current);
       } catch (err) {
         console.error('Failed to init XMPP:', err);
         setResponseError(t('Error connecting to XMPP.'))
@@ -72,7 +73,8 @@ export function XmppProvider({ children }) {
 
   return (
     <XmppContext.Provider value={{
-      xmppRef: xmppRef.current, credentials, roster, presence,
+      xmppClient: xmppClientRef.current, roster, presence,
+      // credentials,
     }}>
       {loading && (
         <Loader

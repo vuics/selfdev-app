@@ -26,12 +26,6 @@ import archetypes, { defaultArchetype } from './archetypes'
 import { useIndexContext } from './components/IndexContext'
 import { useXmppContext } from './components/XmppContext'
 
-// TODO: move these methods to useXmppContext
-import {
-  addToRoster,
-  removeFromRoster,
-} from './map/mapper'
-
 const ajv = new Ajv()
 
 export default function Hive () {
@@ -48,8 +42,7 @@ export default function Hive () {
   const [ loading, setLoading ] = useState(true)
   const fileInputRef = useRef(null);
 
-  const { credentials, roster, presence, } = useXmppContext()
-  // console.log('credentials:', credentials)
+  const { xmppClient, roster, presence, } = useXmppContext()
   // console.log('presence:', presence)
   // console.log('roster:', roster)
 
@@ -118,8 +111,8 @@ export default function Hive () {
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
       setOptions(archetypes[archetype].defaultOptions())
-      addToRoster({
-        jid: `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`,
+      await xmppClient.addToRoster({
+        jid: `${res.data.options.name}@${xmppClient.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
         groups: res.data.options.joinRooms,
       })
@@ -146,16 +139,16 @@ export default function Hive () {
       const prevAgent = agentsImmutable.find(a => a._id === agent._id)
       setAgents(agents.map(a => a._id === res.data._id ? res.data : a))
       setAgentsImmutable(agentsImmutable.map(a => a._id === res.data._id ? res.data : a))
-      const jid = `${res.data.options.name}@${credentials.user}.${conf.xmpp.host}`
+      const jid = `${res.data.options.name}@${xmppClient.credentials.user}.${conf.xmpp.host}`
       const name = res.data.options.name
       const inRoster = roster.find(r => r.jid === jid && r.name === name)
       console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
       if (!inRoster) {
         console.log('Agent with name:', res.data.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
-        removeFromRoster({
-          jid: `${prevAgent.options.name}@${credentials.user}.${conf.xmpp.host}`,
+        await xmppClient.removeFromRoster({
+          jid: `${prevAgent.options.name}@${xmppClient.credentials.user}.${conf.xmpp.host}`,
         })
-        addToRoster({
+        await xmppClient.addToRoster({
           jid,
           name: res.data.options.name,
           groups: res.data.options.joinRooms,
@@ -182,8 +175,8 @@ export default function Hive () {
       const [deletedAgent] = agents.filter(obj => obj._id === _id)
       setAgents(agents.filter(obj => obj._id !== _id))
       setAgentsImmutable(agentsImmutable.filter(obj => obj._id !== _id))
-      removeFromRoster({
-        jid: `${deletedAgent.options.name}@${credentials.user}.${conf.xmpp.host}`,
+      await xmppClient.removeFromRoster({
+        jid: `${deletedAgent.options.name}@${xmppClient.credentials.user}.${conf.xmpp.host}`,
       })
     } catch (err) {
       console.error('delete agent error:', err);
@@ -394,17 +387,17 @@ export default function Hive () {
                         <Grid.Column width={13}>
                           <Icon
                             name={
-                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${xmppClient.credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? 'spy' : 'spinner')
                                 : (agent.deployed ? 'spinner' : 'spy')
                             }
                             color={
-                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${xmppClient.credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? 'green' : 'red')
                                 : (agent.deployed ? 'yellow' : 'grey')
                             }
                             loading={
-                              presence[`${agent.options.name}@${credentials?.user}.${conf.xmpp.host}`]
+                              presence[`${agent.options.name}@${xmppClient.credentials?.user}.${conf.xmpp.host}`]
                                 ? (agent.deployed ? false : true)
                                 : (agent.deployed ? true : false)
                             }

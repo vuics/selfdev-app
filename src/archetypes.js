@@ -47,7 +47,7 @@ const archetypes = {
           systemMessage: '',
           model: {
             provider: 'openai',
-            name: 'gpt-4o-mini',
+            name: 'gpt-5-nano',
             apiKey: {
               valueFromVault: 'OPENAI_API_KEY',
             },

@@ -73,7 +73,7 @@ import { useXmppContext } from './components/XmppContext'
 import {
   unameRegex, ucommentRegex, variableOrCommentRegex,
   buildSmartText, checkCondition, unlinkEdge,
-  createOnChatMessage, sendPersonalMessage, sendAttachments, uploadFile,
+  createOnChatMessage,
   playEdge, playMapCore,
 } from './map/mapper'
 
@@ -518,7 +518,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { getNodes, setNodes, getEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const {
-    presence, roster, setCurrentSlide, attachFile, uploadFile,
+    presence, roster, setCurrentSlide, attachFile, xmppClient,
   } = useMapContext();
   const [ text, setText ] = useState(data.text)
   const [ stash, setStash ] = useState(data.stash || '')
@@ -760,7 +760,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           const audioBlob = new Blob(audioChunksRef.current, { type: contentType });
           const filename = `recording-${Date.now()}.webm`;
           const buffer = await audioBlob.arrayBuffer();
-          const recordingUrl = await uploadFile({
+          const recordingUrl = await xmppClient.uploadFile({
             buffer,
             filename,
             size: audioBlob.size,
@@ -1533,8 +1533,8 @@ const RequestEdge = memo(({
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
 
   const {
-    credentials, recipient, sendPersonalMessage, sendAttachments,
-    condition, reordering, orderEdges, setEdges, getEdges,
+    recipient, condition, reordering, orderEdges, setEdges, getEdges,
+    xmppClient,
   } = useMapContext();
 
   return (
@@ -1573,7 +1573,7 @@ const RequestEdge = memo(({
               await playEdge({
                 sourceNodeData: sourceNode.data, edgeData: data,
                 getNodes, setNodes, getEdges, setEdges,
-                credentials, sendPersonalMessage, sendAttachments,
+                xmppClient,
                 edgeId: id, targetId: targetNode.id,
               })
             }}
@@ -1930,12 +1930,7 @@ function Map () {
     localStorage.setItem('map.markdownEditor', markdownEditor);
   }, [markdownEditor]);
 
-  const { xmppRef, credentials, roster, presence, } = useXmppContext()
-
-  console.log('credentials:', credentials)
-  console.log('presence:', presence)
-  console.log('roster:', roster)
-
+  const { xmppClient, roster, presence, } = useXmppContext()
   const onChatMessageRef = useRef(null);
   if (!onChatMessageRef.current) {
     onChatMessageRef.current = createOnChatMessage({
@@ -1943,17 +1938,20 @@ function Map () {
     });
   }
   useEffect(() => {
-    if (!xmppRef?.emitter || !onChatMessageRef.current) return;
-    xmppRef.emitter.on('chatMessage', onChatMessageRef.current);
-    xmppRef.emitter.on('online', () => setLoading(false))
-    xmppRef.emitter.on('error', (err) => {
+    if (!xmppClient?.emitter || !onChatMessageRef.current) return;
+    xmppClient.emitter.on('chatMessage', onChatMessageRef.current);
+    xmppClient.emitter.on('online', () => setLoading(false))
+    xmppClient.emitter.on('error', (err) => {
       setLoading(false);
       setResponseError(`XMPP error: ${err}`);
     })
-    xmppRef.emitter.on('close', () => setLoading(false))
-    return () => xmppRef.emitter.removeListener('chatMessage', onChatMessageRef.current);
-  }, [xmppRef]);
+    xmppClient.emitter.on('close', () => setLoading(false))
+    return () => xmppClient.emitter.removeListener('chatMessage', onChatMessageRef.current);
+  }, [xmppClient]);
 
+  // console.log('credentials:', credentials)
+  // console.log('presence:', presence)
+  // console.log('roster:', roster)
   // console.log('autosave:', autosave)
   // console.log('nodes:', nodes)
   // console.log('title:', title)
@@ -2174,49 +2172,6 @@ function Map () {
     return () => clearInterval(interval);
   }, [autosave, putMap]);
 
-  // useEffect(() =>{
-  //   async function fetchCredentials () {
-  //     try {
-  //       const response = await axios.post(`${conf.api.url}/xmpp/credentials`, { }, {
-  //         headers: { 'Content-Type': 'application/json' },
-  //         withCredentials: true,
-  //         crossOrigin: { mode: 'cors' },
-  //       })
-  //       console.log('fetchCredentials response:', response)
-  //       const { user, password, jid } = response.data
-  //       setCredentials({ user, password, jid })
-  //     } catch (err) {
-  //       console.error('xmpp/credentials error:', err)
-  //       setResponseError(err?.response?.data?.message || t('Error retrieving credentials.'))
-  //       setLoading(false)
-  //     }
-  //   }
-  //   fetchCredentials()
-  // }, [t])
-
-  // useEffect(() => {
-  //   const initXmpp = async () => {
-  //     try {
-  //       const onChatMessage = createOnChatMessage({
-  //         getNodes, setNodes, shareUrlPrefix: conf.xmpp.shareUrlPrefix,
-  //       })
-  //       xmppRef.current = await initXmppClient({
-  //         credentials,
-  //         service: conf.xmpp.websocketUrl,
-  //         domain: conf.xmpp.host,
-  //         setLoading, setResponseError, setRoster, setPresence,
-  //         onChatMessage,
-  //       })
-  //       console.log('XMPP initialized:', xmppRef.current);
-  //     } catch (err) {
-  //       console.error('Failed to init XMPP:', err);
-  //     }
-  //   };
-
-  //   initXmpp();
-  // }, [credentials]) // `presense` should not be supplied because it should only connect once
-
-
   const attachFile = async (event) => {
     return new Promise((resolve, reject) => {
       try {
@@ -2227,7 +2182,7 @@ function Map () {
         const reader = new FileReader();
         reader.onload = async () => {
           // console.log('Loaded file:', e.target.result)
-          const getUrl = await uploadFile({
+          const getUrl = await xmppClient.uploadFile({
             buffer: reader.result,
             filename: file.name,
             size: file.size,
@@ -2268,10 +2223,10 @@ function Map () {
     await playEdge({
       sourceNodeData: sourceNode.data, edgeData: variableEdge.data,
       getNodes, setNodes, getEdges, setEdges,
-      credentials, sendPersonalMessage, sendAttachments,
+      xmppClient,
       edgeId, targetId: params.target,
     })
-  }, [setEdges, condition, stroke, credentials, getNodes, setNodes, getEdges ]);
+  }, [setEdges, condition, stroke, xmppClient, getNodes, setNodes, getEdges ]);
 
   // const onReconnect = useCallback(
   //   (oldEdge, newConnection) =>
@@ -2422,21 +2377,21 @@ function Map () {
       await playEdge({
         sourceNodeData: connection.fromNode.data, edgeData: newEdge.data,
         getNodes, setNodes, getEdges, setEdges,
-        credentials, sendPersonalMessage, sendAttachments,
+        xmppClient,
         edgeId, targetId: id,
       })
     }
-  }, [screenToFlowPosition, credentials, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke, t]);
+  }, [screenToFlowPosition, xmppClient, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke, t]);
 
 
   const playMap = useCallback(async ({ step = false } = {}) => {
     return playMapCore({
-      step, credentials,
+      step, xmppClient,
       setPlaying, setPausing, setStepping, setReordering,
       playingRef, pausingRef, steppingRef,
       getNodes, getEdges, setNodes, setEdges,
     })
-  }, [credentials, setPlaying, setPausing, setReordering, getNodes, getEdges, setNodes, setEdges])
+  }, [xmppClient, setPlaying, setPausing, setReordering, getNodes, getEdges, setNodes, setEdges])
 
   const stepMap = useCallback(() => {
     setStepping(true)
@@ -2542,10 +2497,10 @@ function Map () {
   return (
     <MapContext.Provider value={{
       presence, roster, recipient,
-      credentials, sendPersonalMessage, sendAttachments,
+      xmppClient,
       condition, reordering, getEdges, setEdges, getNodes, setNodes,
       orderEdges, editorTheme, vimMode, viewerTheme, markdownEditor,
-      setCurrentSlide, attachFile, uploadFile,
+      setCurrentSlide, attachFile,
     }}>
       <Container fluid>
         <Menubar>
@@ -3272,7 +3227,7 @@ function Map () {
                   ><Icon name='group' /><input /></Input>
                   <Button basic size='mini'
                     onClick={async () => {
-                      await sendRoomMessage({ room, recipient, prompt, mucHost: conf.xmpp.mucHost });
+                      await xmppClient.sendRoomMessage({ room, recipient, prompt, mucHost: conf.xmpp.mucHost });
                     }}
                   >Groupchat</Button>
                   <Input
