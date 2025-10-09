@@ -26,6 +26,7 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useIndexContext } from './components/IndexContext'
+import { initXmppClient, } from './map/mapper'
 
 const ajv = new Ajv()
 
@@ -71,107 +72,139 @@ export default function Hive () {
     fetchCredentials()
   }, [t])
 
-  useEffect(() => {
-    console.log('xmpp client credentials:', credentials)
-    if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
-      return console.error("No credentials error")
+
+  /////
+  // FIXME: this is just for compatibility with Map component
+  const map = {
+    flow: {
+      nodes: [],
     }
+  }
+  const getNodes = () => map.flow.nodes;
+  const setNodes = (updater) => map.flow.nodes = updater(map.flow.nodes);
+  /////
 
-    // Initialize XMPP client
-    const xmpp = client({
-      service: conf.xmpp.websocketUrl,
-      domain: conf.xmpp.host,
-      username: credentials.user,
-      password: credentials.password,
-      tls: {
-        rejectUnauthorized: false
+  useEffect(() => {
+    const initXmpp = async () => {
+      try {
+        xmppRef.current = await initXmppClient({
+          credentials,
+          service: conf.xmpp.websocketUrl,
+          domain: conf.xmpp.host,
+          shareUrlPrefix: conf.xmpp.shareUrlPrefix,
+          setLoading, setResponseError, setRoster, setPresence,
+          getNodes, setNodes,
+        })
+        console.log('XMPP initialized:', xmppRef.current);
+      } catch (err) {
+        console.error('Failed to init XMPP:', err);
       }
-    });
-    xmppRef.current = xmpp;
-    console.log('xmpp:', xmpp)
+    };
 
-    // Handle online event
-    xmpp.on('online', async (jid) => {
-      console.log(`Connected as ${jid.toString()}`);
+    initXmpp();
+  }, [credentials]) // `presense` should not be supplied because it should only connect once
 
-      // Get roster (contact list)
-      await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
-        xml('query', { xmlns: 'jabber:iq:roster' })
-      ));
-      console.log('Requested roster');
+  // useEffect(() => {
+  //   console.log('xmpp client credentials:', credentials)
+  //   if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
+  //     return console.error("No credentials error")
+  //   }
 
-      // Send initial presence to let the server know we're online
-      xmpp.send(xml('presence'));
-      console.log('Sent initial presence');
+  //   // Initialize XMPP client
+  //   const xmpp = client({
+  //     service: conf.xmpp.websocketUrl,
+  //     domain: conf.xmpp.host,
+  //     username: credentials.user,
+  //     password: credentials.password,
+  //     tls: {
+  //       rejectUnauthorized: false
+  //     }
+  //   });
+  //   xmppRef.current = xmpp;
+  //   console.log('xmpp:', xmpp)
 
-      setLoading(false)
-    });
+  //   // Handle online event
+  //   xmpp.on('online', async (jid) => {
+  //     console.log(`Connected as ${jid.toString()}`);
 
-    // Handle errors
-    xmpp.on('error', (err) => {
-      setLoading(false)
-      console.error('XMPP error:', err);
-      setResponseError(`XMPP error: ${err}`)
-    });
+  //     // Get roster (contact list)
+  //     await xmpp.send(xml('iq', { type: 'get', id: 'roster_1' },
+  //       xml('query', { xmlns: 'jabber:iq:roster' })
+  //     ));
+  //     console.log('Requested roster');
 
-    // Handle disconnection
-    xmpp.on('close', () => {
-      setLoading(false)
-      console.log('Connection closed');
-    });
+  //     // Send initial presence to let the server know we're online
+  //     xmpp.send(xml('presence'));
+  //     console.log('Sent initial presence');
 
-    // Handle incoming stanzas
-    xmpp.on('stanza', (stanza) => {
-      // console.log('Got stanza:', stanza.toString());
+  //     setLoading(false)
+  //   });
 
-      if (stanza.is('iq') && stanza.attrs.type === 'result') {
-        const query = stanza.getChild('query', 'jabber:iq:roster');
-        if (query) {
-          console.log('recieved roster query:', query)
-          const items = query.getChildren('item');
-          if (items && items.length) {
-            const updatedRoster = items.map(({ attrs }) => {
-              return {
-                jid: attrs.jid.split('/')[0],
-                name: attrs.name,
-              };
-            });
-            setRoster(updatedRoster);
-          }
-        }
-      } else if (stanza.is('presence')) {
-        const from = stanza.attrs.from;
-        const type = stanza.attrs.type;
-        const jid = from.split('/')[0];
+  //   // Handle errors
+  //   xmpp.on('error', (err) => {
+  //     setLoading(false)
+  //     console.error('XMPP error:', err);
+  //     setResponseError(`XMPP error: ${err}`)
+  //   });
 
-        setPresence(prev => {
-          return { ...prev, [jid]: type !== 'unavailable' };
-        });
-      }
+  //   // Handle disconnection
+  //   xmpp.on('close', () => {
+  //     setLoading(false)
+  //     console.log('Connection closed');
+  //   });
 
-      // Skip non-message stanzas
-      if (!stanza.is('message')) return;
+  //   // Handle incoming stanzas
+  //   xmpp.on('stanza', (stanza) => {
+  //     // console.log('Got stanza:', stanza.toString());
 
-      const body = stanza.getChildText('body');
-      if (!body) return;
+  //     if (stanza.is('iq') && stanza.attrs.type === 'result') {
+  //       const query = stanza.getChild('query', 'jabber:iq:roster');
+  //       if (query) {
+  //         console.log('recieved roster query:', query)
+  //         const items = query.getChildren('item');
+  //         if (items && items.length) {
+  //           const updatedRoster = items.map(({ attrs }) => {
+  //             return {
+  //               jid: attrs.jid.split('/')[0],
+  //               name: attrs.name,
+  //             };
+  //           });
+  //           setRoster(updatedRoster);
+  //         }
+  //       }
+  //     } else if (stanza.is('presence')) {
+  //       const from = stanza.attrs.from;
+  //       const type = stanza.attrs.type;
+  //       const jid = from.split('/')[0];
 
-      const from = stanza.attrs.from;
-      const type = stanza.attrs.type;
+  //       setPresence(prev => {
+  //         return { ...prev, [jid]: type !== 'unavailable' };
+  //       });
+  //     }
 
-      if (type === 'chat' || type === 'normal' || !type) {
-        console.log(`Personal message response from ${from}: ${body}`);
-      } else if (type === 'groupchat') {
-        // Skip our own messages
-        if (from.includes(`/${credentials.user}`)) return;
-        // Skip historical messages
-        const delay = stanza.getChild('delay');
-        if (delay) return;
-        console.log(`Group chat message from ${from}: ${body}`);
-      }
-    });
+  //     // Skip non-message stanzas
+  //     if (!stanza.is('message')) return;
 
-    xmpp.start().catch(console.error);
-  }, [credentials]) // presense should not be supplied because it should only connect once
+  //     const body = stanza.getChildText('body');
+  //     if (!body) return;
+
+  //     const from = stanza.attrs.from;
+  //     const type = stanza.attrs.type;
+
+  //     if (type === 'chat' || type === 'normal' || !type) {
+  //       console.log(`Personal message response from ${from}: ${body}`);
+  //     } else if (type === 'groupchat') {
+  //       // Skip our own messages
+  //       if (from.includes(`/${credentials.user}`)) return;
+  //       // Skip historical messages
+  //       const delay = stanza.getChild('delay');
+  //       if (delay) return;
+  //       console.log(`Group chat message from ${from}: ${body}`);
+  //     }
+  //   });
+
+  //   xmpp.start().catch(console.error);
+  // }, [credentials]) // presense should not be supplied because it should only connect once
 
   const addToRoster = ({ jid, name, groups = [] } = {}) => {
     const iq = xml(

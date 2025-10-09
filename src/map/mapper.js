@@ -247,6 +247,7 @@ export async function initXmppClient({
         // Handle roster
         const query = stanza.getChild('query', 'jabber:iq:roster');
         if (query) {
+          // console.log('recieved roster query:', query)
           const items = query.getChildren('item');
           if (items && items.length) {
             const updatedRoster = items.map(({ attrs }) => ({
@@ -275,6 +276,7 @@ export async function initXmppClient({
       const type = stanza.attrs.type;
 
       if (type === 'chat' || type === 'normal' || !type) {
+        // FIXME: the code {below} is only for map, not for hive
         console.log(`Personal message response from ${from}: ${body}`);
         const [updateNode] = getNodes().filter(nd =>
           nd.type === 'NoteNode' && nd.data.waitRecipient === from.split('/')[0]
@@ -313,9 +315,10 @@ export async function initXmppClient({
           }
         }
       } else if (type === 'groupchat') {
+        // Skip our own messages
         if (from.includes(`/${credentials.user}`)) return; // Skip self
         const delay = stanza.getChild('delay');
-        if (delay) return; // Skip history
+        if (delay) { return; } // Skip historcal messages
         console.log(`Group chat message from ${from}: ${body}`);
       }
     });
