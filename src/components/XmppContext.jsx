@@ -16,8 +16,6 @@ export const useXmppContext = () => useContext(XmppContext);
 export function XmppProvider({ children }) {
   const { t } = useTranslation('XmppContext')
   const [ credentials, setCredentials ] = useState(null)
-  const [ roster, setRoster ] = useState([])
-  const [ presence, setPresence ] = useState({});
   const xmppClientRef = useRef(null);
 
   const [ loading, setLoading ] = useState(true)
@@ -57,7 +55,6 @@ export function XmppProvider({ children }) {
           credentials,
           service: conf.xmpp.websocketUrl,
           domain: conf.xmpp.host,
-          setRoster, setPresence,
         })
         console.log('XMPP initialized:', xmppClientRef.current);
       } catch (err) {
@@ -72,10 +69,7 @@ export function XmppProvider({ children }) {
   }, [credentials, t]) // `presense` should not be supplied because it should only connect once
 
   return (
-    <XmppContext.Provider value={{
-      xmppClient: xmppClientRef.current, roster, presence,
-      // credentials,
-    }}>
+    <XmppContext.Provider value={{ xmppClient: xmppClientRef.current }}>
       {loading && (
         <Loader
           active

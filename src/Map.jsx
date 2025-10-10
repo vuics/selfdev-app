@@ -1930,7 +1930,11 @@ function Map () {
     localStorage.setItem('map.markdownEditor', markdownEditor);
   }, [markdownEditor]);
 
-  const { xmppClient, roster, presence, } = useXmppContext()
+  const { xmppClient } = useXmppContext()
+  const [ roster, setRoster ] = useState([])
+  const [ presence, setPresence ] = useState({});
+  console.log('presence:', presence)
+  console.log('roster:', roster)
   const onChatMessageRef = useRef(null);
   if (!onChatMessageRef.current) {
     onChatMessageRef.current = createOnChatMessage({
@@ -1939,6 +1943,10 @@ function Map () {
   }
   useEffect(() => {
     if (!xmppClient?.emitter || !onChatMessageRef.current) return;
+    setRoster(xmppClient.roster)
+    setPresence(xmppClient.presence)
+    xmppClient.emitter.on('roster', setRoster)
+    xmppClient.emitter.on('presence', setPresence)
     xmppClient.emitter.on('chatMessage', onChatMessageRef.current);
     xmppClient.emitter.on('online', () => setLoading(false))
     xmppClient.emitter.on('error', (err) => {
@@ -1946,7 +1954,11 @@ function Map () {
       setResponseError(`XMPP error: ${err}`);
     })
     xmppClient.emitter.on('close', () => setLoading(false))
-    return () => xmppClient.emitter.removeListener('chatMessage', onChatMessageRef.current);
+    return () => {
+      xmppClient.emitter.removeListener('chatMessage', onChatMessageRef.current);
+      xmppClient.emitter.removeListener('roster', setRoster)
+      xmppClient.emitter.removeListener('presence', setPresence)
+    }
   }, [xmppClient]);
 
   // console.log('credentials:', credentials)
