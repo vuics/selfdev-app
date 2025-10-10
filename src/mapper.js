@@ -479,7 +479,9 @@ export class XmppClient {
                 jid: attrs.jid.split('/')[0],
                 name: attrs.name,
               }));
-              setRoster(updatedRoster);
+              if (setRoster) {
+                setRoster(updatedRoster);
+              }
             }
           }
         } else if (stanza.is('presence')) {
@@ -488,7 +490,9 @@ export class XmppClient {
           const type = stanza.attrs.type;
           const jid = from.split('/')[0];
 
-          setPresence(prev => ({ ...prev, [jid]: type !== 'unavailable' }));
+          if (setPresence) {
+            setPresence(prev => ({ ...prev, [jid]: type !== 'unavailable' }));
+          }
         }
 
         // Skip non-message stanzas
