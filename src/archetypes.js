@@ -83,6 +83,7 @@ const archetypes = {
             },
             parseJson: { type: 'boolean' },
             promptKey: { type: 'string' },
+            sendStatus: { type: 'boolean' },
           },
         },
       }
@@ -93,8 +94,7 @@ const archetypes = {
         description: '',
         joinRooms: [ 'maptrix' ],
         maptrix: {
-          // mapId: '',
-          mapId: '68e644b25a4d208ebb0f631a',
+          mapId: '',  // example, mapId: '68e644b25a4d208ebb0f631a',
           input: {
             prompt: '',
             input1: 'hello',
@@ -106,6 +106,7 @@ const archetypes = {
           ],
           parseJson: true,
           promptKey: 'prompt',
+          sendStatus: false,
         },
       }
     }
