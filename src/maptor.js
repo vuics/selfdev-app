@@ -394,19 +394,13 @@ export async function playMapCore ({
 export class XmppClient {
   constructor () {
     this.client = null
-    // this.emitter = null
     this.emitter = new EventEmitter();
     this.credentials = null
     this.roster = []
     this.presence = {}
   }
 
-  async connect({ credentials, service, domain }) {
-    // if (this.xmpp) {
-    //   console.warn('XMPP was already initialized');
-    //   return this.xmpp;
-    // }
-
+  async connect({ credentials, service, domain, mucHost, joinRooms  }) {
     if (!credentials || !credentials.user || !credentials.password || !credentials.jid) {
       console.error("No credentials error");
       return null;
@@ -430,8 +424,6 @@ export class XmppClient {
       tls: { rejectUnauthorized: false },
     });
     // console.log('initXmppClient assign this.xmpp=', this.xmpp)
-    // this.emitter = new EventEmitter();
-
 
     // ✅ Wrap connection in a Promise to await readiness
     const ready = new Promise((resolve, reject) => {
@@ -445,6 +437,7 @@ export class XmppClient {
           ));
           console.log('Requested roster');
 
+          // Send presence
           await sleep(200)
           const presence = xml('presence',
             {},
@@ -453,6 +446,14 @@ export class XmppClient {
           );
           await this.xmpp.send(presence);
           console.log('Sent initial presence');
+
+          // Join MUC rooms ---
+          if (mucHost && joinRooms) {
+            for (const joinRoom of joinRooms) {
+              const roomJid = `${joinRoom}@${mucHost}`
+              await this.joinRoom({ roomJid })
+            }
+          }
 
           this.emitter.emit('online', { jid })
           resolve(this); // ✅ resolve once connected and ready
@@ -516,15 +517,32 @@ export class XmppClient {
 
         if (type === 'chat' || type === 'normal' || !type) {
           console.log(`Personal message response from ${from}: ${body}`);
-          this.emitter.emit('chatMessage', { from, type, body})
+          this.emitter.emit('chatMessage', { from, type, body })
         } else if (type === 'groupchat') {
           // Skip our own messages
           if (from.includes(`/${this.credentials.user}`)) return; // Skip self
           // Skip historical messages
           const delay = stanza.getChild('delay');
           if (delay) { return; }
+
+          let mentioned = false
+          // Detect <reference type="mention" xmlns="urn:xmpp:reference:0"/>
+          const refs = stanza.getChildren('reference', 'urn:xmpp:reference:0')
+          for (const ref of refs) {
+            const type = ref.attrs.type
+            const uri = ref.attrs.uri
+            if (type === 'mention' && uri && uri.endsWith(`/${this.credentials.user}`)) {
+              console.log(`🔔 Mention detected via reference: ${uri}`)
+              mentioned = true
+            }
+          }
+          if (!mentioned || !body.includes(`${this.credentials.user}`)) {
+            console.log(`Mention is not detected via nickname ${this.credentials.user}`)
+            mentioned = false
+          }
+
           console.log(`Group chat message from ${from}: ${body}`);
-          this.emitter.emit('groupMessage', { from, type, body})
+          this.emitter.emit('groupMessage', { from, type, body, mentioned })
         }
       });
     });
@@ -684,11 +702,11 @@ export class XmppClient {
     );
     await this.xmpp.send(presence);
     console.log('Joined group chat');
-    // await new Promise(resolve => setTimeout(resolve, 2000));
+    // await sleep(2000)
   }
 
   async sendRoomMessage ({ room, recipient, prompt, mucHost }) {
-    const roomJid = room.includes("@") ? room: `${room}@${mucHost}`
+    const roomJid = room.includes("@") ? room : `${room}@${mucHost}`
     await this.joinRoom({ roomJid })
     const nickname = recipient.split('@')[0];
     const body = `@${nickname} ${prompt}`;
