@@ -124,7 +124,7 @@ export default function Hive () {
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
       setOptions(archetypes[archetype].defaultOptions())
-      await xmppClient.addToRoster({
+      await xmppClient?.addToRoster({
         jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
         groups: res.data.options.joinRooms,
@@ -158,10 +158,10 @@ export default function Hive () {
       console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
       if (!inRoster) {
         console.log('Agent with name:', res.data.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
-        await xmppClient.removeFromRoster({
+        await xmppClient?.removeFromRoster({
           jid: `${prevAgent.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         })
-        await xmppClient.addToRoster({
+        await xmppClient?.addToRoster({
           jid,
           name: res.data.options.name,
           groups: res.data.options.joinRooms,
@@ -188,7 +188,7 @@ export default function Hive () {
       const [deletedAgent] = agents.filter(obj => obj._id === _id)
       setAgents(agents.filter(obj => obj._id !== _id))
       setAgentsImmutable(agentsImmutable.filter(obj => obj._id !== _id))
-      await xmppClient.removeFromRoster({
+      await xmppClient?.removeFromRoster({
         jid: `${deletedAgent.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
       })
     } catch (err) {

@@ -75,7 +75,7 @@ import {
   buildSmartText, checkCondition, unlinkEdge,
   createOnChatMessage,
   playEdge, playMapCore,
-} from './mapper'
+} from './maptor'
 
 const editorThemes = {
   'default': 'light',

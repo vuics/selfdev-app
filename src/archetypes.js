@@ -58,6 +58,60 @@ const archetypes = {
     }
   },
 
+  'maptrix-v1.0': {
+    key: 'maptrix-v1.0',
+    value: 'maptrix-v1.0',
+    icon: 'sitemap',
+    text: 'Maptrix v1.0',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        maptrix: {
+          type: 'object',
+          properties: {
+            mapId: { type: 'string' },
+            input: { },
+            output: {
+              type: 'array',
+              items: { type: 'string' }
+            },
+            parseJson: { type: 'boolean' },
+            promptKey: { type: 'string' },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'maptrix' ],
+        maptrix: {
+          // mapId: '',
+          mapId: '68e644b25a4d208ebb0f631a',
+          input: {
+            prompt: '',
+            input1: 'hello',
+            input2: 'world',
+          },
+          output: [
+            'output1',
+            'output2',
+          ],
+          parseJson: true,
+          promptKey: 'prompt',
+        },
+      }
+    }
+  },
+
+
   'rag-v1.0': {
     key: 'rag-v1.0',
     value: 'rag-v1.0',
@@ -554,7 +608,7 @@ Answer:`,
   'storage-v1.0': {
     key: 'storage-v1.0',
     value: 'storage-v1.0',
-    icon: 'hdd',
+    icon: 'database',
     text: 'Storage v1.0',
     schema: {
       type: 'object',
@@ -644,7 +698,7 @@ Answer:`,
   'langflow-v1.0': {
     key: 'langflow-v1.0',
     value: 'langflow-v1.0',
-    icon: 'code branch',
+    icon: 'pallet',
     text: 'Langflow v1.0',
     schema: {
       type: 'object',
@@ -764,7 +818,6 @@ Answer:`,
       }
     }
   },
-
 
   'notebook-v1.0': {
     key: 'notebook-v1.0',
