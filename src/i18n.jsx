@@ -823,6 +823,9 @@ const resources = {
       'Update': 'Update'
     },
     Map: {
+      'Info': 'Info',
+      'Show map info': 'Show map info',
+      'The map id is {{mapId}}': 'The map id is {{mapId}}',
       'Execute the map on backend': 'Execute the map on backend',
       'map_executing': 'The map {{title}} (ID: {{_id}}) is being executed on backend.',
       'Error getting maps.': 'Error getting maps.',
@@ -2368,7 +2371,10 @@ const resources = {
       'Update': 'Обновить'
     },
     Map: {
-      "Execute the map on backend": "Выполнить карту на сервере",
+      'Info': 'Инфо',
+      'Show map info': 'Показать информацию о карте',
+      'The map id is {{mapId}}': 'Идентификатор карты — {{mapId}}',
+      'Execute the map on backend': 'Выполнить карту на сервере',
       'map_executing': 'Карта {{title}} (ID: {{_id}}) выполняется на сервере.',
       'Error getting maps.': 'Ошибка при получении карт.',
       'Error posting map.': 'Ошибка при добавлении карты.',

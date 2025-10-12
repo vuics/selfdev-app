@@ -2905,6 +2905,13 @@ function Map () {
             </Dropdown.Menu>
           </Dropdown>
         } />
+        <Button.Group>
+          <Popup content={t('Show map info')} trigger={
+            <Button icon basic onClick={() => { setResponseMessage(t('The map id is {{mapId}}', { mapId })) }}>
+              <Icon name='info circle' color='blue' />
+            </Button>
+          } />
+        </Button.Group>
       </>)}
 
       { showLayout && (<>
@@ -3106,7 +3113,7 @@ function Map () {
           positive
           style={{ textAlign: 'left'}}
           icon='info circle'
-          header='Info'
+          header={t('Info')}
           content={responseMessage}
           onDismiss={() => setResponseMessage('')}
         />
