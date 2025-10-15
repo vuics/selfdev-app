@@ -142,21 +142,8 @@ const archetypes = {
         system: {
           type: 'object',
           properties: {
-          //   systemMessage: { type: 'string' },
-          //   model: {
-          //     type: 'object',
-          //     properties: {
-          //       provider: { type: 'string' },
-          //       name: { type: 'string' },
-          //       apiKey: {
-          //         type: 'object',
-          //         properties: {
-          //           valueFromVault: { type: 'string' },
-          //         },
-          //       },
-          //     }
-          //   },
-          //   session: { type: 'string' },
+            operation: { type: 'string' },
+            model: { type: 'string' },
           }
         },
       }
@@ -168,15 +155,8 @@ const archetypes = {
         description: '',
         joinRooms: [ 'system' ],
         system: {
-          // systemMessage: '',
-          // model: {
-          //   provider: 'openai',
-          //   name: 'gpt-5-nano',
-          //   apiKey: {
-          //     valueFromVault: 'OPENAI_API_KEY',
-          //   },
-          // },
-          // session: '',
+          operation: '',
+          model: '',
         },
       }
     }
