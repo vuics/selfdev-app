@@ -235,13 +235,13 @@ export default function Keys () {
 
       <Segment>
         {t('You can read the')}
-        {' '}<a href='https://github.com/vuics/selfdev-js/blob/main/API.md' target='_blank'>API.md</a>{' '}
+        {' '}<a href='https://github.com/vuics/selfdev-js/blob/main/API.md' target='_blank' rel="noreferrer">API.md</a>{' '}
         {t('document to learn more about the Self-developing API.')}
       </Segment>
 
       <Segment>
         {t('Check the')}
-        {' '}<a href='https://github.com/vuics/selfdev-js' target='_blank'>selfdev-js</a>{' '}
+        {' '}<a href='https://github.com/vuics/selfdev-js' target='_blank' rel="noreferrer">selfdev-js</a>{' '}
         {t('tool on GitHub to use the Self-developing AI from command line.')}
       </Segment>
     </Container>

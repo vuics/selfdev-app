@@ -16,6 +16,7 @@ import {
   List,
   Label,
   Popup,
+  // Menu,
 } from 'semantic-ui-react'
 import Ajv from 'ajv'
 import { useTranslation } from 'react-i18next'
@@ -327,24 +328,33 @@ export default function Hive () {
 
       { adding && (
         <Segment stacked>
-          <Header as='h4'>
+          <Header as='h2'>
             {t('Add Agent')}
           </Header>
-          <span>
-            {t('Archetype')}:
+            <b>{t('Archetype')}:</b>
             {' '}
             <Dropdown
-              inline
               placeholder={t('Select Archetype')}
               search
+              selection
+              fluid
               options={ Object.values(archetypes) }
               defaultValue={ archetype }
               onChange={(e, { value }) => setArchetype(value) }
             />
-          </span>
           <br/>
+          { archetypes[archetype].description && (
+            <p>
+              <b>{t('Description')}:</b> {archetypes[archetype].description}
+            </p>
+          )}
+          { archetypes[archetype].docUrl && (
+            <p>
+              <b>{t('Agent Creation Guide')}:</b>{' '}<a href={archetypes[archetype].docUrl} target='_blank' rel="noreferrer">{archetypes[archetype].text}</a>{' '}
+            </p>
+          )}
           <span>
-            {t('Options')}:
+            <b>{t('Options')}:</b>
           </span>
           <JsonEditor
             data={ options }

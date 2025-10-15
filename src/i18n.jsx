@@ -810,6 +810,8 @@ const resources = {
       'Download': 'Download',
       'Upload': 'Upload',
       'Archetype': 'Archetype',
+      'Description': 'Description',
+      'Agent Creation Guide': 'Agent Creation Guide',
       'Options': 'Options',
       'Select Archetype': 'Select Archetype',
       'Not compliant with JSON Schema': 'Not compliant with JSON Schema',
@@ -1565,6 +1567,62 @@ const resources = {
       "Zambia": "Zambia",
       "Zimbabwe": "Zimbabwe",
       "Åland Islands": "Åland Islands",
+    },
+    archetypes: {
+      chat: {
+        description: 'Communicator understands and responds in natural language.',
+      },
+      maptrix: {
+        description: 'Executor runs maps and allows nested map executions.',
+      },
+      system: {
+        description: 'Administrator interacts with our infrastructure and manages records in the database.',
+      },
+      transform: {
+        description: 'Shaper modifies text using rules, templates, or expressions.',
+      },
+      architect: {
+        description: 'Designer creates new maps from textual descriptions.',
+      },
+      rag: {
+        description: 'Researcher retrieves knowledge from memory or external docs.',
+      },
+      stt: {
+        description: 'Listener transcribes user’s voice into text.',
+      },
+      tts: {
+        description: 'Narrator speaks text back to the user.',
+      },
+      imagegen: {
+        description: 'Illustrator generates images.',
+      },
+      code: {
+        description: 'Engineer executes computations, logic, and visualizations.',
+      },
+      quantum: {
+        description: 'Scientist performs futuristic simulations or computation.',
+      },
+      storage: {
+        description: 'Archivist stores and recalls structured key-value knowledge.',
+      },
+      command: {
+        description: 'Operator runs system-level instructions.',
+      },
+      langflow: {
+        description: 'Strategist executes complex flows & orchestrated decisions.',
+      },
+      nodered: {
+        description: 'Integrator connects to external APIs or IoT flows.',
+      },
+      n8n: {
+        description: 'Automator performs flexible AI workflow automations.',
+      },
+      notebook: {
+        description: 'Analyst runs parameterized reports, simulations, etc.',
+      },
+      avatar: {
+        description: 'Performer represents human-like interaction visually.',
+      },
     },
   },
   'ru-RU': {
@@ -2358,6 +2416,8 @@ const resources = {
       'Download': 'Скачать',
       'Upload': 'Загрузить',
       'Archetype': 'Архетип',
+      'Description': 'Описание',
+      'Agent Creation Guide': 'Руководство по созданию агента',
       'Options': 'Параметры',
       'Select Archetype': 'Выбрать архетип',
       'Not compliant with JSON Schema': 'Не соответствует схеме JSON',
@@ -3098,6 +3158,62 @@ const resources = {
       "Zambia": "Замбия",
       "Zimbabwe": "Зимбабве",
       "Åland Islands": "Аландские острова",
+    },
+    archetypes: {
+      chat: {
+        description: 'Коммуникатор понимает и отвечает на естественном языке.',
+      },
+      maptrix: {
+        description: 'Исполнитель запускает карты и позволяет выполнять вложенные карты.',
+      },
+      system: {
+        description: 'Администратор взаимодействует с инфраструктурой и управляет записями в базе данных.',
+      },
+      transform: {
+        description: 'Преобразователь модифицирует текст с помощью правил, шаблонов или выражений.',
+      },
+      architect: {
+        description: 'Дизайнер создаёт новые карты на основе текстовых описаний.',
+      },
+      rag: {
+        description: 'Исследователь извлекает знания из памяти или внешней документации.',
+      },
+      stt: {
+        description: 'Слушатель преобразует голос пользователя в текст.',
+      },
+      tts: {
+        description: 'Диктор озвучивает текст пользователю.',
+      },
+      imagegen: {
+        description: 'Иллюстратор генерирует изображения.',
+      },
+      code: {
+        description: 'Инженер выполняет вычисления, логику и визуализации.',
+      },
+      quantum: {
+        description: 'Учёный проводит футуристические симуляции или вычисления.',
+      },
+      storage: {
+        description: 'Архивариус хранит и извлекает структурированные знания в формате ключ–значение.',
+      },
+      command: {
+        description: 'Оператор выполняет системные команды.',
+      },
+      langflow: {
+        description: 'Стратег выполняет сложные потоки и оркестровку решений.',
+      },
+      nodered: {
+        description: 'Интегратор подключается к внешним API или IoT-потокам.',
+      },
+      n8n: {
+        description: 'Автоматизатор реализует гибкие AI-автоматизации рабочих процессов.',
+      },
+      notebook: {
+        description: 'Аналитик запускает параметризованные отчёты, симуляции и т.д.',
+      },
+      avatar: {
+        description: 'Актёр визуально представляет человекоподобное взаимодействие.',
+      },
     },
   },
 };

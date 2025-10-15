@@ -89,6 +89,16 @@ const conf = {
     limit: 1000,
   },
 
+  docs: {
+    enable: bool(import.meta.env.VITE_DOCS_ENABLE || false),
+    url: import.meta.env.VITE_DOCS_URL || 'http://docs.dev.local:9298/',
+    i18n: {
+      'en-US': '',
+      'ru-RU': '/ru',
+    },
+  },
+
+
   // TODO: deprecate the section and related component (replaced with synthetic UI)
   flow: {
     enable: bool(import.meta.env.VITE_FLOW_ENABLE || false),
@@ -128,12 +138,6 @@ const conf = {
   train: {
     enable: bool(import.meta.env.VITE_TRAIN_ENABLE || false),
     url: import.meta.env.VITE_TRAIN_URL || 'http://localhost:8180/vnc.html',
-  },
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  docs: {
-    enable: bool(import.meta.env.VITE_DOCS_ENABLE || false),
-    url: import.meta.env.VITE_DOCS_URL || 'http://localhost:9188',
   },
 
   profile: {

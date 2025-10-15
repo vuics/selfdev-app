@@ -1,4 +1,11 @@
 import { faker } from '@faker-js/faker'
+import i18next from 'i18next'
+
+import conf from './conf'
+import i18n from './i18n'
+
+const t = (key) => i18next.t(`archetypes:${key}`)
+const getDocUrl = (path) => `${conf.docs.url}${conf.docs.i18n[i18n.language]}/docs/agent-archetypes/${path}`
 
 const archetypes = {
   'chat-v1.0': {
@@ -6,6 +13,8 @@ const archetypes = {
     value: 'chat-v1.0',
     icon: 'chat',
     text: 'Chat v1.0',
+    description: t('chat.description'),
+    docUrl: getDocUrl('chat'),
     schema: {
       type: 'object',
       properties: {
@@ -63,6 +72,8 @@ const archetypes = {
     value: 'maptrix-v1.0',
     icon: 'sitemap',
     text: 'Maptrix v1.0',
+    description: t('maptrix.description'),
+    docUrl: getDocUrl('maptrix'),
     schema: {
       type: 'object',
       properties: {
@@ -112,12 +123,212 @@ const archetypes = {
     }
   },
 
+  'system-v1.0': {
+    key: 'system-v1.0',
+    value: 'system-v1.0',
+    icon: 'cog',
+    text: 'System v1.0',
+    description: t('system.description'),
+    docUrl: getDocUrl('system'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        system: {
+          type: 'object',
+          properties: {
+          //   systemMessage: { type: 'string' },
+          //   model: {
+          //     type: 'object',
+          //     properties: {
+          //       provider: { type: 'string' },
+          //       name: { type: 'string' },
+          //       apiKey: {
+          //         type: 'object',
+          //         properties: {
+          //           valueFromVault: { type: 'string' },
+          //         },
+          //       },
+          //     }
+          //   },
+          //   session: { type: 'string' },
+          }
+        },
+      }
+    },
+    defaultOptions: function () {
+      const name = faker.internet.username().toLowerCase()
+      return {
+        name,
+        description: '',
+        joinRooms: [ 'system' ],
+        system: {
+          // systemMessage: '',
+          // model: {
+          //   provider: 'openai',
+          //   name: 'gpt-5-nano',
+          //   apiKey: {
+          //     valueFromVault: 'OPENAI_API_KEY',
+          //   },
+          // },
+          // session: '',
+        },
+      }
+    }
+  },
+
+  'transform-v1.0': {
+    key: 'transform-v1.0',
+    value: 'transform-v1.0',
+    icon: 'edit',
+    text: 'Transform v1.0',
+    description: t('transform.description'),
+    docUrl: getDocUrl('transform'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        transform: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              enum: [
+                'echo',      // Returns the original input string unchanged.
+                'const',     // Always returns the string provided in `const`.
+                'repeat',    // Repeats the input string `repeat` times.
+                'regexp',    // Applies a sed/vim-style regex transformation (s/pattern/replacement/flags).
+                'uuid',      // Generates a UUID v4 string; no parameters.
+                'nanoid',    // Generates a NanoID string of length specified in `nanoid`.
+                'case',      // Changes letter casing of input; options: 'upper','lower','camel','snake','kebab'.
+                'hash',      // Returns a hash of input using algorithm specified in `hash` ('md5','sha256','sha512').
+                'trim',      // Removes leading and trailing whitespace from input string.
+                'truncate',  // Truncates input to a maximum length specified in `truncate`.
+                'prefix',    // Adds the string specified in `prefix` to the beginning of input.
+                'suffix',    // Adds the string specified in `suffix` to the end of input.
+                'template',  // Uses Mustache templating to render input with variables from JSON-parsed input string.
+                'slugify'    // Converts input into a URL-friendly slug; lowercase if `slugify` is true.
+              ]
+            },
+
+            // echo -- no params
+            const: { type: 'string' },
+            repeat: { type: 'number' },
+            regexp: { type: 'string' },
+            // uuid -- no params
+            nanoid: { type: 'number' },
+            case: { type: 'string', enum: ['upper','lower','camel','snake','kebab'] },
+            hash: { type: 'string', enum: ['md5','sha256','sha512'] },
+            // trim -- no params
+            truncate: { type: 'number' },
+            prefix: { type: 'string' },
+            suffix: { type: 'string' },
+            template: { type: 'string' },
+            slugify: { type: 'boolean' }, // if true, lowercase slug
+          }
+        },
+      }
+    },
+    defaultOptions: function () {
+      const name = faker.internet.username().toLowerCase()
+      return {
+        name,
+        description: '',
+        joinRooms: [ 'transform' ],
+        transform: {
+          type: 'echo',
+
+          // echo -- no params
+          const: 'constant-text',
+          repeat: 3,
+          regexp: 's/original/replacement/g',
+          // uuid -- no params
+          nanoid: 9,
+          case: 'upper',
+          hash: 'md5',
+          truncate: 30,
+          prefix: 'prefix-',
+          suffix: '-suffix',
+          template: 'Hello, {{name}}!',
+          slugify: true, // if true, lowercase slug
+        },
+      }
+    }
+  },
+
+  'architect-v1.0': {
+    key: 'architect-v1.0',
+    value: 'architect-v1.0',
+    icon: 'magic stick',
+    text: 'Architect v1.0',
+    description: t('architect.description'),
+    docUrl: getDocUrl('architect'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        architect: {
+          type: 'object',
+          properties: {
+            // mapId: { type: 'string' },
+            // input: { },
+            // output: {
+            //   type: 'array',
+            //   items: { type: 'string' }
+            // },
+            // parseJson: { type: 'boolean' },
+            // promptKey: { type: 'string' },
+            // sendStatus: { type: 'boolean' },
+          },
+        },
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'architect' ],
+        maptrix: {
+          // mapId: '',
+          // input: {
+          //   prompt: '',
+          //   input1: 'hello',
+          //   input2: 'world',
+          // },
+          // output: [
+          //   'output1',
+          //   'output2',
+          // ],
+          // parseJson: true,
+          // promptKey: 'prompt',
+          // sendStatus: false,
+        },
+      }
+    }
+  },
 
   'rag-v1.0': {
     key: 'rag-v1.0',
     value: 'rag-v1.0',
     icon: 'archive',
     text: 'RAG v1.0',
+    description: t('rag.description'),
+    docUrl: getDocUrl('rag'),
     schema: {
       type: 'object',
       properties: {
@@ -311,6 +522,8 @@ Answer:`,
     value: 'stt-v1.0',
     icon: 'headphones',
     text: 'Speech-to-Text v1.0',
+    description: t('stt.description'),
+    docUrl: getDocUrl('stt'),
     schema: {
       type: 'object',
       properties: {
@@ -365,6 +578,8 @@ Answer:`,
     value: 'tts-v1.0',
     icon: 'file audio',
     text: 'Text-to-Speech v1.0',
+    description: t('tts.description'),
+    docUrl: getDocUrl('tts'),
     schema: {
       type: 'object',
       properties: {
@@ -422,6 +637,8 @@ Answer:`,
     value: 'imagegen-v1.0',
     icon: 'images',
     text: 'ImageGen v1.0',
+    description: t('imagegen.description'),
+    docUrl: getDocUrl('imagegen'),
     schema: {
       type: 'object',
       properties: {
@@ -483,6 +700,8 @@ Answer:`,
     value: 'code-v1.0',
     icon: 'code',
     text: 'Code v1.0',
+    description: t('code.description'),
+    docUrl: getDocUrl('code'),
     schema: {
       type: 'object',
       properties: {
@@ -538,6 +757,8 @@ Answer:`,
     value: 'quantum-v1.0',
     icon: 'react',
     text: 'Quantum v1.0',
+    description: t('quantum.description'),
+    docUrl: getDocUrl('quantum'),
     schema: {
       type: 'object',
       properties: {
@@ -611,6 +832,8 @@ Answer:`,
     value: 'storage-v1.0',
     icon: 'database',
     text: 'Storage v1.0',
+    description: t('storage.description'),
+    docUrl: getDocUrl('storage'),
     schema: {
       type: 'object',
       properties: {
@@ -664,6 +887,8 @@ Answer:`,
     value: 'command-v1.0',
     icon: 'terminal',
     text: 'Command v1.0',
+    description: t('command.description'),
+    docUrl: getDocUrl('command'),
     schema: {
       type: 'object',
       properties: {
@@ -701,6 +926,8 @@ Answer:`,
     value: 'langflow-v1.0',
     icon: 'pallet',
     text: 'Langflow v1.0',
+    description: t('langflow.description'),
+    docUrl: getDocUrl('langflow'),
     schema: {
       type: 'object',
       properties: {
@@ -737,6 +964,8 @@ Answer:`,
     value: 'nodered-v1.0',
     icon: 'map signs',
     text: 'Node-RED v1.0',
+    description: t('nodered.description'),
+    docUrl: getDocUrl('nodered'),
     schema: {
       type: 'object',
       properties: {
@@ -780,7 +1009,9 @@ Answer:`,
     key: 'n8n-v1.0',
     value: 'n8n-v1.0',
     icon: 'code branch',
-    text: 'N8n v1.0',
+    text: 'N8n (external) v1.0',
+    description: t('n8n.description'),
+    docUrl: getDocUrl('n8n'),
     schema: {
       type: 'object',
       properties: {
@@ -825,6 +1056,8 @@ Answer:`,
     value: 'notebook-v1.0',
     icon: 'file code',
     text: 'Notebook v1.0',
+    description: t('notebook.description'),
+    docUrl: getDocUrl('notebook'),
     schema: {
       type: 'object',
       properties: {
@@ -870,7 +1103,9 @@ Answer:`,
     key: 'avatar-v1.0',
     value: 'avatar-v1.0',
     icon: 'smile outline',
-    text: 'Avatar (Talking Face) v1.0',
+    text: 'Avatar (LipSync) v1.0',
+    description: t('avatar.description'),
+    docUrl: getDocUrl('avatar'),
     schema: {
       type: 'object',
       properties: {
