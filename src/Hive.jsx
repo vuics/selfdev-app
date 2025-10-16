@@ -458,7 +458,7 @@ export default function Hive () {
                     </Grid>
                   </Card.Header>
                   <Card.Meta textAlign='center'>
-                    { archetypes[agent.archetype].text }
+                    { archetypes[agent.archetype]?.text }
                   </Card.Meta>
                   <Card.Description>
                     {agent.options?.description || t('(no description)') }

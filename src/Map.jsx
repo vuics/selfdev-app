@@ -2883,7 +2883,7 @@ function Map () {
               <Dropdown.Header icon='map' content='Maps:' />
               <Dropdown.Menu scrolling>
                 {maps
-                  .filter(({ title }) => title.includes(openerSearch))
+                  .filter(({ title }) => title?.includes(openerSearch))
                   .map(({ _id, title }) => (
                     <Dropdown.Item
                       key={_id} value={_id} text={title}

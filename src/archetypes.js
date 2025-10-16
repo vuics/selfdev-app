@@ -142,8 +142,8 @@ const archetypes = {
         system: {
           type: 'object',
           properties: {
-            operation: { type: 'string' },
-            model: { type: 'string' },
+            operation: { type: 'string', enum: ['create', 'get'] },  // not permitted: 'update', 'delete', 'list'
+            model: { type: 'string', enum: ['map', 'agent'] },       // others are not permitted
           }
         },
       }
@@ -197,7 +197,25 @@ const archetypes = {
                 'prefix',    // Adds the string specified in `prefix` to the beginning of input.
                 'suffix',    // Adds the string specified in `suffix` to the end of input.
                 'template',  // Uses Mustache templating to render input with variables from JSON-parsed input string.
-                'slugify'    // Converts input into a URL-friendly slug; lowercase if `slugify` is true.
+                'slugify',   // Converts input into a URL-friendly slug; lowercase if `slugify` is true.
+                'jsondot',   // Handles simple dot-path operations using Lodash. Accepts a JSON command object:
+                             // {
+                             //   op: 'get' | 'set' | 'delete' | 'batch',            // operation type
+                             //   path: 'store.book.title',                          // Lodash-style dot notation path
+                             //   value: 99,                                         // value to set (only for 'set')
+                             //   default: null,                                     // default value if path does not exist (only for 'get')
+                             //   data: {},                                          // target JSON object
+                             // }
+                'jsonpath',  // Handles advanced JSONPath operations with full support for arrays, wildcards, filters, etc.
+                             // Accepts a JSON command object:
+                             // {
+                             //   op: 'get' | 'set' | 'delete' | 'query' | 'batch', // operation type
+                             //   path: '$.store.book[?(@.price < 10)].title',      // JSONPath expression
+                             //   value: 99,                                        // value to set (only for 'set')
+                             //   default: null,                                    // default value if path does not exist (only for 'get')
+                             //   multi: true,                                      // if true (default), return all matches as an array (for 'get'/'query'), if false returns only the [0] value
+                             //   data: {},                                         // target JSON object
+                             // }
               ]
             },
 
@@ -215,6 +233,8 @@ const archetypes = {
             suffix: { type: 'string' },
             template: { type: 'string' },
             slugify: { type: 'boolean' }, // if true, lowercase slug
+            // jsondot -- no params
+            // jsonpath -- no params
           }
         },
       }
