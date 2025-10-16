@@ -200,21 +200,32 @@ const archetypes = {
                 'slugify',   // Converts input into a URL-friendly slug; lowercase if `slugify` is true.
                 'jsondot',   // Handles simple dot-path operations using Lodash. Accepts a JSON command object:
                              // {
-                             //   op: 'get' | 'set' | 'delete' | 'batch',            // operation type
-                             //   path: 'store.book.title',                          // Lodash-style dot notation path
-                             //   value: 99,                                         // value to set (only for 'set')
-                             //   default: null,                                     // default value if path does not exist (only for 'get')
-                             //   data: {},                                          // target JSON object
+                             //   "op": "get" | "set" | "delete" | "batch",            // operation type
+                             //   "path": "store.book.title",                          // Lodash-style dot notation path
+                             //   "value": 99,                                         // value to set (only for "set")
+                             //   "default": null,                                     // default value if path does not exist (only for "get")
+                             //   "data": {},                                          // target JSON object
                              // }
                 'jsonpath',  // Handles advanced JSONPath operations with full support for arrays, wildcards, filters, etc.
                              // Accepts a JSON command object:
                              // {
-                             //   op: 'get' | 'set' | 'delete' | 'query' | 'batch', // operation type
-                             //   path: '$.store.book[?(@.price < 10)].title',      // JSONPath expression
-                             //   value: 99,                                        // value to set (only for 'set')
-                             //   default: null,                                    // default value if path does not exist (only for 'get')
-                             //   multi: true,                                      // if true (default), return all matches as an array (for 'get'/'query'), if false returns only the [0] value
-                             //   data: {},                                         // target JSON object
+                             //   "op": "get" | "set" | "delete" | "query" | "batch", // operation type
+                             //   "path": "$.store.book[?(@.price < 10)].title",      // JSONPath expression
+                             //   "value": 99,                                        // value to set (only for 'set')
+                             //   "default": null,                                    // default value if path does not exist (only for 'get')
+                             //   "multi": true,                                      // if true (default), return all matches as an array (for 'get'/'query'), if false returns only the [0] value
+                             //   "data": {},                                         // target JSON object
+                             // }
+                'batch',     // Handles batch transformations:
+                             // {
+                             //   "type": "batch",
+                             //   "batch": [
+                             //     { "type": "regexp", "regexp": "s/"//gc" },
+                             //     { "type": "postfix", "postfix": "-abc" },
+                             //     { "type": "trim" },
+                             //     { "type": "repeat", "repeat": 3 }
+                             //   ],
+                             //   "data": [[data]]
                              // }
               ]
             },
@@ -235,6 +246,7 @@ const archetypes = {
             slugify: { type: 'boolean' }, // if true, lowercase slug
             // jsondot -- no params
             // jsonpath -- no params
+            // batch -- no params
           }
         },
       }
@@ -261,6 +273,43 @@ const archetypes = {
           suffix: '-suffix',
           template: 'Hello, {{name}}!',
           slugify: true, // if true, lowercase slug
+        },
+      }
+    }
+  },
+
+  'proxy-v1.0': {
+    key: 'proxy-v1.0',
+    value: 'proxy-v1.0',
+    icon: 'exchange',
+    text: 'Proxy v1.0',
+    description: t('proxy.description'),
+    docUrl: getDocUrl('proxy'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        proxy: {
+          type: 'object',
+          properties: {
+            controlKey: { type: 'string' },
+          }
+        },
+      }
+    },
+    defaultOptions: function () {
+      const name = faker.internet.username().toLowerCase()
+      return {
+        name,
+        description: '',
+        joinRooms: [ 'proxy' ],
+        proxy: {
+          controlKey: 'Please, do it! :)',
         },
       }
     }

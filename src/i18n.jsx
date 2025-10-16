@@ -1581,6 +1581,9 @@ const resources = {
       transform: {
         description: 'Shaper modifies text using rules, templates, or expressions.',
       },
+      proxy: {
+        description: 'Relay messages between the sender and another recipient.',
+      },
       architect: {
         description: 'Designer creates new maps from textual descriptions.',
       },
@@ -3171,6 +3174,9 @@ const resources = {
       },
       transform: {
         description: 'Преобразователь модифицирует текст с помощью правил, шаблонов или выражений.',
+      },
+      proxy: {
+        description: 'Реле передаёт сообщения между отправителем и другим получателем.',
       },
       architect: {
         description: 'Дизайнер создаёт новые карты на основе текстовых описаний.',
