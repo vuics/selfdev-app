@@ -221,6 +221,19 @@ const conf = {
     url: import.meta.env.VITE_UNAMI_URL || 'http://umami.dev.local:3083/script.js',
     websiteId: import.meta.env.VITE_UNAMI_WEBSITE_ID || 'TBS',
   },
+
+  tawk: {
+    enable: bool(import.meta.env.VITE_TAWK_ENABLE || false),
+    url: import.meta.env.VITE_TAWK_URL || 'https://embed.tawk.to/685ce6b56a55a619118475e7/1iuleadir',
+    respectConsent: bool(import.meta.env.VITE_TAWK_RESPECT_CONSENT || true),
+  },
+
+  tiledesk: {
+    enable: bool(import.meta.env.VITE_TILEDESK_ENABLE || false),
+    url: import.meta.env.VITE_TILEDESK_URL || 'https://tiledesk.hyag.ru/widget/launch.js',
+    projectId: import.meta.env.VITE_TILEDESK_PROJECT_ID || '68f52da07782880012123522',
+    respectConsent: bool(import.meta.env.VITE_TILEDESK_RESPECT_CONSENT || false),
+  },
 }
 
 export default conf

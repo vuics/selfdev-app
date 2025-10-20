@@ -1,11 +1,17 @@
 import { useEffect } from 'react'
 import { useIndexContext } from './IndexContext'
 
+import conf from '../conf'
+
 export default function TawkLoader() {
   const { cookieConsent } = useIndexContext()
 
   useEffect(() => {
-    if (!cookieConsent?.functional) return // only load if functional cookies accepted
+    if (!conf.tawk.enable) { return }
+
+    if (conf.tawk.respectConsent) {
+      if (!cookieConsent?.functional) return // only load if functional cookies accepted
+    }
 
     // Set global variables first
     window.Tawk_API = window.Tawk_API || {}
@@ -14,7 +20,7 @@ export default function TawkLoader() {
     // Inject script
     const script = document.createElement('script')
     script.async = true
-    script.src='https://embed.tawk.to/685ce6b56a55a619118475e7/1iuleadir';
+    script.src=conf.tawk.url
     script.charset = 'UTF-8'
     script.setAttribute('crossorigin', '*')
     document.body.appendChild(script)

@@ -11,8 +11,9 @@ import './i18n'
 import { IndexContext, usePersistentState, useIndexContext } from './components/IndexContext'
 import { ConditionalXmppProvider } from './components/XmppContext'
 import CookieBanner from './components/CookieBanner'
-import TawkLoader from './components/TawkLoader'
 import UnamiLoader from './components/UnamiLoader'
+import TawkLoader from './components/TawkLoader'
+import TiledeskLoader from './components/TiledeskLoader'
 
 // import App from './App'
 import Home from './Home'
@@ -272,8 +273,9 @@ function Index () {
     { conf.cookie.banner && (
       <CookieBanner />
     )}
-    <TawkLoader />
     <UnamiLoader />
+    <TawkLoader />
+    <TiledeskLoader />
   </IndexContext.Provider>
   )
 }
