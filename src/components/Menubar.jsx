@@ -169,6 +169,12 @@ export default function Menubar ({ children }) {
                 {t('Subscription')}
               </Dropdown.Item>
             )}
+            { conf.tokens.enable && (
+              <Dropdown.Item onClick={() => navigate('/tokens')}>
+                <Icon name='cubes' />
+                {t('Tokens')}
+              </Dropdown.Item>
+            )}
 
             <Dropdown.Divider />
 

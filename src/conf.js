@@ -172,6 +172,10 @@ const conf = {
     priceKey: import.meta.env.VITE_SUBSCRIBE_PRICE_KEY || 'priceRu',
   },
 
+  tokens: {
+    enable: bool(import.meta.env.VITE_TOKENS_ENABLE || true),
+  },
+
   settings: {
     enable: bool(import.meta.env.VITE_SETTINGS_ENABLE || true),
   },
