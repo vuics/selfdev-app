@@ -18,8 +18,8 @@ import Menubar from './components/Menubar'
 import { sleep } from './helper'
 import conf from './conf'
 
-export default function Tokens () {
-  const { t } = useTranslation('Tokens')
+export default function Wallet () {
+  const { t } = useTranslation('Wallet')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   // const [ address, setAddress ] = useState('')
