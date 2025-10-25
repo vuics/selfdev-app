@@ -8,13 +8,14 @@ import {
   Message,
   Header,
   Icon,
-  // Button,
+  Button,
   // Divider,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 // import { isEmpty } from 'lodash'
 
 import Menubar from './components/Menubar'
+import { sleep } from './helper'
 import conf from './conf'
 
 export default function Tokens () {
@@ -23,6 +24,7 @@ export default function Tokens () {
   const [ loading, setLoading ] = useState(false)
   // const [ address, setAddress ] = useState('')
   const [ account, setAccount ] = useState({})
+  const [ transferData, setTransferData ] = useState(null)
 
   const getAccount = async () => {
     setLoading(true)
@@ -37,8 +39,8 @@ export default function Tokens () {
       // setAddress(res.data.address)
       setAccount(res.data)
     } catch (err) {
-      console.error('get settings error:', err);
-      return setResponseError(err?.response?.data?.message || t('Error getting user account.'))
+      console.error('get account error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error getting account.'))
     } finally {
       setLoading(false)
     }
@@ -48,23 +50,27 @@ export default function Tokens () {
     getAccount()
   }, [])
 
-  // const postAccount = async (e) => {
-  //   e.preventDefault()
-  //   setLoading(true)
-  //   try {
-  //     const res = await axios.post(`${conf.api.url}/firefly/account`, {
-  //     }, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //     })
-  //     console.log('res:', res)
-  //   } catch (err) {
-  //     console.error('post settings error:', err);
-  //     return setResponseError(err?.response?.data?.message || t('Error posting user account.'))
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const transfer = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const { pool, to, tokenIndex, amount } = transferData
+      const res = await axios.post(`${conf.api.url}/firefly/transfer`, {
+        pool, to, tokenIndex, amount
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('res:', res)
+      await sleep(1000)
+      await getAccount()
+    } catch (err) {
+      console.error('transfer error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error transferring tokens.'))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (<>
     <Container fluid>
@@ -87,7 +93,7 @@ export default function Tokens () {
 
       <Segment secondary>
         <Header as='h3'>
-          {t('tokens')}
+          {t('Wallet')}
         </Header>
 
         <Form>
@@ -112,12 +118,12 @@ export default function Tokens () {
             <b>Balance:</b>
             <ul>
             {account?.balances?.map(b => {
-              const { pool, tokenIndex, uri } = b
+              const { pool, balance, tokenIndex, uri } = b
               const foundPool = account?.pools?.find(p => p.id === pool)
               const { symbol, decimals, type } = foundPool
               const amount = decimals
-                ? Number(BigInt(b.balance)) / 10 ** decimals
-                : b.balance
+                ? Number(BigInt(balance)) / 10 ** decimals
+                : balance
 
               return (
                 <li key={pool + tokenIndex}>
@@ -126,15 +132,104 @@ export default function Tokens () {
                   {' '}
                   {symbol}
                   {' '}
-                  { b.uri && (<>
+                  { tokenIndex && (<>
                     {' '}
                       (token index: {tokenIndex}, URI: {uri})
                   </>)}
+                  {' '}
+                  <Button
+                    compact
+                    icon
+                    onClick={() => setTransferData({
+                      pool,
+                      symbol,
+                      type,
+                      to: '',
+                      amount: type === 'fungible' ? '' : balance,
+                      balance,
+                      tokenIndex: tokenIndex || '',
+                    })}
+                  >
+                    <Icon name='send' />
+                    Transfer
+                  </Button>
                 </li>
               )
             })}
             </ul>
           </Segment>
+
+          { transferData && (
+            <Segment>
+              <Header as='h3'>
+                {t('Transfer Tokens')}
+              </Header>
+              <Form>
+                <Form.Group>
+                  <Form.Input
+                    width='2'
+                    placeholder='Pool'
+                    name='pool'
+                    value={transferData.symbol}
+                    onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
+                    readOnly
+                  />
+                  <Form.Input
+                    width='8'
+                    fluid
+                    placeholder='Amount'
+                    name='amount'
+                    value={transferData.amount}
+                    onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
+                    disabled={transferData.type !== 'fungible'}
+                  />
+                  <Form.Button
+                    width='2'
+                    fluid
+                    type="button"
+                    onClick={() => setTransferData(d => ({ ...d, amount: d.balance }))}
+                    disabled={transferData.type !== 'fungible'}
+                  >
+                    Max
+                  </Form.Button>
+                  <Form.Input
+                    width='6'
+                    fluid
+                    placeholder='Token Index'
+                    name='tokenIndex'
+                    value={transferData.tokenIndex}
+                    // onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
+                    disabled={transferData.type !== 'nonfungible'}
+                    readOnly
+                  />
+                </Form.Group>
+                <Form.Input
+                  placeholder='Token Recipient'
+                  name='to'
+                  value={transferData.to}
+                  onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
+                />
+                <Form.Group>
+                </Form.Group>
+                <Button.Group>
+                  <Button type='button' positive icon
+                   onClick={transfer}
+                  >
+                    <Icon name='send' />
+                    Submit
+                  </Button>
+                  <Button.Or/>
+                  <Button type='button' negative icon
+                    onClick={() => setTransferData(null)}
+                  >
+                    <Icon name='cancel' />
+                    Cancel
+                  </Button>
+                </Button.Group>
+              </Form>
+
+            </Segment>
+          )}
         </Form>
       </Segment>
     </Container>
