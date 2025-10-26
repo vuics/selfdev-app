@@ -171,7 +171,7 @@ export default function Menubar ({ children }) {
             )}
             { conf.wallet.enable && (
               <Dropdown.Item onClick={() => navigate('/wallet')}>
-                <Icon name='dollar' />
+                <Icon name='credit card outline' />
                 {t('Wallet')}
               </Dropdown.Item>
             )}

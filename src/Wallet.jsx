@@ -18,6 +18,50 @@ import Menubar from './components/Menubar'
 import { sleep } from './helper'
 import conf from './conf'
 
+
+/**
+ * Converts token balance string to human-readable decimal string
+ * @param {string} balance - token balance as string
+ * @param {number} decimals - number of decimals
+ * @returns {string} - human-readable decimal string
+ */
+function tokenToDecimal(balance, decimals = 18) {
+  if (!decimals) return balance;
+  const bigBalance = BigInt(balance);
+  const factor = 10n ** BigInt(decimals);
+  const integerPart = bigBalance / factor;
+  const fractionPart = (bigBalance % factor).toString().padStart(decimals, '0');
+  // remove trailing zeros in fractional part
+  const fractionTrimmed = fractionPart.replace(/0+$/, '');
+  return fractionTrimmed ? `${integerPart}.${fractionTrimmed}` : `${integerPart}`;
+}
+
+/**
+ * Converts human-readable decimal string to token balance string
+ * @param {string} decimalStr - human-readable decimal string
+ * @param {number} decimals - number of decimals
+ * @returns {string} - token balance as string
+ */
+function decimalToToken(decimalStr, decimals = 18) {
+  if (!decimals) return decimalStr;
+  const [integerPart, fractionPart = ''] = decimalStr.split('.');
+  const fractionPadded = (fractionPart + '0'.repeat(decimals)).slice(0, decimals);
+  const balance = BigInt(integerPart) * (10n ** BigInt(decimals)) + BigInt(fractionPadded);
+  return balance.toString();
+}
+
+// // Example usage:
+// const balanceStr = "1230166026255794176";
+// const decimals = 18;
+//
+// const decimalString = tokenToDecimal(balanceStr, decimals);
+// console.log(decimalString); // "1.230166026255794176"
+//
+// const backToBalance = decimalToToken(decimalString, decimals);
+// console.log(backToBalance); // "1230166026255794176"
+
+
+
 export default function Wallet () {
   const { t } = useTranslation('Wallet')
   const [ responseError, setResponseError ] = useState('')
@@ -54,14 +98,16 @@ export default function Wallet () {
     e.preventDefault()
     setLoading(true)
     try {
-      const { pool, to, tokenIndex, amount } = transferData
+      const { pool, to, tokenIndex, amount, type } = transferData
       const res = await axios.post(`${conf.api.url}/firefly/transfer`, {
-        pool, to, tokenIndex, amount
+        pool, to, tokenIndex,
+        amount: type === 'fungible' ? decimalToToken(amount) : amount,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
       console.log('res:', res)
+      setTransferData(null)
       await sleep(1000)
       await getAccount()
     } catch (err) {
@@ -121,9 +167,7 @@ export default function Wallet () {
               const { pool, balance, tokenIndex, uri } = b
               const foundPool = account?.pools?.find(p => p.id === pool)
               const { symbol, decimals, type } = foundPool
-              const amount = decimals
-                ? Number(BigInt(balance)) / 10 ** decimals
-                : balance
+              const amount = decimals ? tokenToDecimal(balance) : balance
 
               return (
                 <li key={pool + tokenIndex}>
@@ -146,7 +190,7 @@ export default function Wallet () {
                       type,
                       to: '',
                       amount: type === 'fungible' ? '' : balance,
-                      balance,
+                      max: amount,
                       tokenIndex: tokenIndex || '',
                     })}
                   >
@@ -187,7 +231,7 @@ export default function Wallet () {
                     width='2'
                     fluid
                     type="button"
-                    onClick={() => setTransferData(d => ({ ...d, amount: d.balance }))}
+                    onClick={() => setTransferData(d => ({ ...d, amount: d.max }))}
                     disabled={transferData.type !== 'fungible'}
                   >
                     Max
