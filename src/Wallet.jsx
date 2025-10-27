@@ -11,6 +11,7 @@ import {
   Button,
   Table,
   Checkbox,
+  Popup,
   // Dropdown,
   // Divider,
 } from 'semantic-ui-react'
@@ -71,7 +72,6 @@ export default function Wallet () {
   const { t } = useTranslation('Wallet')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
-  // const [ address, setAddress ] = useState('')
   const [ account, setAccount ] = useState({})
   const [ approvals, setApprovals ] = useState([])
   const [ transferData, setTransferData ] = useState(null)
@@ -80,7 +80,7 @@ export default function Wallet () {
   const [ showInactive, setShowInactive ] = useState(false)
   const [ showApprovals, setShowApprovals ] = useState(false)
 
-  console.log('approvalData:', approvalData)
+  // console.log('approvalData:', approvalData)
 
   const getAccount = async () => {
     setLoading(true)
@@ -123,15 +123,6 @@ export default function Wallet () {
 
   useEffect(() => {
     getAccount()
-
-    // async function getAll () {
-    //   setLoading(true)
-    //   await getAccount()
-    //   await getApprovals()
-    //   setLoading(false)
-    // }
-
-    // getAll()
   }, [])
 
   useEffect(() => {
@@ -250,46 +241,71 @@ export default function Wallet () {
             <br/>
 
             <b>Balance:</b>
-            <ul>
-            {account?.balances?.map(b => {
-              const { pool, balance, tokenIndex, uri } = b
-              const foundPool = account?.pools?.find(p => p.id === pool)
-              const { symbol, decimals, type } = foundPool
-              const amount = decimals ? tokenToDecimal(balance, decimals) : balance
 
-              return (
-                <li key={pool + tokenIndex}>
-                  <Icon name={type === 'fungible' ? 'cubes' : 'cube'} />
-                  {amount}
-                  {' '}
-                  {symbol}
-                  {' '}
-                  { tokenIndex && (<>
-                    {' '}
-                      (token index: {tokenIndex}, URI: {uri})
-                  </>)}
-                  {' '}
-                  <Button
-                    compact
-                    icon
-                    onClick={() => setTransferData({
-                      pool,
-                      symbol,
-                      type,
-                      to: '',
-                      amount: type === 'fungible' ? '' : balance,
-                      max: amount,
-                      tokenIndex: tokenIndex || '',
-                      decimals,
-                    })}
-                  >
-                    <Icon name='send' />
-                    Transfer
-                  </Button>
-                </li>
-              )
-            })}
-            </ul>
+            <Table unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Type</Table.HeaderCell>
+                  <Table.HeaderCell>Symbol</Table.HeaderCell>
+                  <Table.HeaderCell>Amount</Table.HeaderCell>
+                  <Table.HeaderCell>Token Index</Table.HeaderCell>
+                  <Table.HeaderCell>URI</Table.HeaderCell>
+                  <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {account?.balances?.map(b => {
+                  const { pool, balance, tokenIndex, uri } = b
+                  const foundPool = account?.pools?.find(p => p.id === pool)
+                  const { symbol, decimals, type } = foundPool
+                  const amount = decimals ? tokenToDecimal(balance, decimals) : balance
+
+                  return (
+                    <Table.Row key={`${pool}:${tokenIndex}`}>
+                      <Table.Cell width='1'>
+                        <Popup
+                          content={type === 'fungible' ? 'fungible' : 'nonfungible' }
+                          trigger={
+                            <Icon name={type === 'fungible' ? 'cubes' : 'cube'} />
+                          } 
+                        />
+                      </Table.Cell>
+                      <Table.Cell>
+                        {symbol}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {amount}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {tokenIndex}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {uri}
+                      </Table.Cell>
+                      <Table.Cell textAlign='right'>
+                        <Button
+                          compact
+                          icon
+                          onClick={() => setTransferData({
+                            pool,
+                            symbol,
+                            type,
+                            to: '',
+                            amount: type === 'fungible' ? '' : balance,
+                            max: amount,
+                            tokenIndex: tokenIndex || '',
+                            decimals,
+                          })}
+                        >
+                          <Icon name='send' />
+                          Transfer
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  )
+                })}
+              </Table.Body>
+            </Table>
           </Segment>
         </Form>
         <br/>
