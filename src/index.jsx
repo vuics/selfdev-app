@@ -42,6 +42,7 @@ import Talk from './Talk'
 import Map from './Map'
 import Meet from './Meet'
 import Hive from './Hive'
+import Apps from './Apps'
 import Flow from './Flow'
 import Node from './Node'
 import Code from './Code'
@@ -162,6 +163,22 @@ function Index () {
       })
   }, []);
 
+  // TODO: implement custome protocol
+  // useEffect(() => {
+  //   if (conf.protocol.enable && ("registerProtocolHandler" in navigator)) {
+  //     try {
+  //       navigator.registerProtocolHandler(
+  //         conf.protocol.proto,
+  //         `${window.location.origin}/apps?uri=%s`,
+  //         "HyperAgency AgentOS Apps Installer"
+  //       );
+  //       console.log("Protocol handler registered!");
+  //     } catch (err) {
+  //       console.warn("Protocol handler registration failed:", err);
+  //     }
+  //   }
+  // }, []);
+
   return (
   <IndexContext.Provider value={{
     available, logIn,
@@ -221,6 +238,9 @@ function Index () {
         )}
         { conf.hive.enable && (
           <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
+        )}
+        { conf.apps.enable && (
+          <Route path="/apps" element={(<Private> <Apps/> </Private>)}/>
         )}
         { conf.flow.enable && (
           <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>

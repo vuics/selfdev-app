@@ -79,6 +79,31 @@ export default function Menubar ({ children }) {
           {t('Meet')}
         </Menu.Item>
       ) }
+      { conf.apps.enable && (
+        <Menu.Item onClick={() => navigate('/apps')} active={pathname==='/apps'}>
+          {/*/}
+          <Icon name='play circle' />
+          <Icon name='compass' />
+          <Icon name='archive' />
+          <Icon name='microchip' />
+          <Icon name='box' />
+          <Icon name='gift' />
+          <Icon name='leaf' />
+          <Icon name='life ring' />
+          <Icon name='boxes' />
+          <Icon name='dna' />
+          <Icon name='gamepad' />
+          <Icon name='gem outline' />
+          <Icon name='sun outline' />
+          <Icon name='tachometer alternate' />
+          <Icon name='cloud' />
+          <Icon name='puzzle' />
+          <Icon name='heartbeat' />
+          {/*/}
+          <Icon name='cloud download' />
+          {t('Apps')}
+        </Menu.Item>
+      ) }
       { conf.flow.enable && (
         <Menu.Item onClick={() => navigate('/flow')} active={pathname==='/flow'}>
           <Icon name='code branch' />

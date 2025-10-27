@@ -79,6 +79,11 @@ const conf = {
     limit: 100,
   },
 
+  apps: {
+    enable: bool(import.meta.env.VITE_APPS_ENABLE || true),
+    registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://verdaccio.hyag.ru/',
+  },
+
   meet: {
     enable: bool(import.meta.env.VITE_MEET_ENABLE || false),
   },
@@ -238,6 +243,12 @@ const conf = {
     projectId: import.meta.env.VITE_TILEDESK_PROJECT_ID || '68f52da07782880012123522',
     respectConsent: bool(import.meta.env.VITE_TILEDESK_RESPECT_CONSENT || false),
   },
+
+  // TODO: implement custom protocol
+  // protocol: {
+  //   enable: bool(import.meta.env.VITE_PROTOCOL_ENABLE || true),
+  //   proto: import.meta.env.VITE_PROTOCOL_PROTO || "web+hyag",
+  // },
 }
 
 export default conf
