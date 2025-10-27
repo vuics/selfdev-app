@@ -78,6 +78,7 @@ export default function Wallet () {
   const [ collectData, setCollectData ] = useState(null)
   const [ approvalData, setApprovalData ] = useState(null)
   const [ showInactive, setShowInactive ] = useState(false)
+  const [ showApprovals, setShowApprovals ] = useState(false)
 
   console.log('approvalData:', approvalData)
 
@@ -121,15 +122,21 @@ export default function Wallet () {
   }
 
   useEffect(() => {
-    async function getAll () {
-      setLoading(true)
-      await getAccount()
-      await getApprovals()
-      setLoading(false)
-    }
+    getAccount()
 
-    getAll()
+    // async function getAll () {
+    //   setLoading(true)
+    //   await getAccount()
+    //   await getApprovals()
+    //   setLoading(false)
+    // }
+
+    // getAll()
   }, [])
+
+  useEffect(() => {
+    getApprovals()
+  }, [showApprovals])
 
   const transfer = async (e) => {
     e.preventDefault()
@@ -242,16 +249,6 @@ export default function Wallet () {
             </div>
             <br/>
 
-            {/*
-            <div>
-              IdentityId:
-            </div>
-            <div>
-              {account?.identityId}
-            </div>
-            <br/>
-            */}
-
             <b>Balance:</b>
             <ul>
             {account?.balances?.map(b => {
@@ -336,7 +333,6 @@ export default function Wallet () {
                   placeholder='Token Index'
                   name='tokenIndex'
                   value={transferData.tokenIndex}
-                  // onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
                   disabled={transferData.type !== 'nonfungible'}
                   readOnly
                 />
@@ -378,11 +374,6 @@ export default function Wallet () {
               {t('Collect Tokens')}
             </Header>
             <Form>
-              {/*
-              <Form.Group>
-              </Form.Group>
-              */}
-
               <Form.Dropdown
                 fluid
                 selection
@@ -411,14 +402,12 @@ export default function Wallet () {
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
               />
               <Form.Input
-                // width='6'
                 fluid
                 placeholder='Token Index'
                 name='tokenIndex'
                 value={collectData.tokenIndex}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
                 disabled={collectData.type !== 'nonfungible'}
-                // readOnly
               />
               <Button.Group>
                 <Button type='button' positive icon
@@ -439,132 +428,136 @@ export default function Wallet () {
           </Segment>
         )}
 
-        <Segment>
-          <Header as='h3'>
-            {t('Approvals to Collect from Your Wallet')}
-          </Header>
+        <Button icon
+          onClick={() => setShowApprovals(!showApprovals)}
+        >
+          <Icon name={ showApprovals ? 'caret down' : 'caret right' } />
+          Show approvals
+        </Button>
 
-          <Button icon
-            onClick={() => setApprovalData(approvalData ? null : { allowance: '0', approved: false })}
-          >
-            Add approval
-          </Button>
+        { showApprovals && (
+          <Segment>
+            <Header as='h3'>
+              {t('Approvals to Collect from Your Wallet')}
+            </Header>
 
-          { approvalData && (
-            <Segment>
-              <Header as='h3'>
-                {t('Add Approval')}
-              </Header>
-              <Form>
-                {/*
-                <Form.Group>
-                </Form.Group>
-                */}
-                <Form.Input
-                  placeholder='Operator Address'
-                  name='operator'
-                  value={approvalData.operator}
-                  onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
-                />
+            <Button icon
+              onClick={() => setApprovalData(approvalData ? null : { allowance: '0', approved: false })}
+            >
+              Add approval
+            </Button>
 
-                <Form.Dropdown
-                  fluid
-                  selection
-                  placeholder='Pool'
-                  name='pool'
-                  value={approvalData.pool}
-                  options={ account?.pools?.map(p => ({ key: p.id, text: p.symbol, value: p.id })) }
-                  onChange={(e, { name, value }) => {
-                    const foundPool = account?.pools?.find(p => p.id === value)
-                    const { decimals, type } = foundPool
-                    setApprovalData(d => ({ ...d, [name]: value, decimals, type }))
-                  }}
-                />
-                <Form.Input
-                  // width='8'
-                  fluid
-                  placeholder='Allowance'
-                  name='allowance'
-                  value={approvalData.allowance}
-                  onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
-                  // disabled={approvalData.type !== 'fungible'}
-                />
-                <Form.Checkbox
-                  label='Approved'
-                  onChange={(e, { checked }) => setApprovalData(d => ({ ...d, approved: checked }))}
-                  checked={approvalData.approved}
-                />
-                <Button.Group>
-                  <Button type='button' positive icon
-                   onClick={approve}
-                  >
-                    <Icon name='send' />
-                    Submit
-                  </Button>
-                  <Button.Or/>
-                  <Button type='button' negative icon
-                    onClick={() => setApprovalData(null)}
-                  >
-                    <Icon name='cancel' />
-                    Cancel
-                  </Button>
-                </Button.Group>
-              </Form>
-            </Segment>
-          )}
-          {' '}
-          <Checkbox
-            label='Show inactive approvals'
-            onChange={(e, data) => setShowInactive(data.checked)}
-            checked={showInactive}
-          />
+            { approvalData && (
+              <Segment>
+                <Header as='h3'>
+                  {t('Add Approval')}
+                </Header>
+                <Form>
+                  <Form.Input
+                    placeholder='Operator Address'
+                    name='operator'
+                    value={approvalData.operator}
+                    onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
+                  />
 
+                  <Form.Dropdown
+                    fluid
+                    selection
+                    placeholder='Pool'
+                    name='pool'
+                    value={approvalData.pool}
+                    options={ account?.pools?.map(p => ({ key: p.id, text: p.symbol, value: p.id })) }
+                    onChange={(e, { name, value }) => {
+                      const foundPool = account?.pools?.find(p => p.id === value)
+                      const { decimals, type } = foundPool
+                      setApprovalData(d => ({ ...d, [name]: value, decimals, type }))
+                    }}
+                  />
+                  <Form.Input
+                    // width='8'
+                    fluid
+                    placeholder='Allowance'
+                    name='allowance'
+                    value={approvalData.allowance}
+                    onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
+                    // disabled={approvalData.type !== 'fungible'}
+                  />
+                  <Form.Checkbox
+                    label='Approved'
+                    onChange={(e, { checked }) => setApprovalData(d => ({ ...d, approved: checked }))}
+                    checked={approvalData.approved}
+                  />
+                  <Button.Group>
+                    <Button type='button' positive icon
+                     onClick={approve}
+                    >
+                      <Icon name='send' />
+                      Submit
+                    </Button>
+                    <Button.Or/>
+                    <Button type='button' negative icon
+                      onClick={() => setApprovalData(null)}
+                    >
+                      <Icon name='cancel' />
+                      Cancel
+                    </Button>
+                  </Button.Group>
+                </Form>
+              </Segment>
+            )}
+            {' '}
+            <Checkbox
+              label='Show inactive approvals'
+              onChange={(e, data) => setShowInactive(data.checked)}
+              checked={showInactive}
+            />
 
-          <Table celled padded>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Operator</Table.HeaderCell>
-                <Table.HeaderCell>Symbol</Table.HeaderCell>
-                <Table.HeaderCell>Active</Table.HeaderCell>
-                <Table.HeaderCell>Approved</Table.HeaderCell>
-                <Table.HeaderCell>Allowance</Table.HeaderCell>
-                <Table.HeaderCell>Created</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-
-            { approvals?.map(approval => {
-              if (!showInactive && !approval.active) { return; }
-              const foundPool = account?.pools?.find(p => p.id === approval.pool)
-              // console.log('foundPool:', foundPool)
-              const { symbol, decimals, type } = foundPool
-              // const amount = decimals ? tokenToDecimal(balance, decimals) : balance
-              return (
-                <Table.Row key={approval.localId}>
-                  <Table.Cell>
-                    {approval.operator}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {symbol}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {approval.active ? 'Yes' : 'No'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {approval.approved ? 'Yes' : 'No'}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {approval.info.value && tokenToDecimal(approval.info.value, decimals)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {approval.created}
-                  </Table.Cell>
+            <Table celled padded>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Operator</Table.HeaderCell>
+                  <Table.HeaderCell>Symbol</Table.HeaderCell>
+                  <Table.HeaderCell>Active</Table.HeaderCell>
+                  <Table.HeaderCell>Approved</Table.HeaderCell>
+                  <Table.HeaderCell>Allowance</Table.HeaderCell>
+                  <Table.HeaderCell>Created</Table.HeaderCell>
                 </Table.Row>
-              )
-            })}
-            </Table.Body>
-          </Table>
-        </Segment>
+              </Table.Header>
+              <Table.Body>
+
+              { approvals?.map(approval => {
+                if (!showInactive && !approval.active) { return; }
+                const foundPool = account?.pools?.find(p => p.id === approval.pool)
+                // console.log('foundPool:', foundPool)
+                const { symbol, decimals, type } = foundPool
+                // const amount = decimals ? tokenToDecimal(balance, decimals) : balance
+                return (
+                  <Table.Row key={approval.localId}>
+                    <Table.Cell>
+                      {approval.operator}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {symbol}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {approval.active ? 'Yes' : 'No'}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {approval.approved ? 'Yes' : 'No'}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {approval.info.value && tokenToDecimal(approval.info.value, decimals)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {approval.created}
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })}
+              </Table.Body>
+            </Table>
+          </Segment>
+        )}
       </Segment>
     </Container>
   </>)
