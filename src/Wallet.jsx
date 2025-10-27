@@ -159,15 +159,12 @@ export default function Wallet () {
     e.preventDefault()
     setLoading(true)
     try {
-      const { pool, from, amount, decimals } = collectData
+      const { pool, from, amount, decimals, type, tokenIndex } = collectData
       const res = await axios.post(`${conf.api.url}/firefly/collect`, {
         pool,
         from,
-
-        // FIXME: enable nonfungible too
-        // amount: type === 'fungible' ? decimalToToken(amount) : amount,
-
-        amount: decimalToToken(amount, decimals),
+        amount: type === 'fungible' ? decimalToToken(amount, decimals) : '1',
+        tokenIndex,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -188,16 +185,14 @@ export default function Wallet () {
     e.preventDefault()
     setLoading(true)
     try {
-      const { pool, operator, allowance, /*approved,*/ decimals } = approvalData
+      const { pool, operator, allowance, approved, decimals } = approvalData
+      console.log('approvalData:', approvalData)
+      console.log('approved:', approved)
       const res = await axios.post(`${conf.api.url}/firefly/approvals`, {
         pool,
         operator,
-
-        // FIXME: enable nonfungible too
-        // allowance: type === 'fungible' ? decimalToToken(allowance) : allowance,
-
         allowance: decimalToToken(allowance, decimals),
-        // approved,
+        approved,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -407,13 +402,23 @@ export default function Wallet () {
                 name='amount'
                 value={collectData.amount}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
-                // disabled={collectData.type !== 'fungible'}
+                disabled={collectData.type !== 'fungible'}
               />
               <Form.Input
                 placeholder='From address'
                 name='from'
                 value={collectData.from}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
+              />
+              <Form.Input
+                // width='6'
+                fluid
+                placeholder='Token Index'
+                name='tokenIndex'
+                value={collectData.tokenIndex}
+                onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
+                disabled={collectData.type !== 'nonfungible'}
+                // readOnly
               />
               <Button.Group>
                 <Button type='button' positive icon
@@ -440,7 +445,7 @@ export default function Wallet () {
           </Header>
 
           <Button icon
-            onClick={() => setApprovalData(approvalData ? null : { })}
+            onClick={() => setApprovalData(approvalData ? null : { allowance: '0', approved: false })}
           >
             Add approval
           </Button>
@@ -484,13 +489,11 @@ export default function Wallet () {
                   onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
                   // disabled={approvalData.type !== 'fungible'}
                 />
-                {/*
                 <Form.Checkbox
                   label='Approved'
                   onChange={(e, { checked }) => setApprovalData(d => ({ ...d, approved: checked }))}
                   checked={approvalData.approved}
                 />
-                */}
                 <Button.Group>
                   <Button type='button' positive icon
                    onClick={approve}
