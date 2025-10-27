@@ -188,7 +188,7 @@ export default function Wallet () {
     e.preventDefault()
     setLoading(true)
     try {
-      const { pool, operator, allowance, approved, decimals } = approvalData
+      const { pool, operator, allowance, /*approved,*/ decimals } = approvalData
       const res = await axios.post(`${conf.api.url}/firefly/approvals`, {
         pool,
         operator,
@@ -197,7 +197,7 @@ export default function Wallet () {
         // allowance: type === 'fungible' ? decimalToToken(allowance) : allowance,
 
         allowance: decimalToToken(allowance, decimals),
-        approved,
+        // approved,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -484,11 +484,13 @@ export default function Wallet () {
                   onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
                   // disabled={approvalData.type !== 'fungible'}
                 />
+                {/*
                 <Form.Checkbox
                   label='Approved'
                   onChange={(e, { checked }) => setApprovalData(d => ({ ...d, approved: checked }))}
                   checked={approvalData.approved}
                 />
+                */}
                 <Button.Group>
                   <Button type='button' positive icon
                    onClick={approve}
