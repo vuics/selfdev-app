@@ -142,8 +142,8 @@ const archetypes = {
         system: {
           type: 'object',
           properties: {
-            operation: { type: 'string', enum: ['create', 'get'] },  // not permitted: 'update', 'delete', 'list'
-            model: { type: 'string', enum: ['map', 'agent'] },       // others are not permitted
+            operation: { type: 'string', enum: ['', 'create', 'get', 'transfer', 'collect', 'account'] },  // not permitted: 'update', 'delete', 'list'
+            model: { type: 'string', enum: ['', 'map', 'agent'] },       // others are not permitted
           }
         },
       }
