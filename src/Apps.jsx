@@ -29,6 +29,7 @@ export default function Apps () {
   const { t } = useTranslation('Apps')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
+  const [ searching, setSearching ] = useState(false)
   const [ apps, setApps ] = useState([])
   const [ candidates, setCandidates ] = useState([])
   const [ appName, setAppName ] = useState('')
@@ -85,7 +86,7 @@ export default function Apps () {
   }, [])
 
   const searchApp = async () => {
-    setLoading(true)
+    setSearching(true)
     try {
       if (!appName) {
         setCandidates([])
@@ -105,7 +106,7 @@ export default function Apps () {
       console.error('App install error:', err);
       return setResponseError(err?.response?.data?.message || t('Error searching app.'))
     } finally {
-      setLoading(false)
+      setSearching(false)
     }
   }
 
@@ -178,6 +179,7 @@ export default function Apps () {
         </Header>
 
         <Input
+          loading={searching}
           icon='search'
           iconPosition='left'
           type='text' placeholder='Package name@version...' action
@@ -188,8 +190,17 @@ export default function Apps () {
           <Icon name='search' />
           <input />
           <Button
+            icon
+            onClick={() => { setAppName(''); setCandidates([]) }}
+          >
+            <Icon name='x' />
+          </Button>
+          <Button
+            icon
+            color={conf.style.color0}
             onClick={searchApp}
           >
+            <Icon name='search' />
             Search
           </Button>
         </Input>
@@ -210,7 +221,7 @@ export default function Apps () {
       </Segment>
 
       { candidates?.length > 0 && (
-        <Segment inverted color={conf.style.color0}>
+        <Segment inverted color='grey'>
           <Header as='h3'>
             {t('Found HyperAgents')}
           </Header>
@@ -244,8 +255,11 @@ export default function Apps () {
                     </List.Item>
                   </>)}
                 </List>
-                <Button positive onClick={() => installApp({ appName: `${candidate.name}@${candidate.version}` })}>
-                  Install
+                <Button
+                  color={pricing?.price ? 'yellow' : 'green'}
+                  onClick={() => installApp({ appName: `${candidate.name}@${candidate.version}` })}
+                >
+                  {pricing?.price ? 'Purchase' : 'Install'}
                 </Button>
               </Segment>
             )
@@ -253,7 +267,7 @@ export default function Apps () {
         </Segment>
       )}
 
-      { apps?.length > 0 && (
+      { apps?.length > 0 && !(candidates?.length) && (
         <Segment secondary>
           <Header as='h3'>
             {t('Installed HyperAgents')}
