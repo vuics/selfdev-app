@@ -244,11 +244,10 @@ const conf = {
     respectConsent: bool(import.meta.env.VITE_TILEDESK_RESPECT_CONSENT || false),
   },
 
-  // TODO: implement custom protocol
-  // protocol: {
-  //   enable: bool(import.meta.env.VITE_PROTOCOL_ENABLE || true),
-  //   proto: import.meta.env.VITE_PROTOCOL_PROTO || "web+hyag",
-  // },
+  protocol: {
+    enable: bool(import.meta.env.VITE_PROTOCOL_ENABLE || true),
+    proto: import.meta.env.VITE_PROTOCOL_PROTO || "web+hyag",
+  },
 }
 
 export default conf

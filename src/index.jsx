@@ -163,21 +163,20 @@ function Index () {
       })
   }, []);
 
-  // TODO: implement custome protocol
-  // useEffect(() => {
-  //   if (conf.protocol.enable && ("registerProtocolHandler" in navigator)) {
-  //     try {
-  //       navigator.registerProtocolHandler(
-  //         conf.protocol.proto,
-  //         `${window.location.origin}/apps?uri=%s`,
-  //         "HyperAgency AgentOS Apps Installer"
-  //       );
-  //       console.log("Protocol handler registered!");
-  //     } catch (err) {
-  //       console.warn("Protocol handler registration failed:", err);
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (conf.protocol.enable && ("registerProtocolHandler" in navigator)) {
+      try {
+        navigator.registerProtocolHandler(
+          conf.protocol.proto,
+          `${window.location.origin}/apps?uri=%s`,
+          "HyperAgency AgentOS Apps Installer"
+        );
+        console.log("Protocol handler registered!");
+      } catch (err) {
+        console.warn("Protocol handler registration failed:", err);
+      }
+    }
+  }, []);
 
   return (
   <IndexContext.Provider value={{
