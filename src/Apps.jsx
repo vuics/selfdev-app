@@ -20,6 +20,7 @@ import {
   // Divider,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
+import CodeMirror from '@uiw/react-codemirror';
 // import { isEmpty } from 'lodash'
 
 import Menubar from './components/Menubar'
@@ -55,6 +56,8 @@ export default function Apps () {
   const [ candidates, setCandidates ] = useState([])
   const [ appName, setAppName ] = useState('')
   const [ confirmOpen, setConfirmOpen ] = useState(false)
+  const [ values, setValues ] = useState('')
+  const [ showValues, setShowValues ] = useState(false)
 
   // Handles links like:
   //   <a href="web+hyag://hello-world@0.0.1">link</a>
@@ -138,6 +141,7 @@ export default function Apps () {
     try {
       const res = await axios.post(`${conf.api.url}/apps/install`, {
         appName,
+        values,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -357,6 +361,52 @@ export default function Apps () {
                   }}
                 >
                 </Confirm>
+
+                <Button icon
+                  onClick={() => setShowValues(!showValues)}
+                >
+                  <Icon name={ showValues ? 'caret down' : 'caret right' } />
+                  Edit values
+                </Button>
+
+                { showValues && (<>
+                  <br />
+                  <br />
+                  Values in YAML or JSON format:
+                  <CodeMirror
+                    value={values}
+                    onChange={setValues}
+                    editable
+                    basicSetup={{
+                      syntaxHighlighting: 'yaml',
+                      highlightActiveLine: false,
+                      lineNumbers: true,
+                      foldGutter: true,
+                      autocompletion: true,
+                      closeBrackets: true,
+                      bracketMatching: true,
+                      indentOnInput: true,
+                      highlightSpecialChars: true,
+                      history: true,
+                      drawSelection: true,
+                      allowMultipleSelections: true,
+                      rectangularSelection: true,
+                      highlightSelectionMatches: true,
+                      dropCursor: true,
+                      crosshairCursor: true,
+                      closeBracketsKeymap: true,
+                      defaultKeymap: true,
+                      searchKeymap: true,
+                      historyKeymap: true,
+                      foldKeymap: true,
+                      completionKeymap: true,
+                      lintKeymap: true,
+                    }}
+                    theme='light'
+                    className="nodrag nopan"
+                  />
+                </>)}
+
               </Segment>
             )
           })}
@@ -394,7 +444,7 @@ export default function Apps () {
                   <strong>Maps:</strong> {app.mapIds.length} {app.mapIds.length === 1 ? 'map' : 'maps'}
                 </List.Item>
                 <List.Item>
-                  <strong>Agents:</strong> {app.agentIds.length} {app.agentIds.length === 1 ? 'agent' : 'agents'}
+                  <strong>Hive:</strong> {app.agentIds.length} {app.agentIds.length === 1 ? 'agent' : 'agents'}
                 </List.Item>
               </List>
               <Checkbox label="Deployed" toggle style={{ marginRight: '1em' }} />

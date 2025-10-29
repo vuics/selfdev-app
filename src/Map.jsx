@@ -1052,6 +1052,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Icon name={ data.lang === 'json' ? 'dot circle' : 'circle outline'} />
                   {t('JSON')}
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => { selectLang('yaml'); selectKind('code') } }>
+                  <Icon name={ data.lang === 'yaml' ? 'dot circle' : 'circle outline'} />
+                  {t('YAML')}
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => { selectLang('html'); selectKind('code') } }>
                   <Icon name={ data.lang === 'html' ? 'dot circle' : 'circle outline'} />
                   {t('HTML')}
