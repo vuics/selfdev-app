@@ -26,6 +26,26 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 // import { sleep } from './helper'
 
+function compareSemver(v1, v2) {
+  // Remove 'v' prefix if present
+  const parse = v => v.replace(/^v/, '').split('.').map(Number);
+
+  const [major1, minor1, patch1] = parse(v1);
+  const [major2, minor2, patch2] = parse(v2);
+
+  if (major1 === major2 && minor1 === minor2 && patch1 === patch2) {
+    return 'equal';
+  } else if (
+    major2 > major1 ||
+    (major2 === major1 && minor2 > minor1) ||
+    (major2 === major1 && minor2 === minor1 && patch2 > patch1)
+  ) {
+    return 'upgrade';
+  } else {
+    return 'downgrade';
+  }
+}
+
 export default function Apps () {
   const { t } = useTranslation('Apps')
   const [ responseError, setResponseError ] = useState('')
@@ -51,7 +71,7 @@ export default function Apps () {
         const parsed =
           uri.startsWith("http") || uri.includes("://")
             ? new URL(uri)
-            : new URL(`web+hyag://${uri}`);
+            : new URL(`${conf.protocol.proto}://${uri}`);
 
         console.log("Host:", parsed.hostname, "Params:", parsed.searchParams);
       } catch (err) {
@@ -236,6 +256,8 @@ export default function Apps () {
 
           {candidates.map(candidate => {
             const pricing = candidate.package['x-hyag']?.pricing
+            const installedApp = apps.find(a => a.package.name === candidate.package.name)
+            const versionAction = compareSemver(installedApp.package.version, candidate.package.version)
             return (
               <Segment key={candidate.package._id}>
                 <Header as="h3">
@@ -270,7 +292,11 @@ export default function Apps () {
                   disabled={candidate.installed}
                   color={
                     candidate.installed
-                      ? 'grey'
+                      ? versionAction === 'equal'
+                        ? 'grey'
+                        : versionAction === 'upgrade'
+                          ? 'orange'
+                          : 'red'
                       : pricing?.price
                         ? (candidate.purchased ? 'olive' : 'yellow')
                         : 'green'
@@ -285,7 +311,11 @@ export default function Apps () {
                 >
                   {
                     candidate.installed
-                      ? 'Installed'
+                      ? versionAction === 'equal'
+                        ? 'Installed'
+                        : versionAction === 'upgrade'
+                          ? 'Upgrade possible'
+                          : 'Downgrade possible'
                       : pricing?.price
                           ? (candidate.purchased ? 'Install (Already Purchased)' : 'Buy')
                           : 'Install'
@@ -299,11 +329,11 @@ export default function Apps () {
                     You are about to <strong>purchase</strong> the app{' '}
                     <strong>{candidate.package.name}</strong> for{' '}
                     <strong>
-                      {' '}{pricing.price}
-                      {' '}{pricing.symbol}
+                      {' '}{pricing?.price}
+                      {' '}{pricing?.symbol}
                     </strong>
-                      {' '}{pricing.tokenIndex}
-                      {' '}{pricing.model}{pricing.interval && ' '}{pricing.interval}.
+                      {' '}{pricing?.tokenIndex}
+                      {' '}{pricing?.model}{pricing?.interval && ' '}{pricing?.interval}.
                     <br /><br />
                     Your wallet will be used to complete this transaction.{' '}
                     <strong>Do you want to continue?</strong>
