@@ -205,12 +205,18 @@ export default function Apps () {
           </Button>
         </Input>
         <p style={{ marginTop: '5px' }}>
-          Example:
+          Examples:
           <Button
             compact standard size='mini'
             onClick={() => setAppName('hello-world@latest')}
           >
             hello-world@latest
+          </Button>
+          <Button
+            compact standard size='mini'
+            onClick={() => setAppName('hello-market@latest')}
+          >
+            hello-market@latest
           </Button>
           Browse more HyperAgent packages in the{' '}
           <a href={conf.apps.registryUrl} target="_blank" rel="noopener noreferrer">
@@ -237,18 +243,28 @@ export default function Apps () {
             const pricing = candidate['x-hyag']?.pricing
             return (
               <Segment key={candidate._id}>
-                <Header as="h3">{candidate.name} <Label>{candidate.version}</Label></Header>
+                <Header as="h3">
+                  <a
+                    href={`${conf.apps.registryUrl}/-/web/detail/${candidate.name}/v/${candidate.version}`}
+                    target="_blank" rel="noopener noreferrer"
+                  >
+                    {candidate.name}
+                  </a>
+                  <Label>{candidate.version}</Label>
+                </Header>
                 <p>{candidate.description}</p>
                 <List>
                   <List.Item>
                     <strong>Author:</strong> {candidate.author}
                   </List.Item>
                   <List.Item>
-                    <strong>License:</strong> {candidate.license}
+                    <strong>License:</strong> <Label>{candidate.license}</Label>
                   </List.Item>
                   { pricing && (<>
                     <List.Item>
-                      <strong>Price:</strong> {pricing.symbol}{' '}{pricing.price}
+                      <strong>Price:</strong>
+                      {' '}{pricing.symbol}
+                      {' '}{pricing.price}
                       {' '}{pricing.tokenIndex}
                       {' '}{pricing.model}
                       {' '}{pricing.interval}
@@ -275,14 +291,21 @@ export default function Apps () {
 
           {apps.map(app => (
             <Segment key={app._id}>
-              <Header as="h3">{app.package.name} <Label>{app.package.version}</Label></Header>
+              <Header as="h3">
+                <a
+                  href={`${conf.apps.registryUrl}/-/web/detail/${app.package.name}/v/${app.package.version}`}
+                  target="_blank" rel="noopener noreferrer"
+                >
+                  {app.package.name}
+                </a>
+                <Label>{app.package.version}</Label></Header>
               <p>{app.package.description}</p>
               <List>
                 <List.Item>
                   <strong>Author:</strong> {app.package.author}
                 </List.Item>
                 <List.Item>
-                  <strong>License:</strong> {app.package.license}
+                  <strong>License:</strong> <Label>{app.package.license}</Label>
                 </List.Item>
                 <List.Item>
                   <strong>Installed:</strong> {new Date(app.createdAt).toLocaleString()}
