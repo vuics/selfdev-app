@@ -12,6 +12,7 @@ import {
   Table,
   Checkbox,
   Popup,
+  Label,
   // Dropdown,
   // Divider,
 } from 'semantic-ui-react'
@@ -79,6 +80,11 @@ export default function Wallet () {
   const [ approvalData, setApprovalData ] = useState(null)
   const [ showInactive, setShowInactive ] = useState(false)
   const [ showApprovals, setShowApprovals ] = useState(false)
+  const [ showTransfers, setShowTransfers ] = useState(false)
+  const [ transfers, setTransfers ] = useState([])
+  const [ showMint, setShowMint ] = useState(false)
+  const [ showTransferTo, setShowTransferTo ] = useState(true)
+  const [ showTransferFrom, setShowTransferFrom ] = useState(true)
 
   // console.log('approvalData:', approvalData)
 
@@ -128,6 +134,27 @@ export default function Wallet () {
   useEffect(() => {
     getApprovals()
   }, [showApprovals])
+
+  const listTransfers = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get(`${conf.api.url}/firefly/transfer`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('res:', res)
+      setTransfers(res.data)
+    } catch (err) {
+      console.error('list transfers error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error listing transfers.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    listTransfers()
+  }, [showTransfers])
 
   const transfer = async (e) => {
     e.preventDefault()
@@ -574,7 +601,108 @@ export default function Wallet () {
             </Table>
           </Segment>
         )}
+
+        <Button icon
+          onClick={() => setShowTransfers(!showTransfers)}
+        >
+          <Icon name={ showTransfers ? 'caret down' : 'caret right' } />
+          List transfers
+        </Button>
       </Segment>
     </Container>
+
+    { showTransfers && (<>
+      <br/>
+      <Container fluid>
+        <Segment>
+          <Header as='h3'>
+            {t('Your Wallet Transfers')}
+          </Header>
+
+          <Checkbox
+            label='Mint'
+            onChange={(e, data) => setShowMint(data.checked)}
+            checked={showMint}
+          />
+          {' '}
+          <Checkbox
+            label='Transfers from your wallet'
+            onChange={(e, data) => setShowTransferFrom(data.checked)}
+            checked={showTransferFrom}
+          />
+          {' '}
+          <Checkbox
+            label='Transfers to your wallet'
+            onChange={(e, data) => setShowTransferTo(data.checked)}
+            checked={showTransferTo}
+          />
+
+          <Table celled padded>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Local ID</Table.HeaderCell>
+                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell>From {'➔'} To (key is bold)</Table.HeaderCell>
+                <Table.HeaderCell>Symbol</Table.HeaderCell>
+                <Table.HeaderCell>Amount</Table.HeaderCell>
+                <Table.HeaderCell>Token Index</Table.HeaderCell>
+                <Table.HeaderCell>URI</Table.HeaderCell>
+                <Table.HeaderCell>Date & Time</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+
+            { transfers?.map(transfer => {
+              if (!showMint && transfer.type === 'mint') { return; }
+              if (!showTransferFrom && transfer.type === 'transfer' && transfer.from === account?.address) { return; }
+              if (!showTransferTo && transfer.type === 'transfer' && transfer.to === account?.address) { return; }
+
+              const foundPool = account?.pools?.find(p => p.id === transfer.pool)
+              // console.log('foundPool:', foundPool)
+              const { symbol, decimals, type } = foundPool
+              // const amount = decimals ? tokenToDecimal(balance, decimals) : balance
+              return (
+                <Table.Row key={transfer.localId}>
+                  <Table.Cell>
+                    {transfer.localId}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {transfer.type}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span style={{ fontWeight: transfer.from === transfer.key ? 'bold' : 'normal' }}>
+                      {transfer.from}
+                    </span>
+                    {' ➔ '}
+                    <span style={{ fontWeight: transfer.to === transfer.key ? 'bold' : 'normal' }}>
+                      {transfer.to}
+                    </span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Label>
+                      {symbol}
+                    </Label>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {type === 'fungible' ? tokenToDecimal(transfer.amount, decimals) : transfer.amount}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {transfer.tokenIndex}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {transfer.uri}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {transfer.created}
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })}
+            </Table.Body>
+          </Table>
+        </Segment>
+      </Container>
+    </>)}
+
   </>)
 }
