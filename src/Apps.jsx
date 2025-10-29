@@ -267,9 +267,13 @@ export default function Apps () {
                   </>)}
                 </List>
                 <Button
-                  color={pricing?.price
-                    ? (candidate.purchased ? 'olive' : 'yellow')
-                    : 'green'
+                  disabled={candidate.installed}
+                  color={
+                    candidate.installed
+                      ? 'grey'
+                      : pricing?.price
+                        ? (candidate.purchased ? 'olive' : 'yellow')
+                        : 'green'
                   }
                   onClick={() => {
                     if (!(pricing?.price) || candidate.purchased) {
@@ -279,9 +283,12 @@ export default function Apps () {
                     }
                   }}
                 >
-                  {pricing?.price
-                    ? (candidate.purchased ? 'Install (Already Purchased)' : 'Buy')
-                    : 'Install'
+                  {
+                    candidate.installed
+                      ? 'Installed'
+                      : pricing?.price
+                          ? (candidate.purchased ? 'Install (Already Purchased)' : 'Buy')
+                          : 'Install'
                   }
                 </Button>
                 <Confirm
