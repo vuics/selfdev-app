@@ -29,7 +29,7 @@ const resources = {
     Home: {
       'Agentic AI Operating System': 'Agentic AI Operating System',
       'Self-developing tools for building autonomous software companies': 'Self-developing tools for building autonomous software companies',
-      'Open-source · Decentralized · Web3': 'Open-source · Decentralized · Web3',
+      'Open-source · Decentralized · Web3 Marketplace': 'Open-source · Decentralized · Web3 Marketplace',
 
       'Autopilot your business. Focus on what you love.': 'Autopilot your business. Focus on what you love.',
       'Powered by Self-developing': 'Powered by Self-developing',
@@ -1639,7 +1639,7 @@ const resources = {
     Home: {
       "Agentic AI Operating System": "Операционная система агентного ИИ",
       "Self-developing tools for building autonomous software companies": "Саморазвивающиеся инструменты для создания автономных программных компаний",
-      "Open-source · Decentralized · Web3": "Открытый исходный код · Децентрализация · Web3",
+      "Open-source · Decentralized · Web3 Marketplace": "Открытый исходный код · Децентрализованный · Web3 маркетплейс",
 
       'Autopilot your business. Focus on what you love.': 'Переведите бизнес на автопилот. Займитесь тем, что любите.',
       'Powered by Self-developing': 'Наслаждайтесь само-развивающейся платформой',
