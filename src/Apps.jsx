@@ -12,6 +12,7 @@ import {
   Checkbox,
   List,
   Label,
+  Confirm,
   // Form,
   // Table,
   // Popup,
@@ -33,6 +34,7 @@ export default function Apps () {
   const [ apps, setApps ] = useState([])
   const [ candidates, setCandidates ] = useState([])
   const [ appName, setAppName ] = useState('')
+  const [ confirmOpen, setConfirmOpen ] = useState(false)
 
   // Handles links like:
   //   <a href="web+hyag://hello-world@0.0.1">link</a>
@@ -233,38 +235,31 @@ export default function Apps () {
           </Header>
 
           {candidates.map(candidate => {
-            // "pricing": {
-            //   "symbol": "SDFT",     // currency symbol
-            //   "tokenIndex": "",     // token index for NFTs only
-            //   "price": "1",         // always 1 for nonfungible
-            //   "model": "one-time",  // or "subscription"
-            //   "interval": ""        // "month" for subscription
-            // }
-            const pricing = candidate['x-hyag']?.pricing
+            const pricing = candidate.package['x-hyag']?.pricing
             return (
-              <Segment key={candidate._id}>
+              <Segment key={candidate.package._id}>
                 <Header as="h3">
                   <a
-                    href={`${conf.apps.registryUrl}/-/web/detail/${candidate.name}/v/${candidate.version}`}
+                    href={`${conf.apps.registryUrl}/-/web/detail/${candidate.package.name}/v/${candidate.package.version}`}
                     target="_blank" rel="noopener noreferrer"
                   >
-                    {candidate.name}
+                    {candidate.package.name}
                   </a>
-                  <Label>{candidate.version}</Label>
+                  <Label>{candidate.package.version}</Label>
                 </Header>
-                <p>{candidate.description}</p>
+                <p>{candidate.package.description}</p>
                 <List>
                   <List.Item>
-                    <strong>Author:</strong> {candidate.author}
+                    <strong>Author:</strong> {candidate.package.author}
                   </List.Item>
                   <List.Item>
-                    <strong>License:</strong> <Label>{candidate.license}</Label>
+                    <strong>License:</strong> <Label>{candidate.package.license}</Label>
                   </List.Item>
                   { pricing && (<>
                     <List.Item>
                       <strong>Price:</strong>
-                      {' '}{pricing.symbol}
                       {' '}{pricing.price}
+                      {' '}{pricing.symbol}
                       {' '}{pricing.tokenIndex}
                       {' '}{pricing.model}
                       {' '}{pricing.interval}
@@ -272,11 +267,50 @@ export default function Apps () {
                   </>)}
                 </List>
                 <Button
-                  color={pricing?.price ? 'yellow' : 'green'}
-                  onClick={() => installApp({ appName: `${candidate.name}@${candidate.version}` })}
+                  color={pricing?.price
+                    ? (candidate.purchased ? 'olive' : 'yellow')
+                    : 'green'
+                  }
+                  onClick={() => {
+                    if (!(pricing?.price) || candidate.purchased) {
+                      installApp({ appName: `${candidate.package.name}@${candidate.package.version}` })
+                    } else {
+                      setConfirmOpen(true);
+                    }
+                  }}
                 >
-                  {pricing?.price ? 'Purchase' : 'Install'}
+                  {pricing?.price
+                    ? (candidate.purchased ? 'Install (Already Purchased)' : 'Buy')
+                    : 'Install'
+                  }
                 </Button>
+                <Confirm
+                  open={confirmOpen}
+                  header="Confirm Purchase"
+                  content={<>
+                    <p style={{ padding: '2rem' }}>
+                    You are about to <strong>purchase</strong> the app{' '}
+                    <strong>{candidate.package.name}</strong> for{' '}
+                    <strong>
+                      {' '}{pricing.price}
+                      {' '}{pricing.symbol}
+                    </strong>
+                      {' '}{pricing.tokenIndex}
+                      {' '}{pricing.model}{pricing.interval && ' '}{pricing.interval}.
+                    <br /><br />
+                    Your wallet will be used to complete this transaction.{' '}
+                    <strong>Do you want to continue?</strong>
+                    </p>
+                  </>}
+                  cancelButton="Cancel"
+                  confirmButton="Buy Now"
+                  onCancel={() => setConfirmOpen(false)}
+                  onConfirm={() => {
+                    setConfirmOpen(false);
+                    installApp({ appName: `${candidate.package.name}@${candidate.package.version}` });
+                  }}
+                >
+                </Confirm>
               </Segment>
             )
           })}
