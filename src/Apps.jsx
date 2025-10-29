@@ -236,9 +236,15 @@ export default function Apps () {
           </Button>
           <Button
             compact standard size='mini'
-            onClick={() => setAppName('hello-market@latest')}
+            onClick={() => setAppName('hello-market')}
           >
-            hello-market@latest
+            hello-market
+          </Button>
+          <Button
+            compact standard size='mini'
+            onClick={() => setAppName('hello-template')}
+          >
+            hello-template
           </Button>
           Browse more HyperAgent packages in the{' '}
           <a href={conf.apps.registryUrl} target="_blank" rel="noopener noreferrer">
@@ -257,7 +263,10 @@ export default function Apps () {
           {candidates.map(candidate => {
             const pricing = candidate.package['x-hyag']?.pricing
             const installedApp = apps.find(a => a.package.name === candidate.package.name)
-            const versionAction = compareSemver(installedApp.package.version, candidate.package.version)
+            let versionAction = 'equal'
+            if (installedApp) {
+              versionAction = compareSemver(installedApp.package.version, candidate.package.version)
+            }
             return (
               <Segment key={candidate.package._id}>
                 <Header as="h3">
