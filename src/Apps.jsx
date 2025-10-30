@@ -9,10 +9,10 @@ import {
   Input,
   Button,
   Icon,
-  Checkbox,
   List,
   Label,
   Confirm,
+  // Checkbox,
   // Form,
   // Table,
   // Popup,
@@ -264,6 +264,12 @@ export default function Apps () {
             onClick={() => setAppName('hello-template')}
           >
             hello-template
+          </Button>
+          <Button
+            compact standard size='mini'
+            onClick={() => setAppName('metaagent')}
+          >
+            metaagent
           </Button>
           Browse more HyperAgent packages in the{' '}
           <a href={conf.apps.registryUrl} target="_blank" rel="noopener noreferrer">
