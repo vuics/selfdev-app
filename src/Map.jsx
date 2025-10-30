@@ -515,7 +515,7 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { t } = useTranslation('Map')
   const { user } = useIndexContext()
-  const { getNodes, setNodes, getEdges } = useReactFlow();
+  const { getNodes, setNodes, getEdges, setEdges } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const {
     presence, roster, setCurrentSlide, attachFile, xmppClient,
@@ -592,6 +592,11 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           )
         }
       });
+      setEdges((edges) =>
+        edges.map((edge) =>
+          edge.data.evaluateOn === data.uname ? { ...edge, data: { ...edge.data, evaluateOn: newUname } } : edge
+        )
+      )
       return updatedNodes
     });
   }, [setNodes, getEdges, data.uname, newUname, id])
@@ -1449,7 +1454,7 @@ const GroupNode = memo(({ id, data, style, selected }) => {
               onClick={toggleActivation}
             >
               <Icon name={data.deactivated ? 'plus circle' : 'minus circle'} />
-              {data.deactivated ? 'Activate' : 'Deactivate'}
+              {data.deactivated ? t('Activate') : t('Deactivate')}
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -1579,7 +1584,7 @@ const RequestEdge = memo(({
   sourceX, sourceY, targetX, targetY, markerEnd,
 }) => {
   const { t } = useTranslation('Map')
-  const { setNodes, getNodes } = useReactFlow();
+  const { setNodes, getNodes, fitView } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -1589,11 +1594,43 @@ const RequestEdge = memo(({
   const { presence, roster } = useMapContext();
   const [ sourceNode, targetNode ] = useNodesData([source, target])
   // console.log('sourceNode:', sourceNode, ', targetNode:', targetNode)
-
   const {
     recipient, condition, reordering, orderEdges, setEdges, getEdges,
     xmppClient,
   } = useMapContext();
+  const [ searchUname, setSearchUname ] = useState('')
+
+  const updateCondition = useCallback(({ condition }) => {
+    let evaluateOnNode = null
+    if (data.evaluateOn) {
+      evaluateOnNode = getNodes().find(n => n.data.uname === data.evaluateOn)
+    }
+    // console.log('text:', evaluateOnNode ? evaluateOnNode.data.text : sourceNode.data.text)
+    const smartText = buildSmartText({
+      text: evaluateOnNode ? evaluateOnNode.data.text : sourceNode.data.text,
+      getNodes
+    })
+    // console.log('smartText:', smartText)
+    const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
+    setEdges((edges) =>
+      edges.map((edge) =>
+        edge.id === id ? { ...edge, data: { ...edge.data, condition, satisfied, safe } } : edge
+      )
+    )
+    return { satisfied, safe }
+  })
+
+  const setEvaluateOn = useCallback(({ uname }) => {
+    setEdges((edges) =>
+      edges.map((edge) =>
+        edge.id === id ? { ...edge, data: { ...edge.data, evaluateOn: uname } } : edge
+      )
+    )
+  }, [setEdges, id])
+
+  useEffect(() => {
+    updateCondition({ condition: data.condition })
+  }, [data.condition, data.evaluateOn]) // NOTE: do not add updateCondition to dependencies
 
   return (
     <>
@@ -1648,13 +1685,7 @@ const RequestEdge = memo(({
               compact
               size='mini'
               onClick={() => {
-                const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
-                const [ satisfied, safe ] = checkCondition({ condition: data.condition, text: smartText })
-                setEdges((edges) =>
-                  edges.map((edge) =>
-                    edge.id=== id ? { ...edge, data: { ...edge.data, satisfied, safe } } : edge
-                  )
-                )
+                const { satisfied, safe } = updateCondition({ condition: data.condition })
                 window.alert(`Condition "${data.condition}" has been ${ satisfied !== null ? (satisfied ? 'satisfied' : 'unsatisfied') : 'unknown'}. The regular expression is ${ safe !== null ? (safe ? 'safe' : 'unsafe') : 'unknown' }.`);
               }}
             >
@@ -1665,6 +1696,24 @@ const RequestEdge = memo(({
                 />
               )}
               {data.condition}
+            </Button>
+          )}
+          { data.evaluateOn && (
+            <Button
+              compact
+              size='mini'
+              onClick={() => {
+                setTimeout(() => {
+                  // NOTE: fitView is deferred to ensure layout is up to date
+                  fitView({ nodes: getNodes().filter(n => n.data.uname === data.evaluateOn), duration: 1000 });
+                }, 0);
+              }}
+            >
+              <Icon
+                name='sticky note outline'
+                color={ data.satisfied ? 'green' : 'red' }
+              />
+              {data.evaluateOn}
             </Button>
           )}
 
@@ -1700,15 +1749,7 @@ const RequestEdge = memo(({
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
-                    // console.log('smartText:', smartText)
-                    const [ satisfied, safe ] = checkCondition({ condition, text: smartText })
-                    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
-                    setEdges((edges) =>
-                      edges.map((edge) =>
-                        edge.id=== id ? { ...edge, data: { ...edge.data, condition, satisfied, safe } } : edge
-                      )
-                    )
+                    updateCondition({ condition })
                   }}
                 >
                   <Icon name='usb' />
@@ -1716,20 +1757,52 @@ const RequestEdge = memo(({
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    const smartText = buildSmartText({ text: sourceNode.data.text, getNodes })
-                    // console.log('smartText:', smartText)
-                    const [ satisfied, safe ] = checkCondition({ condition: '', text: smartText })
-                    // console.log('condition:', condition, ', satisfied:', satisfied, ', safe:', safe)
-                    setEdges((edges) =>
-                      edges.map((edge) =>
-                        edge.id=== id ? { ...edge, data: { ...edge.data, condition: '', satisfied, safe } } : edge
-                      )
-                    )
+                    updateCondition({ condition: '' })
                   }}
                 >
                   <Icon name='eraser' />
                   {t('Unset condition')}
                 </Dropdown.Item>
+
+                <Dropdown.Item
+                  // onClick={() => { }}
+                >
+                  <Icon name='sticky note' />
+                  {t('Evaluate Condition On')}
+                  <Icon name='dropdown' />
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() => setEvaluateOn({ uname: undefined })}
+                        disabled={!data.evaluateOn}
+                      >
+                        { !data.evaluateOn && (<>
+                          {sourceNode.data.uname} (default)
+                        </>)}
+                        { data.evaluateOn && (<>
+                          <Icon name='erase' />
+                          {data.evaluateOn}
+                        </>)}
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Header content='Search a Note' />
+                      <Input
+                        icon='search' iconPosition='left' name='search'
+                        value={searchUname}
+                        onChange={e => setSearchUname(e.target.value)}
+                      />
+                      { getNodes()
+                          .filter(n => !searchUname || n.data.uname.includes(searchUname))
+                          .map(n => (
+                            <Dropdown.Item key={n.data.uname}
+                              text={n.data.uname}
+                              onClick={() => setEvaluateOn({ uname: n.data.uname })}
+                            />
+                          ))
+                          // .slice(0, 10)
+                      }
+                    </Dropdown.Menu>
+                </Dropdown.Item>
+
                 <Dropdown.Item onClick={orderEdges}>
                   <Icon name='sort' />
                   {t('Reorder')}

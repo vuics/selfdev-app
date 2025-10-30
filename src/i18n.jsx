@@ -953,12 +953,14 @@ const resources = {
       'Toggle Loop Exit Operator': 'Toggle Loop Exit Operator',
       'OR': 'OR',
       'AND': 'AND',
+      'Activate': 'Activate',
+      'Deactivate': 'Deactivate',
       'Set recipient': 'Set recipient',
       'Unset recipient': 'Unset recipient',
       'Set condition': 'Set condition',
       'Unset condition': 'Unset condition',
       'Reorder': 'Reorder',
-      'Unlink': 'Unlink'
+      'Unlink': 'Unlink',
     },
     Profile: {
       'Error getting user profile.': 'Error getting user profile.',
@@ -2562,6 +2564,8 @@ const resources = {
       'Waiting for a reply from': 'Ожидание ответа от',
       'The name is not unique': 'Имя не уникально',
       'Toggle Loop Exit Operator': 'Переключить оператор выхода из цикла',
+      'Activate': 'Активировать',
+      'Deactivate': 'Деактивировать',
       'OR': 'ИЛИ',
       'AND': 'И',
       'Set recipient': 'Назначить получателя',
@@ -2569,7 +2573,7 @@ const resources = {
       'Set condition': 'Установить условие',
       'Unset condition': 'Удалить условие',
       'Reorder': 'Изменить порядок',
-      'Unlink': 'Отсоединить'
+      'Unlink': 'Отсоединить',
     },
     Profile: {
       'Error getting user profile.': 'Ошибка при получении профиля пользователя.',
