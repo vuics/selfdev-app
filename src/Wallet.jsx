@@ -94,7 +94,6 @@ export default function Wallet () {
       const res = await axios.get(`${conf.api.url}/firefly/account`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
@@ -114,7 +113,6 @@ export default function Wallet () {
       const res = await axios.get(`${conf.api.url}/firefly/approvals`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)

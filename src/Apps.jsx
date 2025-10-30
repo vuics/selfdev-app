@@ -92,7 +92,6 @@ export default function Apps () {
       const res = await axios.get(`${conf.api.url}/app`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
@@ -121,7 +120,6 @@ export default function Apps () {
         }, {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
-          crossOrigin: { mode: 'cors' },
         })
         // console.log('res:', res)
         console.log('res.data:', res.data)
@@ -145,7 +143,6 @@ export default function Apps () {
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
@@ -167,7 +164,6 @@ export default function Apps () {
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
@@ -175,6 +171,25 @@ export default function Apps () {
     } catch (err) {
       console.error('App uninstall error:', err);
       return setResponseError(err?.response?.data?.message || t('Error uninstalling app.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deployApp = async ({ appId, deployed }) => {
+    setLoading(true)
+    try {
+      const res = await axios.post(`${conf.api.url}/apps/deploy`, {
+        appId,
+        deployed,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('res.data:', res.data)
+    } catch (err) {
+      console.error('App deploy error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error deploying app.'))
     } finally {
       setLoading(false)
     }
@@ -447,7 +462,12 @@ export default function Apps () {
                   <strong>Hive:</strong> {app.agentIds.length} {app.agentIds.length === 1 ? 'agent' : 'agents'}
                 </List.Item>
               </List>
-              <Checkbox label="Deployed" toggle style={{ marginRight: '1em' }} />
+              <Button positive onClick={() => deployApp({ appId: app._id, deployed: true })}>
+                Deploy
+              </Button>
+              <Button color='yellow' onClick={() => deployApp({ appId: app._id, deployed: false })}>
+                Undeploy
+              </Button>
               <Button negative onClick={() => uninstallApp({ appId: app._id })}>
                 Uninstall
               </Button>
