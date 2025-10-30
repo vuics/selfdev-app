@@ -1341,6 +1341,54 @@ const GroupNode = memo(({ id, data, style, selected }) => {
     )
   }, [setNodes, id])
 
+  const toggleActivation = useCallback(() => {
+    if (data.deactivated) {
+      // activate
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.deactivatedParentId === id && !node.extent
+            ? { ...node,
+                parentId: node.deactivatedParentId,
+                deactivatedParentId: undefined,
+                extent: 'parent',
+              }
+            : node
+        ).map((node) => node.id === id
+          ? { ...node,
+              data: { ...node.data, deactivated: undefined },
+              width: node.deactivatedWidth,
+              height: node.deactivatedHeight,
+              deactivatedWidth: undefined,
+              deactivatedHeight: undefined,
+            }
+          : node
+        )
+      )
+    } else {
+      // deactivate
+      setNodes((nodes) =>
+        nodes.map((node) =>
+          node.parentId === id && node.extent === 'parent'
+            ? { ...node,
+                deactivatedParentId: node.parentId,
+                parentId: undefined,
+                extent: undefined,
+              }
+            : node
+        ).map((node) => node.id === id
+          ? { ...node,
+              data: { ...node.data, deactivated: true },
+              deactivatedWidth: node.width,
+              deactivatedHeight: node.height,
+              width: 600,
+              height: 300,
+            }
+          : node
+        )
+      )
+    }
+  }, [setNodes, id, data.deactivated])
+
   // NOTE: The code hides the resizeObserver error
   // useEffect(() => {
   //   const errorHandler = (e: any) => {
@@ -1396,6 +1444,12 @@ const GroupNode = memo(({ id, data, style, selected }) => {
               {t('Toggle Loop Exit Operator')}
               :{' '}
               { data.and ? t('OR') : t('AND') }
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={toggleActivation}
+            >
+              <Icon name={data.deactivated ? 'plus circle' : 'minus circle'} />
+              {data.deactivated ? 'Activate' : 'Deactivate'}
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
