@@ -169,7 +169,7 @@ export default function Hive () {
         })
       }
     } catch (err) {
-      console.error('delete agent error:', err);
+      console.error('put agent error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting agent.'))
     } finally {
       setLoading(false)
