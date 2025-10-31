@@ -7,9 +7,9 @@ import {
   Message,
   Header,
   Statistic,
+  Icon,
   // Input,
   // Button,
-  // Icon,
   // List,
   // Label,
   // Confirm,
@@ -82,34 +82,69 @@ export default function Dash () {
 
         <div
           style={{
+            marginTop: '10vh',
             display: 'flex',
             justifyContent: 'center', // horizontal centering
-            alignItems: 'center',     // vertical centering
-            height: '85vh',          // make container full viewport height (optional)
+            // alignItems: 'center',     // vertical centering
+            // height: '85vh',          // make container full viewport height (optional)
             textAlign: 'center'       // center text inside stats
           }}
         >
           <Statistic.Group>
             <Statistic color='blue' size='huge'>
               <Statistic.Value>
-                {dashboard.deployedAgents} / {dashboard.agents}
+                {dashboard.deployedAgents}/{dashboard.agents}
               </Statistic.Value>
-              <Statistic.Label>Deployed Agents</Statistic.Label>
-            </Statistic>
-
-            <Statistic color='violet' size='huge'>
-              <Statistic.Value>{dashboard.maps}</Statistic.Value>
-              <Statistic.Label>Maps</Statistic.Label>
+              <Statistic.Label>
+                <Icon name='user secret' />
+                Deployed Agents
+              </Statistic.Label>
             </Statistic>
 
             <Statistic color='purple' size='huge'>
-              <Statistic.Value>{dashboard.bridges}</Statistic.Value>
-              <Statistic.Label>Bridges</Statistic.Label>
+              <Statistic.Value>
+                {dashboard.deployedBridges}/{dashboard.bridges}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='linkify' />
+                Deployed Bridges
+              </Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+          <br/>
+        </div>
+        <br/>
+
+        <div
+          style={{
+            marginTop: '10vh',
+            marginBottom: '10vh',
+            display: 'flex',
+            justifyContent: 'center', // horizontal centering
+            // alignItems: 'center',     // vertical centering
+            // height: '85vh',          // make container full viewport height (optional)
+            textAlign: 'center'       // center text inside stats
+          }}
+        >
+          <Statistic.Group>
+            <Statistic color='violet' size='huge'>
+              <Statistic.Value>
+                {dashboard.maps}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='map' />
+                Maps
+              </Statistic.Label>
             </Statistic>
 
             <Statistic color='pink' size='huge'>
-              <Statistic.Value>{dashboard.apps}</Statistic.Value>
-              <Statistic.Label>Apps</Statistic.Label>
+              <Statistic.Value>
+                {dashboard.apps}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='cloud download' />
+                Apps
+              </Statistic.Label>
             </Statistic>
           </Statistic.Group>
         </div>

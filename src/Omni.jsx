@@ -138,7 +138,7 @@ export default function Dash () {
           <div>
           <Button size='large' onClick={() => setAdding(!adding) }>
             <Icon.Group size='large'>
-              <Icon name='spy' />
+              <Icon name='linkify' />
               <Icon corner name='add' />
             </Icon.Group>
             {' '}
