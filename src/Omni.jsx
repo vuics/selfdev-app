@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import {
   Container,
@@ -10,16 +10,16 @@ import {
   Icon,
   Divider,
   Button,
-  Popup,
   Card,
   Checkbox,
+  Dropdown,
+  Popup,
   // Input,
   // List,
   // Label,
   // Confirm,
   // Form,
   // Table,
-  // Dropdown,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
@@ -38,6 +38,7 @@ export default function Dash () {
   const [ connector, setConnector ] = useState(defaultConnector.value)
   const [ activeConnector, setActiveConnector ] = useState('telegram')
   const [ adding, setAdding ] = useState(false)
+  const fileInputRef = useRef(null);
 
   const indexBridges = async () => {
     setLoading(true)
@@ -96,9 +97,7 @@ export default function Dash () {
       })
       console.log('bridge put res:', res)
       // setResponseMessage(`Bridge updated successfully`)
-      // const prevBridge = bridgesImmutable.find(a => a._id === bridge._id)
       setBridges(bridges.map(a => a._id === res.data._id ? res.data : a))
-      // setBridgesImmutable(bridgesImmutable.map(a => a._id === res.data._id ? res.data : a))
     } catch (err) {
       console.error('put bridge error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting bridge.'))
@@ -106,6 +105,78 @@ export default function Dash () {
       setLoading(false)
     }
   }
+
+  const deleteBridge = async ({ _id }) => {
+    setLoading(true)
+    try {
+      const res = await axios.delete(`${conf.api.url}/bridge/${_id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+        crossOrigin: { mode: 'cors' },
+      })
+      console.log('bridge delete res:', res)
+      // setResponseMessage(`Bridge deleted successfully`)
+      setBridges(bridges.filter(obj => obj._id !== _id))
+    } catch (err) {
+      console.error('delete bridge error:', err);
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting bridge.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const downloadBridges = () => {
+    setLoading(true)
+    try {
+      const jsonString = JSON.stringify(bridges, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `bridges.sdb.json`;
+      link.click();
+      URL.revokeObjectURL(url); // Clean up
+    } catch (err) {
+      console.error('download bridges error:', err);
+      return setResponseError(err.toString() || t('Error downloading bridges.'))
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadBridges = async (event) => {
+    setLoading(true)
+    try {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            const parsedBridges = JSON.parse(e.target.result);
+            for (const bridge of parsedBridges) {
+              await postBridge({ bridge })
+            }
+            console.log('Bridges loaded:', parsedBridges);
+            await indexBridges()
+          } catch (err) {
+            alert(`${t('Invalid JSON file')}: ${err}`);
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        alert(t('Please upload a valid JSON file.'))
+      }
+    } catch (err) {
+      console.error('upload bridges error:', err);
+      return setResponseError(err.toString() || t('Error uploading bridge.'))
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const uploadBridgesInit = () => {
+    fileInputRef.current.click(); // triggers hidden input
+  };
 
   const log = (type) => console.log.bind(console, type);
 
@@ -145,7 +216,6 @@ export default function Dash () {
             {t('Add Bridge')}
             {' '}
           </Button>
-          {/*/}
           <Button.Group floated='right'>
             <Popup content='Download bridges' trigger={
               <Button icon onClick={downloadBridges}>
@@ -167,7 +237,6 @@ export default function Dash () {
               </Button>
             } />
           </Button.Group>
-          {/*/}
          </div>
         )}
         <br/>
@@ -223,6 +292,31 @@ export default function Dash () {
           >
             <Card.Content>
               <Card.Header>
+                <Dropdown item simple position='right'
+                  icon={
+                   <Icon name='cog' color='grey'/>
+                  }>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={() => {
+                        setBridges(bridges.map(a =>
+                          a._id === bridge._id ? { ...a, editing: true } : a
+                        ))
+                      }}
+                    >
+                      <Icon name='edit' />
+                      {t('Edit')}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        deleteBridge({ _id: bridge._id })
+                      }}
+                    >
+                      <Icon name='delete' />
+                      {t('Delete')}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
                 {bridge.options.name}
               </Card.Header>
               <Card.Meta>
@@ -240,6 +334,41 @@ export default function Dash () {
                 checked={bridge.deployed}
               />
             </Card.Content>
+            { bridge.editing && (
+              <Card.Content extra>
+                <Form
+                  schema={connectors[bridge.connector].schema}
+                  validator={validator}
+                  // initialFormData={bridge.options}
+                  formData={bridge.options}
+                  onChange={log('changed')}
+                  onSubmit={({ formData }) => {
+                    putBridge({ bridge: { ...bridge, options: formData }});
+                  }}
+                  onError={log('errors')}
+                >
+                  <Button.Group>
+                    <Button type='button' onClick={() => {
+                      setBridges(bridges.map(b =>
+                        b._id === bridge._id ? { ...bridge, editing: false } : b
+                      ))
+                    }}>
+                      <Icon name='cancel' />
+                      {' '}
+                      {t('Cancel')}
+                      {' '}
+                    </Button>
+                    <Button.Or />
+                    <Button type='submit' color='yellow' on>
+                      <Icon name='save' />
+                      {' '}
+                      {t('Update')}
+                      {' '}
+                    </Button>
+                  </Button.Group>
+                </Form>
+              </Card.Content>
+            )}
           </Card>
         ))}
       </Card.Group>

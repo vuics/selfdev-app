@@ -242,7 +242,7 @@ export default function Hive () {
       }
     } catch (err) {
       console.error('upload agents error:', err);
-      return setResponseError(err.toString() || t('Error uploading map.'))
+      return setResponseError(err.toString() || t('Error uploading agent.'))
     } finally {
       setLoading(false)
     }
