@@ -37,11 +37,13 @@ import Team from './Team'
 import Mission from './Mission'
 import Roadmap from './Roadmap'
 
+import Dash from './Dash'
 import Chat from './Chat'
 import Talk from './Talk'
 import Map from './Map'
 import Meet from './Meet'
 import Hive from './Hive'
+import Omni from './Omni'
 import Apps from './Apps'
 import Flow from './Flow'
 import Node from './Node'
@@ -223,6 +225,9 @@ function Index () {
           <Route path="/roadmap" element={<Roadmap />}/>
         )}
 
+        { conf.dash.enable && (
+          <Route path="/dash" element={(<Private> <Dash /> </Private>)}/>
+        )}
         { conf.chat.enable && (
           <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
         )}
@@ -237,6 +242,9 @@ function Index () {
         )}
         { conf.hive.enable && (
           <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
+        )}
+        { conf.omni.enable && (
+          <Route path="/omni" element={(<Private> <Omni/> </Private>)}/>
         )}
         { conf.apps.enable && (
           <Route path="/apps" element={(<Private> <Apps/> </Private>)}/>

@@ -64,6 +64,10 @@ const conf = {
     start: import.meta.env.VITE_ACCOUNT_START || '/chat',
   },
 
+  dash: {
+    enable: bool(import.meta.env.VITE_DASH_ENABLE || true),
+  },
+
   chat: {
     enable: bool(import.meta.env.VITE_CHAT_ENABLE || true),
   },
@@ -77,6 +81,10 @@ const conf = {
     enable: bool(import.meta.env.VITE_MAP_ENABLE || true),
     skip: 0,
     limit: 100,
+  },
+
+  omni: {
+    enable: bool(import.meta.env.VITE_OMNI_ENABLE || true),
   },
 
   apps: {

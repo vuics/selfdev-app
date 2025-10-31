@@ -49,6 +49,12 @@ export default function Menubar ({ children }) {
           {t('name', { ns: 'app' })}
         </span>
       </Menu.Item>
+      { conf.dash.enable && (
+        <Menu.Item onClick={() => navigate('/dash')} active={pathname==='/dash'}>
+          <Icon name='tachometer alternate' />
+          {t('Dash')}
+        </Menu.Item>
+      ) }
       { conf.hive.enable && (
         <Menu.Item onClick={() => navigate('/hive')} active={pathname==='/hive'}>
           <Icon name='cubes' />
@@ -73,6 +79,12 @@ export default function Menubar ({ children }) {
           {t('Map')}
         </Menu.Item>
       ) }
+      { conf.omni.enable && (
+        <Menu.Item onClick={() => navigate('/omni')} active={pathname==='/omni'}>
+          <Icon name='futbol outline' />
+          {t('Omni')}
+        </Menu.Item>
+      ) }
       { conf.meet.enable && (
         <Menu.Item onClick={() => navigate('/meet')} active={pathname==='/meet'}>
           <Icon name='video' />
@@ -81,25 +93,6 @@ export default function Menubar ({ children }) {
       ) }
       { conf.apps.enable && (
         <Menu.Item onClick={() => navigate('/apps')} active={pathname==='/apps'}>
-          {/*/}
-          <Icon name='play circle' />
-          <Icon name='compass' />
-          <Icon name='archive' />
-          <Icon name='microchip' />
-          <Icon name='box' />
-          <Icon name='gift' />
-          <Icon name='leaf' />
-          <Icon name='life ring' />
-          <Icon name='boxes' />
-          <Icon name='dna' />
-          <Icon name='gamepad' />
-          <Icon name='gem outline' />
-          <Icon name='sun outline' />
-          <Icon name='tachometer alternate' />
-          <Icon name='cloud' />
-          <Icon name='puzzle' />
-          <Icon name='heartbeat' />
-          {/*/}
           <Icon name='cloud download' />
           {t('Apps')}
         </Menu.Item>
