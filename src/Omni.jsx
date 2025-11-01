@@ -35,8 +35,7 @@ export default function Dash () {
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ bridges, setBridges ] = useState([])
-  const [ connector, setConnector ] = useState(defaultConnector.value)
-  const [ activeConnector, setActiveConnector ] = useState('telegram')
+  const [ connector, setConnector ] = useState(defaultConnector.key)
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
 
@@ -205,8 +204,7 @@ export default function Dash () {
           {t('Omni-channel')}
         </Header>
 
-        { !adding && (
-          <div>
+        { !adding && (<>
           <Button size='large' onClick={() => setAdding(!adding) }>
             <Icon.Group size='large'>
               <Icon name='linkify' />
@@ -237,21 +235,22 @@ export default function Dash () {
               </Button>
             } />
           </Button.Group>
-         </div>
-        )}
-        <br/>
+        </>)}
 
         { adding && (<>
+          <Header as='h4'>
+            {t('Add Bridge')}:
+          </Header>
           <Menu icon='labeled' horizontal>
-            { Object.values(connectors).map(connector => (
+            { Object.values(connectors).map(c => (
               <Menu.Item
-                key={connector.key}
-                name={connector.text}
-                active={activeConnector === connector.key}
-                onClick={() => setActiveConnector(connector.key)}
+                key={c.key}
+                name={c.text}
+                active={connector === c.key}
+                onClick={() => setConnector(c.key)}
               >
-                <Icon name={connector.icon} />
-                {connector.text}
+                <Icon name={c.icon} />
+                {c.text}
               </Menu.Item>
             ))}
           </Menu>
@@ -280,8 +279,6 @@ export default function Dash () {
             </Button.Group>
           </Form>
         </>)}
-        <br/>
-        <br/>
       </Segment>
 
       <Card.Group>
