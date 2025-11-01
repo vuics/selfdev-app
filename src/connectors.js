@@ -441,6 +441,23 @@ const connectors = {
     },
   },
 
+  'webhook': {
+    key: 'webhook',
+    value: 'webhook',
+    icon: 'world',
+    text: 'Webhook',
+    description: t('webhook.description'),
+    docUrl: getDocUrl('webhook'),
+    schema: {
+      title: 'Webhook',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+      }
+    },
+  },
+
   'email': {
     key: 'email',
     value: 'email',
