@@ -245,8 +245,8 @@ export default function Apps () {
             Search
           </Button>
         </Input>
-        <p style={{ marginTop: '5px' }}>
-          Examples:
+        <p style={{ margin: '5px 0' }}>
+          Examples:{' '}
           <Button
             compact standard size='mini'
             onClick={() => setAppName('hello-world@latest')}
@@ -271,6 +271,14 @@ export default function Apps () {
           >
             metaagent
           </Button>
+          <Button
+            compact standard size='mini'
+            onClick={() => setAppName('bridge-collection')}
+          >
+            bridge-collection
+          </Button>
+        </p>
+        <p>
           Browse more HyperAgent packages in the{' '}
           <a href={conf.apps.registryUrl} target="_blank" rel="noopener noreferrer">
             {t('Registry')}
@@ -462,10 +470,9 @@ export default function Apps () {
                   <strong>Installed:</strong> {new Date(app.createdAt).toLocaleString()}
                 </List.Item>
                 <List.Item>
-                  <strong>Maps:</strong> {app.mapIds.length} {app.mapIds.length === 1 ? 'map' : 'maps'}
-                </List.Item>
-                <List.Item>
-                  <strong>Hive:</strong> {app.agentIds.length} {app.agentIds.length === 1 ? 'agent' : 'agents'}
+                  <strong>Maps:</strong> {app.mapIds?.length || 0} {app.mapIds?.length === 1 ? 'map' : 'maps'}{' '}
+                  • <strong>Hive:</strong> {app.agentIds?.length || 0} {app.agentIds?.length === 1 ? 'agent' : 'agents'}{' '}
+                  • <strong>Omni:</strong> {app.bridgeIds?.length || 0} {app.bridgeIds?.length === 1 ? 'bridge' : 'bridges'}{' '}
                 </List.Item>
               </List>
               <Button positive onClick={() => deployApp({ appId: app._id, deployed: true })}>
