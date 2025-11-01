@@ -14,6 +14,7 @@ import {
   Checkbox,
   Dropdown,
   Popup,
+  Accordion,
   // Input,
   // List,
   // Label,
@@ -28,7 +29,6 @@ import connectors, { defaultConnector } from './connectors'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
-
 
 export default function Dash () {
   const { t } = useTranslation('Dash')
@@ -87,6 +87,7 @@ export default function Dash () {
   const putBridge = async ({ bridge }) => {
     setLoading(true)
     try {
+      console.log('putBridge bridge:', bridge)
       const res = await axios.put(`${conf.api.url}/bridge/${bridge._id}`, {
         ...bridge,
       }, {
@@ -330,13 +331,47 @@ export default function Dash () {
                 }}
                 checked={bridge.deployed}
               />
+              {' '}
+              <Button
+                icon
+                compact
+                floated='right'
+                onClick={() => {
+                  setBridges(bridges.map(a =>
+                    a._id === bridge._id ? { ...a, monitoring: !a.monitoring } : a
+                  ))
+                }}
+              >
+                <Icon name={ bridge.monitoring ? 'caret down' : 'caret right' } />
+                Logs
+              </Button>
+              { bridge.monitoring && (<>
+                <br/>
+                <br/>
+                <pre
+                  style={{
+                    color: '#fff',             // white text
+                    backgroundColor: '#000',   // black background
+                    padding: '10px',
+                    margin: 0,
+                    borderRadius: '4px',
+
+                    overflowX: 'auto',         // horizontal scroll
+                    overflowY: 'auto',         // vertical scroll
+                    maxHeight: '300px',        // limit height
+                    scrollbarColor: '#888 #000',     // Firefox: thumb + track
+                  }}
+                >
+                  {bridge.logs}
+                </pre>
+              </>)}
             </Card.Content>
             { bridge.editing && (
               <Card.Content extra>
                 <Form
                   schema={connectors[bridge.connector].schema}
+                  uiSchema={connectors[bridge.connector].uiSchema}
                   validator={validator}
-                  // initialFormData={bridge.options}
                   formData={bridge.options}
                   onChange={log('changed')}
                   onSubmit={({ formData }) => {
