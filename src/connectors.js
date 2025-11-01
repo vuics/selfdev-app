@@ -83,7 +83,10 @@ const connectors = {
                       properties: {
                         Token: { type: 'string', title: 'Bot Token' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
-                        MessageFormat: { type: 'string', title: 'Message Format' }
+                        MessageFormat: { type: 'string', title: 'Message Format' },
+                        QuoteFormat: { type: 'string', title: 'Quote Format' },
+                        QuoteLengthLimit: { type: 'string', title: 'QuoteLengthLimit' },
+                        IgnoreMessages: { type: 'string', title: 'IgnoreMessages' },
                       },
                       required: ['Token']
                     }
@@ -395,7 +398,8 @@ const connectors = {
           },
           required: ['general', 'protocols', 'gateways']
         }
-      }
+      },
+      required: ["name"]
     },
 
     uiSchema: {

@@ -286,7 +286,8 @@ export default function Dash () {
         { bridges.map(bridge => (
           <Card
             key={bridge._id}
-            fluid color='red'
+            fluid
+            color={conf.style.color0}
           >
             <Card.Content>
               <Card.Header>
@@ -404,10 +405,6 @@ export default function Dash () {
           </Card>
         ))}
       </Card.Group>
-
-      <Divider/>
-        {JSON.stringify(bridges)}
-      <Divider/>
 
     </Container>
   </>)
