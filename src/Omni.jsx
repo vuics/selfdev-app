@@ -370,7 +370,7 @@ export default function Dash () {
               <Card.Content extra>
                 <Form
                   schema={connectors[bridge.connector].schema}
-                  uiSchema={connectors[bridge.connector].uiSchema}
+                  uiSchema={connectors[bridge.connector].uiSchema || {}}
                   validator={validator}
                   formData={bridge.options}
                   onChange={log('changed')}
