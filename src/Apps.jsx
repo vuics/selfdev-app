@@ -55,7 +55,8 @@ export default function Apps () {
   const [ apps, setApps ] = useState([])
   const [ candidates, setCandidates ] = useState([])
   const [ appName, setAppName ] = useState('')
-  const [ confirmOpen, setConfirmOpen ] = useState(false)
+  const [ confirmPurchase, setConfirmPurchase ] = useState(false)
+  const [ confirmUninstall, setConfirmUninstall ] = useState(false)
   const [ values, setValues ] = useState('')
   const [ showValues, setShowValues ] = useState(false)
 
@@ -347,7 +348,7 @@ export default function Apps () {
                     if (!(pricing?.price) || candidate.purchased) {
                       installApp({ appName: `${candidate.package.name}@${candidate.package.version}` })
                     } else {
-                      setConfirmOpen(true);
+                      setConfirmPurchase(true);
                     }
                   }}
                 >
@@ -364,7 +365,7 @@ export default function Apps () {
                   }
                 </Button>
                 <Confirm
-                  open={confirmOpen}
+                  open={confirmPurchase}
                   header="Confirm Purchase"
                   content={<>
                     <p style={{ padding: '2rem' }}>
@@ -383,9 +384,9 @@ export default function Apps () {
                   </>}
                   cancelButton="Cancel"
                   confirmButton="Buy Now"
-                  onCancel={() => setConfirmOpen(false)}
+                  onCancel={() => setConfirmPurchase(false)}
                   onConfirm={() => {
-                    setConfirmOpen(false);
+                    setConfirmPurchase(false);
                     installApp({ appName: `${candidate.package.name}@${candidate.package.version}` });
                   }}
                 >
@@ -481,9 +482,29 @@ export default function Apps () {
               <Button color='yellow' onClick={() => deployApp({ appId: app._id, deployed: false })}>
                 Undeploy
               </Button>
-              <Button negative onClick={() => uninstallApp({ appId: app._id })}>
+              <Button negative onClick={() => setConfirmUninstall(true) }>
                 Uninstall
               </Button>
+              <Confirm
+                open={confirmUninstall}
+                header="Confirm Uninstall"
+                content={<>
+                  <p style={{ padding: '2rem' }}>
+                  You are about to <strong>uninstall</strong> the app{' '}
+                  <strong>{app.package.name}</strong>.
+                  <br /><br />
+                  <strong>Do you want to continue?</strong>
+                  </p>
+                </>}
+                cancelButton="Cancel"
+                confirmButton="Uninstall"
+                onCancel={() => setConfirmUninstall(false)}
+                onConfirm={() => {
+                  setConfirmUninstall(false);
+                  uninstallApp({ appId: app._id });
+                }}
+              >
+              </Confirm>
             </Segment>
           ))}
         </Segment>

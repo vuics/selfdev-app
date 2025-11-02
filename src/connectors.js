@@ -99,7 +99,9 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Matrix Homeserver URL' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password', format: 'password' },
+                        Password: { type: 'string', title: 'Password',
+                          // format: 'password'
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         NoHomeServerSuffix: { type: 'boolean', title: 'No Home Server Suffix', default: false }
                       },
@@ -128,7 +130,9 @@ const connectors = {
                         Server: { type: 'string', title: 'Server URL' },
                         Team: { type: 'string', title: 'Team Name' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password', format: 'password' },
+                        Password: { type: 'string', title: 'Password',
+                          // format: 'password'
+                        },
                         NoTLS: { type: 'boolean', title: 'No TLS', default: false },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
@@ -145,7 +149,9 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Server URL' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password', format: 'password' },
+                        Password: { type: 'string', title: 'Password',
+                          // format: 'password'
+                        },
                         PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                       },
@@ -176,7 +182,9 @@ const connectors = {
                   //   if: { properties: { type: { const: 'irc' } } },
                   //   then: {
                   //     properties: {
-                  //       Password: { type: 'string', title: 'Password', format: 'password' },
+                  //       Password: { type: 'string', title: 'Password',
+                  //         format: 'password'
+                  //       },
                   //       Nick: { type: 'string', title: 'Nickname' },
                   //       Server: { type: 'string', title: 'Server (host:port)' },
                   //       UseTLS: { type: 'boolean', title: 'Use TLS', default: true },
@@ -206,9 +214,11 @@ const connectors = {
                     then: {
                       properties: {
                         Server: { type: 'string', title: 'Server', example: 'jabber.example.com:5222' },
+                        Muc: { type: 'string', title: 'MUC Server', example: 'conference.jabber.example.com' },
                         Jid: { type: 'string', title: 'Jabber ID', example: 'user@example.com' },
-                        Password: { type: 'string', title: 'Password', format: 'password' },
-                        Muc: { type: 'string', title: 'MUC Room', example: 'conference.jabber.example.com' },
+                        Password: { type: 'string', title: 'Password',
+                          // format: 'password'
+                        },
                         Nick: { type: 'string', title: 'Nickname' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false }
