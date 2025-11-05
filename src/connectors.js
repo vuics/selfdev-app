@@ -213,13 +213,14 @@ const connectors = {
                     if: { properties: { type: { const: 'xmpp' } } },
                     then: {
                       properties: {
-                        Server: { type: 'string', title: 'Server', example: 'jabber.example.com:5222' },
-                        Muc: { type: 'string', title: 'MUC Server', example: 'conference.jabber.example.com' },
-                        Jid: { type: 'string', title: 'Jabber ID', example: 'user@example.com' },
+                        name: { type: 'string', title: 'Server', default: 'matterbridge' },
+                        Server: { type: 'string', title: 'Server', default: 'selfdev-prosody.dev.local' },
+                        Muc: { type: 'string', title: 'MUC Server', default: 'conference.selfdev-prosody.dev.local' },
+                        Jid: { type: 'string', title: 'Jabber ID', default: 'matterbridge@selfdev-prosody.dev.local' },
                         Password: { type: 'string', title: 'Password',
                           // format: 'password'
                         },
-                        Nick: { type: 'string', title: 'Nickname' },
+                        Nick: { type: 'string', title: 'Nickname', default: 'matterbridge' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false }
                       },
@@ -429,112 +430,137 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
-        test1: { type: 'string', title: 'Test 1', default: 'test1' },
-      }
+        phone: {
+          title: 'Phone Configuration',
+          type: 'object',
+          properties: {
+            host: { type: 'string', title: 'Server Hostname/IP', default: 'example.com' },
+            username: { type: 'string', title: 'Username', default: 'username' },
+            password: { type: 'string', title: 'Password', default: 'password' },
+
+            altHost: { type: 'string', title: 'Alternative Server Hostname/IP', default: '192.168.50.68' },
+            altUsername: { type: 'string', title: 'Alternative Username', default: '9639' },
+
+            xmppJid: { type: 'string', title: 'XMPP JID', default: 'voip@selfdev-prosody.dev.local' },
+            xmppPassword: { type: 'string', title: 'XMPP Password', default: 'password' },
+
+            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+            joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+
+            welcomeMessage: { type: 'string', title: 'Welcome Message', default: 'Welcome to the HyperAgency. Voice your prompt and press hashtag.' },
+          },
+          required: ["host", "username", "password"]
+        },
+      },
+      required: ["name"]
     },
   },
 
-  'hyperagency': {
-    key: 'hyperagency',
-    value: 'hyperagency',
-    icon: 'futbol outline',
-    text: 'HyperAgency',
-    description: t('hyperagency.description'),
-    docUrl: getDocUrl('hyperagency'),
-    schema: {
-      title: 'HyperAgency',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'hyperagency': {
+  //   key: 'hyperagency',
+  //   value: 'hyperagency',
+  //   icon: 'futbol outline',
+  //   text: 'HyperAgency',
+  //   description: t('hyperagency.description'),
+  //   docUrl: getDocUrl('hyperagency'),
+  //   schema: {
+  //     title: 'HyperAgency',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
-  'webhook': {
-    key: 'webhook',
-    value: 'webhook',
-    icon: 'world',
-    text: 'Webhook',
-    description: t('webhook.description'),
-    docUrl: getDocUrl('webhook'),
-    schema: {
-      title: 'Webhook',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'webhook': {
+  //   key: 'webhook',
+  //   value: 'webhook',
+  //   icon: 'world',
+  //   text: 'Webhook',
+  //   description: t('webhook.description'),
+  //   docUrl: getDocUrl('webhook'),
+  //   schema: {
+  //     title: 'Webhook',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
-  'email': {
-    key: 'email',
-    value: 'email',
-    icon: 'mail',
-    text: 'Email',
-    description: t('email.description'),
-    docUrl: getDocUrl('email'),
-    schema: {
-      title: 'Email',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'email': {
+  //   key: 'email',
+  //   value: 'email',
+  //   icon: 'mail',
+  //   text: 'Email',
+  //   description: t('email.description'),
+  //   docUrl: getDocUrl('email'),
+  //   schema: {
+  //     title: 'Email',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
-  'cron': {
-    key: 'cron',
-    value: 'cron',
-    icon: 'calendar alternate outline',
-    text: 'Cron',
-    description: t('cron.description'),
-    docUrl: getDocUrl('cron'),
-    schema: {
-      title: 'Cron',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'cron': {
+  //   key: 'cron',
+  //   value: 'cron',
+  //   icon: 'calendar alternate outline',
+  //   text: 'Cron',
+  //   description: t('cron.description'),
+  //   docUrl: getDocUrl('cron'),
+  //   schema: {
+  //     title: 'Cron',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
-  'video': {
-    key: 'video',
-    value: 'video',
-    icon: 'video',
-    text: 'Video',
-    description: t('video.description'),
-    docUrl: getDocUrl('video'),
-    schema: {
-      title: 'Video',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'video': {
+  //   key: 'video',
+  //   value: 'video',
+  //   icon: 'video',
+  //   text: 'Video',
+  //   description: t('video.description'),
+  //   docUrl: getDocUrl('video'),
+  //   schema: {
+  //     title: 'Video',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
-  'mcp': {
-    key: 'mcp',
-    value: 'mcp',
-    icon: 'puzzle piece',
-    text: 'MCP',
-    description: t('mcp.description'),
-    docUrl: getDocUrl('mcp'),
-    schema: {
-      title: 'Model Context Protocol',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-      }
-    },
-  },
+  // 'mcp': {
+  //   key: 'mcp',
+  //   value: 'mcp',
+  //   icon: 'puzzle piece',
+  //   text: 'MCP',
+  //   description: t('mcp.description'),
+  //   docUrl: getDocUrl('mcp'),
+  //   schema: {
+  //     title: 'Model Context Protocol',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 }
 
 export default connectors

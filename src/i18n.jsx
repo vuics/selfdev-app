@@ -1589,9 +1589,9 @@ const resources = {
       proxy: {
         description: 'Relay messages between the sender and another recipient.',
       },
-      architect: {
-        description: 'Designer creates new maps from textual descriptions.',
-      },
+      // architect: {
+      //   description: 'Designer creates new maps from textual descriptions.',
+      // },
       rag: {
         description: 'Researcher retrieves knowledge from memory or external docs.',
       },
@@ -3188,9 +3188,9 @@ const resources = {
       proxy: {
         description: 'Реле передаёт сообщения между отправителем и другим получателем.',
       },
-      architect: {
-        description: 'Дизайнер создаёт новые карты на основе текстовых описаний.',
-      },
+      // architect: {
+      //   description: 'Дизайнер создаёт новые карты на основе текстовых описаний.',
+      // },
       rag: {
         description: 'Исследователь извлекает знания из памяти или внешней документации.',
       },

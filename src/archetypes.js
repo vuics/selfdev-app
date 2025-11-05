@@ -319,61 +319,62 @@ const archetypes = {
     }
   },
 
-  'architect-v1.0': {
-    key: 'architect-v1.0',
-    value: 'architect-v1.0',
-    icon: 'magic stick',
-    text: 'Architect v1.0',
-    description: t('architect.description'),
-    docUrl: getDocUrl('architect'),
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
-        architect: {
-          type: 'object',
-          properties: {
-            // mapId: { type: 'string' },
-            // input: { },
-            // output: {
-            //   type: 'array',
-            //   items: { type: 'string' }
-            // },
-            // parseJson: { type: 'boolean' },
-            // promptKey: { type: 'string' },
-            // sendStatus: { type: 'boolean' },
-          },
-        },
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'architect' ],
-        maptrix: {
-          // mapId: '',
-          // input: {
-          //   prompt: '',
-          //   input1: 'hello',
-          //   input2: 'world',
-          // },
-          // output: [
-          //   'output1',
-          //   'output2',
-          // ],
-          // parseJson: true,
-          // promptKey: 'prompt',
-          // sendStatus: false,
-        },
-      }
-    }
-  },
+  // FIXME: Never was implemented, delete.
+  // 'architect-v1.0': {
+  //   key: 'architect-v1.0',
+  //   value: 'architect-v1.0',
+  //   icon: 'magic stick',
+  //   text: 'Architect v1.0',
+  //   description: t('architect.description'),
+  //   docUrl: getDocUrl('architect'),
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string' },
+  //       description: { type: 'string' },
+  //       joinRooms: {
+  //         type: 'array',
+  //         items: { type: 'string' }
+  //       },
+  //       architect: {
+  //         type: 'object',
+  //         properties: {
+  //           // mapId: { type: 'string' },
+  //           // input: { },
+  //           // output: {
+  //           //   type: 'array',
+  //           //   items: { type: 'string' }
+  //           // },
+  //           // parseJson: { type: 'boolean' },
+  //           // promptKey: { type: 'string' },
+  //           // sendStatus: { type: 'boolean' },
+  //         },
+  //       },
+  //     }
+  //   },
+  //   defaultOptions: () => {
+  //     return {
+  //       name: faker.internet.username().toLowerCase(),
+  //       description: '',
+  //       joinRooms: [ 'architect' ],
+  //       maptrix: {
+  //         // mapId: '',
+  //         // input: {
+  //         //   prompt: '',
+  //         //   input1: 'hello',
+  //         //   input2: 'world',
+  //         // },
+  //         // output: [
+  //         //   'output1',
+  //         //   'output2',
+  //         // ],
+  //         // parseJson: true,
+  //         // promptKey: 'prompt',
+  //         // sendStatus: false,
+  //       },
+  //     }
+  //   }
+  // },
 
   'rag-v1.0': {
     key: 'rag-v1.0',
