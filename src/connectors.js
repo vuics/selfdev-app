@@ -441,9 +441,6 @@ const connectors = {
             altHost: { type: 'string', title: 'Alternative Server Hostname/IP', default: '192.168.50.68' },
             altUsername: { type: 'string', title: 'Alternative Username', default: '9639' },
 
-            xmppJid: { type: 'string', title: 'XMPP JID', default: 'voip@selfdev-prosody.dev.local' },
-            xmppPassword: { type: 'string', title: 'XMPP Password', default: 'password' },
-
             recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
             recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
