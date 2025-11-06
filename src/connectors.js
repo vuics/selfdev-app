@@ -437,9 +437,11 @@ const connectors = {
             host: { type: 'string', title: 'Server Hostname/IP', default: 'example.com' },
             username: { type: 'string', title: 'Username', default: 'username' },
             password: { type: 'string', title: 'Password', default: 'password' },
+            realm: { type: 'string', title: 'Realm', default: 'example.com' },
 
-            altHost: { type: 'string', title: 'Alternative Server Hostname/IP', default: '192.168.50.68' },
-            altUsername: { type: 'string', title: 'Alternative Username', default: '9639' },
+            directoryHost: { type: 'string', title: 'Directory Hostname/IP', default: '192.168.50.100' },
+            directoryNumber: { type: 'string', title: 'Directory Number', default: '9639' },
+            directoryPassword: { type: 'string', title: 'Directory Password', default: 'password' },
 
             recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
             recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
