@@ -513,7 +513,7 @@ const connectors = {
           properties: {
             method: { type: 'string', title: 'Method', enum: ['get', 'post'], default: 'get' },
             endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
-            responseTimeoutSec: { type: 'number', title: 'Response Timeout in Seconds', default: 300 },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
             setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
             requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
 
@@ -524,6 +524,40 @@ const connectors = {
             enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
           },
           required: ["method", "endpoint"]
+        },
+      }
+    },
+  },
+
+  'curl': {
+    key: 'curl',
+    value: 'curl',
+    icon: 'external',
+    text: 'Curl',
+    description: t('curl.description'),
+    docUrl: getDocUrl('curl'),
+    schema: {
+      title: 'Curl',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+        curl: {
+          title: 'Curl Configuration',
+          type: 'object',
+          properties: {
+            method: { type: 'string', title: 'Method', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD' ], default: 'GET' },
+            url: { type: 'string', title: 'URL', default: 'http://localhost:80' },
+            headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '' },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15 },
+
+            // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            // joinRoom: { type: 'string', title: 'Join Room', default: 'curl' },
+            // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+            // enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: false },
+            // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: false },
+          },
+          required: ["method", "url"]
         },
       }
     },
