@@ -30,8 +30,8 @@ import connectors, { defaultConnector } from './connectors'
 import Menubar from './components/Menubar'
 import conf from './conf'
 
-export default function Dash () {
-  const { t } = useTranslation('Dash')
+export default function Omni () {
+  const { t } = useTranslation('Omni')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ bridges, setBridges ] = useState([])

@@ -444,37 +444,55 @@ const connectors = {
             directoryPassword: { type: 'string', title: 'Directory Password', default: 'password' },
 
             recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-
             joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
             enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
             enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
 
             welcomeMessage: { type: 'string', title: 'Welcome Message', default: 'Welcome to the HyperAgency. Voice your prompt and press hashtag.' },
           },
-          required: ["host", "username", "password"]
+          required: ["host", "username", "password", "realm", "directoryHost", "directoryNumber", "directoryPassword", "welcomeMessage"]
         },
       },
       required: ["name"]
     },
   },
 
-  // 'hyperagency': {
-  //   key: 'hyperagency',
-  //   value: 'hyperagency',
-  //   icon: 'futbol outline',
-  //   text: 'HyperAgency',
-  //   description: t('hyperagency.description'),
-  //   docUrl: getDocUrl('hyperagency'),
-  //   schema: {
-  //     title: 'HyperAgency',
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-  //       description: { type: 'string', title: 'Description', default: '' },
-  //     }
-  //   },
-  // },
+  'scheduler': {
+    key: 'scheduler',
+    value: 'scheduler',
+    icon: 'calendar alternate outline',
+    text: 'Scheduler',
+    description: t('scheduler.description'),
+    docUrl: getDocUrl('scheduler'),
+    schema: {
+      title: 'Scheduler',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+        scheduler: {
+          title: 'Scheduler Configuration',
+          type: 'object',
+          properties: {
+            cron: { type: 'string', title: 'Schedule in cron format', default: '* * * * *' },
+            message: { type: 'string', title: 'Message', default: 'It is time to do the job.' },
+
+            timezone: { type: 'string', title: 'Timezone (e.g., "America/Sao_Paulo", "UTC", "Europe/London")', default: '' },
+            // maxExecutions: { type: 'number', title: 'Maximum Executions', default: 1 },
+            maxRandomDelay: { type: 'number', title: 'Maximum Random Delay in Milliseconds', default: 0 },
+
+            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+          },
+          required: ["cron", "message"]
+        },
+      }
+    },
+  },
 
   // 'webhook': {
   //   key: 'webhook',
@@ -493,6 +511,23 @@ const connectors = {
   //   },
   // },
 
+  // 'hyperagency': {
+  //   key: 'hyperagency',
+  //   value: 'hyperagency',
+  //   icon: 'futbol outline',
+  //   text: 'HyperAgency',
+  //   description: t('hyperagency.description'),
+  //   docUrl: getDocUrl('hyperagency'),
+  //   schema: {
+  //     title: 'HyperAgency',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
+
   // 'email': {
   //   key: 'email',
   //   value: 'email',
@@ -502,23 +537,6 @@ const connectors = {
   //   docUrl: getDocUrl('email'),
   //   schema: {
   //     title: 'Email',
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-  //       description: { type: 'string', title: 'Description', default: '' },
-  //     }
-  //   },
-  // },
-
-  // 'cron': {
-  //   key: 'cron',
-  //   value: 'cron',
-  //   icon: 'calendar alternate outline',
-  //   text: 'Cron',
-  //   description: t('cron.description'),
-  //   docUrl: getDocUrl('cron'),
-  //   schema: {
-  //     title: 'Cron',
   //     type: 'object',
   //     properties: {
   //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
