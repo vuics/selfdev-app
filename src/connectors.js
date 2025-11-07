@@ -513,6 +513,9 @@ const connectors = {
           properties: {
             method: { type: 'string', title: 'Method', enum: ['get', 'post'], default: 'get' },
             endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+            responseTimeoutSec: { type: 'number', title: 'Response Timeout in Seconds', default: 300 },
+            setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
+            requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
 
             recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
             joinRoom: { type: 'string', title: 'Join Room', default: 'webhook' },
