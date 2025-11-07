@@ -494,22 +494,37 @@ const connectors = {
     },
   },
 
-  // 'webhook': {
-  //   key: 'webhook',
-  //   value: 'webhook',
-  //   icon: 'world',
-  //   text: 'Webhook',
-  //   description: t('webhook.description'),
-  //   docUrl: getDocUrl('webhook'),
-  //   schema: {
-  //     title: 'Webhook',
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-  //       description: { type: 'string', title: 'Description', default: '' },
-  //     }
-  //   },
-  // },
+  'webhook': {
+    key: 'webhook',
+    value: 'webhook',
+    icon: 'world',
+    text: 'Webhook',
+    description: t('webhook.description'),
+    docUrl: getDocUrl('webhook'),
+    schema: {
+      title: 'Webhook',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+        webhook: {
+          title: 'Webhook Configuration',
+          type: 'object',
+          properties: {
+            method: { type: 'string', title: 'Method', enum: ['get', 'post'], default: 'get' },
+            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+
+            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            joinRoom: { type: 'string', title: 'Join Room', default: 'webhook' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+          },
+          required: ["method", "endpoint"]
+        },
+      }
+    },
+  },
 
   // 'hyperagency': {
   //   key: 'hyperagency',
