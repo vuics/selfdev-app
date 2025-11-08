@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { ResponsiveBar } from '@nivo/bar'
 import axios from 'axios'
 import {
   Container,
@@ -82,7 +83,8 @@ export default function Dash () {
 
         <div
           style={{
-            marginTop: '10vh',
+            marginTop: '5vh',
+            marginBottom: '5vh',
             display: 'flex',
             justifyContent: 'center', // horizontal centering
             // alignItems: 'center',     // vertical centering
@@ -110,23 +112,7 @@ export default function Dash () {
                 Deployed Bridges
               </Statistic.Label>
             </Statistic>
-          </Statistic.Group>
-          <br/>
-        </div>
-        <br/>
 
-        <div
-          style={{
-            marginTop: '10vh',
-            marginBottom: '10vh',
-            display: 'flex',
-            justifyContent: 'center', // horizontal centering
-            // alignItems: 'center',     // vertical centering
-            // height: '85vh',          // make container full viewport height (optional)
-            textAlign: 'center'       // center text inside stats
-          }}
-        >
-          <Statistic.Group>
             <Statistic color='violet' size='huge'>
               <Statistic.Value>
                 {dashboard.maps}
@@ -147,8 +133,92 @@ export default function Dash () {
               </Statistic.Label>
             </Statistic>
           </Statistic.Group>
+          <br/>
         </div>
+      </Segment>
 
+      <Segment style={{ height: '800px' }}>
+        { dashboard && dashboard.agentArchetypes && (<>
+          <Header as='h4'>
+            {t('Agent Archetypes')}
+          </Header>
+          <ResponsiveBar
+            key='archetypes-bar-chat'
+            data={dashboard.agentArchetypes}
+            indexBy="_id"
+            height={800}
+            keys={[
+              'deployed',
+              'total'
+            ]}
+            layout="horizontal" enableGridY={false} enableGridX={true}
+            labelSkipHeight={16}
+            labelSkipWidth={16}
+            labelTextColor="inherit:darker(1.4)"
+            margin={{
+              bottom: 60,
+              left: 80,
+              right: 110,
+              top: 60
+            }}
+            onClick={() => {}}
+            onMouseEnter={() => {}}
+            onMouseLeave={() => {}}
+            padding={0.2}
+            width={900}
+            legends={[ {
+              dataFrom: 'keys',
+              anchor: 'bottom-right',
+              direction: 'column',
+              translateX: 120,
+              itemsSpacing: 3,
+              itemWidth: 100,
+              itemHeight: 16
+            } ]}
+          />
+        </>)}
+      </Segment>
+
+      <Segment style={{ height: '300px' }} >
+        { dashboard && dashboard.bridgeConnectors && (<>
+          <Header as='h4'>
+            {t('Bridge Connectors')}
+          </Header>
+          <ResponsiveBar
+            key='connectors-bar-chat'
+            data={dashboard.bridgeConnectors}
+            indexBy="_id"
+            height={500}
+            keys={[
+              'deployed',
+              'total'
+            ]}
+            layout="horizontal" enableGridY={false} enableGridX={true}
+            labelSkipHeight={16}
+            labelSkipWidth={16}
+            labelTextColor="inherit:darker(1.4)"
+            margin={{
+              bottom: 60,
+              left: 80,
+              right: 110,
+              top: 60
+            }}
+            onClick={() => {}}
+            onMouseEnter={() => {}}
+            onMouseLeave={() => {}}
+            padding={0.2}
+            width={900}
+            legends={[ {
+              dataFrom: 'keys',
+              anchor: 'bottom-right',
+              direction: 'column',
+              translateX: 120,
+              itemsSpacing: 3,
+              itemWidth: 100,
+              itemHeight: 16
+            } ]}
+          />
+        </>)}
       </Segment>
     </Container>
   </>)
