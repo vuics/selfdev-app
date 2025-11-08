@@ -157,7 +157,7 @@ export default function Dash () {
             labelTextColor="inherit:darker(1.4)"
             margin={{
               bottom: 60,
-              left: 80,
+              left: 120,
               right: 110,
               top: 60
             }}
@@ -199,7 +199,7 @@ export default function Dash () {
             labelTextColor="inherit:darker(1.4)"
             margin={{
               bottom: 60,
-              left: 80,
+              left: 120,
               right: 110,
               top: 60
             }}
