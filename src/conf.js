@@ -85,6 +85,8 @@ const conf = {
 
   omni: {
     enable: bool(import.meta.env.VITE_OMNI_ENABLE || true),
+    skip: 0,
+    limit: 1000,
   },
 
   apps: {

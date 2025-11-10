@@ -42,7 +42,7 @@ export default function Omni () {
   const indexBridges = async () => {
     setLoading(true)
     try {
-      const res = await axios.get(`${conf.api.url}/bridge`, {
+      const res = await axios.get(`${conf.api.url}/bridge?skip=${conf.omni.skip}&limit=${conf.omni.limit}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })

@@ -563,6 +563,79 @@ const connectors = {
     },
   },
 
+  'email': {
+    key: 'email',
+    value: 'email',
+    icon: 'mail',
+    text: 'Email',
+    description: t('email.description'),
+    docUrl: getDocUrl('email'),
+    schema: {
+      title: 'Email',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        email: {
+          title: 'Email Configuration',
+          type: 'object',
+          properties: {
+
+            imap: {
+              title: 'IMAP',
+              type: 'object',
+              properties: {
+                host: { type: 'string', title: 'Host', default: 'imap.example.com' },
+                port: { type: 'number', title: 'Port', default: 993 },
+                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                pass: { type: 'string', title: 'Password', default: 'password' },
+                secure: { type: 'boolean', title: 'Secure', default: true },
+              },
+            },
+            smtp: {
+              title: 'SMTP',
+              type: 'object',
+              properties: {
+                host: { type: 'string', title: 'Host', default: 'smtp.example.com' },
+                port: { type: 'number', title: 'Port', default: 465 },
+                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                pass: { type: 'string', title: 'Password', default: 'password' },
+                secure: { type: 'boolean', title: 'Secure', default: true },
+              },
+            },
+            pollSec: { type: 'number', title: 'Poll Every Seconds', default: 30 },
+            defaultRecipient: { type: 'string', title: 'Default Recipient', default: 'default@example.com' },
+            defaultSubject: { type: 'string', title: 'Default Subject', default: 'Message from Agentic AI' },
+
+            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+          },
+        },
+      },
+    },
+  },
+
+  // 'tiledesk': {
+  //   key: 'tiledesk',
+  //   value: 'tiledesk',
+  //   icon: 'ticket',
+  //   text: 'Tiledesk',
+  //   description: t('tiledesk.description'),
+  //   docUrl: getDocUrl('tiledesk'),
+  //   schema: {
+  //     title: 'Tiledesk',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
+
   // 'hyperagency': {
   //   key: 'hyperagency',
   //   value: 'hyperagency',
@@ -572,23 +645,6 @@ const connectors = {
   //   docUrl: getDocUrl('hyperagency'),
   //   schema: {
   //     title: 'HyperAgency',
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-  //       description: { type: 'string', title: 'Description', default: '' },
-  //     }
-  //   },
-  // },
-
-  // 'email': {
-  //   key: 'email',
-  //   value: 'email',
-  //   icon: 'mail',
-  //   text: 'Email',
-  //   description: t('email.description'),
-  //   docUrl: getDocUrl('email'),
-  //   schema: {
-  //     title: 'Email',
   //     type: 'object',
   //     properties: {
   //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
