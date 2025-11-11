@@ -1252,6 +1252,48 @@ Answer:`,
       }
     }
   },
+
+  'curl-v1.0': {
+    key: 'curl-v1.0',
+    value: 'curl-v1.0',
+    icon: 'external',
+    text: 'Curl v1.0',
+    description: t('curl.description'),
+    docUrl: getDocUrl('curl'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        curl: {
+          type: 'object',
+          properties: {
+            method: { type: 'string', title: 'Method', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD' ], default: 'GET' },
+            url: { type: 'string', title: 'URL', default: 'http://localhost:80' },
+            headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '' },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15 },
+          },
+        }
+      }
+    },
+    defaultOptions: () => {
+      return {
+        name: faker.internet.username().toLowerCase(),
+        description: '',
+        joinRooms: [ 'curl' ],
+        curl: {
+          method: 'GET',
+          url: 'http://localhost:80',
+          headers: '',
+          timeoutSec: 15,
+        },
+      }
+    }
+  },
 }
 
 export default archetypes

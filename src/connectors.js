@@ -535,42 +535,6 @@ const connectors = {
     },
   },
 
-  'curl': {
-    key: 'curl',
-    value: 'curl',
-    icon: 'external',
-    text: 'Curl',
-    description: t('curl.description'),
-    docUrl: getDocUrl('curl'),
-    schema: {
-      title: 'Curl',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-
-        // enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: false },
-        // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-        //
-        // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: false },
-        // joinRoom: { type: 'string', title: 'Join Room', default: 'curl' },
-        // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-
-        curl: {
-          title: 'Curl Configuration',
-          type: 'object',
-          properties: {
-            method: { type: 'string', title: 'Method', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD' ], default: 'GET' },
-            url: { type: 'string', title: 'URL', default: 'http://localhost:80' },
-            headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '' },
-            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15 },
-          },
-          required: ["method", "url"]
-        },
-      }
-    },
-  },
-
   'email': {
     key: 'email',
     value: 'email',
@@ -664,6 +628,23 @@ const connectors = {
       }
     },
   },
+
+  // 'api': {
+  //   key: 'api',
+  //   value: 'api',
+  //   icon: 'puzzle',
+  //   text: 'API',
+  //   description: t('api.description'),
+  //   docUrl: getDocUrl('api'),
+  //   schema: {
+  //     title: 'API',
+  //     type: 'object',
+  //     properties: {
+  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+  //       description: { type: 'string', title: 'Description', default: '' },
+  //     }
+  //   },
+  // },
 
   // 'tiledesk': {
   //   key: 'tiledesk',
