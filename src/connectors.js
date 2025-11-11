@@ -430,6 +430,14 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         phone: {
           title: 'Phone Configuration',
           type: 'object',
@@ -442,12 +450,6 @@ const connectors = {
             directoryHost: { type: 'string', title: 'Directory Hostname/IP', default: '192.168.50.100' },
             directoryNumber: { type: 'string', title: 'Directory Number', default: '9639' },
             directoryPassword: { type: 'string', title: 'Directory Password', default: 'password' },
-
-            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
 
             welcomeMessage: { type: 'string', title: 'Welcome Message', default: 'Welcome to the HyperAgency. Voice your prompt and press hashtag.' },
           },
@@ -471,6 +473,14 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         scheduler: {
           title: 'Scheduler Configuration',
           type: 'object',
@@ -481,12 +491,6 @@ const connectors = {
             timezone: { type: 'string', title: 'Timezone (e.g., "America/Sao_Paulo", "UTC", "Europe/London")', default: '' },
             // maxExecutions: { type: 'number', title: 'Maximum Executions', default: 1 },
             maxRandomDelay: { type: 'number', title: 'Maximum Random Delay in Milliseconds', default: 0 },
-
-            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
           },
           required: ["cron", "message"]
         },
@@ -507,6 +511,14 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'webhook' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         webhook: {
           title: 'Webhook Configuration',
           type: 'object',
@@ -516,12 +528,6 @@ const connectors = {
             timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
             setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
             requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
-
-            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            joinRoom: { type: 'string', title: 'Join Room', default: 'webhook' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
           },
           required: ["method", "endpoint"]
         },
@@ -542,6 +548,14 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
+
+        // enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: false },
+        // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+        //
+        // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: false },
+        // joinRoom: { type: 'string', title: 'Join Room', default: 'curl' },
+        // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         curl: {
           title: 'Curl Configuration',
           type: 'object',
@@ -550,12 +564,6 @@ const connectors = {
             url: { type: 'string', title: 'URL', default: 'http://localhost:80' },
             headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '' },
             timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15 },
-
-            // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            // joinRoom: { type: 'string', title: 'Join Room', default: 'curl' },
-            // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            // enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: false },
-            // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: false },
           },
           required: ["method", "url"]
         },
@@ -576,6 +584,13 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         email: {
           title: 'Email Configuration',
@@ -607,12 +622,6 @@ const connectors = {
             pollSec: { type: 'number', title: 'Poll Every Seconds', default: 30 },
             defaultRecipient: { type: 'string', title: 'Default Recipient', default: 'default@example.com' },
             defaultSubject: { type: 'string', title: 'Default Subject', default: 'Message from Agentic AI' },
-
-            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
           },
         },
       },
@@ -633,6 +642,13 @@ const connectors = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', default: '' },
 
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         mcp: {
           title: 'Model Context Protocol Configuration',
           type: 'object',
@@ -641,12 +657,6 @@ const connectors = {
             timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
             // setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
             // requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
-
-            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-            joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
-            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
           },
           required: ["endpoint"]
         },
