@@ -123,6 +123,52 @@ const archetypes = {
     }
   },
 
+  'mcp-v1.0': {
+    key: 'mcp-v1.0',
+    value: 'mcp-v1.0',
+    icon: 'dot circle outline',
+    text: 'MCP Client v1.0',
+    description: t('mcp.description'),
+    docUrl: getDocUrl('mcp'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        joinRooms: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        mcp: {
+          type: 'object',
+          properties: {
+            transport: { type: 'string', enum: ['streamable-http', 'sse', 'stdio'] },
+            url: { type: 'string' },
+            command: { type: 'string' },
+            args: {
+              type: 'array',
+              items: { type: 'string' }
+            },
+          },
+        },
+      }
+    },
+    defaultOptions: function () {
+      const name = faker.internet.username().toLowerCase()
+      return {
+        name,
+        description: '',
+        joinRooms: [ 'mcp' ],
+        mcp: {
+          transport: 'streamable-http-then-sse',
+          url: 'http://localhost:6370/mcp/679b3c9a6e26f022ca69515b/mcp-server',
+          command: 'node',
+          args: ['server.js']
+        },
+      }
+    }
+  },
+
   'system-v1.0': {
     key: 'system-v1.0',
     value: 'system-v1.0',

@@ -631,7 +631,8 @@ const connectors = {
   'mcp': {
     key: 'mcp',
     value: 'mcp',
-    icon: 'puzzle piece',
+    // icon: 'puzzle piece',
+    icon: 'dot circle',
     text: 'MCP Server',
     description: t('mcp.description'),
     docUrl: getDocUrl('mcp'),

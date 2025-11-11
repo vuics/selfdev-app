@@ -1580,6 +1580,9 @@ const resources = {
       maptrix: {
         description: 'Executor runs maps and allows nested map executions.',
       },
+      mcp: {
+        description: 'Tools executor through the Model Context Protocol on external MCP servers.',
+      },
       system: {
         description: 'Administrator interacts with our infrastructure and manages records in the database.',
       },
@@ -3178,6 +3181,9 @@ const resources = {
       },
       maptrix: {
         description: 'Исполнитель запускает карты и позволяет выполнять вложенные карты.',
+      },
+      mcp: {
+        description: 'Исполнитель инструментов через протокол контекста модели на внешних серверах MCP.',
       },
       system: {
         description: 'Администратор взаимодействует с инфраструктурой и управляет записями в базе данных.',
