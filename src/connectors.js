@@ -619,6 +619,41 @@ const connectors = {
     },
   },
 
+  'mcp': {
+    key: 'mcp',
+    value: 'mcp',
+    icon: 'puzzle piece',
+    text: 'MCP Server',
+    description: t('mcp.description'),
+    docUrl: getDocUrl('mcp'),
+    schema: {
+      title: 'Model Context Protocol',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        mcp: {
+          title: 'Model Context Protocol Configuration',
+          type: 'object',
+          properties: {
+            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
+            // setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
+            // requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
+
+            recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+            joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
+            recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+            enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+            enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+          },
+          required: ["endpoint"]
+        },
+      }
+    },
+  },
+
   // 'tiledesk': {
   //   key: 'tiledesk',
   //   value: 'tiledesk',
@@ -662,23 +697,6 @@ const connectors = {
   //   docUrl: getDocUrl('video'),
   //   schema: {
   //     title: 'Video',
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-  //       description: { type: 'string', title: 'Description', default: '' },
-  //     }
-  //   },
-  // },
-
-  // 'mcp': {
-  //   key: 'mcp',
-  //   value: 'mcp',
-  //   icon: 'puzzle piece',
-  //   text: 'MCP',
-  //   description: t('mcp.description'),
-  //   docUrl: getDocUrl('mcp'),
-  //   schema: {
-  //     title: 'Model Context Protocol',
   //     type: 'object',
   //     properties: {
   //       name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
