@@ -483,6 +483,16 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
 const NoteEditor = memo(({
   text, setText, applyText, cancelText, data, allNodes, setNodes, id
 }) => {
+  if (!data.editing) {
+    return (
+      <p
+        onClick={() => !data.editing && switchEditing({ id, data, setNodes })}
+      >
+        {text}
+      </p>
+    );
+  }
+
   return (<>
     <TextareaAutosize
       value={text}
@@ -508,8 +518,6 @@ const NoteEditor = memo(({
         color: data.color || '',
         backgroundColor: data.backgroundColor || '',
       }}
-      readOnly={!data.editing}
-      onClick={() => !data.editing && switchEditing({ id, data, setNodes })}
     />
   </>)
 })
