@@ -20,7 +20,7 @@ import {
   Sidebar,
   Label,
   Grid,
-  // Segment,
+  Segment,
   // Header,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
@@ -61,6 +61,12 @@ import { EditorState } from '@codemirror/state';
 import UiwMarkdownEditor from '@uiw/react-markdown-editor'
 import mermaid from "mermaid";
 import { getCodeString } from "rehype-rewrite";
+
+import Form from '@rjsf/semantic-ui'
+import validator from '@rjsf/validator-ajv8';
+import { JsonEditorField } from './Hive'
+import stringify from 'json-stringify-pretty-compact';
+
 
 import Menubar from './components/Menubar'
 import conf, { bool } from './conf'
@@ -300,6 +306,90 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
       className="nodrag nopan"
     />
   </>)
+})
+
+const FormEditor = memo(({ text, setText, id, setNodes, applyText, cancelText }) => {
+  const { t } = useTranslation('Map')
+  const [ changed, setChanged ] = useState(false)
+
+  const [ formObj, setFormObj ] = useState({})
+  const [ errorMessage, setErrorMessage ] = useState(null)
+
+  useEffect(() => {
+    try {
+      const formObj = JSON.parse(text)
+      setFormObj(formObj)
+    } catch (err) {
+      setErrorMessage({
+        header: 'Error parsing the form JSON',
+        body: err.toString(),
+      })
+    }
+  }, [text])
+
+  if (errorMessage) {
+    return (
+      <Message negative>
+        <Message.Header>
+          {errorMessage.header}
+        </Message.Header>
+        <p>
+          {errorMessage.body}
+        </p>
+      </Message>
+    )
+  }
+
+  return (
+    <Segment secondary>
+      <Form
+        schema={formObj.schema || {}}
+        uiSchema={formObj.uiSchema || {}}
+        formData={formObj.formData || {}}
+        fields={{ JsonEditorField }}
+        validator={validator}
+        onSubmit={({ formData }) => {
+          const clonedObj = Object.assign({}, { ...formObj, formData })
+          const text = stringify(clonedObj)
+          setNodes((nodes) =>
+            nodes.map((node) =>
+              node.id === id ? { ...node, data: {
+                ...node.data,
+                text,
+              } } : node
+            )
+          );
+          setChanged(false)
+        }}
+        onChange={() => setChanged(true)}
+        // onChange={log('changed')}
+        // onError={log('errors')}
+      >
+        <Button.Group>
+          <Button
+            type='button'
+            onClick={() => { cancelText(); setChanged(false) }}
+            disabled={!changed}
+          >
+            <Icon name='cancel' />
+            {' '}
+            {t('Cancel')}
+            {' '}
+          </Button>
+          <Button.Or />
+          <Button
+            type='submit' positive on
+            disabled={!changed}
+          >
+            <Icon name='save' />
+            {' '}
+            {t('Submit')}
+            {' '}
+          </Button>
+        </Button.Group>
+      </Form>
+    </Segment>
+  )
 })
 
 const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
@@ -1011,6 +1101,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Icon name={ data.kind === 'raw' ? 'dot circle' : 'circle outline'} />
                   {t('Raw')}
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectKind('form')}>
+                  <Icon name={ data.kind === 'form' ? 'dot circle' : 'circle outline'} />
+                  {t('Form')}
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
@@ -1186,6 +1280,19 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
           </>)}
 
           { (data.kind === 'code' || data.kind === 'raw') && (<>
+            <CodeEditor
+              text={text} setText={setText} roster={roster} data={data}
+              id={id} setNodes={setNodes}
+            />
+          </>)}
+
+          { (data.kind === 'form' && !data.editing) && (<>
+            <FormEditor
+              text={text} setText={setText} id={id} setNodes={setNodes}
+              applyText={applyText} cancelText={cancelText}
+            />
+          </>)}
+          { (data.kind === 'form' && data.editing) && (<>
             <CodeEditor
               text={text} setText={setText} roster={roster} data={data}
               id={id} setNodes={setNodes}

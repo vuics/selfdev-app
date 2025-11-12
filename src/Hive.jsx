@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, memo } from 'react'
 import axios from 'axios'
 import {
   Container,
@@ -28,6 +28,7 @@ import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useXmppContext } from './components/XmppContext'
 
+// export const JsonEditorField = memo((props) => {
 export function JsonEditorField (props) {
   console.log('JsonEditorField props:', props)
   return (<>
@@ -41,6 +42,7 @@ export function JsonEditorField (props) {
     </div>
   </>);
 }
+// })
 
 export default function Hive () {
   const { t } = useTranslation('Hive')
