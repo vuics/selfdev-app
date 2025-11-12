@@ -21,11 +21,26 @@ import {
 import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
+import { JsonEditor } from "json-edit-react";
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useXmppContext } from './components/XmppContext'
+
+export function JsonEditorField (props) {
+  console.log('JsonEditorField props:', props)
+  return (<>
+    <span style={{ color: 'black' }}><b>{props.schema.title}</b></span>
+    <div id={props.id} style={{ border: "1px solid #ccc", borderRadius: 6, padding: 8 }}>
+      <JsonEditor
+        data={props.formData || {}}
+        setData={(formData) => { props.onChange(formData) }}
+        rootName=''
+      />
+    </div>
+  </>);
+}
 
 export default function Hive () {
   const { t } = useTranslation('Hive')
@@ -40,8 +55,9 @@ export default function Hive () {
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
   const [ presence, setPresence ] = useState(xmppClient?.presence || {});
-  console.log('presence:', presence)
-  console.log('roster:', roster)
+  // console.log('presence:', presence)
+  // console.log('roster:', roster)
+
   useEffect(() => {
     if (!xmppClient?.emitter) return;
     setRoster(xmppClient.roster)
@@ -324,6 +340,8 @@ export default function Hive () {
 
           <Form
             schema={archetypes[archetype].schema}
+            uiSchema={archetypes[archetype].uiSchema || {}}
+            fields={{ JsonEditorField }}
             validator={validator}
             onChange={log('changed')}
             onSubmit={({ formData }) => { postAgent({ agentOptions: formData }); setAdding(!adding) }}
@@ -469,6 +487,7 @@ export default function Hive () {
                   <Form
                     schema={archetypes[agent.archetype].schema}
                     uiSchema={archetypes[agent.archetype].uiSchema || {}}
+                    fields={{ JsonEditorField }}
                     validator={validator}
                     formData={agent.options}
                     onChange={({ formData }) => {

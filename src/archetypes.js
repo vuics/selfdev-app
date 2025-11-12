@@ -20,12 +20,7 @@ const archetypes = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' },
-          title: 'Join Rooms',
-          default: [ ],
-        },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         chat: {
           type: 'object',
           title: 'Chat Configuration',
@@ -63,50 +58,47 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         maptrix: {
           type: 'object',
+          title: 'Maptrix Configuration',
           properties: {
-            mapId: { type: 'string' },
-            input: { },
+            mapId: { type: 'string', title: 'Map ID' },
+            input: {
+              type: 'object',
+              title: 'Input',
+              additionalProperties: true,
+              default: {
+                // prompt: '',
+                // input1: 'hello',
+                // input2: 'world',
+              },
+            },
             output: {
               type: 'array',
-              items: { type: 'string' }
+              title: 'Output',
+              items: { type: 'string' },
+              default: [
+                'output1',
+                'output2',
+              ],
             },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
-            sendStatus: { type: 'boolean' },
+            parseJson: { type: 'boolean', title: 'Parse JSON', default: true },
+            promptKey: { type: 'string', title: 'Prompt Key', default: 'prompt' },
+            sendStatus: { type: 'boolean', title: 'Send Status', default: false },
           },
         },
       }
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'maptrix' ],
-        maptrix: {
-          mapId: '',  // example, mapId: '68e644b25a4d208ebb0f631a',
-          input: {
-            prompt: '',
-            input1: 'hello',
-            input2: 'world',
-          },
-          output: [
-            'output1',
-            'output2',
-          ],
-          parseJson: true,
-          promptKey: 'prompt',
-          sendStatus: false,
-        },
+    uiSchema: {
+      maptrix: {
+        input: {
+          "ui:field": "JsonEditorField"
+        }
       }
-    }
+    },
   },
 
   'mcp-v1.0': {
@@ -119,12 +111,9 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         mcp: {
           type: 'object',
           properties: {
@@ -165,12 +154,9 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         system: {
           type: 'object',
           properties: {
@@ -204,12 +190,9 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         transform: {
           type: 'object',
           properties: {
@@ -324,12 +307,9 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         proxy: {
           type: 'object',
           properties: {
@@ -351,63 +331,6 @@ const archetypes = {
     }
   },
 
-  // FIXME: Never was implemented, delete.
-  // 'architect-v1.0': {
-  //   key: 'architect-v1.0',
-  //   value: 'architect-v1.0',
-  //   icon: 'magic stick',
-  //   text: 'Architect v1.0',
-  //   description: t('architect.description'),
-  //   docUrl: getDocUrl('architect'),
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       name: { type: 'string' },
-  //       description: { type: 'string' },
-  //       joinRooms: {
-  //         type: 'array',
-  //         items: { type: 'string' }
-  //       },
-  //       architect: {
-  //         type: 'object',
-  //         properties: {
-  //           // mapId: { type: 'string' },
-  //           // input: { },
-  //           // output: {
-  //           //   type: 'array',
-  //           //   items: { type: 'string' }
-  //           // },
-  //           // parseJson: { type: 'boolean' },
-  //           // promptKey: { type: 'string' },
-  //           // sendStatus: { type: 'boolean' },
-  //         },
-  //       },
-  //     }
-  //   },
-  //   defaultOptions: () => {
-  //     return {
-  //       name: faker.internet.username().toLowerCase(),
-  //       description: '',
-  //       joinRooms: [ 'architect' ],
-  //       maptrix: {
-  //         // mapId: '',
-  //         // input: {
-  //         //   prompt: '',
-  //         //   input1: 'hello',
-  //         //   input2: 'world',
-  //         // },
-  //         // output: [
-  //         //   'output1',
-  //         //   'output2',
-  //         // ],
-  //         // parseJson: true,
-  //         // promptKey: 'prompt',
-  //         // sendStatus: false,
-  //       },
-  //     }
-  //   }
-  // },
-
   'rag-v1.0': {
     key: 'rag-v1.0',
     value: 'rag-v1.0',
@@ -418,12 +341,9 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         rag: {
           type: 'object',
           properties: {
@@ -613,12 +533,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         stt: {
           type: 'object',
           properties: {
@@ -669,12 +586,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         tts: {
           type: 'object',
           properties: {
@@ -728,12 +642,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         imagegen: {
           type: 'object',
           properties: {
@@ -791,12 +702,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         code: {
           type: 'object',
           properties: {
@@ -848,12 +756,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         quantum: {
           type: 'object',
           properties: {
@@ -923,12 +828,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         storage: {
           type: 'object',
           properties: {
@@ -978,12 +880,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         command: {
           type: 'object',
           properties: {
@@ -1017,12 +916,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         langflow: {
           type: 'object',
           properties: {
@@ -1055,12 +951,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         nodered: {
           type: 'object',
           properties: {
@@ -1101,12 +994,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         n8n: {
           type: 'object',
           properties: {
@@ -1147,12 +1037,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         notebook: {
           type: 'object',
           properties: {
@@ -1195,12 +1082,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         avatar: {
           type: 'object',
           properties: {
@@ -1249,12 +1133,9 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-        joinRooms: {
-          type: 'array',
-          items: { type: 'string' }
-        },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         curl: {
           type: 'object',
           properties: {
