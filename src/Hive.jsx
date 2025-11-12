@@ -313,19 +313,6 @@ export default function Hive () {
           <Header as='h2'>
             {t('Add Agent')}
           </Header>
-          <b>{t('Archetype')}:</b>
-          {' '}
-          {/*
-          <Dropdown
-            placeholder={t('Select Archetype')}
-            search
-            selection
-            fluid
-            options={ Object.values(archetypes) }
-            defaultValue={ archetype }
-            onChange={(e, { value }) => setArchetype(value) }
-          />
-          */}
 
           <Menu attached='top' tabular>
             { [...new Set(Object.values(archetypes).map(ar => ar.category))].map(cat => (
@@ -354,26 +341,23 @@ export default function Hive () {
             </Menu>
           </Segment>
 
-
-          <br/>
-          { archetypes[archetype].text && (
-            <p>
-              <b>{t('Agent Archetype')}:</b> {archetypes[archetype].text}
-            </p>
-          )}
-          { archetypes[archetype].description && (
-            <p>
-              <b>{t('Agent Description')}:</b> {archetypes[archetype].description}
-            </p>
-          )}
-          { archetypes[archetype].docUrl && (
-            <p>
+          <p>
+            { archetypes[archetype].text && (<>
+              <b>{t('Archetype')}:</b> {archetypes[archetype].text}
+              <br/>
+            </>)}
+            { archetypes[archetype].description && (<>
+              <b>{t('Description')}:</b> {archetypes[archetype].description}
+              <br/>
+            </>)}
+            { archetypes[archetype].docUrl && (<>
               <b>{t('Agent Creation Guide')}:</b>{' '}<a href={archetypes[archetype].docUrl} target='_blank' rel="noreferrer">{archetypes[archetype].text}</a>{' '}
-            </p>
-          )}
-          <span>
-            <b>{t('Options')}:</b>
-          </span>
+              <br/>
+            </>)}
+            <span>
+              <b>{t('Options')}:</b>
+            </span>
+          </p>
 
           <Form
             schema={archetypes[archetype].schema}
