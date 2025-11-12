@@ -18,53 +18,39 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string' },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
         joinRooms: {
           type: 'array',
-          items: { type: 'string' }
+          items: { type: 'string' },
+          title: 'Join Rooms',
+          default: [ ],
         },
         chat: {
           type: 'object',
+          title: 'Chat Configuration',
           properties: {
-            systemMessage: { type: 'string' },
+            systemMessage: { type: 'string', format: "textarea", default: '' },
             model: {
               type: 'object',
+              title: 'Large Language Model (LLM)',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'LLM Provider', default: 'openai' },
+                name: { type: 'string', title: 'LLM Name', default: 'gpt-5-nano' },
                 apiKey: {
                   type: 'object',
+                  title: 'API Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault Key', default: 'OPENAI_API_KEY' },
                   },
                 },
               }
             },
-            session: { type: 'string' },
+            session: { type: 'string', title: 'Session', default: '' },
           }
         },
       }
     },
-    defaultOptions: function () {
-      const name = faker.internet.username().toLowerCase()
-      return {
-        name,
-        description: '',
-        joinRooms: [ 'chat' ],
-        chat: {
-          systemMessage: '',
-          model: {
-            provider: 'openai',
-            name: 'gpt-5-nano',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          session: '',
-        },
-      }
-    }
   },
 
   'maptrix-v1.0': {

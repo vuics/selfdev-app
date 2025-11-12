@@ -48,7 +48,6 @@ export default function Omni () {
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
-      // setAddress(res.data.address)
       setBridges(res.data)
     } catch (err) {
       console.error('get bridges error:', err);
@@ -93,7 +92,6 @@ export default function Omni () {
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('bridge put res:', res)
       // setResponseMessage(`Bridge updated successfully`)
@@ -112,7 +110,6 @@ export default function Omni () {
       const res = await axios.delete(`${conf.api.url}/bridge/${_id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('bridge delete res:', res)
       // setResponseMessage(`Bridge deleted successfully`)
@@ -180,7 +177,7 @@ export default function Omni () {
 
   const log = (type) => console.log.bind(console, type);
 
-  console.log('connector:', connector)
+  // console.log('connector:', connector)
 
   return (<>
     <Container fluid>

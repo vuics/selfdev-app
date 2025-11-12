@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { JsonEditor } from 'json-edit-react'
 import axios from 'axios'
 import {
   Container,
@@ -16,32 +15,27 @@ import {
   List,
   Label,
   Popup,
+  // Divider,
   // Menu,
 } from 'semantic-ui-react'
-import Ajv from 'ajv'
 import { useTranslation } from 'react-i18next'
+import Form from '@rjsf/semantic-ui'
+import validator from '@rjsf/validator-ajv8';
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
-import { useIndexContext } from './components/IndexContext'
 import { useXmppContext } from './components/XmppContext'
 
-const ajv = new Ajv()
-
 export default function Hive () {
-  const { user } = useIndexContext()
   const { t } = useTranslation('Hive')
-  const [ agents, setAgents ] = useState([])
-  const [ agentsImmutable, setAgentsImmutable ] = useState([])
-  const [ archetype, setArchetype ] = useState(defaultArchetype.value)
-  const [ options, setOptions ] = useState(() => defaultArchetype.defaultOptions())
   const [ responseError, setResponseError ] = useState('')
-  const [ validationError, setValidationError ] = useState('')
-  const [ responseMessage, setResponseMessage ] = useState('')
-  const [ adding, setAdding ] = useState(false)
   const [ loading, setLoading ] = useState(true)
+  const [ agents, setAgents ] = useState([])
+  const [ archetype, setArchetype ] = useState(defaultArchetype.value)
+  const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
+  const [ agentsImmutable, setAgentsImmutable ] = useState([])
 
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
@@ -87,9 +81,9 @@ export default function Hive () {
       const res = await axios.get(`${conf.api.url}/agent?skip=${conf.hive.skip}&limit=${conf.hive.limit}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
-      console.log('agents index res:', res)
+      // console.log('agents index res:', res)
+      console.log('res.data:', res.data)
       setAgents(res?.data.sort(sortAgents) || [])
       setAgentsImmutable(res?.data || [])
     } catch (err) {
@@ -101,30 +95,23 @@ export default function Hive () {
   }
 
   useEffect(() => {
-    setOptions(archetypes[archetype].defaultOptions())
-  }, [archetype])
-
-  useEffect(() => {
     indexAgents()
   }, [])
 
-  const postAgent = async ({ agent = null } = {}) => {
+  const postAgent = async ({ agent = null, agentOptions = null } = {}) => {
     setLoading(true)
     try {
       const res = await axios.post(`${conf.api.url}/agent`, {
         deployed: false,
         archetype: agent ? agent.archetype : archetype,
-        options: agent ? agent.options : options,
+        options: agent ? agent.options : agentOptions,
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('post agent res:', res)
-      // setResponseMessage(`Agent created successfully`)
       setAgents(agents => [res.data, ...agents])
       setAgentsImmutable(agentsImmutable => [res.data, ...agentsImmutable])
-      setOptions(archetypes[archetype].defaultOptions())
       await xmppClient?.addToRoster({
         jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
@@ -146,10 +133,8 @@ export default function Hive () {
       }, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('agent put res:', res)
-      // setResponseMessage(`Agent updated successfully`)
       const prevAgent = agentsImmutable.find(a => a._id === agent._id)
       setAgents(agents.map(a => a._id === res.data._id ? res.data : a))
       setAgentsImmutable(agentsImmutable.map(a => a._id === res.data._id ? res.data : a))
@@ -182,10 +167,8 @@ export default function Hive () {
       const res = await axios.delete(`${conf.api.url}/agent/${_id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
-        crossOrigin: { mode: 'cors' },
       })
       console.log('agent delete res:', res)
-      // setResponseMessage(`Agent deleted successfully`)
       const [deletedAgent] = agents.filter(obj => obj._id === _id)
       setAgents(agents.filter(obj => obj._id !== _id))
       setAgentsImmutable(agentsImmutable.filter(obj => obj._id !== _id))
@@ -208,7 +191,7 @@ export default function Hive () {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${user.firstName}-${user.lastName}.sda.json`;
+      link.download = `agents.sda.json`;
       link.click();
       URL.revokeObjectURL(url); // Clean up
     } catch (err) {
@@ -252,6 +235,8 @@ export default function Hive () {
     fileInputRef.current.click(); // triggers hidden input
   };
 
+  const log = (type) => console.log.bind(console, type);
+
   return (<>
     <Container fluid>
       <Menubar />
@@ -267,26 +252,6 @@ export default function Hive () {
           header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
-        />
-      }
-      { responseMessage &&
-        <Message
-          positive
-          style={{ textAlign: 'left'}}
-          icon='info circle'
-          header={t('Info')}
-          content={responseMessage}
-          onDismiss={() => setResponseMessage('')}
-        />
-      }
-      { validationError &&
-        <Message
-          negative
-          style={{ textAlign: 'left'}}
-          icon='exclamation circle'
-          header={t('Schema Validation Error')}
-          content={validationError}
-          onDismiss={() => setValidationError('')}
         />
       }
 
@@ -327,7 +292,7 @@ export default function Hive () {
       <br/>
 
       { adding && (
-        <Segment stacked>
+        <Segment secondary>
           <Header as='h2'>
             {t('Add Agent')}
           </Header>
@@ -356,43 +321,31 @@ export default function Hive () {
           <span>
             <b>{t('Options')}:</b>
           </span>
-          <JsonEditor
-            data={ options }
-            setData={ setOptions }
-            defaultValue=''
-            rootName=''
-            maxWidth='1100px'
-            onUpdate={ ({ newData }) => {
-              const validate = ajv.compile(archetypes[archetype].schema)
-              const valid = validate(newData)
-              if (!valid) {
-                console.log('Validation Errors:', validate.errors)
-                const errorMessage = validate.errors
-                  ?.map((error) => `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`)
-                  .join('\n')
-                setValidationError(
-                  `${t('Not compliant with JSON Schema')} ${errorMessage}`
-                )
-                return t('JSON Schema error')
-              }
-            }}
-            />
-          <br/>
-          <Button.Group>
-            <Button onClick={() => setAdding(!adding) }>
-              <Icon name='cancel' />
-              {' '}
-              {t('Cancel')}
-              {' '}
-            </Button>
-            <Button.Or />
-            <Button positive onClick={() => { postAgent(); setAdding(!adding) }}>
-              <Icon name='save' />
-              {' '}
-              {t('Submit')}
-              {' '}
-            </Button>
-          </Button.Group>
+
+          <Form
+            schema={archetypes[archetype].schema}
+            validator={validator}
+            onChange={log('changed')}
+            onSubmit={({ formData }) => { postAgent({ agentOptions: formData }); setAdding(!adding) }}
+            onError={log('errors')}
+          >
+            <Button.Group>
+              <Button type='button' onClick={() => setAdding(!adding) }>
+                <Icon name='cancel' />
+                {' '}
+                {t('Cancel')}
+                {' '}
+              </Button>
+              <Button.Or />
+              <Button type='submit' positive on>
+                <Icon name='save' />
+                {' '}
+                {t('Submit')}
+                {' '}
+              </Button>
+            </Button.Group>
+          </Form>
+
         </Segment>
       )}
       <br/>
@@ -401,7 +354,7 @@ export default function Hive () {
       <Grid>
         { agents.map((agent) => (
           <Grid.Row key={agent._id}>
-            <Grid.Column width={4}>
+            <Grid.Column width={5}>
               <Card>
                 <Card.Content>
                   <Card.Header>
@@ -496,7 +449,7 @@ export default function Hive () {
                       { agent.edited && (
                         <Button color='yellow'
                           onClick={() => {
-                            putAgent({ agent })
+                            putAgent({ agent: { ...agent, options: agent.options }});
                           }}
                         >
                         {t('Update')}
@@ -508,18 +461,48 @@ export default function Hive () {
               </Card>
             </Grid.Column>
             { agent.editing && (
-              <Grid.Column width={12}>
-                <JsonEditor
-                  data={ agent.options || {} }
-                  setData={ (options) => {
-                    setAgents(agents.map(a =>
-                      a._id === agent._id ? { ...agent, options, edited: true } : a
-                    ))
-                  } }
-                  defaultValue=''
-                  rootName=''
-                  maxWidth='1000px'
-                  />
+              <Grid.Column width={11}>
+                <Segment secondary>
+                  <Header as='h3'>
+                    {t('Edit Agent')}
+                  </Header>
+                  <Form
+                    schema={archetypes[agent.archetype].schema}
+                    uiSchema={archetypes[agent.archetype].uiSchema || {}}
+                    validator={validator}
+                    formData={agent.options}
+                    onChange={({ formData }) => {
+                      setAgents(agents.map(a =>
+                        a._id === agent._id ? { ...agent, edited: true, options: formData } : a
+                      ))
+                    }}
+                    onSubmit={({ formData }) => {
+                      putAgent({ agent: { ...agent, options: formData }});
+                    }}
+                    onError={log('errors')}
+                  >
+                    <Button.Group>
+                      <Button type='button' onClick={() => {
+                        const foundAgent = agentsImmutable.find(a => a._id === agent._id)
+                        setAgents(agents.map(a =>
+                          a._id === agent._id ? { ...foundAgent, editing: false } : a
+                        ))
+                      }}>
+                        <Icon name='cancel' />
+                        {' '}
+                        {t('Cancel')}
+                        {' '}
+                      </Button>
+                      <Button.Or />
+                      <Button type='submit' color='yellow' on>
+                        <Icon name='save' />
+                        {' '}
+                        {t('Update')}
+                        {' '}
+                      </Button>
+                    </Button.Group>
+                  </Form>
+                </Segment>
               </Grid.Column>
             )}
           </Grid.Row>
