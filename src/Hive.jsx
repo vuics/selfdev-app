@@ -15,8 +15,8 @@ import {
   List,
   Label,
   Popup,
+  Menu,
   // Divider,
-  // Menu,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
@@ -48,6 +48,7 @@ export default function Hive () {
   const [ loading, setLoading ] = useState(true)
   const [ agents, setAgents ] = useState([])
   const [ archetype, setArchetype ] = useState(defaultArchetype.value)
+  const [ category, setCategory ] = useState(defaultArchetype.category)
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
   const [ agentsImmutable, setAgentsImmutable ] = useState([])
@@ -312,21 +313,57 @@ export default function Hive () {
           <Header as='h2'>
             {t('Add Agent')}
           </Header>
-            <b>{t('Archetype')}:</b>
-            {' '}
-            <Dropdown
-              placeholder={t('Select Archetype')}
-              search
-              selection
-              fluid
-              options={ Object.values(archetypes) }
-              defaultValue={ archetype }
-              onChange={(e, { value }) => setArchetype(value) }
-            />
+          <b>{t('Archetype')}:</b>
+          {' '}
+          {/*
+          <Dropdown
+            placeholder={t('Select Archetype')}
+            search
+            selection
+            fluid
+            options={ Object.values(archetypes) }
+            defaultValue={ archetype }
+            onChange={(e, { value }) => setArchetype(value) }
+          />
+          */}
+
+          <Menu attached='top' tabular>
+            { [...new Set(Object.values(archetypes).map(ar => ar.category))].map(cat => (
+              <Menu.Item
+                key={cat}
+                active={category === cat}
+                onClick={() => setCategory(cat)}
+              >
+              {cat}
+              </Menu.Item>
+            )) }
+          </Menu>
+          <Segment attached='bottom'>
+            <Menu icon='labeled' horizontal>
+              { Object.values(archetypes).filter(ar => ar.category === category).map(c => (
+                <Menu.Item
+                  key={c.key}
+                  name={c.text}
+                  active={archetype === c.key}
+                  onClick={() => setArchetype(c.key)}
+                >
+                  <Icon name={c.icon} />
+                  {c.text}
+                </Menu.Item>
+              ))}
+            </Menu>
+          </Segment>
+
+
           <br/>
+          { archetypes[archetype].text && (
+            <p>
+              <b>{t('Agent Archetype')}:</b> {archetypes[archetype].text}
+            </p>
+          )}
           { archetypes[archetype].description && (
             <p>
-              <b>{t('Description')}:</b> {archetypes[archetype].description}
+              <b>{t('Agent Description')}:</b> {archetypes[archetype].description}
             </p>
           )}
           { archetypes[archetype].docUrl && (
