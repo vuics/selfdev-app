@@ -20,13 +20,13 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         chat: {
           type: 'object',
           title: 'Chat Configuration',
           properties: {
-            systemMessage: { type: 'string', format: "textarea", default: '' },
+            systemMessage: { type: 'string', format: 'textarea', default: '' },
             model: {
               type: 'object',
               title: 'Large Language Model (LLM)',
@@ -61,7 +61,7 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
         maptrix: {
           type: 'object',
@@ -564,7 +564,7 @@ const archetypes = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['quantum'], },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         quantum: {
           type: 'object',
           title: 'Quantum',
@@ -889,6 +889,46 @@ const archetypes = {
       },
     },
   },
+
+  'browseruse-v1.0': {
+    key: 'browseruse-v1.0',
+    value: 'browseruse-v1.0',
+    category: 'LLM',
+    icon: 'compass',
+    text: 'Browser-Use v1.0',
+    description: t('browseruse.description'),
+    docUrl: getDocUrl('browseruse'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        browseruse: {
+          type: 'object',
+          title: 'Browser-Use Configuration',
+          properties: {
+            model: {
+              type: 'object',
+              title: 'Large Language Model (LLM)',
+              properties: {
+                provider: { type: 'string', title: 'LLM Provider', default: 'openai' },
+                name: { type: 'string', title: 'LLM Name', default: 'gpt-5-nano' },
+                apiKey: {
+                  type: 'object',
+                  title: 'API Key',
+                  properties: {
+                    valueFromVault: { type: 'string', title: 'Value From Vault Key', default: 'OPENAI_API_KEY' },
+                  },
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  },
+
 }
 
 export default archetypes
