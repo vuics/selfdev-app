@@ -308,7 +308,7 @@ const CodeEditor = memo(({ text, setText, roster, data, id, setNodes }) => {
   </>)
 })
 
-const FormEditor = memo(({ text, setText, id, setNodes, applyText, cancelText }) => {
+const FormEditor = memo(({ text, setText, id, setNodes, roster, data, cancelText }) => {
   const { t } = useTranslation('Map')
   const [ changed, setChanged ] = useState(false)
 
@@ -326,6 +326,15 @@ const FormEditor = memo(({ text, setText, id, setNodes, applyText, cancelText })
       })
     }
   }, [text])
+
+  if (data.editing) {
+    return (
+      <CodeEditor
+        text={text} setText={setText} roster={roster} data={data}
+        id={id} setNodes={setNodes}
+      />
+    )
+  }
 
   if (errorMessage) {
     return (
@@ -1279,16 +1288,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             />
           </>)}
 
-          { (data.kind === 'form' && !data.editing) && (<>
+          { data.kind === 'form' && (<>
             <FormEditor
               text={text} setText={setText} id={id} setNodes={setNodes}
-              applyText={applyText} cancelText={cancelText}
-            />
-          </>)}
-          { (data.kind === 'form' && data.editing) && (<>
-            <CodeEditor
-              text={text} setText={setText} roster={roster} data={data}
-              id={id} setNodes={setNodes}
+              roster={roster} data={data} cancelText={cancelText}
             />
           </>)}
         </>)}
