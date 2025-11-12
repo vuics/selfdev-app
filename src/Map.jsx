@@ -607,7 +607,7 @@ const ApplyOrCancel = memo(({ applyText, cancelText }) => {
 const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const { t } = useTranslation('Map')
   const { user } = useIndexContext()
-  const { getNodes, setNodes, getEdges, setEdges } = useReactFlow();
+  const { getNodes, setNodes, getEdges, setEdges, fitView } = useReactFlow();
   const [ newUname, setNewUname ] = useState(data.uname)
   const {
     presence, roster, setCurrentSlide, attachFile, xmppClient,
@@ -1223,126 +1223,131 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <Icon name='check' />
             </Button>
             <Button.Or />
-            <Button icon onClick={cancelNewUname} >
-              <Icon name='cancel' />
+            <Button icon onClick={cancelNewUname}>
+              <Icon name='cancel'/>
             </Button>
           </Button.Group>
           </>
         ) }
+        <Button.Group floated='right'>
+          <Button
+            icon compact basic
+            size='mini'
+            onClick={() => {
+              setNodes((nodes) =>
+                nodes.map((node) =>
+                  node.id === id ? {
+                    ...node,
+                    width: data.minimized ? 600 : 350,
+                    data: { ...node.data, minimized: !data.minimized }
+                  } : node
+                )
+              )
+            }}
+          >
+            <Icon
+              name={data.minimized ? 'window maximize outline' : 'window minimize outline'}
+              color={data.minimized ? 'blue' : 'grey'}
+            />
+          </Button>
+          <Button
+            icon compact basic
+            size='mini'
+            onClick={() => {
+              setTimeout(() => {
+                // NOTE: fitView is deferred to ensure layout is up to date
+                fitView({ nodes: getNodes().filter(n => n.id === id), duration: 1000 });
+              }, 0);
+            }}
+          >
+            <Icon name='crosshairs' color='grey' />
+          </Button>
+        </Button.Group>
       </Card.Header>
-      <Card.Content>
-        <Loader active={!!data.waitRecipient} inline='centered' size='mini' />
-        { data.waitRecipient && (
-          <>
-            <br />
-            {t('Waiting for a reply from')}
-            :{' '}
-            <Label as='a' basic color='grey'>
-              <Icon name='user' color={ presence[data.waitRecipient] ? 'green' : 'red' }/>
-              {(roster.find(r => r.jid === data.waitRecipient))?.name || data.waitRecipient}
-              <Icon
-                name='delete'
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent opening the link when clicking the icon
-                  setNodes((nodes) =>
-                    nodes.map((node) =>
-                      node.id === id ? { ...node, data: {
-                        ...node.data,
-                        waitRecipient: undefined,
-                      } } : node
-                    )
-                  );
-                }}
-                style={{ marginLeft: '1em', cursor: 'pointer' }}
-              />
-            </Label>
-          </>
-        ) }
-
-        { data.diffing ? (<>
-          <DiffEditor
-            text={text} setText={setText} stash={stash} setStash={setStash}
-            data={data} setNodes={setNodes} id={id}
-          />
-        </>) : (<>
-          { !data.kind && (<>
-            <NoteEditor
-              text={text} setText={setText}
-              applyText={applyText} cancelText={cancelText} data={data}
-              allNodes={allNodes} setNodes={setNodes} id={id}
-            />
-          </>)}
-
-          { data.kind === 'markdown' && (<>
-            <MarkdownEditor
-              text={text} setText={setText}
-              applyText={applyText} cancelText={cancelText} data={data}
-              allNodes={allNodes} setNodes={setNodes} id={id} roster={roster}
-            />
-          </>)}
-
-          { (data.kind === 'code' || data.kind === 'raw') && (<>
-            <CodeEditor
-              text={text} setText={setText} roster={roster} data={data}
-              id={id} setNodes={setNodes}
-            />
-          </>)}
-
-          { data.kind === 'form' && (<>
-            <FormEditor
-              text={text} setText={setText} id={id} setNodes={setNodes}
-              roster={roster} data={data} cancelText={cancelText}
-            />
-          </>)}
-        </>)}
-
-        { data.editing && (<>
-          <br/>
-          <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
-        </>)}
-      </Card.Content>
-      { (data.attachments || attaching) && (
+      { !data?.minimized && (<>
         <Card.Content>
-          {attaching && (
-            <Loader active={attaching}  size='tiny' inline='centered' />
-          )}
+          <Loader active={!!data.waitRecipient} inline='centered' size='mini' />
+          { data.waitRecipient && (
+            <>
+              <br />
+              {t('Waiting for a reply from')}
+              :{' '}
+              <Label as='a' basic color='grey'>
+                <Icon name='user' color={ presence[data.waitRecipient] ? 'green' : 'red' }/>
+                {(roster.find(r => r.jid === data.waitRecipient))?.name || data.waitRecipient}
+                <Icon
+                  name='delete'
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent opening the link when clicking the icon
+                    setNodes((nodes) =>
+                      nodes.map((node) =>
+                        node.id === id ? { ...node, data: {
+                          ...node.data,
+                          waitRecipient: undefined,
+                        } } : node
+                      )
+                    );
+                  }}
+                  style={{ marginLeft: '1em', cursor: 'pointer' }}
+                />
+              </Label>
+            </>
+          ) }
 
-          <Grid divided='vertically'>
-            <Grid.Row columns={data.diffing ? 2 : 1}>
-              <Grid.Column>
-                {data.attachments?.map((url, index) => (
-                  <Label
-                    key={index}
-                    as='a'
-                    href={url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    basic
-                    color='grey'
-                  >
-                    <Icon name='attach' />
-                    {url.split('/').pop()}
-                    <Icon
-                      name='delete'
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent opening the link when clicking the icon
-                        setNodes((nodes) =>
-                          nodes.map((node) =>
-                            node.id === id ? { ...node, data: {
-                              ...node.data,
-                              attachments: (node.data.attachments || []).filter((item) => item !== url),
-                            } } : node
-                          )
-                        );
-                      }}
-                      style={{ marginLeft: '1em', cursor: 'pointer' }}
-                    />
-                  </Label>
-                ))}
-              </Grid.Column>
-              { data.diffing && (
+          { data.diffing ? (<>
+            <DiffEditor
+              text={text} setText={setText} stash={stash} setStash={setStash}
+              data={data} setNodes={setNodes} id={id}
+            />
+          </>) : (<>
+            { !data.kind && (<>
+              <NoteEditor
+                text={text} setText={setText}
+                applyText={applyText} cancelText={cancelText} data={data}
+                allNodes={allNodes} setNodes={setNodes} id={id}
+              />
+            </>)}
+
+            { data.kind === 'markdown' && (<>
+              <MarkdownEditor
+                text={text} setText={setText}
+                applyText={applyText} cancelText={cancelText} data={data}
+                allNodes={allNodes} setNodes={setNodes} id={id} roster={roster}
+              />
+            </>)}
+
+            { (data.kind === 'code' || data.kind === 'raw') && (<>
+              <CodeEditor
+                text={text} setText={setText} roster={roster} data={data}
+                id={id} setNodes={setNodes}
+              />
+            </>)}
+
+            { data.kind === 'form' && (<>
+              <FormEditor
+                text={text} setText={setText} id={id} setNodes={setNodes}
+                roster={roster} data={data} cancelText={cancelText}
+              />
+            </>)}
+          </>)}
+
+          { data.editing && (<>
+            <br/>
+            <ApplyOrCancel applyText={applyText} cancelText={cancelText} />
+          </>)}
+        </Card.Content>
+        { ((data.attachments && data.attachments.length > 0)
+            || (data.diffing && data.stashAttachments && data.stashAttachments.length > 0)
+            || attaching) && (
+          <Card.Content>
+            {attaching && (
+              <Loader active={attaching}  size='tiny' inline='centered' />
+            )}
+
+            <Grid divided='vertically'>
+              <Grid.Row columns={data.diffing ? 2 : 1}>
                 <Grid.Column>
-                  {data.stashAttachments?.map((url, index) => (
+                  {data.attachments?.map((url, index) => (
                     <Label
                       key={index}
                       as='a'
@@ -1362,7 +1367,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                             nodes.map((node) =>
                               node.id === id ? { ...node, data: {
                                 ...node.data,
-                                stashAttachments: (node.data.stashAttachments || []).filter((item) => item !== url),
+                                attachments: (node.data.attachments || []).filter((item) => item !== url),
                               } } : node
                             )
                           );
@@ -1372,11 +1377,44 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                     </Label>
                   ))}
                 </Grid.Column>
-              )}
-            </Grid.Row>
-          </Grid>
-        </Card.Content>
-      )}
+                { data.diffing && (
+                  <Grid.Column>
+                    {data.stashAttachments?.map((url, index) => (
+                      <Label
+                        key={index}
+                        as='a'
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        basic
+                        color='grey'
+                      >
+                        <Icon name='attach' />
+                        {url.split('/').pop()}
+                        <Icon
+                          name='delete'
+                          onClick={(e) => {
+                            e.preventDefault(); // Prevent opening the link when clicking the icon
+                            setNodes((nodes) =>
+                              nodes.map((node) =>
+                                node.id === id ? { ...node, data: {
+                                  ...node.data,
+                                  stashAttachments: (node.data.stashAttachments || []).filter((item) => item !== url),
+                                } } : node
+                              )
+                            );
+                          }}
+                          style={{ marginLeft: '1em', cursor: 'pointer' }}
+                        />
+                      </Label>
+                    ))}
+                  </Grid.Column>
+                )}
+              </Grid.Row>
+            </Grid>
+          </Card.Content>
+        )}
+      </>)}
 
       <Handle
         type="source"
