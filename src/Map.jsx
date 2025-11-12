@@ -437,17 +437,16 @@ const Code = ({ children = [], className, ...props }) => {
   return <code className={className}>{children}</code>;
 };
 
+const switchEditing = ({ id, data, setNodes }) => {
+  console.log('switchEditing')
+  setNodes((nodes) =>
+    nodes.map((node) =>
+      node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
+    )
+  );
+}
+
 const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
-
-  const switchEditing = ({ id, data, setNodes }) => {
-    console.log('switchEditing')
-    setNodes((nodes) =>
-      nodes.map((node) =>
-        node.id === id ? { ...node, data: { ...node.data, editing: !data.editing } } : node
-      )
-    );
-  }
-
   return (<>
     <div
       onClick={() => switchEditing({ id, data, setNodes })}
@@ -475,14 +474,6 @@ const NoteViewer = memo(({ data, allNodes, setNodes, id, text }) => {
 const NoteEditor = memo(({
   text, setText, applyText, cancelText, data, allNodes, setNodes, id
 }) => {
-  if (!data.editing) {
-    return (
-      <NoteViewer
-        data={data} allNodes={allNodes} setNodes={setNodes} id={id} text={text}
-      />
-    )
-  }
-
   return (<>
     <TextareaAutosize
       value={text}
@@ -508,6 +499,8 @@ const NoteEditor = memo(({
         color: data.color || '',
         backgroundColor: data.backgroundColor || '',
       }}
+      readOnly={!data.editing}
+      onClick={() => !data.editing && switchEditing({ id, data, setNodes })}
     />
   </>)
 })
