@@ -115,36 +115,20 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
         mcp: {
           type: 'object',
+          title: 'Model Context Protocol (MCP)',
           properties: {
-            transport: { type: 'string', enum: ['streamable-http', 'sse', 'stdio'] },
-            url: { type: 'string' },
-            command: { type: 'string' },
-            args: {
-              type: 'array',
-              items: { type: 'string' }
-            },
+            transport: { type: 'string', enum: ['streamable-http', 'sse', 'stdio'], title: 'Transport', default: 'streamable-http-then-sse' },
+            url: { type: 'string', title: 'URL', default: 'http://localhost:6370/mcp/679b3c9a6e26f022ca69515b/mcp-server' },
+            command: { type: 'string', title: 'Command', default: 'node' },
+            args: { type: 'array', items: { type: 'string' }, title: 'Arguments', default: ['server.js'] },
           },
         },
-      }
+      },
     },
-    defaultOptions: function () {
-      const name = faker.internet.username().toLowerCase()
-      return {
-        name,
-        description: '',
-        joinRooms: [ 'mcp' ],
-        mcp: {
-          transport: 'streamable-http-then-sse',
-          url: 'http://localhost:6370/mcp/679b3c9a6e26f022ca69515b/mcp-server',
-          command: 'node',
-          args: ['server.js']
-        },
-      }
-    }
   },
 
   'system-v1.0': {
@@ -159,28 +143,17 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
         system: {
           type: 'object',
+          title: 'System',
           properties: {
-            operation: { type: 'string', enum: ['', 'create', 'get', 'transfer', 'collect', 'account'] },  // not permitted: 'update', 'delete', 'list'
-            model: { type: 'string', enum: ['', 'map', 'agent'] },       // others are not permitted
-          }
+            operation: { type: 'string', enum: ['', 'create', 'get', 'transfer', 'collect', 'account'], title: 'Operation', default: '' },
+            model: { type: 'string', enum: ['', 'map', 'agent'], title: 'Model', default: '' },
+          },
         },
-      }
-    },
-    defaultOptions: function () {
-      const name = faker.internet.username().toLowerCase()
-      return {
-        name,
-        description: '',
-        joinRooms: [ 'system' ],
-        system: {
-          operation: '',
-          model: '',
-        },
-      }
+      },
     }
   },
 
@@ -196,10 +169,11 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
         transform: {
           type: 'object',
+          title: 'Transform',
           properties: {
             type: {
               type: 'string',
@@ -251,55 +225,32 @@ const archetypes = {
                               //   ],
                               //   "data": "[[demo-data]]"
                               // }
-              ]
+              ],
+              title: 'Type',
+              default: 'echo',
             },
 
             // echo -- no params
-            const: { type: 'string' },
-            repeat: { type: 'number' },
-            regexp: { type: 'string' },
+            const: { type: 'string', title: 'Const', default: 'constant-text' },
+            repeat: { type: 'number', title: 'Repeat', default: 3 },
+            regexp: { type: 'string', title: 'Regexp', default: 's/original/replacement/g' },
             // uuid -- no params
-            nanoid: { type: 'number' },
-            case: { type: 'string', enum: ['upper','lower','camel','snake','kebab'] },
-            hash: { type: 'string', enum: ['md5','sha256','sha512'] },
+            nanoid: { type: 'number', title: 'Nanoid', default: 9 },
+            case: { type: 'string', enum: ['upper','lower','camel','snake','kebab'], title: 'Case', default: 'upper' },
+            hash: { type: 'string', enum: ['md5','sha256','sha512'], title: 'Hash', default: 'md5' },
             // trim -- no params
-            truncate: { type: 'number' },
-            prefix: { type: 'string' },
-            suffix: { type: 'string' },
-            template: { type: 'string' },
-            slugify: { type: 'boolean' }, // if true, lowercase slug
+            truncate: { type: 'number', title: 'Truncate', default: 30 },
+            prefix: { type: 'string', title: 'Prefix', default: 'prefix-' },
+            suffix: { type: 'string', title: 'Suffix', default: '-suffix' },
+            template: { type: 'string', title: 'Template', default: 'Hello, {{name}}!' },
+            slugify: { type: 'boolean', title: 'Slugify', default: true }, // if true, lowercase slug
             // jsondot -- no params
             // jsonpath -- no params
             // batch -- no params
-          }
+          },
         },
-      }
+      },
     },
-    defaultOptions: function () {
-      const name = faker.internet.username().toLowerCase()
-      return {
-        name,
-        description: '',
-        joinRooms: [ 'transform' ],
-        transform: {
-          type: 'echo',
-
-          // echo -- no params
-          const: 'constant-text',
-          repeat: 3,
-          regexp: 's/original/replacement/g',
-          // uuid -- no params
-          nanoid: 9,
-          case: 'upper',
-          hash: 'md5',
-          truncate: 30,
-          prefix: 'prefix-',
-          suffix: '-suffix',
-          template: 'Hello, {{name}}!',
-          slugify: true, // if true, lowercase slug
-        },
-      }
-    }
   },
 
   'proxy-v1.0': {
@@ -314,27 +265,17 @@ const archetypes = {
       type: 'object',
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
         proxy: {
           type: 'object',
+          title: 'Proxy',
           properties: {
-            controlKey: { type: 'string' },
-          }
+            controlKey: { type: 'string', title: 'Control Key', default: 'Please, do it! :-)' },
+          },
         },
-      }
+      },
     },
-    defaultOptions: function () {
-      const name = faker.internet.username().toLowerCase()
-      return {
-        name,
-        description: '',
-        joinRooms: [ 'proxy' ],
-        proxy: {
-          controlKey: 'Please, do it! :-)',
-        },
-      }
-    }
   },
 
   'rag-v1.0': {
@@ -348,186 +289,90 @@ const archetypes = {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         rag: {
           type: 'object',
+          title: 'RAG',
           properties: {
-            systemMessage: { type: 'string' },
+            systemMessage: { type: 'string', title: 'System Message', default: `You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: {question}\nContext: {context}\nAnswer:`, },
             model: {
               type: 'object',
+              title: 'Model',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', default: 'openai', },
+                name: { type: 'string', title: 'Name', default: 'gpt-4o-mini', },
                 apiKey: {
                   type: 'object',
+                  title: 'API Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault', default: 'OPENAI_API_KEY', },
                   },
                 },
               },
             },
             embeddings: {
               type: 'object',
+              title: 'Embeddings',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', default: 'openai', },
+                name: { type: 'string', title: 'Name', default: 'text-embedding-3-large', },
                 apiKey: {
                   type: 'object',
+                  title: 'API Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault', default: 'OPENAI_API_KEY', },
                   },
                 },
               },
             },
-            vectorStore: { type: 'string' },
+            vectorStore: { type: 'string', title: 'Vector Store', default: 'chroma', },
             commands: {
               type: 'object',
+              title: 'Commands',
               properties: {
-                get: { type: 'string' },
-                count: { type: 'string' },
-                loadText: { type: 'string' },
-                loadURL: { type: 'string' },
-                loadAttachment: { type: 'string' },
-                // loadGDrive: { type: 'string' },
-                delete: { type: 'string' },
+                get: { type: 'string', title: 'Get', default: '^//GET$', },
+                count: { type: 'string', title: 'Count', default: '^//COUNT$', },
+                loadText: { type: 'string', title: 'Load Text', default: '^//LOAD_TEXT\\s+([\\s\\S]*)', },
+                loadURL: { type: 'string', title: 'Load URL', default: '^//LOAD_URL\\s+([\\s\\S]*)', },
+                loadAttachment: { type: 'string', title: 'Load Attachment', default: '^//LOAD_ATTACHMENT$', },
+                // loadGDrive: { type: 'string', title: 'Load GDrive', default: "^//LOAD_URL\\s+((https?:\\/\\/[^\\s,]+)(,\\s*https?:\\/\\/[^\\s,]+)*)$", },
+                delete: { type: 'string', title: 'Delete', default: '^//DELETE$', },
               },
             },
             loaders: {
               type: 'array',
+              title: 'Loaders',
               items: {
                 type: 'object',
                 properties: {
-                  enable: { type: 'boolean' },
-                  kind: { type: 'string' },
+                  enable: { type: 'boolean', title: 'Enable', default: false, },
+                  kind: { type: 'string', enum: ['text', 'directory', 'web', 'google-drive'], title: 'Kind', default: 'text', },
 
                   // file loader
-                  files: {
-                    type: 'array',
-                    items: { type: 'string' }
-                  },
+                  files: { type: 'array', title: 'Files', items: { type: 'string' }, default: [/* "/opt/app/README.md" */], },
 
                   // directory loader
-                  path: { type: 'string' },
-                  glob: { type: 'string' },
+                  path: { type: 'string', title: 'Path', default: '', },
+                  glob: { type: 'string', title: 'Glob', default: '**/*.*', },
 
                   // web loader
-                  urls: {
-                    type: 'array',
-                    items: { type: 'string' }
-                  },
+                  urls: { type: 'array', title: 'URLs', items: { type: 'string' }, default: [/* "https://hyag.org" */], },
 
                   // google-drive loader
-                  folderId: { type: 'string' },
-                  recursive: { type: 'boolean' },
-                  unstructured: { type: 'boolean' },
-                  filesIds: {
-                    type: 'array',
-                    items: { type: 'string' }
-                  },
-                  documentIds: {
-                    type: 'array',
-                    items: { type: 'string' }
-                  },
+                  folderId: { type: 'string', title: 'Folder ID', default: '', },
+                  recursive: { type: 'boolean', title: 'Recursive', default: true, },
+                  unstructured: { type: 'boolean', title: 'Unstructured', default: false, },
+                  filesIds: { type: 'array', title: 'Files IDs', items: { type: 'string' }, default: [/* "" */], },
+                  documentIds: { type: 'array', title: 'Document IDs', items: { type: 'string' }, default: [/* "1pi95Wc03l8poJoIJpRXniILIPNGIbDn9VMBfmZPdgZY", ... */], },
                 },
               },
             },
           },
         },
-      }
+      },
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'rag' ],
-        rag: {
-          systemMessage: `You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-Question: {question}
-Context: {context}
-Answer:`,
-          model: {
-            provider: 'openai',
-            name: 'gpt-4o-mini',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          embeddings: {
-            provider: 'openai',
-            name: 'text-embedding-3-large',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          vectorStore: 'chroma',
-          commands: {
-            get: '^//GET$',
-            count: '^//COUNT$',
-            loadText: '^//LOAD_TEXT\\s+([\\s\\S]*)',
-            loadURL: '^//LOAD_URL\\s+([\\s\\S]*)',
-            loadAttachment: '^//LOAD_ATTACHMENT$',
-            // loadGDrive: "^//LOAD_URL\\s+((https?:\\/\\/[^\\s,]+)(,\\s*https?:\\/\\/[^\\s,]+)*)$",
-            delete: '^//DELETE$',
-          },
-          loaders: [ {
-            enable: false,
-            kind: "text",
-            files: [
-              // "/opt/app/README.md",
-              // "/opt/app/input/tech-docs/raw-features-list.md",
-              // "/opt/app/input/tech-docs/tech-development-leading_draft.md",
-            ],
-          }, {
-            enable: false,
-            kind: "directory",
-            // path: "/opt/app/input",
-            path: "",
-            glob: "**/*.*",
-          }, {
-            enable: false,
-            kind: "web",
-            urls: [
-              // "https://hyag.org",
-              // "https://en.wikipedia.org/wiki/Agent-based_model",
-            ],
-          }, {
-            enable: false,
-            kind: "google-drive",
-            folderId: "",
-            recursive: true,
-            unstructured: false,
-            filesIds: [
-              // ""
-            ],
-            documentIds: [
-              // "1pi95Wc03l8poJoIJpRXniILIPNGIbDn9VMBfmZPdgZY",
-              // "1PdeQWPP1EZMXCnNNeMAdUhuRQffTbigfKU3bYC3hGjA",
-              // "12adeT8_7-9ZP7mO205zFlLxU1PjrvtMviV7uwhRunAY",
-              // "17U3QGlmaKxY_DoXkSZCC5EhSQ7iVehBJSWVifxRpLPo",
-              // "114agEJugBBjhOoY8Tj0o0tXdntLg94kyGLPmNBemq1A",
-              // "1DOwKaugogQy-yR9H-rAd-gqPDIfcDV7B3s6orvytKso",
-              // "1H9OjmYsSJ8Bq2HE4X3bMidranqvkjqP-kLjkcVxQIGA",
-              // "1zKuMfvQx0Lq_cJgJmzssOZnIHi7hLEpcILsDq7IPOAY",
-              // "1iJQQ-__EGdsApjFAPJu2c0-raDnCebcXq33UgWL-2CM",
-              // "1j1_cTw01NUO7tiVWfRADFV2WddZV-ttORupmkMd66vs",
-              // "16PrhlaVbOqWL-J6N2zKBzKxROICbbf_R7FCoNEmpXac",
-              // "1RBULCW0TXrYjTL8i9rFcZXu6cvMIkYmJr4cMqf1B9eI",
-              // "1ozAo6OGcJRj96pk6OXNLCo-cBHT-vZaJ0PEckEAJzUc",
-              // "1Oq1T9H6EM-XKmQ1FjGTC7SvZRXoz6k1Z1QLBnx6osDY",
-              // "1lgvjB6RKYviPHC9sgEaCpZc-lbiBTZ1XWEop3Vbq_iQ",
-              // "1c1cJSqJKJDYj-w8nSWXoc43uFlyNshqDTscMkk-mFuk",
-              // "1EfDV6cVE4ipe4ZiAFYhFd4jPsCOrYJ-3ENT0wYf1IDk",
-              // "1882BF98pW90cb5tS-nCyEuOB2eXO7EOTrNJdyykdC3Q",
-              // "162yIECys1DdLF88jqfMm9kTvt7HoYs47ixPVqxTir94",
-              // "15JwiNM-28Z9L-ZMvnLaqXd80yxOO9hAmZ6mU87Kk5zA",
-              // "1MCPlsbmsyTU_h2ehDiqcLSaDOAGoIIJc4KVz7Nh_J9M",
-            ]
-          } ],
-        },
-      }
-    }
   },
 
   'stt-v1.0': {
@@ -541,47 +386,33 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         stt: {
           type: 'object',
+          title: 'Stt',
           properties: {
             model: {
               type: 'object',
+              title: 'Model',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', default: 'openai', },
+                name: { type: 'string', title: 'Name', default: 'whisper-1', },
                 apiKey: {
                   type: 'object',
+                  title: 'Api Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault', default: 'OPENAI_API_KEY', },
                   },
                 },
-              }
+              },
             },
-            language: { type: 'string' },
+            language: { type: 'string', title: 'Language', default: 'en', },
           },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'stt' ],
-        stt: {
-          model: {
-            provider: 'openai',
-            name: 'whisper-1',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          language: 'en',
         },
-      }
-    }
+      },
+    },
   },
 
   'tts-v1.0': {
@@ -595,50 +426,35 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         tts: {
           type: 'object',
+          title: 'TTS',
           properties: {
             model: {
               type: 'object',
+              title: 'Model',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', default: 'openai', },
+                name: { type: 'string', title: 'Name', default: 'tts-1', },
+                voice: { type: 'string', title: 'Voice', default: 'nova', },
                 apiKey: {
                   type: 'object',
+                  title: 'API Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault', default: 'OPENAI_API_KEY', },
                   },
                 },
-                format: { type: 'string' },
-                speed: { type: 'number' },
-              }
+                format: { type: 'string', enum: ['mp3', 'flac', 'wav', 'pcm'], title: 'Format', default: 'mp3', },
+                speed: { type: 'number', title: 'Speed', default: 1, },
+              },
             },
           },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'tts' ],
-        tts: {
-          model: {
-            provider: 'openai',
-            name: 'tts-1',
-            voice: 'nova',
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
-          },
-          format: 'mp3', // mp3, flac, wav, pcm
-          speed: 1,
         },
-      }
-    }
+      },
+    },
   },
 
   'imagegen-v1.0': {
@@ -652,54 +468,36 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         imagegen: {
           type: 'object',
+          title: 'Imagegen',
           properties: {
             model: {
               type: 'object',
+              title: 'Model',
               properties: {
-                provider: { type: 'string' },
-                name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', default: 'openai', },
+                name: { type: 'string', title: 'Name', default: 'dall-e-2', }, // "dall-e-2", "dall-e-3", "gpt-image-1"
                 apiKey: {
                   type: 'object',
+                  title: 'Api Key',
                   properties: {
-                    valueFromVault: { type: 'string' },
+                    valueFromVault: { type: 'string', title: 'Value From Vault', default: 'OPENAI_API_KEY', },
                   },
                 },
-              }
+              },
             },
-            size: { type: 'string' },
-            quality: { type: 'string' },
-            style: { type: 'string' },
-            n: { type: 'number' },
-          }
-        },
-      }
-    },
-    defaultOptions: function () {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'imagegen' ],
-        imagegen: {
-          // See docs on params: https://platform.openai.com/docs/api-reference/images/create
-          model: {
-            provider: 'openai',
-            name: 'dall-e-2',    // "dall-e-2", "dall-e-3", "gpt-image-1",
-            apiKey: {
-              valueFromVault: 'OPENAI_API_KEY',
-            },
+            size: { type: 'string', title: 'Size', enum: [ "256x256", "512x512", "1024x1024" ], default: '256x256', },      // "256x256", "512x512", "1024x1024"; DALL·E 3 only supports "1024x1024"
+            quality: { type: 'string', title: 'Quality', enum: ['standard', 'hq'], default: 'standard', }, // "standard" (default) or "hd" (for high detail)
+            style: { type: 'string', title: 'Style', enum: ['vivid', 'natural'], default: 'natural', },     // "vivid" (default) or "natural" — affects artistic style
+            n: { type: 'number', title: 'Number of Images', default: 1, },                     // OpenAI limits you to n=1
           },
-          size: '256x256',      // "256x256", "512x512", "1024x1024"; DALL·E 3 only supports "1024x1024")
-          quality: 'standard',  // "standard" (default) or "hd" (for high detail)
-          style: 'natural',     // "vivid" (default) or "natural" — affects artistic style
-          n: 1,                 // OpenAI limits you to n=1
         },
-      }
-    }
+      },
+    },
   },
 
   'code-v1.0': {
@@ -713,48 +511,44 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         code: {
           type: 'object',
+          title: 'Code',
           properties: {
-            kernel: { type: 'string' },
-            env: { },
+            kernel: { type: 'string', title: 'Kernel (Programming Language)', enum: ['python3', 'javascript', 'bash'], default: 'python3', },
+            env: {
+              type: 'object',
+              title: 'Environment Variables (key:value)',
+              additionalProperties: true,
+              default: {
+                // 'MY_ENV_VAR': 'my-value',
+                // 'MY_SECOND_ENV_VAR': 'some value',
+              },
+            },
             commands: {
               type: 'object',
+              title: 'Commands',
               properties: {
-                start: { type: 'string' },
-                restart: { type: 'string' },
-                reconnect: { type: 'string' },
-                shutdown: { type: 'string' },
+                start: { type: 'string', title: 'Start', default: '^//START$', },
+                restart: { type: 'string', title: 'Restart', default: '^//RESTART$', },
+                reconnect: { type: 'string', title: 'Reconnect', default: '^//RECONNECT$', },
+                shutdown: { type: 'string', title: 'Shutdown', default: '^//SHUTDOWN$', },
               },
             },
           },
         },
+      },
+    },
+    uiSchema: {
+      code: {
+        env: {
+          "ui:field": "JsonEditorField"
+        }
       }
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'code' ],
-
-        code: {
-          kernel: 'python3',
-          env: {
-            'MY_ENV_VAR': 'my-value',
-            'MY_SECOND_ENV_VAR': 'some value',
-          },
-          commands: {
-            start: "^//START$",
-            restart: "^//RESTART$",
-            reconnect: "^//RECONNECT$",
-            shutdown: "^//SHUTDOWN$",
-          },
-        },
-      }
-    }
   },
 
   'quantum-v1.0': {
@@ -768,72 +562,51 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['quantum'], },
         quantum: {
           type: 'object',
+          title: 'Quantum',
           properties: {
-            // provider: { type: 'string' },
-            backend: { type: 'string' },
-            minNumQubits: { type: 'number' },
-            language: { type: 'string' },
-            optimizationLevel: { type: 'number' },
+            // provider: { type: 'string', title: 'Provider', default: 'ibm', },
+            backend: { type: 'string', title: 'Backend', default: 'fake_almaden_v2', }, // least_busy, fake_almaden_v2, ibm_torino, ibm_brisbane, ibm_sherbrooke
+            minNumQubits: { type: 'number', title: 'Min Num Qubits', default: 127, }, // only for least_busy backend
+            language: { type: 'string', title: 'Language', enum: ['qasm2', 'qasm3'], default: 'qasm2', }, // qasm2, qasm3
+            optimizationLevel: { type: 'number', title: 'Optimization Level', default: 1, },
             draw: {
               type: 'object',
+              title: 'Draw',
               properties: {
-                enable: { type: 'boolean' },
-                output: { type: 'string' },
-                style: { type: 'string' },
+                enable: { type: 'boolean', title: 'Enable', default: true, },
+                output: { type: 'string', title: 'Output', default: 'text', }, // text, mpl
+                style: { type: 'string', title: 'Style', default: 'str', }, // only for text output
               },
             },
             instance: {
               type: 'object',
+              title: 'Instance',
               properties: {
-                valueFromVault: { type: 'string' },
+                valueFromVault: { type: 'string', title: 'Value From Vault', default: 'IBM_CLOUD_QISKIT_INSTANCE', },
               },
             },
             apiKey: {
               type: 'object',
+              title: 'API Key',
               properties: {
-                valueFromVault: { type: 'string' },
+                valueFromVault: { type: 'string', title: 'Value From Vault', default: 'IBM_CLOUD_API_KEY', },
               },
             },
           },
         },
-      }
+      },
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'quantum' ],
-        quantum: {
-          // provider: 'ibm',
-          backend: 'fake_almaden_v2',  // least_busy, fake_almaden_v2, ibm_torino, ibm_brisbane, ibm_sherbrooke
-          minNumQubits: 127,  // only for least_busy backend
-          language: 'qasm2',  // qasm2, qasm3
-          optimizationLevel: 1,
-          draw: {
-            enable: true,
-            output: 'text',   // text, mpl
-            style: 'str',     // only for text output
-          },
-          instance: {
-            valueFromVault: 'IBM_CLOUD_QISKIT_INSTANCE',
-          },
-          apiKey: {
-            valueFromVault: 'IBM_CLOUD_API_KEY',
-          },
-        },
-      }
-    }
   },
 
   'storage-v1.0': {
     key: 'storage-v1.0',
     value: 'storage-v1.0',
-    category: 'Storage',
+    category: 'Data',
     icon: 'database',
     text: 'Storage v1.0',
     description: t('storage.description'),
@@ -841,46 +614,30 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         storage: {
           type: 'object',
+          title: 'Storage',
           properties: {
-            driver: { type: 'string' },
-            namespace: { type: 'string' },
-            verbose: { type: 'number', enum: [0, 1, 2] },
+            driver: { type: 'string', title: 'Driver', default: 'mongodb', },
+            namespace: { type: 'string', title: 'Namespace', default: 'default', },
+            verbose: { type: 'number', title: 'Verbose', enum: [0, 1, 2], default: 1, },
             commands: {
               type: 'object',
+              title: 'Commands',
               properties: {
-                list: { type: 'string' },
-                get: { type: 'string' },
-                set: { type: 'string' },
-                delete: { type: 'string' },
+                list: { type: 'string', title: 'List', default: '^//LIST$', },
+                get: { type: 'string', title: 'Get', default: '^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$', },
+                set: { type: 'string', title: 'Set', default: '^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
+                delete: { type: 'string', title: 'Delete', default: '^//DELETE\\s+(?P<key>\\S+)$', },
               },
             },
           },
         },
-      }
+      },
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'storage' ],
-        storage: {
-          driver: 'mongodb',
-          namespace: 'default',
-          verbose: 1,
-          commands: {
-            list: "^//LIST$",
-            get: "^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$",
-            set: "^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$",
-            delete: "^//DELETE\\s+(?P<key>\\S+)$",
-          },
-        },
-      }
-    }
   },
 
   'command-v1.0': {
@@ -894,30 +651,20 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         command: {
           type: 'object',
+          title: 'Command',
           properties: {
-            execute: { type: 'string' },
-            shell: { type: 'boolean' },
+            // execute: { type: 'string', title: 'Execute', default: '/bin/sh', },
+            execute: { type: 'string', title: 'Execute', default: '', },
+            shell: { type: 'boolean', title: 'Run in Shell', default: false, },
           },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'command' ],
-        command: {
-          // execute: '/bin/sh',
-          execute: '',
-          shell: false,
         },
-      }
-    }
+      },
+    },
   },
 
   'langflow-v1.0': {
@@ -931,29 +678,19 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         langflow: {
           type: 'object',
+          title: 'Langflow',
           properties: {
-            flowId: { type: 'string' },
-            sessionId: { type: 'string' },
+            flowId: { type: 'string', title: 'Flow Id', default: '', },
+            sessionId: { type: 'string', title: 'Session Id', default: '', },
           },
         },
-      }
+      },
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'langflow' ],
-        langflow: {
-          flowId: '',
-          sessionId: '',
-        },
-      }
-    }
   },
 
   'nodered-v1.0': {
@@ -967,37 +704,36 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         nodered: {
           type: 'object',
+          title: 'Nodered',
           properties: {
-            method: { type: 'string' },
-            route: { type: 'string' },
-            payload: { },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
+            method: { type: 'string', title: 'Method', default: 'POST', },
+            route: { type: 'string', title: 'Route', default: '', },
+            payload: {
+              type: 'object',
+              title: 'Payload',
+              additionalProperties: true,
+              default: {
+                // prompt: '',
+              },
+            },
+            parseJson: { type: 'boolean', title: 'Parse Json', default: true, },
+            promptKey: { type: 'string', title: 'Prompt Key', default: 'prompt', },
           },
         },
+      },
+    },
+    uiSchema: {
+      nodered: {
+        payload: {
+          "ui:field": "JsonEditorField"
+        }
       }
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'nodered' ],
-        nodered: {
-          method: 'POST',
-          route: '',
-          payload: {
-            prompt: '',
-          },
-          parseJson: true,
-          promptKey: 'prompt',
-        },
-      }
-    }
   },
 
   'n8n-v1.0': {
@@ -1011,37 +747,36 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         n8n: {
           type: 'object',
+          title: 'N8n',
           properties: {
-            method: { type: 'string' },
-            url: { type: 'string' },
-            payload: { },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
+            method: { type: 'string', title: 'Method', default: 'POST', },
+            url: { type: 'string', title: 'URL', default: '', },
+            payload: {
+              type: 'object',
+              title: 'Payload',
+              additionalProperties: true,
+              default: {
+                // prompt: '',
+              },
+            },
+            parseJson: { type: 'boolean', title: 'Parse Json', default: true, },
+            promptKey: { type: 'string', title: 'Prompt Key', default: 'prompt', },
           },
         },
+      },
+    },
+    uiSchema: {
+      n8n: {
+        payload: {
+          "ui:field": "JsonEditorField"
+        }
       }
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'n8n' ],
-        n8n: {
-          method: 'POST',
-          url: '',
-          payload: {
-            prompt: '',
-          },
-          parseJson: true,
-          promptKey: 'prompt',
-        },
-      }
-    }
   },
 
   'notebook-v1.0': {
@@ -1055,39 +790,37 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         notebook: {
           type: 'object',
+          title: 'Notebook',
           properties: {
-            filePath: { type: 'string' },
-            kernelName: { type: 'string' },
-            parameters: { },
-            parseJson: { type: 'boolean' },
-            promptKey: { type: 'string' },
+            // filePath: { type: 'string', title: 'File Path', default: '/opt/app/input/selfdev-notebooks/papermill.ipynb', },
+            filePath: { type: 'string', title: 'File Path', default: '', },
+            kernelName: { type: 'string', title: 'Kernel Name', default: 'python3', },
+            parameters: {
+              type: 'object',
+              title: 'Parameters',
+              additionalProperties: true,
+              default: {
+                // who: 'Earth', num: 0.3,
+              },
+            },
+            parseJson: { type: 'boolean', title: 'Parse Json', default: true, },
+            promptKey: { type: 'string', title: 'Prompt Key', default: 'prompt', },
           },
+        },
+      },
+    },
+    uiSchema: {
+      notebook: {
+        parameters: {
+          "ui:field": "JsonEditorField"
         }
       }
     },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'notebook' ],
-        notebook: {
-          // filePath: '/opt/app/input/selfdev-notebooks/papermill.ipynb',
-          filePath: '',
-          kernelName: 'python3',
-          parameters: {
-            who: 'Earth',
-            num: 0.3,
-          },
-          parseJson: true,
-          promptKey: 'prompt',
-        },
-      }
-    }
   },
 
   'avatar-v1.0': {
@@ -1101,45 +834,32 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         avatar: {
           type: 'object',
+          title: 'Avatar',
           properties: {
             model: {
               type: 'object',
+              title: 'Model',
               properties: {
-                provider: { type: 'string' },
-                // name: { type: 'string' },
+                provider: { type: 'string', title: 'Provider', enum: ['sadtalker'], default: 'sadtalker', },
+                // name: { type: 'string', title: 'Name', default: '', },
                 // apiKey: {
                 //   type: 'object',
+                //   title: 'Api Key',
                 //   properties: {
-                //     valueFromVault: { type: 'string' },
+                //     valueFromVault: { type: 'string', title: 'Value From Vault', default: 'API_KEY', },
                 //   },
                 // },
-              }
+              },
             },
           },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'avatar' ],
-        avatar: {
-          model: {
-            provider: 'sadtalker',
-            // name: 'gpt-4o-mini',
-            // apiKey: {
-            //   valueFromVault: 'OPENAI_API_KEY',
-            // },
-          },
         },
-      }
-    }
+      },
+    },
   },
 
   'curl-v1.0': {
@@ -1153,33 +873,21 @@ Answer:`,
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', format: "textarea", default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         curl: {
           type: 'object',
+          title: 'Curl',
           properties: {
-            method: { type: 'string', title: 'Method', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD' ], default: 'GET' },
-            url: { type: 'string', title: 'URL', default: 'http://localhost:80' },
-            headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '' },
-            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15 },
+            method: { type: 'string', title: 'Method', enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'], default: 'GET', },
+            url: { type: 'string', title: 'URL', default: 'http://localhost:80', },
+            headers: { type: 'string', title: 'Headers in Stringified JSON format', default: '', },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 15, },
           },
-        }
-      }
-    },
-    defaultOptions: () => {
-      return {
-        name: faker.internet.username().toLowerCase(),
-        description: '',
-        joinRooms: [ 'curl' ],
-        curl: {
-          method: 'GET',
-          url: 'http://localhost:80',
-          headers: '',
-          timeoutSec: 15,
         },
-      }
-    }
+      },
+    },
   },
 }
 
