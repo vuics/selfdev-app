@@ -24,6 +24,8 @@
     "@dagrejs/dagre": "^1.1.4",
     "@faker-js/faker": "^9.5.1",
     "@jitsi/react-sdk": "^1.4.4",
+    "@mdx-js/mdx": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
     "@nivo/bar": "^0.99.0",
     "@nivo/core": "^0.99.0",
     "@replit/codemirror-vim": "^6.3.0",

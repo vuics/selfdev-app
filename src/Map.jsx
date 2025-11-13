@@ -1,8 +1,9 @@
 import React, {
-  useState, useRef, useEffect, useCallback, memo, createContext, useContext,
-  Fragment,
+  useState, useRef, useEffect, useCallback, createContext, useContext,
+  Fragment, memo,
 } from 'react'
 import axios from 'axios'
+import * as SemanticUiReact from 'semantic-ui-react'
 import {
   Container,
   Loader,
@@ -67,6 +68,9 @@ import validator from '@rjsf/validator-ajv8';
 import { JsonEditorField } from './Hive'
 import stringify from 'json-stringify-pretty-compact';
 
+import { MDXProvider } from '@mdx-js/react'
+import * as runtime from 'react/jsx-runtime'
+import { compile } from '@mdx-js/mdx'
 
 import Menubar from './components/Menubar'
 import conf, { bool } from './conf'
@@ -586,6 +590,74 @@ const MarkdownEditor = memo(({
     />
   )
 })
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so next render shows fallback UI
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can log the error to an external service here
+    console.error("Error in child component:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div style={{ color: 'red' }}>Something went wrong: {this.state.error?.message}</div>;
+    }
+
+    return this.props.children;
+  }
+}
+
+const MDXEditor = ({ text, setText, roster, data, id, setNodes }) => {
+  const components = {
+    ...SemanticUiReact,
+    ExternalButtonExample: (props) => <button {...props} style={{ color: 'violet' }} />,
+  }
+
+  const [Compiled, setCompiled] = useState(() => () => <div>Compiling...</div>)
+
+  useEffect(() => {
+    if (data.editing) {
+      return
+    }
+    // TODO: compile in worker
+    //      Take care of security
+    //      https://mdxjs.com/docs/getting-started/#security
+    compile(text, { outputFormat: 'function-body' })
+      .then((file) => {
+        const { default: MDXContent } = new Function(String(file))(runtime)
+        setCompiled(() => MDXContent)
+      })
+      .catch((err) => {
+        setCompiled(() => () => <pre style={{ color: 'red' }}>{err.message}</pre>)
+      })
+  }, [text, data.editing])
+
+  if (data.editing) {
+    return (
+      <CodeEditor
+        text={text} setText={setText} roster={roster} data={data}
+        id={id} setNodes={setNodes}
+      />
+    )
+  }
+
+  return (
+    <ErrorBoundary>
+      <MDXProvider>
+        <Compiled components={components} />
+      </MDXProvider>
+    </ErrorBoundary>
+  )
+}
 
 const ApplyOrCancel = memo(({ applyText, cancelText }) => {
   const { t } = useTranslation('Map')
@@ -1115,6 +1187,10 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                   <Icon name={ data.kind === 'form' ? 'dot circle' : 'circle outline'} />
                   {t('Form')}
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => selectKind('mdx')}>
+                  <Icon name={ data.kind === 'mdx' ? 'dot circle' : 'circle outline'} />
+                  {t('MDX / HTML')}
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
@@ -1335,6 +1411,13 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               <FormEditor
                 text={text} setText={setText} id={id} setNodes={setNodes}
                 roster={roster} data={data} cancelText={cancelText}
+              />
+            </>)}
+
+            { data.kind === 'mdx' && (<>
+              <MDXEditor
+                text={text} setText={setText} roster={roster} data={data}
+                id={id} setNodes={setNodes}
               />
             </>)}
           </>)}
