@@ -106,7 +106,7 @@ const archetypes = {
   'mcp-v1.0': {
     key: 'mcp-v1.0',
     value: 'mcp-v1.0',
-    category: 'Client',
+    category: 'Web',
     icon: 'dot circle outline',
     text: 'MCP Client v1.0',
     description: t('mcp.description'),
@@ -865,7 +865,7 @@ const archetypes = {
   'curl-v1.0': {
     key: 'curl-v1.0',
     value: 'curl-v1.0',
-    category: 'Client',
+    category: 'Web',
     icon: 'external',
     text: 'Curl v1.0',
     description: t('curl.description'),
@@ -893,7 +893,7 @@ const archetypes = {
   'browseruse-v1.0': {
     key: 'browseruse-v1.0',
     value: 'browseruse-v1.0',
-    category: 'LLM',
+    category: 'Web',
     icon: 'compass',
     text: 'Browser-Use v1.0',
     description: t('browseruse.description'),
