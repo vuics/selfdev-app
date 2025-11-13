@@ -501,7 +501,7 @@ const connectors = {
   'webhook': {
     key: 'webhook',
     value: 'webhook',
-    icon: 'world',
+    icon: 'anchor',
     text: 'Webhook',
     description: t('webhook.description'),
     docUrl: getDocUrl('webhook'),
@@ -628,6 +628,42 @@ const connectors = {
       }
     },
   },
+
+  'webapp': {
+    key: 'webapp',
+    value: 'webapp',
+    icon: 'globe',
+    text: 'Web App',
+    description: t('webapp.description'),
+    docUrl: getDocUrl('webapp'),
+    schema: {
+      title: 'Model Context Protocol',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'webapp' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        webapp: {
+          title: 'Web Configuration',
+          type: 'object',
+          properties: {
+            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+            lowdefyYaml: { type: 'string', title: 'Lowdefy YAML', format: 'textarea', default: '' },
+            regenerate: { type: 'boolean', title: 'Regenerate upon Receiving Messages with Lowdefy YAML', default: true },
+          },
+          // required: ["lowdefyYaml"]
+        },
+      }
+    },
+  },
+
 
   // 'api': {
   //   key: 'api',
