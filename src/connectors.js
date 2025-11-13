@@ -657,7 +657,6 @@ const connectors = {
             endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
             defaultCode: { type: 'string', title: 'Default Code (Lowdefy YAML)', format: 'textarea', default: '' },
             allowUpdates: { type: 'boolean', title: 'Allow Updates (Regenerate upon Receiving Messages with Code)', default: true },
-            updatedCode: { type: 'string', title: 'Updated Code (Lowdefy YAML)', format: 'textarea', default: '' },
           },
           // required: ["lowdefyYaml"]
         },
