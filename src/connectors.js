@@ -651,14 +651,15 @@ const connectors = {
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         webapp: {
-          title: 'Web Configuration',
+          title: 'Web App Configuration',
           type: 'object',
           properties: {
+            domain: { type: 'string', title: 'Domain', default: 'webapp.example.com' },
             endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
             defaultCode: { type: 'string', title: 'Default Code (Lowdefy YAML)', format: 'textarea', default: '' },
             allowUpdates: { type: 'boolean', title: 'Allow Updates (Regenerate upon Receiving Messages with Code)', default: true },
           },
-          // required: ["lowdefyYaml"]
+          required: ["domain", "endpoint"]
         },
       }
     },
