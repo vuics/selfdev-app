@@ -89,6 +89,12 @@ const conf = {
     limit: 1000,
   },
 
+  logs: {
+    enable: bool(import.meta.env.VITE_LOGS_ENABLE || true),
+    // skip: 0,
+    // limit: 1000,
+  },
+
   apps: {
     enable: bool(import.meta.env.VITE_APPS_ENABLE || true),
     registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://verdaccio.hyag.ru',

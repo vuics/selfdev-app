@@ -85,6 +85,16 @@ export default function Menubar ({ children }) {
           {t('Omni')}
         </Menu.Item>
       ) }
+      { conf.logs.enable && (
+        <Menu.Item onClick={() => navigate('/logs')} active={pathname==='/logs'}>
+          {/*/}
+          <Icon name='tasks' />
+          <Icon name='th list' />
+          {/*/}
+          <Icon name='chart bar' />
+          {t('Logs')}
+        </Menu.Item>
+      ) }
       { conf.meet.enable && (
         <Menu.Item onClick={() => navigate('/meet')} active={pathname==='/meet'}>
           <Icon name='video' />

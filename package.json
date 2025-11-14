@@ -24,6 +24,7 @@
     "@dagrejs/dagre": "^1.1.4",
     "@faker-js/faker": "^9.5.1",
     "@jitsi/react-sdk": "^1.4.4",
+    "@kanaries/graphic-walker": "^0.4.77",
     "@mdx-js/mdx": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
     "@nivo/bar": "^0.99.0",
