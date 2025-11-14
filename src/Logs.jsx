@@ -55,6 +55,8 @@ export default function Omni () {
       { "field": "@timestamp", filter: true },
       { "field": "level", filter: true },
       { "field": "agentId", filter: true },
+      { "field": "archetype", filter: true },
+      { "field": "name", filter: true },
       { "field": "message", filter: true },
   ]);
   const [rowData, setRowData] = useState([ ]);
