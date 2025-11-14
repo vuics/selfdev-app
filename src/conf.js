@@ -91,8 +91,8 @@ const conf = {
 
   logs: {
     enable: bool(import.meta.env.VITE_LOGS_ENABLE || true),
-    // skip: 0,
-    // limit: 1000,
+    skip: 0,
+    limit: 1000,
   },
 
   apps: {
