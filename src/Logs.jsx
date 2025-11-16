@@ -31,12 +31,88 @@ import { GraphicWalker } from '@kanaries/graphic-walker';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from "ag-grid-community"
-import { useWindowDimensions } from './helper.js'
 
+import {
+  ChartsProvider,
+  generateChartsTheme,
+  getTheme,
+  SnackbarProvider,
+} from "@perses-dev/components";
+import {
+  DataQueriesProvider,
+  dynamicImportPluginLoader,
+  // PluginModuleResource,
+  PluginRegistry,
+  TimeRangeProvider,
+} from "@perses-dev/plugin-system";
+import { ThemeProvider } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  DatasourceStoreProvider,
+  Panel,
+  VariableProvider,
+} from "@perses-dev/dashboards";
+// import {
+//   DashboardResource,
+//   DurationString,
+//   GlobalDatasourceResource,
+//   DatasourceResource,
+//   TimeRangeValue,
+// } from "@perses-dev/core";
+// import { DatasourceApi } from "@perses-dev/dashboards";
+import * as prometheusPlugin from "@perses-dev/prometheus-plugin";
+import * as timeseriesChartPlugin from "@perses-dev/timeseries-chart-plugin";
+
+import { useWindowDimensions } from './helper.js'
 import Menubar from './components/Menubar'
 import conf from './conf'
 
 ModuleRegistry.registerModules([AllCommunityModule])
+
+
+
+const fakeDatasource = {
+  kind: "GlobalDatasource",
+  metadata: { name: "hello" },
+  spec: {
+    default: true,
+    plugin: {
+      kind: "PrometheusDatasource",
+      spec: {
+        // Update to your actual datasource url
+        directUrl: "http://prometheus.dev.local:9090",
+      },
+    },
+  },
+};
+
+class DatasourceApiImpl {
+  getDatasource() {
+    return Promise.resolve(undefined);
+  }
+
+  getGlobalDatasource() {
+    return Promise.resolve(fakeDatasource);
+  }
+
+  listDatasources() {
+    return Promise.resolve([]);
+  }
+
+  listGlobalDatasources() {
+    return Promise.resolve([fakeDatasource]);
+  }
+
+  buildProxyUrl() {
+    return "/prometheus";
+  }
+}
+export const fakeDatasourceApi = new DatasourceApiImpl();
+export const fakeDashboard = {
+  kind: "Dashboard",
+  metadata: {},
+  spec: {},
+};
 
 
 export function transformPrometheusRange(response) {
@@ -102,6 +178,38 @@ export default function Logs () {
 
   const [ metricsData, setMetricsData ] = useState([]);
   // console.log('metricsData:', metricsData)
+
+
+  const [timeRange, setTimeRange] = useState({
+    // start: new Date(Math.floor(Date.now() / 1000) - 60 * 60),
+    // end: new Date(),
+
+    // pastDuration: "30m"
+
+    pastDuration: "3h"
+  });
+  const [refreshInterval, setRefreshInterval] = useState("0s");
+  // const [refreshInterval, setRefreshInterval] = useState("10s");
+  const muiTheme = getTheme("light");
+  const chartsTheme = generateChartsTheme(muiTheme, {});
+  const pluginLoader = dynamicImportPluginLoader([
+    {
+      resource: prometheusPlugin.getPluginModule(),
+      importPlugin: () => Promise.resolve(prometheusPlugin),
+    },
+    {
+      resource: timeseriesChartPlugin.getPluginModule(),
+      importPlugin: () => Promise.resolve(timeseriesChartPlugin),
+    },
+  ]);
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+    },
+  });
 
 
   const fetchLogs = async () => {
@@ -292,6 +400,86 @@ export default function Logs () {
                 fields={metricsFields}
                 i18nLang={i18n.language}
               />
+            </Tab.Pane>),
+        }, {
+          menuItem: 'Perses',
+          render: () => (
+            <Tab.Pane
+              attached='top'
+              // attached='bottom'
+            >
+              <div
+                style={{
+                  width: width - 25,
+                  height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
+                }}
+              >
+                <ThemeProvider theme={muiTheme}>
+                  <ChartsProvider chartsTheme={chartsTheme}>
+                    <SnackbarProvider
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      variant="default"
+                      content=""
+                    >
+                      <PluginRegistry
+                        pluginLoader={pluginLoader}
+                        defaultPluginKinds={{
+                          Panel: "TimeSeriesChart",
+                          TimeSeriesQuery: "PrometheusTimeSeriesQuery",
+                        }}
+                      >
+                        <QueryClientProvider client={queryClient}>
+                          <TimeRangeProvider timeRange={timeRange} refreshInterval={refreshInterval} setTimeRange={setTimeRange} setRefreshInterval={setRefreshInterval}>
+                            <VariableProvider>
+                              <DatasourceStoreProvider
+                                dashboardResource={fakeDashboard}
+                                datasourceApi={fakeDatasourceApi}
+                              >
+                                <DataQueriesProvider
+                                  definitions={[
+                                    {
+                                      kind: "PrometheusTimeSeriesQuery",
+                                      // spec: { query: `up{job="prometheus"}` },
+                                      spec: { query: `agents_processed` },
+                                    },
+                                    {
+                                      kind: "PrometheusTimeSeriesQuery",
+                                      // spec: { query: `up{job="prometheus"}` },
+                                      spec: { query: `running_agents` },
+                                    },
+                                  ]}
+                                >
+                                  <Panel
+                                    panelOptions={{
+                                      hideHeader: true,
+                                      // hideHeader: false,
+                                    }}
+                                    definition={{
+                                      kind: "Panel",
+                                      spec: {
+                                        display: { name: "Example Panel" },
+                                        plugin: {
+                                          kind: "TimeSeriesChart",
+                                          spec: {
+                                            legend: {
+                                              position: "bottom",
+                                              size: "medium",
+                                            },
+                                          },
+                                        },
+                                      },
+                                    }}
+                                  />
+                                </DataQueriesProvider>
+                              </DatasourceStoreProvider>
+                            </VariableProvider>
+                          </TimeRangeProvider>
+                        </QueryClientProvider>
+                      </PluginRegistry>
+                    </SnackbarProvider>
+                  </ChartsProvider>
+                </ThemeProvider>
+              </div>
             </Tab.Pane>),
         } ] }
       />
