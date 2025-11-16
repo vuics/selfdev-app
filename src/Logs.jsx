@@ -5,18 +5,18 @@ import {
   Loader,
   Message,
   Tab,
+  Input,
+  Button,
+  Icon,
   // Header,
   // Segment,
   // Menu,
-  // Icon,
-  // Button,
   // Card,
   // Checkbox,
   // Dropdown,
   // Popup,
   // Divider,
   // Accordion,
-  // Input,
   // List,
   // Label,
   // Confirm,
@@ -64,11 +64,13 @@ export function toNivoLineData(points) {
   ];
 }
 
-export default function Omni () {
+export default function Logs () {
   const { t } = useTranslation('Logs')
   const { height, width } = useWindowDimensions();
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
+  const [ querying, setQuerying ] = useState(false)
+  const [ metricsQuery, setMetricsQuery ] = useState('agents_processed')
 
   // For GraphicWalker
   const [ logsFields, ] = useState([
@@ -121,9 +123,9 @@ export default function Omni () {
   }
 
   const fetchMetrics = async () => {
-    setLoading(true)
+    setQuerying(true)
     try {
-      const res = await axios.get(`${conf.api.url}/logs/metrics`, {
+      const res = await axios.get(`${conf.api.url}/logs/metrics?query=${metricsQuery}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
@@ -135,7 +137,7 @@ export default function Omni () {
       console.error('fetch metrics error:', err);
       return setResponseError(err?.response?.data?.message || t('Error fetching metrics.'))
     } finally {
-      setLoading(false)
+      setQuerying(false)
     }
   }
 
@@ -207,31 +209,62 @@ export default function Omni () {
                   height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
                 }}
               >
-                <ResponsiveLine
-                  data={metricsData}
-                  margin={{ top: 30, right: 30, bottom: 50, left: 60 }}
-                  xScale={{ type: 'time', format: 'native' }}
-                  xFormat="time:%H:%M:%S"
-                  // yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
-                  axisBottom={{
-                    format: "%H:%M:%S",
-                    tickValues: "every 2 minutes",
-                    tickRotation: -30,
-                    legend: "time",
-                    legendOffset: 36
+                <Input
+                  loading={querying}
+                  iconPosition='left'
+                  type='text'
+                  placeholder='Query...'
+                  action
+                  fluid
+                  value={metricsQuery}
+                  onChange={e => setMetricsQuery(e.target.value)}
+                >
+                  <Icon name='terminal' />
+                  <input />
+                  <Button
+                    icon
+                    // iconPosition='left'
+                    labelPosition='right'
+                    color={conf.style.color0}
+                    onClick={fetchMetrics}
+                  >
+                    Query
+                    <Icon name='search' />
+                  </Button>
+                </Input>
+                <div
+                  style={{
+                    width: width - 25,
+                    height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 100
                   }}
-                  // axisLeft={{
-                  //   tickSize: 5,
-                  //   tickPadding: 5,
-                  //   format: value => Number(value).toFixed(0), // <-- numbers on Y axis
-                  //   legend: "count",
-                  //   legendOffset: -40
-                  // }}
-                  // enableGridX={true} // vertical grid lines
-                  // enableGridY={true} // horizontal grid lines
-                  pointSize={4}
-                  useMesh={true}
-                />
+                >
+                  <ResponsiveLine
+                    data={metricsData}
+                    margin={{ top: 30, right: 30, bottom: 50, left: 60 }}
+                    xScale={{ type: 'time', format: 'native' }}
+                    xFormat="time:%H:%M:%S"
+                    // yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
+                    axisBottom={{
+                      format: "%H:%M:%S",
+                      // tickValues: "every 2 minutes",
+                      tickValues: "every 5 minutes",
+                      tickRotation: -30,
+                      legend: "time",
+                      legendOffset: 36
+                    }}
+                    // axisLeft={{
+                    //   tickSize: 5,
+                    //   tickPadding: 5,
+                    //   format: value => Number(value).toFixed(0), // <-- numbers on Y axis
+                    //   legend: "count",
+                    //   legendOffset: -40
+                    // }}
+                    // enableGridX={true} // vertical grid lines
+                    // enableGridY={true} // horizontal grid lines
+                    pointSize={4}
+                    useMesh={true}
+                  />
+                </div>
               </div>
             </Tab.Pane>),
         }, {
