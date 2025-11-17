@@ -27,16 +27,9 @@ import {
   // Table,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
-
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
-
-// import { HighlightStyle, tags } from "@uiw/codemirror-themes-all"
-// import { HighlightStyle, tags } from "@codemirror/language"; // use language package
-// import { Extension } from "@codemirror/state";
-import CodeMirror from '@uiw/react-codemirror';
 import { JsonEditor } from "json-edit-react"
-
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from "ag-grid-community"
@@ -68,21 +61,6 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 
 ModuleRegistry.registerModules([AllCommunityModule])
-
-
-// basic keywords for DQL
-// const dqlKeywords = ["AND", "OR", "NOT", "level", "name", "message"];
-
-// HighlightStyle for CodeMirror 6
-// export const dqlHighlightStyle = HighlightStyle.define([
-//   { tag: tags.keyword, color: "#d73a49", fontWeight: "bold" },    // AND, OR, NOT
-//   { tag: tags.propertyName, color: "#005cc5" },                  // level:, name:, message:
-//   { tag: tags.string, color: "#032f62" },                        // "quoted string"
-// ]);
-
-// export function dqlSyntaxHighlight() {
-//   return [dqlHighlightStyle];
-// }
 
 
 const prometheusDatasource = {
@@ -224,8 +202,7 @@ export default function Logs () {
   const [ selectedLog, setSelectedLog ] = useState(null)
   const [ modalOpen, setModalOpen ] = useState(false)
   const [ levelFilter, setLevelFilter ] = useState('')
-  const [ nameFilter, setServiceFilter ] = useState('')
-
+  const [ nameFilter, setNameFilter ] = useState('')
 
   function toLocalDatetime(date) {
     const pad = (n) => n.toString().padStart(2, "0");
@@ -236,7 +213,7 @@ export default function Logs () {
   function formatLocalTimestamp(utcString) {
     const date = new Date(utcString);
     // Example: "2025-11-17 14:59"
-    return date.toLocaleString([], { 
+    return date.toLocaleString([], {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
@@ -246,6 +223,29 @@ export default function Logs () {
       hour12: false,
     });
   }
+  const [pastDuration, setPastDuration] = useState("1d");
+
+
+  const pastDurationOptions = [
+    { key: "15m", text: "Last 15 minutes", value: "15m", seconds: 15 * 60 },
+    { key: "30m", text: "Last 30 minutes", value: "30m", seconds: 30 * 60 },
+    { key: "1h",  text: "Last 1 hour",     value: "1h",  seconds: 1 * 60 * 60 },
+    { key: "3h",  text: "Last 3 hours",    value: "3h",  seconds: 3 * 60 * 60 },
+    { key: "12h", text: "Last 12 hours",   value: "12h", seconds: 12 * 60 * 60 },
+    { key: "1d",  text: "Last 1 day",      value: "1d",  seconds: 24 * 60 * 60 },
+    { key: "3d",  text: "Last 3 days",     value: "3d",  seconds: 3 * 24 * 60 * 60 },
+    { key: "7d",  text: "Last 7 days",     value: "7d",  seconds: 7 * 24 * 60 * 60 },
+    { key: "custom", text: "Custom", value: "custom", seconds: null },
+  ];
+  useEffect(() => {
+    if (!pastDuration || pastDuration === "custom") return;
+    const item = pastDurationOptions.find(x => x.value === pastDuration);
+    if (!item || !item.seconds) return;
+    const now = new Date();
+    const ms = item.seconds * 1000;
+    setEndTs(toLocalDatetime(now));
+    setStartTs(toLocalDatetime(new Date(now - ms)));
+  }, [pastDuration]);
 
   // const [startTs, setStartTs] = useState(
   //   new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0,16)
@@ -261,12 +261,20 @@ export default function Logs () {
   // TODO: edit it
   const [ logsQueryBase, setLogsQueryBase ] = useState('*')
 
-  useEffect(() => {
-    let q = logsQueryBase;
-    if (levelFilter) q += ` AND level:${levelFilter}`;
-    if (nameFilter) q += ` AND name:${nameFilter}`;
-    setLogsQuery(q);
-  }, [levelFilter, nameFilter, logsQueryBase]);
+  // useEffect(() => {
+  //   let q = logsQuery
+  //   if (levelFilter) {
+  //     q += ` AND level:${levelFilter}`
+  //   } else {
+  //     q.replace(` AND level:${levelFilter}`, '')
+  //   }
+  //   if (nameFilter) {
+  //     q += ` AND name:${nameFilter}`;
+  //   } else {
+  //     q.replace(` AND name:${nameFilter}`, '')
+  //   }
+  //   setLogsQuery(q);
+  // }, [levelFilter, nameFilter, logsQuery]);
 
   const metricsQueriesSchema = {
     type: 'array',
@@ -433,7 +441,13 @@ export default function Logs () {
                   onChange={e => setLogsQuery(e.target.value)}
                 >
                   <Icon name='terminal' />
-                  <input />
+                  <input
+                    style={{
+                      fontFamily: `"Fira Code", "JetBrains Mono", "Source Code Pro", monospace`,
+                      fontSize: "14px",
+                      letterSpacing: "0.3px",
+                    }}
+                  />
                   <Button
                     icon
                     // iconPosition='left'
@@ -446,57 +460,71 @@ export default function Logs () {
                   </Button>
                 </Input>
 
-
-                <CodeMirror
-                  value={logsQuery}
-                  height="50px"
-                  // extensions={[dqlSyntaxHighlight()]}
-                  onChange={(value) => setLogsQuery(value)}
+                <div
+                  style={{ height: '0.1rem'}}
                 />
-                <Button
-                  icon
-                  color={conf.style.color0}
-                  onClick={fetchLogs}
-                >
-                  <Icon name="search" /> Query
-                </Button>
 
-
+                {' '}
+                <Icon name='filter' color='grey'/>
                 <Dropdown
                   placeholder="Level"
                   selection
                   clearable
                   options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
                   value={levelFilter}
-                  onChange={(e, { value }) => setLevelFilter(value)}
+                  onChange={(e, { value }) => {
+                    let q = logsQuery
+                    q = q.replace(` AND level:${levelFilter}`, '')
+                    if (value) {
+                      q += ` AND level:${value}`;
+                    }
+                    setLevelFilter(value)
+                    setLogsQuery(q)
+                  }}
                 />
 
+                {' '}
                 <Dropdown
                   placeholder="Name"
                   selection
                   clearable
                   options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
                   value={nameFilter}
-                  onChange={(e, { value }) => setServiceFilter(value)}
+                  onChange={(e, { value }) => {
+                    let q = logsQuery
+                    q = q.replace(` AND name:${nameFilter}`, '')
+                    if (value) {
+                      q += ` AND name:${value}`;
+                    }
+                    setNameFilter(value)
+                    setLogsQuery(q)
+                  }}
                 />
 
+                {' '}
+                <Icon name='calendar alternate outline' color='grey'/>
                 <Input
                   type="datetime-local"
                   label="Start"
                   value={startTs || ""}
-                  onChange={(e) => setStartTs(e.target.value)}
+                  onChange={(e) => { setStartTs(e.target.value); setPastDuration('custom') }}
                   style={{ marginRight: "10px" }}
                 />
                 <Input
                   type="datetime-local"
                   label="End"
                   value={endTs || ""}
-                  onChange={(e) => setEndTs(e.target.value)}
+                  onChange={(e) => { setEndTs(e.target.value); setPastDuration('custom') }}
                   style={{ marginRight: "10px" }}
                 />
-                <Button onClick={fetchLogs}>Apply Time Range</Button>
-
-
+                <Dropdown
+                  placeholder="Past duration"
+                  label="Dur"
+                  selection
+                  options={pastDurationOptions}
+                  value={pastDuration}
+                  onChange={(e, { value }) => setPastDuration(value)}
+                />
 
                 {aggs && (
                   <LogsHistogram buckets={aggs.per_minute.buckets} />
