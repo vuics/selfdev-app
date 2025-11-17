@@ -164,33 +164,6 @@ export function LogsHistogram({ buckets }) {
   );
 }
 
-
-
-// export function transformPrometheusRange(response) {
-//   const result = response?.data?.result?.[0];
-//   if (!result) return [];
-
-//   const labels = result.metric; // metric labels like job, instance, etc.
-
-//   return result.values.map(([ts, val]) => ({
-//       timestamp: ts * 1000,
-//       value: Number(val),
-//       ...labels
-//     }));
-// }
-
-// export function toNivoLineData(points) {
-//   return [
-//     {
-//       id: points[0]?.__name__ || "metric",
-//       data: points.map(p => ({
-//         x: new Date(p.timestamp),
-//         y: p.value
-//       }))
-//     }
-//   ];
-// }
-
 export default function Logs () {
   const { t } = useTranslation('Logs')
   const { height, width } = useWindowDimensions();
@@ -258,24 +231,6 @@ export default function Logs () {
   console.log('endTs:', endTs)
   // console.log('selectedLog:', selectedLog)
 
-  // TODO: edit it
-  const [ logsQueryBase, setLogsQueryBase ] = useState('*')
-
-  // useEffect(() => {
-  //   let q = logsQuery
-  //   if (levelFilter) {
-  //     q += ` AND level:${levelFilter}`
-  //   } else {
-  //     q.replace(` AND level:${levelFilter}`, '')
-  //   }
-  //   if (nameFilter) {
-  //     q += ` AND name:${nameFilter}`;
-  //   } else {
-  //     q.replace(` AND name:${nameFilter}`, '')
-  //   }
-  //   setLogsQuery(q);
-  // }, [levelFilter, nameFilter, logsQuery]);
-
   const metricsQueriesSchema = {
     type: 'array',
     title: 'Queries',
@@ -291,17 +246,15 @@ export default function Logs () {
 
   // For AgGridReact
   const [logsColumns, ] = useState([
-    // { "field": "@timestamp", filter: true },
     { field: "@timestamp",
       headerName: "Timestamp",
       valueFormatter: (params) => formatLocalTimestamp(params.value),
-      filter: true,
     },
-    { "field": "level", filter: true },
-    { "field": "agentId", filter: true },
-    { "field": "archetype", filter: true },
-    { "field": "name", filter: true },
-    { "field": "message", filter: true },
+    { field: "level" },
+    { field: "agentId" },
+    { field: "archetype" },
+    { field: "name" },
+    { field: "message" },
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
