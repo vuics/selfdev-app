@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ResponsiveBar } from '@nivo/bar'
+import ReactECharts from "echarts-for-react";
 import axios from 'axios'
 import {
   Container,
@@ -22,11 +22,49 @@ import {
   // Divider,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
-// import { isEmpty } from 'lodash'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
 // import { sleep } from './helper'
+
+const buildHorizontalBarOptions = (title, data) => {
+  const categories = data.map(item => item._id);
+  const totals = data.map(item => item.total);
+  const deployed = data.map(item => item.deployed);
+  return {
+    title: { text: title, left: 'center' },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { bottom: 0 },
+    grid: { left: 120, right: 50, top: 60, bottom: 60 },
+    xAxis: { type: 'value', min: 0, max: Math.max(...totals) }, // set max to keep scale correct
+    yAxis: { type: 'category', data: categories },
+    series: [
+      // Draw TOTAL as background
+      {
+        name: 'total',
+        type: 'bar',
+        data: totals,
+        barWidth: 26,
+        // itemStyle: { color: 'red' },   // background color
+        label: { show: true, position: 'insideRight', formatter: '{c}' },
+        emphasis: { focus: 'series' },
+        z: 1
+      },
+      // Draw DEPLOYED on top (same category position)
+      {
+        name: 'deployed',
+        type: 'bar',
+        data: deployed,
+        barWidth: 26,
+        barGap: '-100%',                 // overlay exactly on top of total
+        // itemStyle: { color: 'yellow' },
+        label: { show: true, position: 'insideRight', formatter: '{c}' },
+        emphasis: { focus: 'series' },
+        z: 2
+      }
+    ]
+  };
+};
 
 export default function Dash () {
   const { t } = useTranslation('Dash')
@@ -76,19 +114,18 @@ export default function Dash () {
         />
       }
 
-      <Segment secondary>
-        <Header as='h3'>
-          {t('Dashboard')}
-        </Header>
+      <Header as='h1' textAlign='center'>
+        {t('Dashboard')}
+      </Header>
 
+      <Segment secondary>
         <div
           style={{
-            marginTop: '5vh',
-            marginBottom: '5vh',
+            marginTop: '2vh',
+            marginBottom: '2vh',
             display: 'flex',
             justifyContent: 'center', // horizontal centering
-            // alignItems: 'center',     // vertical centering
-            // height: '85vh',          // make container full viewport height (optional)
+            alignItems: 'center',     // vertical centering
             textAlign: 'center'       // center text inside stats
           }}
         >
@@ -137,89 +174,34 @@ export default function Dash () {
         </div>
       </Segment>
 
-      <Segment style={{ height: '800px' }}>
+      <Segment style={{ height: '850px' }}>
         { dashboard && dashboard.agentArchetypes && (<>
-          <Header as='h4'>
-            {t('Agent Archetypes')}
-          </Header>
-          <ResponsiveBar
-            key='archetypes-bar-chat'
-            data={dashboard.agentArchetypes}
-            indexBy="_id"
-            height={800}
-            keys={[
-              'deployed',
-              'total'
-            ]}
-            layout="horizontal" enableGridY={false} enableGridX={true}
-            labelSkipHeight={16}
-            labelSkipWidth={16}
-            labelTextColor="inherit:darker(1.4)"
-            margin={{
-              bottom: 60,
-              left: 120,
-              right: 110,
-              top: 60
-            }}
-            onClick={() => {}}
-            onMouseEnter={() => {}}
-            onMouseLeave={() => {}}
-            padding={0.2}
-            width={900}
-            legends={[ {
-              dataFrom: 'keys',
-              anchor: 'bottom-right',
-              direction: 'column',
-              translateX: 120,
-              itemsSpacing: 3,
-              itemWidth: 100,
-              itemHeight: 16
-            } ]}
+          <ReactECharts
+            key="archetypes-echarts"
+            option={buildHorizontalBarOptions(
+              t('Agent Archetypes'),
+              dashboard.agentArchetypes
+            )}
+            style={{ height: "800px", width: "100%" }}
           />
         </>)}
       </Segment>
 
-      <Segment style={{ height: '300px' }} >
+      <Segment style={{ height: '550px' }} >
         { dashboard && dashboard.bridgeConnectors && (<>
-          <Header as='h4'>
-            {t('Bridge Connectors')}
-          </Header>
-          <ResponsiveBar
-            key='connectors-bar-chat'
-            data={dashboard.bridgeConnectors}
-            indexBy="_id"
-            height={500}
-            keys={[
-              'deployed',
-              'total'
-            ]}
-            layout="horizontal" enableGridY={false} enableGridX={true}
-            labelSkipHeight={16}
-            labelSkipWidth={16}
-            labelTextColor="inherit:darker(1.4)"
-            margin={{
-              bottom: 60,
-              left: 120,
-              right: 110,
-              top: 60
-            }}
-            onClick={() => {}}
-            onMouseEnter={() => {}}
-            onMouseLeave={() => {}}
-            padding={0.2}
-            width={900}
-            legends={[ {
-              dataFrom: 'keys',
-              anchor: 'bottom-right',
-              direction: 'column',
-              translateX: 120,
-              itemsSpacing: 3,
-              itemWidth: 100,
-              itemHeight: 16
-            } ]}
+          <ReactECharts
+            key="connectors-echarts"
+            option={buildHorizontalBarOptions(
+              t('Bridge Connectors'),
+              dashboard.bridgeConnectors
+            )}
+            style={{ height: "500px", width: "100%" }}
           />
+
         </>)}
       </Segment>
+
+      <br />
     </Container>
   </>)
 }
