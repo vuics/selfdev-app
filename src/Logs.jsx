@@ -59,7 +59,7 @@ import * as timeseriesChartPlugin from "@perses-dev/timeseries-chart-plugin";
 
 import { useWindowDimensions } from './helper.js'
 import Menubar from './components/Menubar'
-import conf from './conf'
+import conf, { bool } from './conf'
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
@@ -168,21 +168,61 @@ export default function Logs () {
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ querying, setQuerying ] = useState(false)
-  const [ logsQuery, setLogsQuery ] = useState('*')
-  const [ adding, setAdding ] = useState(false)
   const [ selectedLog, setSelectedLog ] = useState(null)
   const [ modalOpen, setModalOpen ] = useState(false)
-  const [ levelFilter, setLevelFilter ] = useState('')
-  const [ nameFilter, setNameFilter ] = useState('')
-  const [ active, setActive ] = useState('logs')
-  const [ showLogsChart, setShowLogsChart ] = useState(true)
+
+  const [ levelFilter, setLevelFilter ] = useState(() => {
+    return localStorage.getItem('logs.levelFilter') || ''
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.levelFilter', levelFilter);
+  }, [levelFilter]);
+
+  const [ nameFilter, setNameFilter ] = useState(() => {
+    return localStorage.getItem('logs.nameFilter') || ''
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.nameFilter', nameFilter);
+  }, [nameFilter]);
+
+  const [ logsQuery, setLogsQuery ] = useState(() => {
+    return localStorage.getItem('logs.logsQuery') || '*'
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.logsQuery', logsQuery);
+  }, [logsQuery]);
+
+  const [ editing, setEditing ] = useState(() => {
+    const saved = localStorage.getItem('logs.editing')
+    return saved !== null ? bool(saved) : false
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.editing', editing.toString());
+  }, [editing]);
+
+  const [ active, setActive ] = useState(() => {
+    return localStorage.getItem('logs.active') || 'logs'
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.active', active);
+  }, [active]);
+
+  const [ showLogsChart, setShowLogsChart ] = useState(() => {
+    const saved = localStorage.getItem('logs.showLogsChart')
+    return saved !== null ? bool(saved) : true
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.showLogsChart', showLogsChart.toString());
+  }, [showLogsChart]);
+
 
   function toLocalDatetime(date) {
     const pad = (n) => n.toString().padStart(2, "0");
     return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
-  const [start, setStart] = useState(toLocalDatetime(new Date(Date.now() - 24*60*60*1000))); // 24h ago
-  const [end, setEnd] = useState(toLocalDatetime(new Date())); // now
+  const [ start, setStart ] = useState(toLocalDatetime(new Date(Date.now() - 24*60*60*1000))); // 24h ago
+  const [ end, setEnd ] = useState(toLocalDatetime(new Date())); // now
+
   function formatLocalTimestamp(utcString) {
     const date = new Date(utcString);
     // Example: "2025-11-17 14:59"
@@ -196,7 +236,12 @@ export default function Logs () {
       hour12: false,
     });
   }
-  const [pastDuration, setPastDuration] = useState("1d");
+  const [pastDuration, setPastDuration] = useState(() => {
+    return localStorage.getItem('logs.pastDuration') || '1d'
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.pastDuration', pastDuration);
+  }, [pastDuration]);
 
 
   const pastDurationOptions = [
@@ -236,13 +281,15 @@ export default function Logs () {
     title: 'Queries',
     items: {
       type: 'string',
-      title: 'PromQL query',
+      title: 'PromQL Query',
     },
   }
-  const [ metricsQueries, setMetricsQueries ] = useState([
-    `agents_processed`,
-    `running_agents`,
-  ])
+  const [ metricsQueries, setMetricsQueries ] = useState(() => {
+    return (localStorage.getItem('logs.metricsQueries') || 'agents_processed,running_agents').split('\n')
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.metricsQueries', metricsQueries.join('\n'));
+  }, [metricsQueries]);
 
   // For AgGridReact
   const [logsColumns, ] = useState([
@@ -381,9 +428,9 @@ export default function Logs () {
 
             <Menu.Item
               position='right'
-              onClick={() => { setAdding(!adding) }}
+              onClick={() => { setEditing(!editing) }}
             >
-              <Icon name='edit' color={adding ? conf.style.color0 : 'grey'}/>
+              <Icon name='edit' color={editing ? conf.style.color0 : 'grey'}/>
               {' '}
               {t('Edit Queries')}
               {' '}
@@ -410,7 +457,7 @@ export default function Logs () {
     <Container fluid
       style={{ padding: '15px 15px 0 15px' }}
     >
-      { adding && active === 'logs' && (<>
+      { editing && active === 'logs' && (<>
         <Segment secondary size='mini'>
           <Input
             loading={querying}
@@ -521,16 +568,16 @@ export default function Logs () {
         </Segment>
       </>)}
 
-      { adding && active === 'metrics' && (
+      { editing && active === 'metrics' && (
         <Segment secondary size='mini'>
           <Form
             schema={metricsQueriesSchema}
             validator={validator}
             formData={metricsQueries}
-            onSubmit={({ formData }) => { setMetricsQueries(formData); setAdding(!adding) }}
+            onSubmit={({ formData }) => { setMetricsQueries(formData); setEditing(!editing) }}
           >
             <Button.Group>
-              <Button type='button' onClick={() => { setMetricsQueries(metricsQueries); setAdding(!adding) }}>
+              <Button type='button' onClick={() => { setMetricsQueries(metricsQueries); setEditing(!editing) }}>
                 <Icon name='cancel' />
                 {' '}
                 {t('Cancel')}
@@ -554,7 +601,7 @@ export default function Logs () {
             width: width - 25,
             height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 25
                     - (showLogsChart ? 340 : 0)
-                    - (adding ? 110 : 0)
+                    - (editing ? 110 : 0)
           }}
         >
           { showLogsChart && aggs && (
