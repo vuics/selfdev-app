@@ -181,8 +181,8 @@ export default function Logs () {
     const pad = (n) => n.toString().padStart(2, "0");
     return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
-  const [startTs, setStartTs] = useState(toLocalDatetime(new Date(Date.now() - 24*60*60*1000))); // 24h ago
-  const [endTs, setEndTs] = useState(toLocalDatetime(new Date())); // now
+  const [start, setStart] = useState(toLocalDatetime(new Date(Date.now() - 24*60*60*1000))); // 24h ago
+  const [end, setEnd] = useState(toLocalDatetime(new Date())); // now
   function formatLocalTimestamp(utcString) {
     const date = new Date(utcString);
     // Example: "2025-11-17 14:59"
@@ -216,19 +216,19 @@ export default function Logs () {
     if (!item || !item.seconds) return;
     const now = new Date();
     const ms = item.seconds * 1000;
-    setEndTs(toLocalDatetime(now));
-    setStartTs(toLocalDatetime(new Date(now - ms)));
+    setEnd(toLocalDatetime(now));
+    setStart(toLocalDatetime(new Date(now - ms)));
   }, [pastDuration]);
 
-  // const [startTs, setStartTs] = useState(
+  // const [start, setStart] = useState(
   //   new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0,16)
   // );
-  // const [endTs, setEndTs] = useState(
+  // const [end, setEnd] = useState(
   //   new Date().toISOString().slice(0,16)
   // );
 
-  console.log('startTs:', startTs)
-  console.log('endTs:', endTs)
+  console.log('start:', start)
+  console.log('end:', end)
   // console.log('selectedLog:', selectedLog)
 
   const metricsQueriesSchema = {
@@ -302,7 +302,7 @@ export default function Logs () {
     setLoading(true)
     setQuerying(true)
     try {
-      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}&q=${logsQuery}&startTs=${new Date(startTs).toISOString()}&endTs=${new Date(endTs).toISOString()}`, {
+      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}&q=${logsQuery}&start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
@@ -459,15 +459,15 @@ export default function Logs () {
                 <Input
                   type="datetime-local"
                   label="Start"
-                  value={startTs || ""}
-                  onChange={(e) => { setStartTs(e.target.value); setPastDuration('custom') }}
+                  value={start || ""}
+                  onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
                   style={{ marginRight: "10px" }}
                 />
                 <Input
                   type="datetime-local"
                   label="End"
-                  value={endTs || ""}
-                  onChange={(e) => { setEndTs(e.target.value); setPastDuration('custom') }}
+                  value={end || ""}
+                  onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
                   style={{ marginRight: "10px" }}
                 />
                 <Dropdown
