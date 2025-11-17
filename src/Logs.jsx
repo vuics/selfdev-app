@@ -6,7 +6,6 @@ import {
   Container,
   Loader,
   Message,
-  Tab,
   Input,
   Button,
   Icon,
@@ -15,8 +14,9 @@ import {
   Card,
   Dropdown,
   Modal,
+  Checkbox,
+  // Tab,
   // Header,
-  // Checkbox,
   // Popup,
   // Divider,
   // Accordion,
@@ -112,7 +112,8 @@ export function LogsHistogram({ buckets }) {
     return buckets.map(b => ({
       time: new Date(b.key).toLocaleTimeString([], {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
+        hour12: false,
       }),
       count: b.doc_count
     }));
@@ -124,9 +125,9 @@ export function LogsHistogram({ buckets }) {
     },
     grid: {
       left: 50,
-      right: 20,
-      top: 40,
-      bottom: 40
+      right: 10,
+      top: 30,
+      bottom: 80,
     },
     xAxis: {
       type: "category",
@@ -135,7 +136,7 @@ export function LogsHistogram({ buckets }) {
     },
     yAxis: {
       type: "value",
-      name: "Count"
+      name: "Logs per Minute"
     },
     dataZoom: [
       { type: "inside" },
@@ -154,11 +155,7 @@ export function LogsHistogram({ buckets }) {
   return (
     <Card fluid>
       <Card.Content>
-        <Card.Header>Logs per Minute</Card.Header>
-      </Card.Content>
-
-      <Card.Content>
-        <ReactECharts option={option} style={{ height: 400 }} />
+        <ReactECharts option={option} style={{ height: 300 }} />
       </Card.Content>
     </Card>
   );
@@ -176,6 +173,8 @@ export default function Logs () {
   const [ modalOpen, setModalOpen ] = useState(false)
   const [ levelFilter, setLevelFilter ] = useState('')
   const [ nameFilter, setNameFilter ] = useState('')
+  const [ active, setActive ] = useState('logs')
+  const [ showLogsChart, setShowLogsChart ] = useState(true)
 
   function toLocalDatetime(date) {
     const pad = (n) => n.toString().padStart(2, "0");
@@ -364,266 +363,284 @@ export default function Logs () {
           onDismiss={() => setResponseError('')}
         />
       }
-
     </Container>
 
-      <Tab
-        menu={{ attached: 'bottom' }}
-        panes={[ {
-          menuItem: 'Logs',
-          render: () => (
-            <Tab.Pane
-              attached='top'
-              // attached='bottom'
-              // style={{ margin: '0 0 0 0', padding: '0 0 0 0'}}
+    <Container fluid
+      style={{ padding: '0 15px 0 15px' }}
+    >
+      <Menu pointing secondary>
+        <Menu.Item
+          active={active === 'logs'}
+          onClick={() => { setActive('logs') }}
+        >
+          <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
+          {' '}
+          {t('Logs')}
+          {' '}
+        </Menu.Item>
+
+        <Menu.Item
+          active={active === 'metrics'}
+          onClick={() => { setActive('metrics') }}
+        >
+          <Icon name='chart bar' color={active === 'metrics' ? conf.style.color0 : 'grey'}/>
+          {' '}
+          {t('Metrics')}
+          {' '}
+        </Menu.Item>
+
+        <Menu.Item
+          position='right'
+          onClick={() => { setAdding(!adding) }}
+        >
+          <Icon name='edit' color={adding ? conf.style.color0 : 'grey'}/>
+          {' '}
+          {t('Edit Queries')}
+          {' '}
+        </Menu.Item>
+      </Menu>
+
+      { adding && active === 'logs' && (<>
+        <Segment secondary size='mini'>
+          <Input
+            loading={querying}
+            iconPosition='left'
+            type='text'
+            placeholder='Query...'
+            action
+            fluid
+            value={logsQuery}
+            onChange={e => setLogsQuery(e.target.value)}
+          >
+            <Icon name='terminal' />
+            <input
+              style={{
+                fontFamily: `"Fira Code", "JetBrains Mono", "Source Code Pro", monospace`,
+                fontSize: "14px",
+                letterSpacing: "0.3px",
+              }}
+            />
+            <Button
+              icon
+              // iconPosition='left'
+              labelPosition='right'
+              color={conf.style.color0}
+              onClick={fetchLogs}
             >
-              <div
-                style={{
-                  width: width - 25,
-                  height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
-                }}
+              Query
+              <Icon name='search' />
+            </Button>
+          </Input>
+
+          <div
+            style={{ height: '0.1rem'}}
+          />
+
+          {' '}
+          <Icon name='filter' color='grey'/>
+          <Dropdown
+            placeholder="Level"
+            selection
+            clearable
+            options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
+            value={levelFilter}
+            onChange={(e, { value }) => {
+              let q = logsQuery
+              q = q.replace(` AND level:${levelFilter}`, '')
+              if (value) {
+                q += ` AND level:${value}`;
+              }
+              setLevelFilter(value)
+              setLogsQuery(q)
+            }}
+          />
+
+          {' '}
+          <Dropdown
+            placeholder="Name"
+            selection
+            clearable
+            options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
+            value={nameFilter}
+            onChange={(e, { value }) => {
+              let q = logsQuery
+              q = q.replace(` AND name:${nameFilter}`, '')
+              if (value) {
+                q += ` AND name:${value}`;
+              }
+              setNameFilter(value)
+              setLogsQuery(q)
+            }}
+          />
+
+          {' '}
+          <Icon name='calendar alternate outline' color='grey'/>
+          <Input
+            type="datetime-local"
+            label="Start"
+            value={start || ""}
+            onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
+            style={{ marginRight: "10px" }}
+          />
+          <Input
+            type="datetime-local"
+            label="End"
+            value={end || ""}
+            onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
+            style={{ marginRight: "10px" }}
+          />
+          <Dropdown
+            placeholder="Past duration"
+            label="Dur"
+            selection
+            options={pastDurationOptions}
+            value={pastDuration}
+            onChange={(e, { value }) => setPastDuration(value)}
+          />
+
+        {' '}
+         <Checkbox
+            label='Show Logs Chart'
+            onChange={(e, data) => setShowLogsChart(data.checked)}
+            checked={showLogsChart}
+          />
+        </Segment>
+      </>)}
+
+      { adding && active === 'metrics' && (
+        <Segment secondary size='mini'>
+          <Form
+            schema={metricsQueriesSchema}
+            validator={validator}
+            formData={metricsQueries}
+            onSubmit={({ formData }) => { setMetricsQueries(formData); setAdding(!adding) }}
+          >
+            <Button.Group>
+              <Button type='button' onClick={() => { setMetricsQueries(metricsQueries); setAdding(!adding) }}>
+                <Icon name='cancel' />
+                {' '}
+                {t('Cancel')}
+                {' '}
+              </Button>
+              <Button.Or />
+              <Button type='submit' positive on>
+                <Icon name='save' />
+                {' '}
+                {t('Apply')}
+                {' '}
+              </Button>
+            </Button.Group>
+          </Form>
+        </Segment>
+      )}
+
+      { active === 'logs' && (
+        <div
+          style={{
+            width: width - 25,
+            height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 55
+                    - (showLogsChart ? 340 : 0)
+                    - (adding ? 110 : 0)
+          }}
+        >
+          { showLogsChart && aggs && (
+            <LogsHistogram buckets={aggs.per_minute.buckets} />
+          )}
+
+          <AgGridReact
+            rowData={logsData}
+            columnDefs={logsColumns}
+            theme={theme}
+            pagination
+            paginationPageSize={500}
+            paginationPageSizeSelector={[200, 500, 1000]}
+
+            cacheBlockSize={500}
+            // rowModelType="infinite"
+            onRowClicked={(e) => { console.log('e:', e); console.log('e.data:', e.data); setSelectedLog(e.data); setModalOpen(true); }}
+          />
+
+          <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+            <Modal.Header>Log Detail</Modal.Header>
+            <Modal.Content>
+              <JsonEditor
+                data={selectedLog || {}}
+                viewOnly
+                rootName=''
+              />
+            </Modal.Content>
+          </Modal>
+
+        </div>
+      )}
+
+      { active === 'metrics' && (
+        <div
+          style={{
+            width: width - 25,
+            height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
+          }}
+        >
+
+          <ThemeProvider theme={muiTheme}>
+            <ChartsProvider chartsTheme={chartsTheme}>
+              <SnackbarProvider
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                variant="default"
+                content=""
               >
-                <Input
-                  loading={querying}
-                  iconPosition='left'
-                  type='text'
-                  placeholder='Query...'
-                  action
-                  fluid
-                  value={logsQuery}
-                  onChange={e => setLogsQuery(e.target.value)}
+                <PluginRegistry
+                  pluginLoader={pluginLoader}
+                  defaultPluginKinds={{
+                    Panel: "TimeSeriesChart",
+                    TimeSeriesQuery: "PrometheusTimeSeriesQuery",
+                  }}
                 >
-                  <Icon name='terminal' />
-                  <input
-                    style={{
-                      fontFamily: `"Fira Code", "JetBrains Mono", "Source Code Pro", monospace`,
-                      fontSize: "14px",
-                      letterSpacing: "0.3px",
-                    }}
-                  />
-                  <Button
-                    icon
-                    // iconPosition='left'
-                    labelPosition='right'
-                    color={conf.style.color0}
-                    onClick={fetchLogs}
-                  >
-                    Query
-                    <Icon name='search' />
-                  </Button>
-                </Input>
-
-                <div
-                  style={{ height: '0.1rem'}}
-                />
-
-                {' '}
-                <Icon name='filter' color='grey'/>
-                <Dropdown
-                  placeholder="Level"
-                  selection
-                  clearable
-                  options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
-                  value={levelFilter}
-                  onChange={(e, { value }) => {
-                    let q = logsQuery
-                    q = q.replace(` AND level:${levelFilter}`, '')
-                    if (value) {
-                      q += ` AND level:${value}`;
-                    }
-                    setLevelFilter(value)
-                    setLogsQuery(q)
-                  }}
-                />
-
-                {' '}
-                <Dropdown
-                  placeholder="Name"
-                  selection
-                  clearable
-                  options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
-                  value={nameFilter}
-                  onChange={(e, { value }) => {
-                    let q = logsQuery
-                    q = q.replace(` AND name:${nameFilter}`, '')
-                    if (value) {
-                      q += ` AND name:${value}`;
-                    }
-                    setNameFilter(value)
-                    setLogsQuery(q)
-                  }}
-                />
-
-                {' '}
-                <Icon name='calendar alternate outline' color='grey'/>
-                <Input
-                  type="datetime-local"
-                  label="Start"
-                  value={start || ""}
-                  onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
-                  style={{ marginRight: "10px" }}
-                />
-                <Input
-                  type="datetime-local"
-                  label="End"
-                  value={end || ""}
-                  onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
-                  style={{ marginRight: "10px" }}
-                />
-                <Dropdown
-                  placeholder="Past duration"
-                  label="Dur"
-                  selection
-                  options={pastDurationOptions}
-                  value={pastDuration}
-                  onChange={(e, { value }) => setPastDuration(value)}
-                />
-
-                {aggs && (
-                  <LogsHistogram buckets={aggs.per_minute.buckets} />
-                )}
-
-                <AgGridReact
-                  rowData={logsData}
-                  columnDefs={logsColumns}
-                  theme={theme}
-                  pagination
-                  paginationPageSize={500}
-                  paginationPageSizeSelector={[200, 500, 1000]}
-
-                  cacheBlockSize={500}
-                  // rowModelType="infinite"
-                  onRowClicked={(e) => { console.log('e:', e); console.log('e.data:', e.data); setSelectedLog(e.data); setModalOpen(true); }}
-                />
-
-                <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-                  <Modal.Header>Log Detail</Modal.Header>
-                  <Modal.Content>
-                    <JsonEditor
-                      data={selectedLog || {}}
-                      viewOnly
-                      rootName=''
-                    />
-                  </Modal.Content>
-                </Modal>
-
-              </div>
-            </Tab.Pane>),
-        }, {
-          menuItem: 'Metrics',
-          render: () => (
-            <Tab.Pane
-              attached='top'
-              // attached='bottom'
-            >
-              <div
-                style={{
-                  width: width - 25,
-                  height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
-                }}
-              >
-
-                { adding ? (
-                  <Segment secondary size='mini'>
-                    <Form
-                      schema={metricsQueriesSchema}
-                      validator={validator}
-                      formData={metricsQueries}
-                      // onChange={log('changed')}
-                      onSubmit={({ formData }) => { setMetricsQueries(formData); setAdding(!adding) }}
-                      // onError={log('errors')}
-                    >
-                      <Button.Group>
-                        <Button type='button' onClick={() => { setMetricsQueries(metricsQueries); setAdding(!adding) }}>
-                          <Icon name='cancel' />
-                          {' '}
-                          {t('Cancel')}
-                          {' '}
-                        </Button>
-                        <Button.Or />
-                        <Button type='submit' positive on>
-                          <Icon name='save' />
-                          {' '}
-                          {t('Apply')}
-                          {' '}
-                        </Button>
-                      </Button.Group>
-                    </Form>
-                  </Segment>
-                ) : (
-                  <Menu pointing secondary>
-                    <Menu.Item
-                      position='right'
-                      onClick={() => { setAdding(!adding) }}
-                    >
-                      <Icon name='edit' />
-                      {' '}
-                      {t('Edit Queries')}
-                      {' '}
-                    </Menu.Item>
-                  </Menu>
-                )}
-
-                <ThemeProvider theme={muiTheme}>
-                  <ChartsProvider chartsTheme={chartsTheme}>
-                    <SnackbarProvider
-                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                      variant="default"
-                      content=""
-                    >
-                      <PluginRegistry
-                        pluginLoader={pluginLoader}
-                        defaultPluginKinds={{
-                          Panel: "TimeSeriesChart",
-                          TimeSeriesQuery: "PrometheusTimeSeriesQuery",
-                        }}
-                      >
-                        <QueryClientProvider client={queryClient}>
-                          <TimeRangeProvider timeRange={timeRange} refreshInterval={refreshInterval} setTimeRange={setTimeRange} setRefreshInterval={setRefreshInterval}>
-                            <VariableProvider>
-                              <DatasourceStoreProvider
-                                dashboardResource={prometheusDashboard}
-                                datasourceApi={prometheusDatasourceApi}
-                              >
-                                <DataQueriesProvider
-                                  definitions={metricsQueries.map(mq => ({
-                                    kind: "PrometheusTimeSeriesQuery",
-                                    spec: { query: mq },
-                                  }))}
-                                >
-                                  <Panel
-                                    panelOptions={{
-                                      hideHeader: true,
-                                    }}
-                                    definition={{
-                                      kind: "Panel",
-                                      spec: {
-                                        display: { name: "Example Panel" },
-                                        plugin: {
-                                          kind: "TimeSeriesChart",
-                                          spec: {
-                                            legend: {
-                                              position: "bottom",
-                                              size: "medium",
-                                            },
-                                          },
-                                        },
+                  <QueryClientProvider client={queryClient}>
+                    <TimeRangeProvider timeRange={timeRange} refreshInterval={refreshInterval} setTimeRange={setTimeRange} setRefreshInterval={setRefreshInterval}>
+                      <VariableProvider>
+                        <DatasourceStoreProvider
+                          dashboardResource={prometheusDashboard}
+                          datasourceApi={prometheusDatasourceApi}
+                        >
+                          <DataQueriesProvider
+                            definitions={metricsQueries.map(mq => ({
+                              kind: "PrometheusTimeSeriesQuery",
+                              spec: { query: mq },
+                            }))}
+                          >
+                            <Panel
+                              panelOptions={{
+                                hideHeader: true,
+                              }}
+                              definition={{
+                                kind: "Panel",
+                                spec: {
+                                  display: { name: "Example Panel" },
+                                  plugin: {
+                                    kind: "TimeSeriesChart",
+                                    spec: {
+                                      legend: {
+                                        position: "bottom",
+                                        size: "medium",
                                       },
-                                    }}
-                                  />
-                                </DataQueriesProvider>
-                              </DatasourceStoreProvider>
-                            </VariableProvider>
-                          </TimeRangeProvider>
-                        </QueryClientProvider>
-                      </PluginRegistry>
-                    </SnackbarProvider>
-                  </ChartsProvider>
-                </ThemeProvider>
-              </div>
-            </Tab.Pane>),
-        } ] }
-      />
+                                    },
+                                  },
+                                },
+                              }}
+                            />
+                          </DataQueriesProvider>
+                        </DatasourceStoreProvider>
+                      </VariableProvider>
+                    </TimeRangeProvider>
+                  </QueryClientProvider>
+                </PluginRegistry>
+              </SnackbarProvider>
+            </ChartsProvider>
+          </ThemeProvider>
+        </div>
+      )}
 
+    </Container>
   </>)
 }
