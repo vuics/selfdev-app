@@ -61,6 +61,8 @@
     "ag-grid-react": "^34.3.1",
     "axios": "^1.7.9",
     "codemirror": "^6.0.1",
+    "echarts": "^5.5.0",
+    "echarts-for-react": "^3.0.5",
     "eventemitter3": "^5.0.1",
     "framer-motion": "^12.23.3",
     "html-react-parser": "^5.2.2",

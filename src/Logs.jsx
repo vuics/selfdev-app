@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import ReactECharts from "echarts-for-react";
+
 import axios from 'axios'
 import {
   Container,
@@ -10,8 +12,8 @@ import {
   Icon,
   Segment,
   Menu,
+  Card,
   // Header,
-  // Card,
   // Checkbox,
   // Dropdown,
   // Popup,
@@ -105,31 +107,90 @@ export const prometheusDashboard = {
   spec: {},
 };
 
-
-export function transformPrometheusRange(response) {
-  const result = response?.data?.result?.[0];
-  if (!result) return [];
-
-  const labels = result.metric; // metric labels like job, instance, etc.
-
-  return result.values.map(([ts, val]) => ({
-      timestamp: ts * 1000,
-      value: Number(val),
-      ...labels
+export function LogsHistogram({ buckets }) {
+  const data = useMemo(() => {
+    if (!buckets) return [];
+    return buckets.map(b => ({
+      time: new Date(b.key).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      }),
+      count: b.doc_count
     }));
+  }, [buckets]);
+
+  const option = {
+    tooltip: {
+      trigger: "axis"
+    },
+    grid: {
+      left: 50,
+      right: 20,
+      top: 40,
+      bottom: 40
+    },
+    xAxis: {
+      type: "category",
+      data: data.map(d => d.time),
+      axisLabel: { rotate: 45 }
+    },
+    yAxis: {
+      type: "value",
+      name: "Count"
+    },
+    dataZoom: [
+      { type: "inside" },
+      { type: "slider" }
+    ],
+    series: [
+      {
+        name: "Logs",
+        data: data.map(d => d.count),
+        type: "bar",
+        barWidth: "60%"
+      }
+    ]
+  };
+
+  return (
+    <Card fluid>
+      <Card.Content>
+        <Card.Header>Logs per Minute</Card.Header>
+      </Card.Content>
+
+      <Card.Content>
+        <ReactECharts option={option} style={{ height: 400 }} />
+      </Card.Content>
+    </Card>
+  );
 }
 
-export function toNivoLineData(points) {
-  return [
-    {
-      id: points[0]?.__name__ || "metric",
-      data: points.map(p => ({
-        x: new Date(p.timestamp),
-        y: p.value
-      }))
-    }
-  ];
-}
+
+
+// export function transformPrometheusRange(response) {
+//   const result = response?.data?.result?.[0];
+//   if (!result) return [];
+
+//   const labels = result.metric; // metric labels like job, instance, etc.
+
+//   return result.values.map(([ts, val]) => ({
+//       timestamp: ts * 1000,
+//       value: Number(val),
+//       ...labels
+//     }));
+// }
+
+// export function toNivoLineData(points) {
+//   return [
+//     {
+//       id: points[0]?.__name__ || "metric",
+//       data: points.map(p => ({
+//         x: new Date(p.timestamp),
+//         y: p.value
+//       }))
+//     }
+//   ];
+// }
 
 export default function Logs () {
   const { t } = useTranslation('Logs')
@@ -164,6 +225,7 @@ export default function Logs () {
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
+  const [aggs, setAggs] = useState(null);
 
   // const [ metricsData, setMetricsData ] = useState([]);
   // console.log('metricsData:', metricsData)
@@ -214,6 +276,7 @@ export default function Logs () {
       // console.log('res:', res)
       console.log('res.data:', res.data)
       setLogsData(res.data.logsData)
+      setAggs(res.data.aggs)
     } catch (err) {
       console.error('fetch logs error:', err);
       return setResponseError(err?.response?.data?.message || t('Error fetching logs.'))
@@ -310,6 +373,10 @@ export default function Logs () {
                     <Icon name='search' />
                   </Button>
                 </Input>
+
+                {aggs && (
+                  <LogsHistogram buckets={aggs.per_minute.buckets} />
+                )}
 
                 <AgGridReact
                   rowData={logsData}
