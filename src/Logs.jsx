@@ -26,6 +26,7 @@ import {
   // Form,
   // Table,
 } from 'semantic-ui-react'
+import { texturePattern } from './components/patterns'
 import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
@@ -348,7 +349,48 @@ export default function Logs () {
 
   return (<>
     <Container fluid>
-      <Menubar />
+      <Menubar>
+        <Menu.Item style={{
+          padding: '0 0.7rem 0 0',
+          backgroundImage: texturePattern,
+        }}/>
+        <Menu.Header style={{
+          paddingLeft: '0.5rem',
+          paddingRight: '0.5rem',
+        }}>
+          <Menu pointing secondary compact>
+            <Menu.Item
+              active={active === 'logs'}
+              onClick={() => { setActive('logs') }}
+            >
+              <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
+              {' '}
+              {t('Logs')}
+              {' '}
+            </Menu.Item>
+
+            <Menu.Item
+              active={active === 'metrics'}
+              onClick={() => { setActive('metrics') }}
+            >
+              <Icon name='chart bar' color={active === 'metrics' ? conf.style.color0 : 'grey'}/>
+              {' '}
+              {t('Metrics')}
+              {' '}
+            </Menu.Item>
+
+            <Menu.Item
+              position='right'
+              onClick={() => { setAdding(!adding) }}
+            >
+              <Icon name='edit' color={adding ? conf.style.color0 : 'grey'}/>
+              {' '}
+              {t('Edit Queries')}
+              {' '}
+            </Menu.Item>
+          </Menu>
+        </Menu.Header>
+      </Menubar>
     </Container>
 
     <Container>
@@ -366,40 +408,8 @@ export default function Logs () {
     </Container>
 
     <Container fluid
-      style={{ padding: '0 15px 0 15px' }}
+      style={{ padding: '15px 15px 0 15px' }}
     >
-      <Menu pointing secondary>
-        <Menu.Item
-          active={active === 'logs'}
-          onClick={() => { setActive('logs') }}
-        >
-          <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
-          {' '}
-          {t('Logs')}
-          {' '}
-        </Menu.Item>
-
-        <Menu.Item
-          active={active === 'metrics'}
-          onClick={() => { setActive('metrics') }}
-        >
-          <Icon name='chart bar' color={active === 'metrics' ? conf.style.color0 : 'grey'}/>
-          {' '}
-          {t('Metrics')}
-          {' '}
-        </Menu.Item>
-
-        <Menu.Item
-          position='right'
-          onClick={() => { setAdding(!adding) }}
-        >
-          <Icon name='edit' color={adding ? conf.style.color0 : 'grey'}/>
-          {' '}
-          {t('Edit Queries')}
-          {' '}
-        </Menu.Item>
-      </Menu>
-
       { adding && active === 'logs' && (<>
         <Segment secondary size='mini'>
           <Input
@@ -433,77 +443,81 @@ export default function Logs () {
           </Input>
 
           <div
-            style={{ height: '0.1rem'}}
-          />
-
-          {' '}
-          <Icon name='filter' color='grey'/>
-          <Dropdown
-            placeholder="Level"
-            selection
-            clearable
-            options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
-            value={levelFilter}
-            onChange={(e, { value }) => {
-              let q = logsQuery
-              q = q.replace(` AND level:${levelFilter}`, '')
-              if (value) {
-                q += ` AND level:${value}`;
-              }
-              setLevelFilter(value)
-              setLogsQuery(q)
+            style={{
+              marginTop: '0.5rem',
+              alignItems: 'center',       // vertically center
             }}
-          />
+          >
+            {' '}
+            <Icon name='filter' color='grey'/>
+            <Dropdown
+              placeholder="Level"
+              selection
+              clearable
+              options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
+              value={levelFilter}
+              onChange={(e, { value }) => {
+                let q = logsQuery
+                q = q.replace(` AND level:${levelFilter}`, '')
+                if (value) {
+                  q += ` AND level:${value}`;
+                }
+                setLevelFilter(value)
+                setLogsQuery(q)
+              }}
+            />
 
-          {' '}
-          <Dropdown
-            placeholder="Name"
-            selection
-            clearable
-            options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
-            value={nameFilter}
-            onChange={(e, { value }) => {
-              let q = logsQuery
-              q = q.replace(` AND name:${nameFilter}`, '')
-              if (value) {
-                q += ` AND name:${value}`;
-              }
-              setNameFilter(value)
-              setLogsQuery(q)
-            }}
-          />
+            {' '}
+            <Dropdown
+              placeholder="Name"
+              selection
+              clearable
+              options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
+              value={nameFilter}
+              onChange={(e, { value }) => {
+                let q = logsQuery
+                q = q.replace(` AND name:${nameFilter}`, '')
+                if (value) {
+                  q += ` AND name:${value}`;
+                }
+                setNameFilter(value)
+                setLogsQuery(q)
+              }}
+            />
 
-          {' '}
-          <Icon name='calendar alternate outline' color='grey'/>
-          <Input
-            type="datetime-local"
-            label="Start"
-            value={start || ""}
-            onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
-            style={{ marginRight: "10px" }}
-          />
-          <Input
-            type="datetime-local"
-            label="End"
-            value={end || ""}
-            onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
-            style={{ marginRight: "10px" }}
-          />
-          <Dropdown
-            placeholder="Past duration"
-            label="Dur"
-            selection
-            options={pastDurationOptions}
-            value={pastDuration}
-            onChange={(e, { value }) => setPastDuration(value)}
-          />
+            {' '}
+            <Dropdown
+              placeholder="Past duration"
+              label="Dur"
+              selection
+              options={pastDurationOptions}
+              value={pastDuration}
+              onChange={(e, { value }) => setPastDuration(value)}
+            />
+            {' '}
+            <Icon name='calendar alternate outline' color='grey'/>
+            <Input
+              type="datetime-local"
+              label="Start"
+              value={start || ""}
+              onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
+              style={{ marginRight: "10px" }}
+            />
+            <Input
+              type="datetime-local"
+              label="End"
+              value={end || ""}
+              onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
+              style={{ marginRight: "10px" }}
+            />
 
-        {' '}
-         <Checkbox
-            label='Show Logs Chart'
-            onChange={(e, data) => setShowLogsChart(data.checked)}
-            checked={showLogsChart}
-          />
+            {' '}
+            <Checkbox
+              label='Show Logs Chart'
+              onChange={(e, data) => setShowLogsChart(data.checked)}
+              checked={showLogsChart}
+            />
+          </div>
         </Segment>
       </>)}
 
@@ -538,7 +552,7 @@ export default function Logs () {
         <div
           style={{
             width: width - 25,
-            height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 55
+            height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 25
                     - (showLogsChart ? 340 : 0)
                     - (adding ? 110 : 0)
           }}
