@@ -343,15 +343,14 @@ export default function Logs () {
 
   const refreshIntervalOptions = [
     { key: "0s", text: "No refresh", value: "0s", seconds: 0 },
-    // { key: "5s", text: "Every 5 seconds", value: "5s", seconds: 5 },
-    // { key: "10s", text: "Every 10 seconds", value: "10s", seconds: 10 },
-    // { key: "15s", text: "Every 15 seconds", value: "15s", seconds: 15 },
     { key: "30s", text: "Every 30 seconds", value: "30s", seconds: 30 },
     { key: "1m", text: "Every 1 minute", value: "1m", seconds: 1 * 60 },
+    { key: "2m", text: "Every 2 minutes", value: "2m", seconds: 2 * 60 },
     { key: "5m", text: "Every 5 minutes", value: "5m", seconds: 5 * 60 },
+    { key: "10m", text: "Every 10 minutes", value: "10m", seconds: 10 * 60 },
     { key: "15m", text: "Every 15 minutes", value: "15m", seconds: 15 * 60 },
     { key: "30m", text: "Every 30 minutes", value: "30m", seconds: 30 * 60 },
-    { key: "1h", text: "Every 1 hours", value: "1h", seconds: 60 * 60 },
+    { key: "1h", text: "Every 1 hour", value: "1h", seconds: 60 * 60 },
   ];
   const [refreshInterval, setRefreshInterval] = useState(() => {
     return localStorage.getItem('logs.refreshInterval') || '0s'
@@ -359,6 +358,22 @@ export default function Logs () {
   useEffect(() => {
     localStorage.setItem('logs.refreshInterval', refreshInterval);
   }, [refreshInterval]);
+
+  useEffect(() => {
+    // Always fetch once on interval change
+    fetchLogs();
+
+    const intervalSeconds =
+      refreshIntervalOptions.find(o => o.value === refreshInterval)?.seconds ?? 0;
+    if (intervalSeconds === 0) return; // no auto-refresh
+
+    const id = setInterval(() => {
+      fetchLogs();
+    }, intervalSeconds * 1000);
+
+    return () => clearInterval(id); // cleanup on change/unmount
+  }, [refreshInterval]);
+
 
   const muiTheme = getTheme("light");
   const chartsTheme = generateChartsTheme(muiTheme, {});
@@ -383,29 +398,29 @@ export default function Logs () {
 
 
   const fetchLogs = async () => {
-    setLoading(true)
+    // setLoading(true)
     setQuerying(true)
     try {
       const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}&q=${logsQuery}&start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      // console.log('res:', res)
-      console.log('res.data:', res.data)
-      setLogsData(res.data.logs)
-      setAggs(res.data.aggs)
+      console.log('res:', res)
+      if (res.status === 304) {
+        console.log("Not Modified — use cached data");
+      } else {
+        console.log("Got new data> res.data", res.data);
+        setLogsData(res.data.logs)
+        setAggs(res.data.aggs)
+      }
     } catch (err) {
       console.error('fetch logs error:', err);
       return setResponseError(err?.response?.data?.message || t('Error fetching logs.'))
     } finally {
-      setLoading(false)
+      // setLoading(false)
       setQuerying(false)
     }
   }
-
-  useEffect(() => {
-    fetchLogs()
-  }, [])
 
   const theme = themeQuartz.withParams({
     spacing: 3,
@@ -435,6 +450,14 @@ export default function Logs () {
         value={end || ""}
         onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
         style={{ marginRight: "10px" }}
+      />
+      <Dropdown
+        placeholder="Refresh Interval"
+        label="Dur"
+        selection
+        options={refreshIntervalOptions}
+        value={refreshInterval}
+        onChange={(e, { value }) => setRefreshInterval(value)}
       />
     </>)
   }
@@ -467,9 +490,6 @@ export default function Logs () {
               active={active === 'metrics'}
               onClick={() => { setActive('metrics') }}
             >
-              {/*/}
-              <Icon name='chart bar' color={active === 'metrics' ? conf.style.color0 : 'grey'}/>
-              {/*/}
               {' '}
               {t('Metrics')}
               {' '}
@@ -479,9 +499,6 @@ export default function Logs () {
               position='right'
               onClick={() => { setEditing(!editing) }}
             >
-              {/*/}
-              <Icon name='edit' color={editing ? conf.style.color0 : 'grey'}/>
-              {/*/}
               <Icon name={editing ? 'toggle on' : 'toggle off'} color={editing ? conf.style.color0 : 'grey'}/>
               {' '}
               {t('Edit Queries')}
@@ -624,14 +641,6 @@ export default function Logs () {
           <Divider />
           <TimeInterval />
 
-          <Dropdown
-            placeholder="Refresh Interval"
-            label="Dur"
-            selection
-            options={refreshIntervalOptions}
-            value={refreshInterval}
-            onChange={(e, { value }) => setRefreshInterval(value)}
-          />
           {' '}
 
           <Button
