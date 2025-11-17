@@ -8,9 +8,9 @@ import {
   Input,
   Button,
   Icon,
+  Segment,
+  Menu,
   // Header,
-  // Segment,
-  // Menu,
   // Card,
   // Checkbox,
   // Dropdown,
@@ -26,6 +26,9 @@ import {
 import { useTranslation } from 'react-i18next'
 import i18n from "i18next";
 import { ResponsiveLine } from '@nivo/line'
+
+import Form from '@rjsf/semantic-ui'
+import validator from '@rjsf/validator-ajv8';
 
 import { GraphicWalker } from '@kanaries/graphic-walker';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
@@ -79,7 +82,6 @@ const fakeDatasource = {
     plugin: {
       kind: "PrometheusDatasource",
       spec: {
-        // Update to your actual datasource url
         directUrl: "http://prometheus.dev.local:9090",
       },
     },
@@ -147,6 +149,20 @@ export default function Logs () {
   const [ loading, setLoading ] = useState(false)
   const [ querying, setQuerying ] = useState(false)
   const [ metricsQuery, setMetricsQuery ] = useState('agents_processed')
+  const [ adding, setAdding ] = useState(false)
+
+  const metricsQueriesSchema = {
+    type: 'array',
+    title: 'Queries',
+    items: {
+      type: 'string',
+      title: 'PromQL query',
+    },
+  }
+  const [ metricsQueries, setMetricsQueries ] = useState([
+    `agents_processed`,
+    `running_agents`,
+  ])
 
   // For GraphicWalker
   const [ logsFields, ] = useState([
@@ -402,7 +418,7 @@ export default function Logs () {
               />
             </Tab.Pane>),
         }, {
-          menuItem: 'Perses',
+          menuItem: 'Metrics',
           render: () => (
             <Tab.Pane
               attached='top'
@@ -414,6 +430,48 @@ export default function Logs () {
                   height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
                 }}
               >
+
+                { adding ? (
+                  <Segment secondary size='mini'>
+                    <Form
+                      schema={metricsQueriesSchema}
+                      validator={validator}
+                      formData={metricsQueries}
+                      // onChange={log('changed')}
+                      onSubmit={({ formData }) => { setMetricsQueries(formData); setAdding(!adding) }}
+                      // onError={log('errors')}
+                    >
+                      <Button.Group>
+                        <Button type='button' onClick={() => { setMetricsQueries(metricsQueries); setAdding(!adding) }}>
+                          <Icon name='cancel' />
+                          {' '}
+                          {t('Cancel')}
+                          {' '}
+                        </Button>
+                        <Button.Or />
+                        <Button type='submit' positive on>
+                          <Icon name='save' />
+                          {' '}
+                          {t('Apply')}
+                          {' '}
+                        </Button>
+                      </Button.Group>
+                    </Form>
+                  </Segment>
+                ) : (
+                  <Menu pointing secondary>
+                    <Menu.Item
+                      position='right'
+                      onClick={() => { setAdding(!adding) }}
+                    >
+                      <Icon name='edit' />
+                      {' '}
+                      {t('Edit Queries')}
+                      {' '}
+                    </Menu.Item>
+                  </Menu>
+                )}
+
                 <ThemeProvider theme={muiTheme}>
                   <ChartsProvider chartsTheme={chartsTheme}>
                     <SnackbarProvider
@@ -436,18 +494,22 @@ export default function Logs () {
                                 datasourceApi={fakeDatasourceApi}
                               >
                                 <DataQueriesProvider
-                                  definitions={[
-                                    {
-                                      kind: "PrometheusTimeSeriesQuery",
-                                      // spec: { query: `up{job="prometheus"}` },
-                                      spec: { query: `agents_processed` },
-                                    },
-                                    {
-                                      kind: "PrometheusTimeSeriesQuery",
-                                      // spec: { query: `up{job="prometheus"}` },
-                                      spec: { query: `running_agents` },
-                                    },
-                                  ]}
+                                  definitions={metricsQueries.map(mq => ({
+                                    kind: "PrometheusTimeSeriesQuery",
+                                    spec: { query: mq },
+                                  }))}
+                                  // definitions={[
+                                  //   {
+                                  //     kind: "PrometheusTimeSeriesQuery",
+                                  //     // spec: { query: `up{job="prometheus"}` },
+                                  //     spec: { query: `agents_processed` },
+                                  //   },
+                                  //   {
+                                  //     kind: "PrometheusTimeSeriesQuery",
+                                  //     // spec: { query: `up{job="prometheus"}` },
+                                  //     spec: { query: `running_agents` },
+                                  //   },
+                                  // ]}
                                 >
                                   <Panel
                                     panelOptions={{
