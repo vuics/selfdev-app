@@ -62,7 +62,7 @@ ModuleRegistry.registerModules([AllCommunityModule])
 
 
 
-const fakeDatasource = {
+const prometheusDatasource = {
   kind: "GlobalDatasource",
   metadata: { name: "hello" },
   spec: {
@@ -70,6 +70,7 @@ const fakeDatasource = {
     plugin: {
       kind: "PrometheusDatasource",
       spec: {
+        // TODO: move to conf
         directUrl: "http://prometheus.dev.local:9090",
       },
     },
@@ -82,7 +83,7 @@ class DatasourceApiImpl {
   }
 
   getGlobalDatasource() {
-    return Promise.resolve(fakeDatasource);
+    return Promise.resolve(prometheusDatasource);
   }
 
   listDatasources() {
@@ -90,15 +91,15 @@ class DatasourceApiImpl {
   }
 
   listGlobalDatasources() {
-    return Promise.resolve([fakeDatasource]);
+    return Promise.resolve([prometheusDatasource]);
   }
 
   buildProxyUrl() {
     return "/prometheus";
   }
 }
-export const fakeDatasourceApi = new DatasourceApiImpl();
-export const fakeDashboard = {
+export const prometheusDatasourceApi = new DatasourceApiImpl();
+export const prometheusDashboard = {
   kind: "Dashboard",
   metadata: {},
   spec: {},
@@ -167,17 +168,19 @@ export default function Logs () {
   const [ metricsData, setMetricsData ] = useState([]);
   // console.log('metricsData:', metricsData)
 
-
   const [timeRange, setTimeRange] = useState({
     // start: new Date(Math.floor(Date.now() / 1000) - 60 * 60),
     // end: new Date(),
 
     // pastDuration: "30m"
 
+    // TODO: make setting
     pastDuration: "3h"
   });
+  // TODO: make setting
   const [refreshInterval, setRefreshInterval] = useState("0s");
   // const [refreshInterval, setRefreshInterval] = useState("10s");
+
   const muiTheme = getTheme("light");
   const chartsTheme = generateChartsTheme(muiTheme, {});
   const pluginLoader = dynamicImportPluginLoader([
@@ -389,8 +392,8 @@ export default function Logs () {
                           <TimeRangeProvider timeRange={timeRange} refreshInterval={refreshInterval} setTimeRange={setTimeRange} setRefreshInterval={setRefreshInterval}>
                             <VariableProvider>
                               <DatasourceStoreProvider
-                                dashboardResource={fakeDashboard}
-                                datasourceApi={fakeDatasourceApi}
+                                dashboardResource={prometheusDashboard}
+                                datasourceApi={prometheusDatasourceApi}
                               >
                                 <DataQueriesProvider
                                   definitions={metricsQueries.map(mq => ({
