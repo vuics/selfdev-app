@@ -89,8 +89,8 @@ const conf = {
     limit: 1000,
   },
 
-  logs: {
-    enable: bool(import.meta.env.VITE_LOGS_ENABLE || true),
+  o11y: {
+    enable: bool(import.meta.env.VITE_O11Y_ENABLE || true),
     skip: 0,
     limit: 1000,
   },

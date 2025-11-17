@@ -185,8 +185,8 @@ export function LogsHistogram({ buckets }) {
   );
 }
 
-export default function Logs () {
-  const { t } = useTranslation('Logs')
+export default function O11y () {
+  const { t } = useTranslation('O11y')
   const { height, width } = useWindowDimensions();
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -401,7 +401,7 @@ export default function Logs () {
     // setLoading(true)
     setQuerying(true)
     try {
-      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}&q=${logsQuery}&start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`, {
+      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.o11y.skip}&limit=${conf.o11y.limit}&q=${logsQuery}&start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
