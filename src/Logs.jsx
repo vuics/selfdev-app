@@ -15,10 +15,10 @@ import {
   Dropdown,
   Modal,
   Checkbox,
+  Divider,
   // Tab,
   // Header,
   // Popup,
-  // Divider,
   // Accordion,
   // List,
   // Label,
@@ -324,17 +324,41 @@ export default function Logs () {
   const [aggs, setAggs] = useState(null);
 
   const [timeRange, setTimeRange] = useState({
-    // start: new Date(Math.floor(Date.now() / 1000) - 60 * 60),
-    // end: new Date(),
-
-    // pastDuration: "30m"
-
-    // TODO: make setting
-    pastDuration: "3h"
+    start,
+    end,
+    pastDuration,
   });
-  // TODO: make setting
-  const [refreshInterval, setRefreshInterval] = useState("0s");
-  // const [refreshInterval, setRefreshInterval] = useState("10s");
+  useEffect(() => {
+    if (!pastDuration) { return; }
+    if (pastDuration === "custom") {
+      setTimeRange({
+        start,
+        end,
+      })
+    } else {
+      setTimeRange({ pastDuration })
+    }
+  }, [pastDuration, setTimeRange, start, end]);
+
+
+  const refreshIntervalOptions = [
+    { key: "0s", text: "No refresh", value: "0s", seconds: 0 },
+    // { key: "5s", text: "Every 5 seconds", value: "5s", seconds: 5 },
+    // { key: "10s", text: "Every 10 seconds", value: "10s", seconds: 10 },
+    // { key: "15s", text: "Every 15 seconds", value: "15s", seconds: 15 },
+    { key: "30s", text: "Every 30 seconds", value: "30s", seconds: 30 },
+    { key: "1m", text: "Every 1 minute", value: "1m", seconds: 1 * 60 },
+    { key: "5m", text: "Every 5 minutes", value: "5m", seconds: 5 * 60 },
+    { key: "15m", text: "Every 15 minutes", value: "15m", seconds: 15 * 60 },
+    { key: "30m", text: "Every 30 minutes", value: "30m", seconds: 30 * 60 },
+    { key: "1h", text: "Every 1 hours", value: "1h", seconds: 60 * 60 },
+  ];
+  const [refreshInterval, setRefreshInterval] = useState(() => {
+    return localStorage.getItem('logs.refreshInterval') || '0s'
+  })
+  useEffect(() => {
+    localStorage.setItem('logs.refreshInterval', refreshInterval);
+  }, [refreshInterval]);
 
   const muiTheme = getTheme("light");
   const chartsTheme = generateChartsTheme(muiTheme, {});
@@ -387,6 +411,34 @@ export default function Logs () {
     spacing: 3,
   });
 
+  const TimeInterval = () => {
+    return (<>
+      <Dropdown
+        placeholder="Past duration"
+        selection
+        options={pastDurationOptions}
+        value={pastDuration}
+        onChange={(e, { value }) => setPastDuration(value)}
+      />
+      {' '}
+      <Icon name='calendar alternate outline' color='grey'/>
+      <Input
+        type="datetime-local"
+        label="Start"
+        value={start || ""}
+        onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
+        style={{ marginRight: "10px" }}
+      />
+      <Input
+        type="datetime-local"
+        label="End"
+        value={end || ""}
+        onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
+        style={{ marginRight: "10px" }}
+      />
+    </>)
+  }
+
   return (<>
     <Container fluid>
       <Menubar>
@@ -403,7 +455,9 @@ export default function Logs () {
               active={active === 'logs'}
               onClick={() => { setActive('logs') }}
             >
+              {/*/}
               <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
+              {/*/}
               {' '}
               {t('Logs')}
               {' '}
@@ -413,7 +467,9 @@ export default function Logs () {
               active={active === 'metrics'}
               onClick={() => { setActive('metrics') }}
             >
+              {/*/}
               <Icon name='chart bar' color={active === 'metrics' ? conf.style.color0 : 'grey'}/>
+              {/*/}
               {' '}
               {t('Metrics')}
               {' '}
@@ -423,7 +479,10 @@ export default function Logs () {
               position='right'
               onClick={() => { setEditing(!editing) }}
             >
+              {/*/}
               <Icon name='edit' color={editing ? conf.style.color0 : 'grey'}/>
+              {/*/}
+              <Icon name={editing ? 'toggle on' : 'toggle off'} color={editing ? conf.style.color0 : 'grey'}/>
               {' '}
               {t('Edit Queries')}
               {' '}
@@ -525,30 +584,7 @@ export default function Logs () {
             />
 
             {' '}
-            <Dropdown
-              placeholder="Past duration"
-              label="Dur"
-              selection
-              options={pastDurationOptions}
-              value={pastDuration}
-              onChange={(e, { value }) => setPastDuration(value)}
-            />
-            {' '}
-            <Icon name='calendar alternate outline' color='grey'/>
-            <Input
-              type="datetime-local"
-              label="Start"
-              value={start || ""}
-              onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
-              style={{ marginRight: "10px" }}
-            />
-            <Input
-              type="datetime-local"
-              label="End"
-              value={end || ""}
-              onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
-              style={{ marginRight: "10px" }}
-            />
+            <TimeInterval />
 
             {' '}
             <Checkbox
@@ -584,6 +620,35 @@ export default function Logs () {
               </Button>
             </Button.Group>
           </Form>
+
+          <Divider />
+          <TimeInterval />
+
+          <Dropdown
+            placeholder="Refresh Interval"
+            label="Dur"
+            selection
+            options={refreshIntervalOptions}
+            value={refreshInterval}
+            onChange={(e, { value }) => setRefreshInterval(value)}
+          />
+          {' '}
+
+          <Button
+            icon
+            compact
+            labelPosition='right'
+            color={conf.style.color0}
+            onClick={() => {
+              // FIXME: This is a way to re-render Perses components.
+              //        I do not see any better way now.
+              setActive('logs'); setTimeout(() => setActive('metrics'), 10)
+            }}
+          >
+            Query
+            <Icon name='search' />
+          </Button>
+
         </Segment>
       )}
 
