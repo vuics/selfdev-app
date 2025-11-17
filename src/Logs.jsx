@@ -137,7 +137,7 @@ export default function Logs () {
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ querying, setQuerying ] = useState(false)
-  const [ metricsQuery, setMetricsQuery ] = useState('agents_processed')
+  const [ logsQuery, setLogsQuery ] = useState('*')
   const [ adding, setAdding ] = useState(false)
 
   const metricsQueriesSchema = {
@@ -165,7 +165,7 @@ export default function Logs () {
 
   const [ logsData, setLogsData ] = useState([ ]);
 
-  const [ metricsData, setMetricsData ] = useState([]);
+  // const [ metricsData, setMetricsData ] = useState([]);
   // console.log('metricsData:', metricsData)
 
   const [timeRange, setTimeRange] = useState({
@@ -205,8 +205,9 @@ export default function Logs () {
 
   const fetchLogs = async () => {
     setLoading(true)
+    setQuerying(true)
     try {
-      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}`, {
+      const res = await axios.get(`${conf.api.url}/logs?skip=${conf.logs.skip}&limit=${conf.logs.limit}&q=${logsQuery}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
@@ -218,31 +219,32 @@ export default function Logs () {
       return setResponseError(err?.response?.data?.message || t('Error fetching logs.'))
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchMetrics = async () => {
-    setQuerying(true)
-    try {
-      const res = await axios.get(`${conf.api.url}/logs/metrics?query=${metricsQuery}`, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      })
-      // console.log('res:', res)
-      console.log('res.data:', res.data)
-      const points = transformPrometheusRange(res.data.metrics);
-      setMetricsData(toNivoLineData(points))
-    } catch (err) {
-      console.error('fetch metrics error:', err);
-      return setResponseError(err?.response?.data?.message || t('Error fetching metrics.'))
-    } finally {
       setQuerying(false)
     }
   }
 
+  // const fetchMetrics = async () => {
+  //   setQuerying(true)
+  //   try {
+  //     const res = await axios.get(`${conf.api.url}/logs/metrics?query=${metricsQuery}`, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //       withCredentials: true,
+  //     })
+  //     // console.log('res:', res)
+  //     console.log('res.data:', res.data)
+  //     const points = transformPrometheusRange(res.data.metrics);
+  //     setMetricsData(toNivoLineData(points))
+  //   } catch (err) {
+  //     console.error('fetch metrics error:', err);
+  //     return setResponseError(err?.response?.data?.message || t('Error fetching metrics.'))
+  //   } finally {
+  //     setQuerying(false)
+  //   }
+  // }
+
   useEffect(() => {
     fetchLogs()
-    fetchMetrics()
+    // fetchMetrics()
   }, [])
 
   const theme = themeQuartz.withParams({
@@ -292,8 +294,8 @@ export default function Logs () {
                   placeholder='Query...'
                   action
                   fluid
-                  value={metricsQuery}
-                  onChange={e => setMetricsQuery(e.target.value)}
+                  value={logsQuery}
+                  onChange={e => setLogsQuery(e.target.value)}
                 >
                   <Icon name='terminal' />
                   <input />
@@ -302,7 +304,7 @@ export default function Logs () {
                     // iconPosition='left'
                     labelPosition='right'
                     color={conf.style.color0}
-                    onClick={fetchMetrics}
+                    onClick={fetchLogs}
                   >
                     Query
                     <Icon name='search' />
