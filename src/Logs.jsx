@@ -72,8 +72,30 @@ const prometheusDatasource = {
     plugin: {
       kind: "PrometheusDatasource",
       spec: {
-        // TODO: move to conf
-        directUrl: "http://prometheus.dev.local:9090",
+        directUrl: `${conf.api.url}/prometheus`,
+
+        // NOTE: Another option is to query Prometheus directly
+        // directUrl: "http://prometheus.dev.local:9090",
+
+        // NOTE: We use Proxy but the section below is useless.
+        //       It is easier to use the directUrl option.
+        //
+        // proxy: {
+        //   kind: "HTTPProxy",
+        //   spec: {
+        //     url: `${conf.api.url}/prometheus`,
+        //     allowedEndpoints: [
+        //       { endpointPattern: "/api/v1/labels", method: "POST" },
+        //       { endpointPattern: "/api/v1/series", method: "POST" },
+        //       { endpointPattern: "/api/v1/metadata", method: "GET" },
+        //       { endpointPattern: "/api/v1/query", method: "POST" },
+        //       { endpointPattern: "/api/v1/query_range",  method: "POST" },
+        //       { endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values", method: "GET" },
+        //       { endpointPattern: "/api/v1/parse_query", method: "POST" },
+        //     ],
+        //     // secret: "prometheus_secret_config"
+        //   },
+        // },
       },
     },
   },
@@ -97,7 +119,8 @@ class DatasourceApiImpl {
   }
 
   buildProxyUrl() {
-    return "/prometheus";
+    // NOTE: It is not used in the case of directUrl
+    return `${conf.api.url}/prometheus`
   }
 }
 export const prometheusDatasourceApi = new DatasourceApiImpl();
@@ -265,15 +288,8 @@ export default function Logs () {
     setStart(toLocalDatetime(new Date(now - ms)));
   }, [pastDuration]);
 
-  // const [start, setStart] = useState(
-  //   new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().slice(0,16)
-  // );
-  // const [end, setEnd] = useState(
-  //   new Date().toISOString().slice(0,16)
-  // );
-
-  console.log('start:', start)
-  console.log('end:', end)
+  // console.log('start:', start)
+  // console.log('end:', end)
   // console.log('selectedLog:', selectedLog)
 
   const metricsQueriesSchema = {
@@ -306,9 +322,6 @@ export default function Logs () {
 
   const [ logsData, setLogsData ] = useState([ ]);
   const [aggs, setAggs] = useState(null);
-
-  // const [ metricsData, setMetricsData ] = useState([]);
-  // console.log('metricsData:', metricsData)
 
   const [timeRange, setTimeRange] = useState({
     // start: new Date(Math.floor(Date.now() / 1000) - 60 * 60),
@@ -355,7 +368,7 @@ export default function Logs () {
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
-      setLogsData(res.data.logsData)
+      setLogsData(res.data.logs)
       setAggs(res.data.aggs)
     } catch (err) {
       console.error('fetch logs error:', err);
@@ -366,28 +379,8 @@ export default function Logs () {
     }
   }
 
-  // const fetchMetrics = async () => {
-  //   setQuerying(true)
-  //   try {
-  //     const res = await axios.get(`${conf.api.url}/logs/metrics?query=${metricsQuery}`, {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true,
-  //     })
-  //     // console.log('res:', res)
-  //     console.log('res.data:', res.data)
-  //     const points = transformPrometheusRange(res.data.metrics);
-  //     setMetricsData(toNivoLineData(points))
-  //   } catch (err) {
-  //     console.error('fetch metrics error:', err);
-  //     return setResponseError(err?.response?.data?.message || t('Error fetching metrics.'))
-  //   } finally {
-  //     setQuerying(false)
-  //   }
-  // }
-
   useEffect(() => {
     fetchLogs()
-    // fetchMetrics()
   }, [])
 
   const theme = themeQuartz.withParams({
@@ -479,7 +472,6 @@ export default function Logs () {
             />
             <Button
               icon
-              // iconPosition='left'
               labelPosition='right'
               color={conf.style.color0}
               onClick={fetchLogs}
@@ -613,11 +605,10 @@ export default function Logs () {
             columnDefs={logsColumns}
             theme={theme}
             pagination
-            paginationPageSize={500}
+            paginationPageSize={1000}
             paginationPageSizeSelector={[200, 500, 1000]}
 
             cacheBlockSize={500}
-            // rowModelType="infinite"
             onRowClicked={(e) => { console.log('e:', e); console.log('e.data:', e.data); setSelectedLog(e.data); setModalOpen(true); }}
           />
 
