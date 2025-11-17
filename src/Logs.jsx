@@ -24,13 +24,10 @@ import {
   // Table,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
-import i18n from "i18next";
-import { ResponsiveLine } from '@nivo/line'
 
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
 
-import { GraphicWalker } from '@kanaries/graphic-walker';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react'
 import { themeQuartz } from "ag-grid-community"
@@ -44,7 +41,6 @@ import {
 import {
   DataQueriesProvider,
   dynamicImportPluginLoader,
-  // PluginModuleResource,
   PluginRegistry,
   TimeRangeProvider,
 } from "@perses-dev/plugin-system";
@@ -55,14 +51,6 @@ import {
   Panel,
   VariableProvider,
 } from "@perses-dev/dashboards";
-// import {
-//   DashboardResource,
-//   DurationString,
-//   GlobalDatasourceResource,
-//   DatasourceResource,
-//   TimeRangeValue,
-// } from "@perses-dev/core";
-// import { DatasourceApi } from "@perses-dev/dashboards";
 import * as prometheusPlugin from "@perses-dev/prometheus-plugin";
 import * as timeseriesChartPlugin from "@perses-dev/timeseries-chart-plugin";
 
@@ -164,16 +152,6 @@ export default function Logs () {
     `running_agents`,
   ])
 
-  // For GraphicWalker
-  const [ logsFields, ] = useState([
-    { "fid": "@timestamp", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "level", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "agentId", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "archetype", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "name", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "message", "semanticType": "nominal", "analyticType": "dimension" },
-  ])
-
   // For AgGridReact
   const [logsColumns, ] = useState([
       { "field": "@timestamp", filter: true },
@@ -185,12 +163,6 @@ export default function Logs () {
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
-
-  // For GraphicWalker
-  const [ metricsFields, ] = useState([
-    { "fid": "x", "semanticType": "nominal", "analyticType": "dimension" },
-    { "fid": "y", "semanticType": "nominal", "analyticType": "dimension" },
-  ])
 
   const [ metricsData, setMetricsData ] = useState([]);
   // console.log('metricsData:', metricsData)
@@ -297,35 +269,12 @@ export default function Logs () {
       <Tab
         menu={{ attached: 'bottom' }}
         panes={[ {
-          menuItem: 'Logs Grid',
+          menuItem: 'Logs',
           render: () => (
             <Tab.Pane
               attached='top'
               // attached='bottom'
               // style={{ margin: '0 0 0 0', padding: '0 0 0 0'}}
-            >
-              <div
-                style={{
-                  width: width - 25,
-                  height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 75
-                }}
-              >
-                <AgGridReact
-                  rowData={logsData}
-                  columnDefs={logsColumns}
-                  theme={theme}
-                  pagination
-                  paginationPageSize={500}
-                  paginationPageSizeSelector={[200, 500, 1000]}
-                />
-              </div>
-            </Tab.Pane>),
-        }, {
-          menuItem: 'Metrics Chart',
-          render: () => (
-            <Tab.Pane
-              attached='top'
-              // attached='bottom'
             >
               <div
                 style={{
@@ -356,66 +305,16 @@ export default function Logs () {
                     <Icon name='search' />
                   </Button>
                 </Input>
-                <div
-                  style={{
-                    width: width - 25,
-                    height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 100
-                  }}
-                >
-                  <ResponsiveLine
-                    data={metricsData}
-                    margin={{ top: 30, right: 30, bottom: 50, left: 60 }}
-                    xScale={{ type: 'time', format: 'native' }}
-                    xFormat="time:%H:%M:%S"
-                    // yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
-                    axisBottom={{
-                      format: "%H:%M:%S",
-                      // tickValues: "every 2 minutes",
-                      tickValues: "every 5 minutes",
-                      tickRotation: -30,
-                      legend: "time",
-                      legendOffset: 36
-                    }}
-                    // axisLeft={{
-                    //   tickSize: 5,
-                    //   tickPadding: 5,
-                    //   format: value => Number(value).toFixed(0), // <-- numbers on Y axis
-                    //   legend: "count",
-                    //   legendOffset: -40
-                    // }}
-                    // enableGridX={true} // vertical grid lines
-                    // enableGridY={true} // horizontal grid lines
-                    pointSize={4}
-                    useMesh={true}
-                  />
-                </div>
+
+                <AgGridReact
+                  rowData={logsData}
+                  columnDefs={logsColumns}
+                  theme={theme}
+                  pagination
+                  paginationPageSize={500}
+                  paginationPageSizeSelector={[200, 500, 1000]}
+                />
               </div>
-            </Tab.Pane>),
-        }, {
-          menuItem: 'Logs Analysis',
-          render: () => (
-            <Tab.Pane
-              attached='top'
-              // attached='bottom'
-            >
-              <GraphicWalker
-                data={logsData}
-                fields={logsFields}
-                i18nLang={i18n.language}
-              />
-            </Tab.Pane>),
-        }, {
-          menuItem: 'Metrics Analysis',
-          render: () => (
-            <Tab.Pane
-              attached='top'
-              // attached='bottom'
-            >
-              <GraphicWalker
-                data={metricsData[0].data}
-                fields={metricsFields}
-                i18nLang={i18n.language}
-              />
             </Tab.Pane>),
         }, {
           menuItem: 'Metrics',
@@ -498,23 +397,10 @@ export default function Logs () {
                                     kind: "PrometheusTimeSeriesQuery",
                                     spec: { query: mq },
                                   }))}
-                                  // definitions={[
-                                  //   {
-                                  //     kind: "PrometheusTimeSeriesQuery",
-                                  //     // spec: { query: `up{job="prometheus"}` },
-                                  //     spec: { query: `agents_processed` },
-                                  //   },
-                                  //   {
-                                  //     kind: "PrometheusTimeSeriesQuery",
-                                  //     // spec: { query: `up{job="prometheus"}` },
-                                  //     spec: { query: `running_agents` },
-                                  //   },
-                                  // ]}
                                 >
                                   <Panel
                                     panelOptions={{
                                       hideHeader: true,
-                                      // hideHeader: false,
                                     }}
                                     definition={{
                                       kind: "Panel",
