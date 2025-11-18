@@ -329,40 +329,6 @@ export default function Omni () {
                 }}
                 checked={bridge.deployed}
               />
-              {' '}
-              <Button
-                icon
-                compact
-                floated='right'
-                onClick={() => {
-                  setBridges(bridges.map(a =>
-                    a._id === bridge._id ? { ...a, monitoring: !a.monitoring } : a
-                  ))
-                }}
-              >
-                <Icon name={ bridge.monitoring ? 'caret down' : 'caret right' } />
-                Logs
-              </Button>
-              { bridge.monitoring && (<>
-                <br/>
-                <br/>
-                <pre
-                  style={{
-                    color: '#fff',             // white text
-                    backgroundColor: '#000',   // black background
-                    padding: '10px',
-                    margin: 0,
-                    borderRadius: '4px',
-
-                    overflowX: 'auto',         // horizontal scroll
-                    overflowY: 'auto',         // vertical scroll
-                    maxHeight: '300px',        // limit height
-                    scrollbarColor: '#888 #000',     // Firefox: thumb + track
-                  }}
-                >
-                  {bridge.logs}
-                </pre>
-              </>)}
             </Card.Content>
             { bridge.editing && (
               <Card.Content extra>
