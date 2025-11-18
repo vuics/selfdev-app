@@ -314,10 +314,12 @@ export default function O11y () {
       valueFormatter: (params) => formatLocalTimestamp(params.value),
     },
     { field: "level" },
-    { field: "agentId" },
-    { field: "archetype" },
     { field: "name" },
     { field: "message" },
+    { field: "archetype" },
+    { field: "connector" },
+    { field: "agentId" },
+    { field: "bridgeId" },
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
