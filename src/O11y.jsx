@@ -321,12 +321,12 @@ export default function O11y () {
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
-  const [aggs, setAggs] = useState(null);
+  const [ aggs, setAggs ] = useState(null);
 
-  const [timeRange, setTimeRange] = useState({
-    start,
-    end,
-    pastDuration,
+  const [ timeRange, setTimeRange ] = useState({
+    start: pastDuration === "custom" ? start : undefined,
+    end: pastDuration === "custom" ? end : undefined,
+    pastDuration: pastDuration === "custom" ? undefined : pastDuration,
   });
   useEffect(() => {
     if (!pastDuration) { return; }
@@ -360,6 +360,9 @@ export default function O11y () {
   }, [refreshInterval]);
 
   useEffect(() => {
+    if (active !== 'logs') {
+      return
+    }
     // Always fetch once on interval change
     fetchLogs();
 
@@ -372,7 +375,7 @@ export default function O11y () {
     }, intervalSeconds * 1000);
 
     return () => clearInterval(id); // cleanup on change/unmount
-  }, [refreshInterval]);
+  }, [refreshInterval, active]);
 
 
   const muiTheme = getTheme("light");
