@@ -301,7 +301,7 @@ export default function O11y () {
     },
   }
   const [ metricsQueries, setMetricsQueries ] = useState(() => {
-    return (localStorage.getItem('logs.metricsQueries') || 'agents_processed,running_agents').split('\n')
+    return (localStorage.getItem('logs.metricsQueries') || 'g_agents_processed,g_running_agents').split('\n')
   })
   useEffect(() => {
     localStorage.setItem('logs.metricsQueries', metricsQueries.join('\n'));
