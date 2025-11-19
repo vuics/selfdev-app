@@ -1018,7 +1018,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             nodes.map((node) =>
               node.id === id ? { ...node, data: {
                 ...node.data,
-                text: node.data.text + `\n<audio controls><source src="${recordingUrl}" type="${contentType}">Your browser does not support the audio element.</audio>`,
+                text: node.data.text + `\n<audio controls><source src="${recordingUrl}" type="${contentType}" />Your browser does not support the audio element.</audio>`,
                 attachments: [...(node.data.attachments || []), recordingUrl],
               } } : node
             )
