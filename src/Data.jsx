@@ -280,7 +280,9 @@ export default function Data ({
                 >
                   {(new Date(file.createdAt)).toLocaleTimeString()}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell
+                  collapsing
+                >
                   <Dropdown icon='ellipsis vertical' color='gray'>
                     <Dropdown.Menu>
                       <Dropdown.Item
