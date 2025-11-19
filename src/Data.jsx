@@ -94,7 +94,12 @@ const getContentIcon = (contentType = '') => {
   return 'file';
 };
 
-export default function Data () {
+const openFile = (file) => {
+  const url = `${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`;
+  window.open(url, "_blank");
+}
+
+export default function Data ({ hideMenubar = false, clickFile = openFile } = {}) {
   const { t } = useTranslation('Data')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -145,15 +150,12 @@ export default function Data () {
     }
   }
 
-  const clickFile = (file) => {
-    const url = `${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`;
-    window.open(url, "_blank");
-  }
-
   return (<>
-    <Container fluid>
-      <Menubar />
-    </Container>
+    { !hideMenubar && (
+      <Container fluid>
+        <Menubar />
+      </Container>
+    )}
 
     <Container>
       <Loader active={loading} inline='centered' />
@@ -178,8 +180,6 @@ export default function Data () {
             <Table.HeaderCell>File Name</Table.HeaderCell>
             <Table.HeaderCell>Size</Table.HeaderCell>
             <Table.HeaderCell>Path</Table.HeaderCell>
-            <Table.HeaderCell>Content Type</Table.HeaderCell>
-            <Table.HeaderCell>Uploaded</Table.HeaderCell>
             <Table.HeaderCell>Created At</Table.HeaderCell>
             <Table.HeaderCell>Actions</Table.HeaderCell>
           </Table.Row>
@@ -210,25 +210,18 @@ export default function Data () {
                 collapsing
                 onClick={() => clickFile(file)}
               >
-                {file.contentType}
-              </Table.Cell>
-              <Table.Cell
-                collapsing
-                onClick={() => clickFile(file)}
-              >
-                <Checkbox
-                  checked={file.uploaded}
-                />
-              </Table.Cell>
-              <Table.Cell
-                collapsing
-                onClick={() => clickFile(file)}
-              >
-                {file.createdAt}
+                {(new Date(file.createdAt)).toLocaleTimeString()}
               </Table.Cell>
               <Table.Cell>
                 <Dropdown icon='ellipsis vertical' color='gray'>
                   <Dropdown.Menu>
+                    <Dropdown.Item
+                      text='Open'
+                      onClick={() => {
+                        openFile(file)
+                      }}
+                    />
+                    <Dropdown.Divider />
                     <Dropdown.Item
                       text='Delete'
                       onClick={() => {

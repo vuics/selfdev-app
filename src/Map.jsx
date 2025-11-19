@@ -22,7 +22,7 @@ import {
   Label,
   Grid,
   Segment,
-  // Header,
+  Header,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -89,6 +89,7 @@ import {
   createOnChatMessage,
   playEdge, playMapCore,
 } from './maptor'
+import Data from './Data'
 
 const editorThemes = {
   'default': 'light',
@@ -765,6 +766,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
   const [ stash, setStash ] = useState(data.stash || '')
   const attachFileInputRef = useRef(null);
   const [ attaching, setAttaching ] = useState(false)
+  const [ dataModal, setDataModal ] = useState(false)
 
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
@@ -1149,6 +1151,48 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 style={{ display: 'none' }} // hide input
               />
             </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => setDataModal(true)}
+              disabled={user?.limits?.fileAttachments != null && !user.limits.fileAttachments}
+            >
+              <Icon name='disk' />
+              {t('Attach file from Data')}
+            </Dropdown.Item>
+
+            { dataModal && (
+              <Modal
+                onClose={() => setDataModal(false)}
+                open={dataModal}
+                size='fullscreen'
+              >
+                <Modal.Header>Select a File</Modal.Header>
+                <Modal.Content scrolling>
+                  <Data
+                    hideMenubar
+                    clickFile = {(file) => {
+                      console.log('file:', file)
+                      const fileUrl = `${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`;
+                      console.log('fileUrl:', fileUrl)
+                      setNodes((nodes) =>
+                        nodes.map((node) =>
+                          node.id === id ? { ...node, data: {
+                            ...node.data,
+                            attachments: [...(node.data.attachments || []), fileUrl]
+                          } } : node
+                        )
+                      );
+                      setDataModal(false)
+                    }}
+                  />
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button onClick={() => setDataModal(false)}>
+                    Cancel
+                  </Button>
+                </Modal.Actions>
+              </Modal>
+            )}
+
             <Dropdown.Item
               onClick={recording ? stopRecording : startRecording}
               disabled={user?.limits?.audioRecordings != null && !user.limits.audioRecordings}
