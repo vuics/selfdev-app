@@ -35,9 +35,13 @@ const buildHorizontalBarOptions = (title, data) => {
     title: { text: title, left: 'center' },
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
     legend: { bottom: 0 },
-    grid: { left: 120, right: 50, top: 60, bottom: 60 },
-    xAxis: { type: 'value', min: 0, max: Math.max(...totals) }, // set max to keep scale correct
-    yAxis: { type: 'category', data: categories },
+    grid: { left: 160, right: 50, top: 60, bottom: 60 },
+    xAxis: { type: 'value', min: 0, max: Math.max(...totals), }, // set max to keep scale correct
+    yAxis: { type: 'category', data: categories,
+      axisLabel: {
+        marginRight: 40,
+      }
+    },
     series: [
       // Draw TOTAL as background
       {
@@ -130,33 +134,33 @@ export default function Dash () {
           }}
         >
           <Statistic.Group>
-            <Statistic color='blue' size='huge'>
-              <Statistic.Value>
-                {dashboard.deployedAgents}/{dashboard.agents}
-              </Statistic.Value>
-              <Statistic.Label>
-                <Icon name='user secret' />
-                Deployed Agents
-              </Statistic.Label>
-            </Statistic>
-
-            <Statistic color='purple' size='huge'>
-              <Statistic.Value>
-                {dashboard.deployedBridges}/{dashboard.bridges}
-              </Statistic.Value>
-              <Statistic.Label>
-                <Icon name='linkify' />
-                Deployed Bridges
-              </Statistic.Label>
-            </Statistic>
-
-            <Statistic color='violet' size='huge'>
+            <Statistic color='teal' size='huge'>
               <Statistic.Value>
                 {dashboard.maps}
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='map' />
                 Maps
+              </Statistic.Label>
+            </Statistic>
+
+            <Statistic color='violet' size='huge'>
+              <Statistic.Value>
+                {dashboard.files}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='cloud download' />
+                Files
+              </Statistic.Label>
+            </Statistic>
+
+            <Statistic color='purple' size='huge'>
+              <Statistic.Value>
+                {dashboard.storages}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='cloud download' />
+                KV Storages
               </Statistic.Label>
             </Statistic>
 
@@ -174,7 +178,42 @@ export default function Dash () {
         </div>
       </Segment>
 
-      <Segment style={{ height: '850px' }}>
+      <Segment secondary>
+        <div
+          style={{
+            marginTop: '2vh',
+            marginBottom: '2vh',
+            display: 'flex',
+            justifyContent: 'center', // horizontal centering
+            alignItems: 'center',     // vertical centering
+            textAlign: 'center'       // center text inside stats
+          }}
+        >
+          <Statistic.Group>
+            <Statistic color='green' size='huge'>
+              <Statistic.Value>
+                {dashboard.deployedAgents}/{dashboard.agents}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='user secret' />
+                Deployed Agents
+              </Statistic.Label>
+            </Statistic>
+
+            <Statistic color='blue' size='huge'>
+              <Statistic.Value>
+                {dashboard.deployedBridges}/{dashboard.bridges}
+              </Statistic.Value>
+              <Statistic.Label>
+                <Icon name='linkify' />
+                Deployed Bridges
+              </Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+        </div>
+      </Segment>
+
+      <Segment style={{ height: '850px' }} secondary>
         { dashboard && dashboard.agentArchetypes && (<>
           <ReactECharts
             key="archetypes-echarts"
@@ -187,7 +226,7 @@ export default function Dash () {
         </>)}
       </Segment>
 
-      <Segment style={{ height: '550px' }} >
+      <Segment style={{ height: '550px' }} secondary>
         { dashboard && dashboard.bridgeConnectors && (<>
           <ReactECharts
             key="connectors-echarts"
