@@ -963,6 +963,15 @@ const resources = {
       'Reorder': 'Reorder',
       'Unlink': 'Unlink',
     },
+    Data: {
+      units: {
+        "B": "B",
+        "KB": "KB",
+        "MB": "MB",
+        "GB": "GB",
+        "TB": "TB",
+      },
+    },
     Profile: {
       'Error getting user profile.': 'Error getting user profile.',
       'Error': 'Error',
@@ -2579,6 +2588,15 @@ const resources = {
       'Evaluate Condition On': 'Проверить условие на',
       'Reorder': 'Изменить порядок',
       'Unlink': 'Отсоединить',
+    },
+    Data: {
+      units: {
+        "B": "Б",
+        "KB": "КБ",
+        "MB": "МБ",
+        "GB": "ГБ",
+        "TB": "ТБ"
+      },
     },
     Profile: {
       'Error getting user profile.': 'Ошибка при получении профиля пользователя.',

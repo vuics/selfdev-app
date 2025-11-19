@@ -44,6 +44,7 @@ import Map from './Map'
 import Meet from './Meet'
 import Hive from './Hive'
 import Omni from './Omni'
+import Data from './Data'
 import O11y from './O11y'
 import Apps from './Apps'
 import Flow from './Flow'
@@ -246,6 +247,9 @@ function Index () {
         )}
         { conf.omni.enable && (
           <Route path="/omni" element={(<Private> <Omni/> </Private>)}/>
+        )}
+        { conf.data.enable && (
+          <Route path="/data" element={(<Private> <Data/> </Private>)}/>
         )}
         { conf.o11y.enable && (
           <Route path="/o11y" element={(<Private> <O11y /> </Private>)}/>

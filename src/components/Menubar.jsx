@@ -85,6 +85,12 @@ export default function Menubar ({ children }) {
           {t('Omni')}
         </Menu.Item>
       ) }
+      { conf.data.enable && (
+        <Menu.Item onClick={() => navigate('/data')} active={pathname==='/data'}>
+          <Icon name='database' />
+          {t('Data')}
+        </Menu.Item>
+      ) }
       { conf.o11y.enable && (
         <Menu.Item onClick={() => navigate('/o11y')} active={pathname==='/o11y'}>
           <Icon name='chart bar' />

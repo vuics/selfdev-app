@@ -89,6 +89,12 @@ const conf = {
     limit: 1000,
   },
 
+  data: {
+    enable: bool(import.meta.env.VITE_DATA_ENABLE || true),
+    skip: 0,
+    limit: 1000,
+  },
+
   o11y: {
     enable: bool(import.meta.env.VITE_O11Y_ENABLE || true),
     skip: 0,
