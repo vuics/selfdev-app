@@ -8,11 +8,11 @@ import {
   Icon,
   Dropdown,
   Table,
-  Checkbox,
+  Menu,
+  // Checkbox,
   // Button,
   // Input,
   // Segment,
-  // Menu,
   // Card,
   // Modal,
   // Divider,
@@ -99,11 +99,25 @@ const openFile = (file) => {
   window.open(url, "_blank");
 }
 
-export default function Data ({ hideMenubar = false, clickFile = openFile } = {}) {
+const openStorage = (storage) => {
+  window.alert(`Namespace: ${storage.namespace}\nKey: ${storage.key}\nValue: ${storage.value}`)
+}
+
+export default function Data ({
+  hideMenubar = false, clickFile = openFile, clickStorage = openStorage
+} = {}) {
   const { t } = useTranslation('Data')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ files, setFiles ] = useState([])
+  const [ storages, setStorages ] = useState([])
+
+  const [ active, setActive ] = useState(() => {
+    return localStorage.getItem('data.active') || 'files'
+  })
+  useEffect(() => {
+    localStorage.setItem('data.active', active);
+  }, [active]);
 
   const indexFiles = async () => {
     setLoading(true)
@@ -123,9 +137,28 @@ export default function Data ({ hideMenubar = false, clickFile = openFile } = {}
     }
   }
 
+  const indexStorages = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get(`${conf.api.url}/storage?skip=${conf.data.skip}&limit=${conf.data.limit}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      // console.log('res:', res)
+      console.log('res.data:', res.data)
+      setStorages(res.data)
+    } catch (err) {
+      console.error('get storages error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error getting storages.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     indexFiles()
-  }, [])
+    indexStorages()
+  }, [active])
 
   const deleteFile = async ({ file }) => {
     setLoading(true)
@@ -149,6 +182,26 @@ export default function Data ({ hideMenubar = false, clickFile = openFile } = {}
       setLoading(false)
     }
   }
+
+  const deleteStorage = async ({ storage }) => {
+    setLoading(true)
+    try {
+      const res = await axios.delete(`${conf.api.url}/storage/${storage._id}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('storage doc delete res:', res)
+      // setResponseMessage(`Storage deleted successfully`)
+      setStorages(storages.filter(obj => obj._id !== storage._id))
+    } catch (err) {
+      console.error('delete storage error:', err);
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting storage.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  console.log('storages:', storages)
 
   return (<>
     { !hideMenubar && (
@@ -174,68 +227,151 @@ export default function Data ({ hideMenubar = false, clickFile = openFile } = {}
     <Container fluid
       style={{ padding: '15px 15px 0 15px' }}
     >
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>File Name</Table.HeaderCell>
-            <Table.HeaderCell>Size</Table.HeaderCell>
-            <Table.HeaderCell>Path</Table.HeaderCell>
-            <Table.HeaderCell>Created At</Table.HeaderCell>
-            <Table.HeaderCell>Actions</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+      <Menu pointing>
+        <Menu.Item
+          name='File System'
+          active={active === 'files'}
+          onClick={() => setActive('files')}
+        />
+        <Menu.Item
+          name='KV Storage'
+          active={active === 'storages'}
+          onClick={() => setActive('storages')}
+        />
+      </Menu>
 
-          { files.map(file => (
-            <Table.Row key={file.slot}>
-              <Table.Cell
-                onClick={() => clickFile(file)}
-              >
-                <Icon name={getContentIcon(file.contentType)} />
-                {file.filename}
-              </Table.Cell>
-              <Table.Cell
-                collapsing
-                onClick={() => clickFile(file)}
-              >
-                {humanFileSizeI18n(file.filesize, t)}
-              </Table.Cell>
-              <Table.Cell
-                collapsing
-                onClick={() => clickFile(file)}
-              >
-                {file.path}
-              </Table.Cell>
-              <Table.Cell
-                collapsing
-                onClick={() => clickFile(file)}
-              >
-                {(new Date(file.createdAt)).toLocaleTimeString()}
-              </Table.Cell>
-              <Table.Cell>
-                <Dropdown icon='ellipsis vertical' color='gray'>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      text='Open'
-                      onClick={() => {
-                        openFile(file)
-                      }}
-                    />
-                    <Dropdown.Divider />
-                    <Dropdown.Item
-                      text='Delete'
-                      onClick={() => {
-                        deleteFile({ file })
-                      }}
-                    />
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Table.Cell>
+
+      { active === 'files' && (
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>File Name</Table.HeaderCell>
+              <Table.HeaderCell>Size</Table.HeaderCell>
+              <Table.HeaderCell>Path</Table.HeaderCell>
+              <Table.HeaderCell>Created At</Table.HeaderCell>
+              <Table.HeaderCell>Actions</Table.HeaderCell>
             </Table.Row>
-          ))}
+          </Table.Header>
+          <Table.Body>
 
-        </Table.Body>
-      </Table>
+            { files.map(file => (
+              <Table.Row key={file.slot}>
+                <Table.Cell
+                  onClick={() => clickFile(file)}
+                >
+                  <Icon name={getContentIcon(file.contentType)} />
+                  {file.filename}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickFile(file)}
+                >
+                  {humanFileSizeI18n(file.filesize, t)}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickFile(file)}
+                >
+                  {file.path}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickFile(file)}
+                >
+                  {(new Date(file.createdAt)).toLocaleTimeString()}
+                </Table.Cell>
+                <Table.Cell>
+                  <Dropdown icon='ellipsis vertical' color='gray'>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        text='Open'
+                        onClick={() => {
+                          openFile(file)
+                        }}
+                      />
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        text='Delete'
+                        onClick={() => {
+                          deleteFile({ file })
+                        }}
+                      />
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+
+          </Table.Body>
+        </Table>
+      )}
+
+      { active === 'storages' && (
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Namespace</Table.HeaderCell>
+              <Table.HeaderCell>Key</Table.HeaderCell>
+              <Table.HeaderCell>Value</Table.HeaderCell>
+              <Table.HeaderCell>Updated At</Table.HeaderCell>
+              <Table.HeaderCell>Actions</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+
+            { storages.map(storage => (
+              <Table.Row key={storage.key}>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickStorage(storage)}
+                >
+                  {storage.namespace}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickStorage(storage)}
+                >
+                  <Icon name='file' />
+                  {storage.key}
+                </Table.Cell>
+                <Table.Cell
+                  onClick={() => clickStorage(storage)}
+                >
+                  {storage.value}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => clickStorage(storage)}
+                >
+                  {(new Date(storage.updatedAt)).toLocaleTimeString()}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                >
+                  <Dropdown icon='ellipsis vertical' color='gray'>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        text='Open'
+                        onClick={() => {
+                          openStorage(storage)
+                        }}
+                      />
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        text='Delete'
+                        onClick={() => {
+                          deleteStorage({ storage })
+                        }}
+                      />
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+
+          </Table.Body>
+        </Table>
+      )}
 
     </Container>
   </>)

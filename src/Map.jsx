@@ -22,7 +22,7 @@ import {
   Label,
   Grid,
   Segment,
-  Header,
+  // Header,
 } from 'semantic-ui-react'
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -1156,16 +1156,15 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
               disabled={user?.limits?.fileAttachments != null && !user.limits.fileAttachments}
             >
               <Icon name='disk' />
-              {t('Attach file from Data')}
+              {t('Insert Data')}
             </Dropdown.Item>
-
             { dataModal && (
               <Modal
                 onClose={() => setDataModal(false)}
                 open={dataModal}
                 size='fullscreen'
               >
-                <Modal.Header>Select a File</Modal.Header>
+                <Modal.Header>Insert Data</Modal.Header>
                 <Modal.Content scrolling>
                   <Data
                     hideMenubar
@@ -1178,6 +1177,18 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                           node.id === id ? { ...node, data: {
                             ...node.data,
                             attachments: [...(node.data.attachments || []), fileUrl]
+                          } } : node
+                        )
+                      );
+                      setDataModal(false)
+                    }}
+                    clickStorage = {(storage) => {
+                      setNodes((nodes) =>
+                        nodes.map((node) =>
+                          node.id === id ? { ...node, data: {
+                            ...node.data,
+                            text: node.data.text += storage.value,
+                            editing: false,
                           } } : node
                         )
                       );
