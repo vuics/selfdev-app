@@ -634,7 +634,7 @@ const archetypes = {
                 append: { type: 'string', title: 'Append Command RegExp', default: '^//APPEND\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
                 delete: { type: 'string', title: 'Delete Command RegExp', default: '^//DELETE\\s+(?P<key>\\S+)$', },
                 load: { type: 'string', title: 'Load from Files Command RegExp', default: '^//LOAD\\s+(?P<key>\\S+)$', },
-                save: { type: 'string', title: 'Save to File Command RegExp', default: '^//SAVE\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$', },
+                save: { type: 'string', title: 'Save to File Command RegExp', default: '^//SAVE\\s+(?P<key>\\S+)(?:\\s+(?P<filename>\\S+))?(?:\\s+(?P<default>.*))?$', },
               },
             },
           },
