@@ -118,6 +118,7 @@ const conf = {
 
   docs: {
     enable: bool(import.meta.env.VITE_DOCS_ENABLE || false),
+    linkEnable: bool(import.meta.env.VITE_DOCS_LINK_ENABLE || true),
     url: import.meta.env.VITE_DOCS_URL || 'http://docs.dev.local:9298/',
     i18n: {
       'en-US': '',

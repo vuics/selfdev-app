@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 
+import i18n from '../i18n'
 import conf from '../conf.js'
 import Logo from './Logo'
 import { useIndexContext } from './IndexContext'
@@ -155,6 +156,17 @@ export default function Menubar ({ children }) {
       {children}
 
       <Menu.Menu position='right'>
+        { conf.docs.linkEnable && (
+          <Menu.Item
+            onClick={() => window.open(`${conf.docs.url}${conf.docs.i18n[i18n.language]}`, '_blank')}
+          >
+            <Icon.Group size='large'>
+              <Icon name='book' />
+              <Icon name='external alternate' corner color='grey' />
+            </Icon.Group>
+            {t('Docs')}
+          </Menu.Item>
+        ) }
         <Dropdown
           item
           trigger={
