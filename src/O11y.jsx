@@ -59,6 +59,7 @@ import * as timeseriesChartPlugin from "@perses-dev/timeseries-chart-plugin";
 
 import { useWindowDimensions } from './helper.js'
 import Menubar from './components/Menubar'
+import { useIndexContext } from './components/IndexContext'
 import conf, { bool } from './conf'
 
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -185,8 +186,36 @@ export function LogsHistogram({ buckets }) {
   );
 }
 
+/**
+ * Secure PromQL injector for metrics prefixed with "h9y_".
+ * - Adds userId if missing
+ * - Replaces userId if present
+ */
+function injectUserId(promql, userId) {
+  return promql.replace(
+    /\b(h9y_[a-zA-Z0-9_]+)\b(\{[^}]*\})?(\[[^\]]+])?/g,
+    (match, metric, labels, range) => {
+      // If no labels, add userId
+      if (!labels) {
+        return `${metric}{userId="${userId}"}${range || ''}`;
+      }
+
+      // If labels exist, replace any existing userId
+      if (/userId\s*=/.test(labels)) {
+        const newLabels = labels.replace(/userId\s*=\s*"[^"]*"/, `userId="${userId}"`);
+        return `${metric}${newLabels}${range || ''}`;
+      }
+
+      // Labels exist but no userId — append
+      const newLabels = labels.replace(/\}$/, `,userId="${userId}"}`);
+      return `${metric}${newLabels}${range || ''}`;
+    }
+  );
+}
+
 export default function O11y () {
   const { t } = useTranslation('O11y')
+  const { user } = useIndexContext()
   const { height, width } = useWindowDimensions();
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
@@ -301,11 +330,12 @@ export default function O11y () {
     },
   }
   const [ metricsQueries, setMetricsQueries ] = useState(() => {
-    return (localStorage.getItem('logs.metricsQueries') || 'g_agents_processed,g_running_agents').split('\n')
+    return (localStorage.getItem('logs.metricsQueries') || 'h9y_c_messages_received,h9y_c_messages_sent').split('\n')
   })
   useEffect(() => {
     localStorage.setItem('logs.metricsQueries', metricsQueries.join('\n'));
   }, [metricsQueries]);
+  // console.log('Sequre queries:', metricsQueries.map(mq => injectUserId(mq, user._id)))
 
   // For AgGridReact
   const [logsColumns, ] = useState([
@@ -737,7 +767,7 @@ export default function O11y () {
                           <DataQueriesProvider
                             definitions={metricsQueries.map(mq => ({
                               kind: "PrometheusTimeSeriesQuery",
-                              spec: { query: mq },
+                              spec: { query: injectUserId(mq, user._id) },
                             }))}
                           >
                             <Panel
