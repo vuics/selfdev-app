@@ -179,16 +179,11 @@ export default function Data ({
   const deleteFile = async ({ file }) => {
     setLoading(true)
     try {
-      const res = await axios.delete(`${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`, {
+      const res = await axios.delete(`${conf.api.url}/file/${file._id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log('file delete res:', res)
-      const res1 = await axios.delete(`${conf.api.url}/file/${file._id}`, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      })
-      console.log('file doc delete res:', res1)
+      console.log('file doc delete res:', res)
       // setResponseMessage(`File deleted successfully`)
       setFiles(files.filter(obj => obj._id !== file._id))
     } catch (err) {

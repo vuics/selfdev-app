@@ -1016,20 +1016,6 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
             shareHost: conf.xmpp.shareHost,
           });
           console.log('Uploaded recording url:', recordingUrl);
-          const slot = recordingUrl.replace(conf.xmpp.shareUrlPrefix, '').split("/")[0]
-          console.log('slot:', slot)
-          const res = await axios.post(`${conf.api.url}/file`, {
-            slot,
-            contentType,
-            filename,
-            filesize: audioBlob.size,
-            path: '/',
-            uploaded: false,
-          }, {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-          })
-          console.log('file upload res.data:', res.data)
           setNodes((nodes) =>
             nodes.map((node) =>
               node.id === id ? { ...node, data: {
@@ -2714,20 +2700,6 @@ function Map () {
             contentType: file.type || 'application/octet-stream',
             shareHost: conf.xmpp.shareHost,
           })
-          const slot = getUrl.replace(conf.xmpp.shareUrlPrefix, '').split("/")[0]
-          console.log('slot:', slot)
-          const res = await axios.post(`${conf.api.url}/file`, {
-            slot,
-            contentType: file.type || 'application/octet-stream',
-            filename: file.name,
-            filesize: file.size,
-            path: '/',
-            uploaded: false,
-          }, {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-          })
-          console.log('file upload res.data:', res.data)
           resolve(getUrl)
         };
         reader.onerror = (err) => {
