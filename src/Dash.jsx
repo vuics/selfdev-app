@@ -39,7 +39,8 @@ const buildHorizontalBarOptions = (title, data) => {
     xAxis: { type: 'value', min: 0, max: Math.max(...totals), }, // set max to keep scale correct
     yAxis: { type: 'category', data: categories,
       axisLabel: {
-        marginRight: 40,
+        padding: [0, 24, 0, 0], // increase the RIGHT padding so labels are further from the axis line
+        margin: 8               // additional distance between label box and axis/tick line
       }
     },
     series: [
