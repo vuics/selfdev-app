@@ -1187,6 +1187,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                         nodes.map((node) =>
                           node.id === id ? { ...node, data: {
                             ...node.data,
+                            // uname: node.data.uname += storage.key,
                             text: node.data.text += storage.value,
                             editing: false,
                           } } : node

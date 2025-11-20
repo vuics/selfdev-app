@@ -9,15 +9,15 @@ import {
   Dropdown,
   Table,
   Menu,
+  Button,
+  Segment,
+  Modal,
+  // Header,
   // Checkbox,
-  // Button,
   // Input,
-  // Segment,
   // Card,
-  // Modal,
   // Divider,
   // Tab,
-  // Header,
   // Popup,
   // Accordion,
   // List,
@@ -26,6 +26,8 @@ import {
   // Form,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
+import Form from '@rjsf/semantic-ui'
+import validator from '@rjsf/validator-ajv8';
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -94,23 +96,37 @@ const getContentIcon = (contentType = '') => {
   return 'file';
 };
 
+const storageSchema = {
+  title: 'Key-value',
+  description: 'Add key-value pair to the KV storage',
+  type: 'object',
+  properties: {
+    namespace: { type: 'string', title: 'Namespace', default: 'default' },
+    key: { type: 'string', title: 'Key' },
+    value: { type: 'string', title: 'Value', format: 'textarea' },
+  }
+}
+
 const openFile = (file) => {
   const url = `${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`;
   window.open(url, "_blank");
 }
 
-const openStorage = (storage) => {
-  window.alert(`Namespace: ${storage.namespace}\nKey: ${storage.key}\nValue: ${storage.value}`)
+const editStorage = (storage, { storages, setStorages }) => {
+  setStorages(storages.map(b =>
+    b._id === storage._id ? { ...b, editing: true } : b
+  ))
 }
 
 export default function Data ({
-  hideMenubar = false, clickFile = openFile, clickStorage = openStorage
+  hideMenubar = false, clickFile = openFile, clickStorage = editStorage
 } = {}) {
   const { t } = useTranslation('Data')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ files, setFiles ] = useState([])
   const [ storages, setStorages ] = useState([])
+  const [ addingStorage, setAddingStorage ] = useState(false)
 
   const [ active, setActive ] = useState(() => {
     return localStorage.getItem('data.active') || 'files'
@@ -178,6 +194,47 @@ export default function Data ({
     } catch (err) {
       console.error('delete file error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting file.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const postStorage = async ({ storage } = {}) => {
+    setLoading(true)
+    try {
+      const res = await axios.post(`${conf.api.url}/storage`, {
+        ...storage
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      // console.log('res:', res)
+      console.log('res.data:', res.data)
+      setStorages([ ...storages, res.data ])
+    } catch (err) {
+      console.error('get storages error:', err);
+      return setResponseError(err?.response?.data?.message || t('Error getting storages.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const putStorage = async ({ storage }) => {
+    setLoading(true)
+    try {
+      console.log('putStorage storage:', storage)
+      const res = await axios.put(`${conf.api.url}/storage/${storage._id}`, {
+        ...storage,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log('storage put res:', res)
+      // setResponseMessage(`Storage updated successfully`)
+      setStorages(storages.map(a => a._id === res.data._id ? res.data : a))
+    } catch (err) {
+      console.error('put storage error:', err);
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting storage.'))
     } finally {
       setLoading(false)
     }
@@ -308,7 +365,48 @@ export default function Data ({
         </Table>
       )}
 
-      { active === 'storages' && (
+      { active === 'storages' && (<>
+        { !addingStorage && (<>
+          <Button size='large' onClick={() => setAddingStorage(!addingStorage) }>
+            <Icon.Group size='large'>
+              <Icon name='hockey puck' />
+              <Icon corner name='add' />
+            </Icon.Group>
+            {' '}
+            {t('Add Key-value')}
+            {' '}
+          </Button>
+        </>)}
+
+        { addingStorage && (<>
+          <Segment secondary>
+            <Form
+              schema={storageSchema}
+              validator={validator}
+              onSubmit={({ formData }) => {
+                postStorage({ storage: formData });
+                setAddingStorage(!addingStorage)
+              }}
+            >
+              <Button.Group>
+                <Button type='button' onClick={() => setAddingStorage(!addingStorage) }>
+                  <Icon name='cancel' />
+                  {' '}
+                  {t('Cancel')}
+                  {' '}
+                </Button>
+                <Button.Or />
+                <Button type='submit' positive on>
+                  <Icon name='save' />
+                  {' '}
+                  {t('Submit')}
+                  {' '}
+                </Button>
+              </Button.Group>
+            </Form>
+          </Segment>
+        </>)}
+
         <Table>
           <Table.Header>
             <Table.Row>
@@ -321,29 +419,31 @@ export default function Data ({
           </Table.Header>
           <Table.Body>
 
-            { storages.map(storage => (
+            { storages.map(storage => (<>
               <Table.Row key={storage.key}>
                 <Table.Cell
                   collapsing
-                  onClick={() => clickStorage(storage)}
+                  onClick={() => clickStorage(storage, { storages, setStorages })}
                 >
                   {storage.namespace}
                 </Table.Cell>
                 <Table.Cell
                   collapsing
-                  onClick={() => clickStorage(storage)}
+                  onClick={() => clickStorage(storage, { storages, setStorages })}
                 >
-                  <Icon name='file' />
+                  <Icon name='hockey puck' />
                   {storage.key}
                 </Table.Cell>
                 <Table.Cell
-                  onClick={() => clickStorage(storage)}
+                  onClick={() => clickStorage(storage, { storages, setStorages })}
                 >
-                  {storage.value}
+                  {storage.value.length > 1000
+                    ? (<> {storage.value.slice(0, 1000)} <Icon name='ellipsis horizontal' color='grey'/> </>)
+                    : storage.value}
                 </Table.Cell>
                 <Table.Cell
                   collapsing
-                  onClick={() => clickStorage(storage)}
+                  onClick={() => clickStorage(storage, { storages, setStorages })}
                 >
                   {(new Date(storage.updatedAt)).toLocaleTimeString()}
                 </Table.Cell>
@@ -353,9 +453,9 @@ export default function Data ({
                   <Dropdown icon='ellipsis vertical' color='gray'>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        text='Open'
+                        text='Edit'
                         onClick={() => {
-                          openStorage(storage)
+                          editStorage(storage, { storages, setStorages })
                         }}
                       />
                       <Dropdown.Divider />
@@ -369,11 +469,49 @@ export default function Data ({
                   </Dropdown>
                 </Table.Cell>
               </Table.Row>
-            ))}
+
+              { storage.editing && (
+                <Modal
+                  open={storage.editing}
+                >
+                  <Modal.Header>Edit Key-value</Modal.Header>
+                  <Modal.Content>
+                    <Form
+                      schema={storageSchema}
+                      validator={validator}
+                      formData={storage}
+                      onSubmit={({ formData }) => {
+                        putStorage({ storage: formData });
+                      }}
+                    >
+                      <Button.Group>
+                        <Button type='button' onClick={() => {
+                          setStorages(storages.map(b =>
+                            b._id === storage._id ? { ...storage, editing: false } : b
+                          ))
+                        }}>
+                          <Icon name='cancel' />
+                          {' '}
+                          {t('Cancel')}
+                          {' '}
+                        </Button>
+                        <Button.Or />
+                        <Button type='submit' color='green' on>
+                          <Icon name='save' />
+                          {' '}
+                          {t('Update')}
+                          {' '}
+                        </Button>
+                      </Button.Group>
+                    </Form>
+                  </Modal.Content>
+                </Modal>
+              )}
+            </>))}
 
           </Table.Body>
         </Table>
-      )}
+      </>)}
 
     </Container>
   </>)
