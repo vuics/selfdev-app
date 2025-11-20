@@ -330,7 +330,7 @@ export default function O11y () {
     },
   }
   const [ metricsQueries, setMetricsQueries ] = useState(() => {
-    return (localStorage.getItem('logs.metricsQueries') || 'h9y_c_messages_received,h9y_c_messages_sent').split('\n')
+    return (localStorage.getItem('logs.metricsQueries') || 'h9y_messages_received_total,h9y_messages_sent_total').split('\n')
   })
   useEffect(() => {
     localStorage.setItem('logs.metricsQueries', metricsQueries.join('\n'));
