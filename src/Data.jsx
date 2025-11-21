@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import axios from 'axios'
 import {
@@ -28,6 +28,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
+import { useXmppContext } from './components/XmppContext'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -125,8 +126,11 @@ export default function Data ({
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ files, setFiles ] = useState([])
+  const [ attaching, setAttaching ] = useState(false)
   const [ storages, setStorages ] = useState([])
   const [ addingStorage, setAddingStorage ] = useState(false)
+  const attachFileInputRef = useRef(null);
+  const { xmppClient } = useXmppContext()
 
   const [ active, setActive ] = useState(() => {
     return localStorage.getItem('data.active') || 'files'
@@ -253,6 +257,54 @@ export default function Data ({
     }
   }
 
+  const attachFileInit = () => {
+    // console.log('user:', user)
+    attachFileInputRef.current.click(); // triggers hidden input
+  };
+
+  const onFileInputChange = async (event) => {
+    try {
+      setAttaching(true)
+      const fileUrl = await attachFile(event)
+      console.log('fileUrl:', fileUrl)
+      await indexFiles()
+    } catch (err) {
+      console.error('Error attaching file:', err);
+    } finally {
+      setAttaching(false)
+    }
+  }
+
+
+  const attachFile = async (event) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const file = event.target.files[0];
+        if (!file) {
+          throw new Error(`Error attaching file: ${file}`)
+        }
+        const reader = new FileReader();
+        reader.onload = async () => {
+          // console.log('Loaded file:', e.target.result)
+          const getUrl = await xmppClient.uploadFile({
+            buffer: reader.result,
+            filename: file.name,
+            size: file.size,
+            contentType: file.type || 'application/octet-stream',
+            shareHost: conf.xmpp.shareHost,
+          })
+          resolve(getUrl)
+        };
+        reader.onerror = (err) => {
+          throw err
+        };
+        reader.readAsArrayBuffer(file);
+      } catch (err) {
+        reject(err);
+      }
+    })
+  }
+
   console.log('storages:', storages)
 
   return (<>
@@ -293,7 +345,25 @@ export default function Data ({
       </Menu>
 
 
-      { active === 'files' && (
+      { active === 'files' && (<>
+        <Button size='large' onClick={() => { 
+          attachFileInit()
+        }}>
+          <Icon.Group size='large'>
+            <Icon name='upload' />
+          </Icon.Group>
+          {' '}
+          {t('Upload File')}
+          {' '}
+          <input
+            type="file"
+            // accept="application/json"
+            ref={attachFileInputRef}
+            onChange={onFileInputChange}
+            style={{ display: 'none' }} // hide input
+          />
+        </Button>
+
         <Table>
           <Table.Header>
             <Table.Row>
@@ -358,7 +428,7 @@ export default function Data ({
 
           </Table.Body>
         </Table>
-      )}
+      </>)}
 
       { active === 'storages' && (<>
         { !addingStorage && (<>
