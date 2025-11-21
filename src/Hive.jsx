@@ -392,164 +392,166 @@ export default function Hive () {
       <br/>
       <br/>
 
-      <Grid>
-        { agents.map((agent) => (
-          <Grid.Row key={agent._id}>
-            <Grid.Column width={5}>
-              <Card>
-                <Card.Content>
-                  <Card.Header>
-                    <Grid>
-                      <Grid.Row>
-                        <Grid.Column width={13}>
-                          <Icon
-                            name={
-                              presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
-                                ? (agent.deployed ? 'spy' : 'spinner')
-                                : (agent.deployed ? 'spinner' : 'spy')
-                            }
-                            color={
-                              presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
-                                ? (agent.deployed ? 'green' : 'red')
-                                : (agent.deployed ? 'yellow' : 'grey')
-                            }
-                            loading={
-                              presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
-                                ? (agent.deployed ? false : true)
-                                : (agent.deployed ? true : false)
-                            }
-                          />
-                          {agent.options?.name || '(no name)'}
-                        </Grid.Column>
-                        <Grid.Column width={3}>
-                          <Dropdown item simple position='right'
-                            icon={
-                             <Icon name='cog' color='grey'/>
-                            }>
-                            <Dropdown.Menu>
-                              <Dropdown.Item
-                                onClick={() => {
-                                  setAgents(agents.map(a =>
-                                    a._id === agent._id ? { ...a, editing: true } : a
-                                  ))
-                                }}
-                              >
-                                <Icon name='edit' />
-                                {t('Edit')}
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                onClick={() => {
-                                  deleteAgent({ _id: agent._id })
-                                }}
-                              >
-                                <Icon name='delete' />
-                                {t('Delete')}
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
-                  </Card.Header>
-                  <Card.Meta textAlign='center'>
-                    { archetypes[agent.archetype]?.text }
-                  </Card.Meta>
-                  <Card.Description>
-                    {agent.options?.description || t('(no description)') }
-                  </Card.Description>
-                  { agent.options?.joinRooms?.length > 0 && (
-                    <List>
-                    { agent.options?.joinRooms?.map(room => (
-                        <Label key={room}><List.Item>{room}</List.Item></Label>
-                    ))}
-                    </List>
-                  ) }
-                </Card.Content>
-                <Card.Content extra>
-                  <Checkbox toggle label={t('Deployed')}
-                    disabled={agent.editing}
-                    onChange={(e, data) => {
-                      putAgent({ agent: {...agent, deployed: data.checked } })
-                    }}
-                    checked={agent.deployed}
-                  />
-                </Card.Content>
-                { agent.editing && (
+      <Segment tertiary>
+        <Grid>
+          { agents.map((agent) => (
+            <Grid.Row key={agent._id}>
+              <Grid.Column width={agent.editing ? 5 : 16}>
+                <Card fluid>
+                  <Card.Content>
+                    <Card.Header>
+                      <Grid>
+                        <Grid.Row>
+                          <Grid.Column width={agent.editing ? 13 : 15}>
+                            <Icon
+                              name={
+                                presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                                  ? (agent.deployed ? 'spy' : 'spinner')
+                                  : (agent.deployed ? 'spinner' : 'spy')
+                              }
+                              color={
+                                presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                                  ? (agent.deployed ? 'green' : 'red')
+                                  : (agent.deployed ? 'yellow' : 'grey')
+                              }
+                              loading={
+                                presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                                  ? (agent.deployed ? false : true)
+                                  : (agent.deployed ? true : false)
+                              }
+                            />
+                            {agent.options?.name || '(no name)'}
+                          </Grid.Column>
+                          <Grid.Column width={agent.editing ? 3 : 1}>
+                            <Dropdown item simple position='right'
+                              icon={
+                               <Icon name='cog' color='grey'/>
+                              }>
+                              <Dropdown.Menu>
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    setAgents(agents.map(a =>
+                                      a._id === agent._id ? { ...a, editing: true } : a
+                                    ))
+                                  }}
+                                >
+                                  <Icon name='edit' />
+                                  {t('Edit')}
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    deleteAgent({ _id: agent._id })
+                                  }}
+                                >
+                                  <Icon name='delete' />
+                                  {t('Delete')}
+                                </Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Card.Header>
+                    <Card.Meta textAlign='left'>
+                      { archetypes[agent.archetype]?.text }
+                    </Card.Meta>
+                    <Card.Description>
+                      {agent.options?.description || t('(no description)') }
+                    </Card.Description>
+                    { agent.options?.joinRooms?.length > 0 && (
+                      <List>
+                      { agent.options?.joinRooms?.map(room => (
+                          <Label key={room}><List.Item>{room}</List.Item></Label>
+                      ))}
+                      </List>
+                    ) }
+                  </Card.Content>
                   <Card.Content extra>
-                    <div className='ui two buttons'>
-                      <Button basic color='grey'
-                        onClick={() => {
+                    <Checkbox toggle label={t('Deployed')}
+                      disabled={agent.editing}
+                      onChange={(e, data) => {
+                        putAgent({ agent: {...agent, deployed: data.checked } })
+                      }}
+                      checked={agent.deployed}
+                    />
+                  </Card.Content>
+                  { agent.editing && (
+                    <Card.Content extra>
+                      <div className='ui two buttons'>
+                        <Button basic color='grey'
+                          onClick={() => {
+                            const foundAgent = agentsImmutable.find(a => a._id === agent._id)
+                            setAgents(agents.map(a =>
+                              a._id === agent._id ? { ...foundAgent, editing: false } : a
+                            ))
+                          }}
+                        >
+                        {t('Cancel')}
+                        </Button>
+                        { agent.edited && (
+                          <Button color='yellow'
+                            onClick={() => {
+                              putAgent({ agent: { ...agent, options: agent.options }});
+                            }}
+                          >
+                          {t('Update')}
+                          </Button>
+                        )}
+                      </div>
+                  </Card.Content>
+                  ) }
+                </Card>
+              </Grid.Column>
+              { agent.editing && (
+                <Grid.Column width={11}>
+                  <Segment secondary>
+                    <Header as='h3'>
+                      {t('Edit Agent')}
+                    </Header>
+                    <Form
+                      schema={archetypes[agent.archetype].schema}
+                      uiSchema={archetypes[agent.archetype].uiSchema || {}}
+                      fields={{ JsonEditorField }}
+                      validator={validator}
+                      formData={agent.options}
+                      onChange={({ formData }) => {
+                        setAgents(agents.map(a =>
+                          a._id === agent._id ? { ...agent, edited: true, options: formData } : a
+                        ))
+                      }}
+                      onSubmit={({ formData }) => {
+                        putAgent({ agent: { ...agent, options: formData }});
+                      }}
+                      onError={log('errors')}
+                    >
+                      <Button.Group>
+                        <Button type='button' onClick={() => {
                           const foundAgent = agentsImmutable.find(a => a._id === agent._id)
                           setAgents(agents.map(a =>
                             a._id === agent._id ? { ...foundAgent, editing: false } : a
                           ))
-                        }}
-                      >
-                      {t('Cancel')}
-                      </Button>
-                      { agent.edited && (
-                        <Button color='yellow'
-                          onClick={() => {
-                            putAgent({ agent: { ...agent, options: agent.options }});
-                          }}
-                        >
-                        {t('Update')}
+                        }}>
+                          <Icon name='cancel' />
+                          {' '}
+                          {t('Cancel')}
+                          {' '}
                         </Button>
-                      )}
-                    </div>
-                </Card.Content>
-                ) }
-              </Card>
-            </Grid.Column>
-            { agent.editing && (
-              <Grid.Column width={11}>
-                <Segment secondary>
-                  <Header as='h3'>
-                    {t('Edit Agent')}
-                  </Header>
-                  <Form
-                    schema={archetypes[agent.archetype].schema}
-                    uiSchema={archetypes[agent.archetype].uiSchema || {}}
-                    fields={{ JsonEditorField }}
-                    validator={validator}
-                    formData={agent.options}
-                    onChange={({ formData }) => {
-                      setAgents(agents.map(a =>
-                        a._id === agent._id ? { ...agent, edited: true, options: formData } : a
-                      ))
-                    }}
-                    onSubmit={({ formData }) => {
-                      putAgent({ agent: { ...agent, options: formData }});
-                    }}
-                    onError={log('errors')}
-                  >
-                    <Button.Group>
-                      <Button type='button' onClick={() => {
-                        const foundAgent = agentsImmutable.find(a => a._id === agent._id)
-                        setAgents(agents.map(a =>
-                          a._id === agent._id ? { ...foundAgent, editing: false } : a
-                        ))
-                      }}>
-                        <Icon name='cancel' />
-                        {' '}
-                        {t('Cancel')}
-                        {' '}
-                      </Button>
-                      <Button.Or />
-                      <Button type='submit' color='yellow' on>
-                        <Icon name='save' />
-                        {' '}
-                        {t('Update')}
-                        {' '}
-                      </Button>
-                    </Button.Group>
-                  </Form>
-                </Segment>
-              </Grid.Column>
-            )}
-          </Grid.Row>
-        ))}
-      </Grid>
+                        <Button.Or />
+                        <Button type='submit' color='yellow' on>
+                          <Icon name='save' />
+                          {' '}
+                          {t('Update')}
+                          {' '}
+                        </Button>
+                      </Button.Group>
+                    </Form>
+                  </Segment>
+                </Grid.Column>
+              )}
+            </Grid.Row>
+          ))}
+        </Grid>
+      </Segment>
     </Container>
   </>)
 }
