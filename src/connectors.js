@@ -160,7 +160,8 @@ const connectors = {
                       'xmpp', 'zulip',
                       // 'twitch',  // twitch is basically irc
                       // 'harmony', // there is no config example
-                    ]
+                    ],
+                    default: 'telegram',
                   },
                   name: { type: 'string', title: 'Account Name' },
                 },
@@ -185,9 +186,12 @@ const connectors = {
                         },
                         Nick: { type: 'string', title: 'Nickname', default: 'matterbridge' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
-                        SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false }
+                        SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Jid', 'Muc', 'Nick', 'Password', 'Server']
+                      required: ['Jid', 'Muc', 'Nick', 'Password', 'Server', 'channel', 'direction']
                     }
                   },
 
@@ -208,8 +212,11 @@ const connectors = {
                         AutoWebhooks: { type: 'boolean', title: 'Auto Webhooks', default: true },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         PreserveThreading: { type: 'boolean', title: 'Preserve Threading', default: true },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Token', 'Server']
+                      required: ['Token', 'Server', 'channel', 'direction']
                     }
                   },
 
@@ -230,8 +237,11 @@ const connectors = {
                         QuoteFormat: { type: 'string', title: 'Quote Format' },
                         QuoteLengthLimit: { type: 'string', title: 'QuoteLengthLimit' },
                         IgnoreMessages: { type: 'string', title: 'IgnoreMessages' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Token']
+                      required: ['Token', 'channel', 'direction']
                     }
                   },
 
@@ -250,9 +260,12 @@ const connectors = {
                           },
                         },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
-                        NoHomeServerSuffix: { type: 'boolean', title: 'No Home Server Suffix', default: false }
+                        NoHomeServerSuffix: { type: 'boolean', title: 'No Home Server Suffix', default: false },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Login', 'Password']
+                      required: ['Server', 'Login', 'Password', 'channel', 'direction']
                     }
                   },
 
@@ -270,8 +283,11 @@ const connectors = {
                         },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         PreserveThreading: { type: 'boolean', title: 'Preserve Threading', default: true },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Token']
+                      required: ['Token', 'channel', 'direction']
                     }
                   },
 
@@ -294,8 +310,11 @@ const connectors = {
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
                         PreserveThreading: { type: 'boolean', title: 'Preserve Threading', default: true },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Team', 'Login', 'Password']
+                      required: ['Server', 'Team', 'Login', 'Password', 'channel', 'direction']
                     }
                   },
 
@@ -315,8 +334,11 @@ const connectors = {
                         },
                         PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Login', 'Password']
+                      required: ['Server', 'Login', 'Password', 'channel', 'direction']
                     }
                   },
 
@@ -346,8 +368,11 @@ const connectors = {
                         UseTLS: { type: 'boolean', title: 'Use TLS', default: true },
                         UseSASL: { type: 'boolean', title: 'Use SASL', default: true },
                         SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Nick']
+                      required: ['Server', 'Nick', 'channel', 'direction']
                     }
                   },
 
@@ -360,8 +385,11 @@ const connectors = {
                         SessionFile: { type: 'string', title: 'Session File' },
                         QrOnWhiteTerminal: { type: 'boolean', title: 'Invert QR for white terminal', default: false },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Number']
+                      required: ['Number', 'channel', 'direction']
                     }
                   },
 
@@ -378,8 +406,11 @@ const connectors = {
                             valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'GITTER_TOKEN', },
                           },
                         },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['name']
+                      required: ['name', 'channel', 'direction']
                     }
                   },
 
@@ -390,8 +421,11 @@ const connectors = {
                       properties: {
                         Team: { type: 'string', title: 'Team' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Team']
+                      required: ['Team', 'channel', 'direction']
                     }
                   },
 
@@ -410,8 +444,11 @@ const connectors = {
                           },
                         },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['TenantID', 'ClientID', 'TeamID']
+                      required: ['TenantID', 'ClientID', 'TeamID', 'channel', 'direction']
                     }
                   },
 
@@ -433,8 +470,11 @@ const connectors = {
                         TLSClientKey: { type: 'string', title: 'TLSClientKey' },
                         TLSCACertificate: { type: 'string', title: 'TLSCACertificate' },
                         SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Nick', 'Password']
+                      required: ['Server', 'Nick', 'Password', 'channel', 'direction']
                     }
                   },
 
@@ -453,8 +493,11 @@ const connectors = {
                           },
                         },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Login', 'Password']
+                      required: ['Server', 'Login', 'Password', 'channel', 'direction']
                     }
                   },
 
@@ -466,8 +509,11 @@ const connectors = {
                         Server: { type: 'string', title: 'Server' },
                         Nick: { type: 'string', title: 'Nick' },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Server', 'Nick']
+                      required: ['Server', 'Nick', 'channel', 'direction']
                     }
                   },
 
@@ -483,8 +529,11 @@ const connectors = {
                             valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'VK_TOKEN', },
                           },
                         },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Token']
+                      required: ['Token', 'channel', 'direction']
                     }
                   },
 
@@ -502,85 +551,18 @@ const connectors = {
                         },
                         Login: { type: 'string', title: 'Login' },
                         Server: { type: 'string', title: 'Server' },
+
+                        channel: { type: 'string', title: 'Channel / Room' },
+                        direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
                       },
-                      required: ['Token', 'Login', 'Server']
+                      required: ['Token', 'Login', 'Server', 'channel', 'direction']
                     }
                   },
-
-                  // === Default fallback
-                  // {
-                  //   if: {
-                  //     not: {
-                  //       properties: {
-                  //         type: {
-                  //           enum: [
-                  //             'discord', 'telegram', 'matrix', 'slack',
-                  //             'mattermost', 'rocketchat', 'irc',
-                  //             'whatsapp', 'xmpp', 'gitter', 'keybase',
-                  //             'msteams', 'mumble', 'nctalk', 'sshchat',
-                  //             'vk', 'zulip',
-                  //             // 'twitch',  // twitch is basically irc
-                  //           ]
-                  //         }
-                  //       }
-                  //     }
-                  //   },
-                  //   then: {
-                  //     properties: {
-                  //     },
-                  //   }
-                  // },
                 ]
               }
             },
-
-            "gateways": {
-              "type": "array",
-              "title": "Gateways",
-              "description": "Each gateway connects several protocol accounts together.",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "title": "Gateway Name"
-                  },
-                  "enable": {
-                    "type": "boolean",
-                    "title": "Enabled",
-                    "default": true
-                  },
-                  "inout": {
-                    "type": "array",
-                    "title": "Bridged Channels (In/Out)",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "account": {
-                          "type": "string",
-                          "title": "Account (e.g. discord.mybot)"
-                        },
-                        "channel": {
-                          "type": "string",
-                          "title": "Channel / Room"
-                        },
-                        "direction": {
-                          "type": "string",
-                          "title": "Direction",
-                          "enum": ["inout", "in", "out"],
-                          "default": "inout"
-                        }
-                      },
-                      "required": ["account", "channel"]
-                    }
-                  }
-                },
-                "required": ["name", "inout"]
-              }
-            },
-
           },
-          required: ['general', 'protocols', 'gateways']
+          required: ['general', 'protocols' ]
         }
       },
       required: ["name"]
