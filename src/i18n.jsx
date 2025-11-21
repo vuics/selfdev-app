@@ -777,6 +777,7 @@ const resources = {
       'Omni': 'Omni',
       'Data': 'Data',
       'O11y': 'O11y',
+      'Apps': 'Apps',
       'Meet': 'Meet',
       'Flow': 'Flow',
       'Node': 'Node',
@@ -796,8 +797,6 @@ const resources = {
     XmppContext: {
       'Error retrieving credentials.': 'Error retrieving credentials.',
       'Error connecting to XMPP.': 'Error connecting to XMPP.',
-    },
-    Chat: {
     },
     Dash: {
       "Error getting dash.": "Error getting dash.",
@@ -844,6 +843,8 @@ const resources = {
       '(no description)': '(no description)',
       'Deployed': 'Deployed',
       'Update': 'Update'
+    },
+    Chat: {
     },
     Map: {
       'Info': 'Info',
@@ -1098,6 +1099,65 @@ const resources = {
       "Log Detail": "Log Detail",
 
       "Logs per Minute": "Logs per Minute",
+    },
+    Apps: {
+      "error": "Error",
+      "Install a HyperAgent": "Install a HyperAgent",
+      "Package name...": "Package name...",
+      "Search": "Search",
+      "Examples": "Examples",
+      "Browse more HyperAgent packages in the": "Browse more HyperAgent packages in the",
+      "Registry": "Registry",
+      "Found HyperAgents": "Found HyperAgents",
+
+      "Author": "Author",
+      "License": "License",
+      "Price": "Price",
+
+      "Installed": "Installed",
+      "Upgrade possible": "Upgrade possible",
+      "Downgrade possible": "Downgrade possible",
+      "Install (Already Purchased)": "Install (Already Purchased)",
+      "Buy": "Buy",
+      "Install": "Install",
+
+      "Confirm Purchase": "Confirm Purchase",
+      "You are about to purchase the app": "You are about to purchase the app",
+      "for": "for",
+      "Your wallet will be used to complete this transaction.": "Your wallet will be used to complete this transaction.",
+      "Do you want to continue?": "Do you want to continue?",
+      "Cancel": "Cancel",
+      "Buy Now": "Buy Now",
+
+      "Edit values": "Edit values",
+      "Values in YAML or JSON format": "Values in YAML or JSON format",
+
+      "Installed HyperAgents": "Installed HyperAgents",
+
+      "Maps": "Maps",
+      "map": "map",
+      "maps": "maps",
+
+      "Hive": "Hive",
+      "agent": "agent",
+      "agents": "agents",
+
+      "Omni": "Omni",
+      "bridge": "bridge",
+      "bridges": "bridges",
+
+      "Deploy": "Deploy",
+      "Undeploy": "Undeploy",
+      "Uninstall": "Uninstall",
+
+      "Confirm Uninstall": "Confirm Uninstall",
+      "You are about to uninstall the app": "You are about to uninstall the app",
+
+      "Error getting apps.": "Error getting apps.",
+      "Error searching app.": "Error searching app.",
+      "Error installing app.": "Error installing app.",
+      "Error uninstalling app.": "Error uninstalling app.",
+      "Error deploying app.": "Error deploying app.",
     },
     Profile: {
       'Error getting user profile.': 'Error getting user profile.',
@@ -2530,6 +2590,7 @@ const resources = {
       'Omni': 'Омни',
       'Data': 'Данные',
       "O11y": "Наблюдаемость",
+      "Apps": "Приложения",
       'Meet': 'Встреча',
       'Flow': 'Поток',
       'Node': 'Узел',
@@ -2549,8 +2610,6 @@ const resources = {
     XmppContext: {
       'Error retrieving credentials.': 'Ошибка при получении учетных данных.',
       'Error connecting to XMPP.': 'Ошибка подключения к XMPP.',
-    },
-    Chat: {
     },
     Dash: {
       "Error getting dash.": "Ошибка получения дашборда.",
@@ -2597,6 +2656,8 @@ const resources = {
       '(no description)': '(без описания)',
       'Deployed': 'Развернуто',
       'Update': 'Обновить'
+    },
+    Chat: {
     },
     Map: {
       'Info': 'Инфо',
@@ -2851,6 +2912,65 @@ const resources = {
       "Log Detail": "Детали лога",
 
       "Logs per Minute": "Логи в минуту",
+    },
+    Apps: {
+      "error": "Ошибка",
+      "Install a HyperAgent": "Установить ГиперАгента",
+      "Package name...": "Имя пакета...",
+      "Search": "Поиск",
+      "Examples": "Примеры",
+      "Browse more HyperAgent packages in the": "Посмотрите больше пакетов c ГиперАгентами в",
+      "Registry": "Реестре",
+      "Found HyperAgents": "Найдены ГиперАгенты",
+
+      "Author": "Автор",
+      "License": "Лицензия",
+      "Price": "Цена",
+
+      "Installed": "Установлено",
+      "Upgrade possible": "Доступно обновление",
+      "Downgrade possible": "Доступен откат версии",
+      "Install (Already Purchased)": "Установить (Уже куплено)",
+      "Buy": "Купить",
+      "Install": "Установить",
+
+      "Confirm Purchase": "Подтверждение покупки",
+      "You are about to purchase the app": "Вы собираетесь купить приложение",
+      "for": "за",
+      "Your wallet will be used to complete this transaction.": "Ваш кошелёк будет использован для завершения транзакции.",
+      "Do you want to continue?": "Вы хотите продолжить?",
+      "Cancel": "Отмена",
+      "Buy Now": "Купить сейчас",
+
+      "Edit values": "Редактировать значения",
+      "Values in YAML or JSON format": "Значения в формате YAML или JSON",
+
+      "Installed HyperAgents": "Установленные ГиперАгенты",
+
+      "Maps": "Карты",
+      "map": "карта",
+      "maps": "карты",
+
+      "Hive": "Улей",
+      "agent": "агент",
+      "agents": "агентов",
+
+      "Omni": "Omni",
+      "bridge": "мост",
+      "bridges": "мостов",
+
+      "Deploy": "Развернуть",
+      "Undeploy": "Отключить",
+      "Uninstall": "Удалить",
+
+      "Confirm Uninstall": "Подтверждение удаления",
+      "You are about to uninstall the app": "Вы собираетесь удалить приложение",
+
+      "Error getting apps.": "Ошибка при получении приложений.",
+      "Error searching app.": "Ошибка при поиске приложения.",
+      "Error installing app.": "Ошибка при установке приложения.",
+      "Error uninstalling app.": "Ошибка при удалении приложения.",
+      "Error deploying app.": "Ошибка при развёртывании приложения.",
     },
     Profile: {
       'Error getting user profile.': 'Ошибка при получении профиля пользователя.',

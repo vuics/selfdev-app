@@ -196,6 +196,7 @@ export default function Apps () {
     }
   }
 
+
   return (<>
     <Container fluid>
       <Menubar />
@@ -224,7 +225,7 @@ export default function Apps () {
           loading={searching}
           icon='search'
           iconPosition='left'
-          type='text' placeholder='Package name@version...' action
+          type='text' placeholder={t('Package name...')} action
           fluid
           value={appName}
           onChange={e => setAppName(e.target.value)}
@@ -243,11 +244,11 @@ export default function Apps () {
             onClick={searchApp}
           >
             <Icon name='search' />
-            Search
+            {t('Search')}
           </Button>
         </Input>
         <p style={{ margin: '5px 0' }}>
-          Examples:{' '}
+          {t('Examples')}:{' '}
           <Button
             compact standard size='mini'
             onClick={() => setAppName('hello-world@latest')}
@@ -280,7 +281,7 @@ export default function Apps () {
           </Button>
         </p>
         <p>
-          Browse more HyperAgent packages in the{' '}
+          {t('Browse more HyperAgent packages in the')}{' '}
           <a href={conf.apps.registryUrl} target="_blank" rel="noopener noreferrer">
             {t('Registry')}
           </a>
@@ -315,14 +316,14 @@ export default function Apps () {
                 <p>{candidate.package.description}</p>
                 <List>
                   <List.Item>
-                    <strong>Author:</strong> {candidate.package.author}
+                    <strong>{t('Author')}:</strong> {candidate.package.author}
                   </List.Item>
                   <List.Item>
-                    <strong>License:</strong> <Label>{candidate.package.license}</Label>
+                    <strong>{t('License')}:</strong> <Label>{candidate.package.license}</Label>
                   </List.Item>
                   { pricing && (<>
                     <List.Item>
-                      <strong>Price:</strong>
+                      <strong>{t('Price')}:</strong>
                       {' '}{pricing.price}
                       {' '}{pricing.symbol}
                       {' '}{pricing.tokenIndex}
@@ -355,35 +356,36 @@ export default function Apps () {
                   {
                     candidate.installed
                       ? versionAction === 'equal'
-                        ? 'Installed'
+                        ? t('Installed')
                         : versionAction === 'upgrade'
-                          ? 'Upgrade possible'
-                          : 'Downgrade possible'
+                          ? t('Upgrade possible')
+                          : t('Downgrade possible')
                       : pricing?.price
-                          ? (candidate.purchased ? 'Install (Already Purchased)' : 'Buy')
-                          : 'Install'
+                          ? (candidate.purchased ? t('Install (Already Purchased)') : t('Buy'))
+                          : t('Install')
                   }
                 </Button>
                 <Confirm
                   open={confirmPurchase}
-                  header="Confirm Purchase"
+                  header={t('Confirm Purchase')}
                   content={<>
                     <p style={{ padding: '2rem' }}>
-                    You are about to <strong>purchase</strong> the app{' '}
-                    <strong>{candidate.package.name}</strong> for{' '}
-                    <strong>
-                      {' '}{pricing?.price}
-                      {' '}{pricing?.symbol}
-                    </strong>
-                      {' '}{pricing?.tokenIndex}
-                      {' '}{pricing?.model}{pricing?.interval && ' '}{pricing?.interval}.
-                    <br /><br />
-                    Your wallet will be used to complete this transaction.{' '}
-                    <strong>Do you want to continue?</strong>
+                      {t('You are about to purchase the app')}{' '}
+                      <strong>{candidate.package.name}</strong>{' '}
+                      {t('for')}{' '}
+                      <strong>
+                        {' '}{pricing?.price}
+                        {' '}{pricing?.symbol}
+                      </strong>
+                        {' '}{pricing?.tokenIndex}
+                        {' '}{pricing?.model}{pricing?.interval && ' '}{pricing?.interval}.
+                      <br /><br />
+                      {t('Your wallet will be used to complete this transaction.')}{' '}
+                      <strong>{t('Do you want to continue?')}</strong>
                     </p>
                   </>}
-                  cancelButton="Cancel"
-                  confirmButton="Buy Now"
+                  cancelButton={t('Cancel')}
+                  confirmButton={t('Buy Now')}
                   onCancel={() => setConfirmPurchase(false)}
                   onConfirm={() => {
                     setConfirmPurchase(false);
@@ -396,13 +398,13 @@ export default function Apps () {
                   onClick={() => setShowValues(!showValues)}
                 >
                   <Icon name={ showValues ? 'caret down' : 'caret right' } />
-                  Edit values
+                  {t('Edit values')}
                 </Button>
 
                 { showValues && (<>
                   <br />
                   <br />
-                  Values in YAML or JSON format:
+                  {t('Values in YAML or JSON format')}:
                   <CodeMirror
                     value={values}
                     onChange={setValues}
@@ -462,47 +464,47 @@ export default function Apps () {
               <p>{app.package.description}</p>
               <List>
                 <List.Item>
-                  <strong>Author:</strong> {app.package.author}
+                  <strong>{t('Author')}:</strong> {app.package.author}
                 </List.Item>
                 <List.Item>
-                  <strong>License:</strong> <Label>{app.package.license}</Label>
+                  <strong>{t('License')}:</strong> <Label>{app.package.license}</Label>
                 </List.Item>
                 <List.Item>
-                  <strong>Installed:</strong> {new Date(app.createdAt).toLocaleString()}
+                  <strong>{t('Installed')}:</strong> {new Date(app.createdAt).toLocaleString()}
                 </List.Item>
                 <List.Item>
-                  <strong>Maps:</strong> {app.mapIds?.length || 0} {app.mapIds?.length === 1 ? 'map' : 'maps'}{' '}
-                  • <strong>Hive:</strong> {app.agentIds?.length || 0} {app.agentIds?.length === 1 ? 'agent' : 'agents'}{' '}
-                  • <strong>Omni:</strong> {app.bridgeIds?.length || 0} {app.bridgeIds?.length === 1 ? 'bridge' : 'bridges'}{' '}
+                  <strong>{t('Maps')}:</strong> {app.mapIds?.length || 0} {app.mapIds?.length === 1 ? t('map') : t('maps')}{' '}
+                  • <strong>{t('Hive')}:</strong> {app.agentIds?.length || 0} {app.agentIds?.length === 1 ? t('agent') : t('agents')}{' '}
+                  • <strong>{t('Omni')}:</strong> {app.bridgeIds?.length || 0} {app.bridgeIds?.length === 1 ? t('bridge') : t('bridges')}{' '}
                 </List.Item>
               </List>
               <Button positive onClick={() => deployApp({ appId: app._id, deployed: true })}>
-                Deploy
+                {t('Deploy')}
               </Button>
               <Button color='yellow' onClick={() => deployApp({ appId: app._id, deployed: false })}>
-                Undeploy
+                {t('Undeploy')}
               </Button>
               <Button negative onClick={() => setAppToUninstall(app)}>
-                Uninstall
+                {t('Uninstall')}
               </Button>
             </Segment>
           ))}
 
           <Confirm
             open={!!appToUninstall}
-            header="Confirm Uninstall"
+            header={t('Confirm Uninstall')}
             content={
               appToUninstall && (
                 <p style={{ padding: '2rem' }}>
-                  You are about to <strong>uninstall</strong> the app{" "}
+                  {t('You are about to uninstall the app')}{' '}
                   <strong>{appToUninstall.package.name}</strong>.
                   <br /><br />
-                  <strong>Do you want to continue?</strong>
+                  <strong>{t('Do you want to continue?')}</strong>
                 </p>
               )
             }
-            cancelButton="Cancel"
-            confirmButton="Uninstall"
+            cancelButton={t('Cancel')}
+            confirmButton={t('Uninstall')}
             onCancel={() => setAppToUninstall(null)}
             onConfirm={() => {
               uninstallApp({ appId: appToUninstall._id });
