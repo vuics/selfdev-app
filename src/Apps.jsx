@@ -56,9 +56,9 @@ export default function Apps () {
   const [ candidates, setCandidates ] = useState([])
   const [ appName, setAppName ] = useState('')
   const [ confirmPurchase, setConfirmPurchase ] = useState(false)
-  const [ confirmUninstall, setConfirmUninstall ] = useState(false)
   const [ values, setValues ] = useState('')
   const [ showValues, setShowValues ] = useState(false)
+  const [ appToUninstall, setAppToUninstall ] = useState(null);
 
   // Handles links like:
   //   <a href="web+hyag://hello-world@0.0.1">link</a>
@@ -482,31 +482,33 @@ export default function Apps () {
               <Button color='yellow' onClick={() => deployApp({ appId: app._id, deployed: false })}>
                 Undeploy
               </Button>
-              <Button negative onClick={() => setConfirmUninstall(true) }>
+              <Button negative onClick={() => setAppToUninstall(app)}>
                 Uninstall
               </Button>
-              <Confirm
-                open={confirmUninstall}
-                header="Confirm Uninstall"
-                content={<>
-                  <p style={{ padding: '2rem' }}>
-                  You are about to <strong>uninstall</strong> the app{' '}
-                  <strong>{app.package.name}</strong>.
-                  <br /><br />
-                  <strong>Do you want to continue?</strong>
-                  </p>
-                </>}
-                cancelButton="Cancel"
-                confirmButton="Uninstall"
-                onCancel={() => setConfirmUninstall(false)}
-                onConfirm={() => {
-                  setConfirmUninstall(false);
-                  uninstallApp({ appId: app._id });
-                }}
-              >
-              </Confirm>
             </Segment>
           ))}
+
+          <Confirm
+            open={!!appToUninstall}
+            header="Confirm Uninstall"
+            content={
+              appToUninstall && (
+                <p style={{ padding: '2rem' }}>
+                  You are about to <strong>uninstall</strong> the app{" "}
+                  <strong>{appToUninstall.package.name}</strong>.
+                  <br /><br />
+                  <strong>Do you want to continue?</strong>
+                </p>
+              )
+            }
+            cancelButton="Cancel"
+            confirmButton="Uninstall"
+            onCancel={() => setAppToUninstall(null)}
+            onConfirm={() => {
+              uninstallApp({ appId: appToUninstall._id });
+              setAppToUninstall(null);
+            }}
+          />
         </Segment>
       )}
 
