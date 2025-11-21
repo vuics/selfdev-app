@@ -27,42 +27,44 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 // import { sleep } from './helper'
 
-const buildHorizontalBarOptions = (title, data) => {
+
+const buildHorizontalBarOptions = ({ title, data, t }) => {
   const categories = data.map(item => item._id);
   const totals = data.map(item => item.total);
   const deployed = data.map(item => item.deployed);
   return {
     title: { text: title, left: 'center' },
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-    legend: { bottom: 0 },
+    legend: { 
+      bottom: 0,
+      data: [t('total'), t('deployed')],
+    },
     grid: { left: 160, right: 50, top: 60, bottom: 60 },
-    xAxis: { type: 'value', min: 0, max: Math.max(...totals), }, // set max to keep scale correct
-    yAxis: { type: 'category', data: categories,
+    xAxis: { type: 'value', min: 0, max: Math.max(...totals) },
+    yAxis: { 
+      type: 'category', 
+      data: categories,
       axisLabel: {
-        padding: [0, 24, 0, 0], // increase the RIGHT padding so labels are further from the axis line
-        margin: 8               // additional distance between label box and axis/tick line
+        padding: [0, 24, 0, 0],
+        margin: 8
       }
     },
     series: [
-      // Draw TOTAL as background
       {
-        name: 'total',
+        name: t('total'),
         type: 'bar',
         data: totals,
         barWidth: 26,
-        // itemStyle: { color: 'red' },   // background color
         label: { show: true, position: 'insideRight', formatter: '{c}' },
         emphasis: { focus: 'series' },
         z: 1
       },
-      // Draw DEPLOYED on top (same category position)
       {
-        name: 'deployed',
+        name: t('deployed'),
         type: 'bar',
         data: deployed,
         barWidth: 26,
-        barGap: '-100%',                 // overlay exactly on top of total
-        // itemStyle: { color: 'yellow' },
+        barGap: '-100%',
         label: { show: true, position: 'insideRight', formatter: '{c}' },
         emphasis: { focus: 'series' },
         z: 2
@@ -84,9 +86,6 @@ export default function Dash () {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      // console.log('res:', res)
-      console.log('res.data:', res.data)
-      // setAddress(res.data.address)
       setDashboard(res.data)
     } catch (err) {
       console.error('get dash error:', err);
@@ -113,7 +112,7 @@ export default function Dash () {
           negative
           style={{ textAlign: 'left'}}
           icon='exclamation circle'
-          header={t('error')}
+          header={t('Error')}
           content={responseError}
           onDismiss={() => setResponseError('')}
         />
@@ -129,19 +128,20 @@ export default function Dash () {
             marginTop: '2vh',
             marginBottom: '2vh',
             display: 'flex',
-            justifyContent: 'center', // horizontal centering
-            alignItems: 'center',     // vertical centering
-            textAlign: 'center'       // center text inside stats
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center'
           }}
         >
           <Statistic.Group>
+
             <Statistic color='teal' size='huge'>
               <Statistic.Value>
                 {dashboard.maps}
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='map' />
-                Maps
+                {t('Maps')}
               </Statistic.Label>
             </Statistic>
 
@@ -151,7 +151,7 @@ export default function Dash () {
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='cloud download' />
-                Files
+                {t('Files')}
               </Statistic.Label>
             </Statistic>
 
@@ -161,7 +161,7 @@ export default function Dash () {
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='cloud download' />
-                KV Storages
+                {t('KV Storages')}
               </Statistic.Label>
             </Statistic>
 
@@ -171,9 +171,10 @@ export default function Dash () {
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='cloud download' />
-                Apps
+                {t('Apps')}
               </Statistic.Label>
             </Statistic>
+
           </Statistic.Group>
           <br/>
         </div>
@@ -185,19 +186,20 @@ export default function Dash () {
             marginTop: '2vh',
             marginBottom: '2vh',
             display: 'flex',
-            justifyContent: 'center', // horizontal centering
-            alignItems: 'center',     // vertical centering
-            textAlign: 'center'       // center text inside stats
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center'
           }}
         >
           <Statistic.Group>
+
             <Statistic color='green' size='huge'>
               <Statistic.Value>
                 {dashboard.deployedAgents}/{dashboard.agents}
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='user secret' />
-                Deployed Agents
+                {t('Deployed Agents')}
               </Statistic.Label>
             </Statistic>
 
@@ -207,9 +209,10 @@ export default function Dash () {
               </Statistic.Value>
               <Statistic.Label>
                 <Icon name='linkify' />
-                Deployed Bridges
+                {t('Deployed Bridges')}
               </Statistic.Label>
             </Statistic>
+
           </Statistic.Group>
         </div>
       </Segment>
@@ -218,10 +221,11 @@ export default function Dash () {
         { dashboard && dashboard.agentArchetypes && (<>
           <ReactECharts
             key="archetypes-echarts"
-            option={buildHorizontalBarOptions(
-              t('Agent Archetypes'),
-              dashboard.agentArchetypes
-            )}
+            option={buildHorizontalBarOptions({
+              title: t('Agent Archetypes'),
+              data: dashboard.agentArchetypes,
+              t,
+            })}
             style={{ height: "800px", width: "100%" }}
           />
         </>)}
@@ -231,13 +235,13 @@ export default function Dash () {
         { dashboard && dashboard.bridgeConnectors && (<>
           <ReactECharts
             key="connectors-echarts"
-            option={buildHorizontalBarOptions(
-              t('Bridge Connectors'),
-              dashboard.bridgeConnectors
-            )}
+            option={buildHorizontalBarOptions({
+              title: t('Bridge Connectors'),
+              data: dashboard.bridgeConnectors,
+              t,
+            })}
             style={{ height: "500px", width: "100%" }}
           />
-
         </>)}
       </Segment>
 

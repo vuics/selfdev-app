@@ -769,6 +769,7 @@ const resources = {
       'Log In': 'Log In'
     },
     Menubar: {
+      "Dash": "Dash",
       'Hive': 'Hive',
       'Chat': 'Chat',
       'Talk': 'Talk',
@@ -797,6 +798,21 @@ const resources = {
       'Error connecting to XMPP.': 'Error connecting to XMPP.',
     },
     Chat: {
+    },
+    Dash: {
+      "Error getting dash.": "Error getting dash.",
+      "Error": "Error",
+      "Dashboard": "Dashboard",
+      "Maps": "Maps",
+      "Files": "Files",
+      "KV Storages": "KV Storages",
+      "Apps": "Apps",
+      "Deployed Agents": "Deployed Agents",
+      "Deployed Bridges": "Deployed Bridges",
+      "Agent Archetypes": "Agent Archetypes",
+      "Bridge Connectors": "Bridge Connectors",
+      "total": "Total",
+      "deployed": "Deployed",
     },
     Hive: {
       'Error retrieving credentials.': 'Error retrieving credentials.',
@@ -2506,6 +2522,7 @@ const resources = {
       'Log In': 'Войти'
     },
     Menubar: {
+      "Dash": "Панель",
       'Hive': 'Улей',
       'Chat': 'Чат',
       'Talk': 'Разговор',
@@ -2534,6 +2551,21 @@ const resources = {
       'Error connecting to XMPP.': 'Ошибка подключения к XMPP.',
     },
     Chat: {
+    },
+    Dash: {
+      "Error getting dash.": "Ошибка получения дашборда.",
+      "Error": "Ошибка",
+      "Dashboard": "Дашборд",
+      "Maps": "Карты",
+      "Files": "Файлы",
+      "KV Storages": "KV-хранилища",
+      "Apps": "Приложения",
+      "Deployed Agents": "Развернутые агенты",
+      "Deployed Bridges": "Развернутые мосты",
+      "Agent Archetypes": "Архетипы агентов",
+      "Bridge Connectors": "Коннекторы мостов",
+      "total": "Всего",
+      "deployed": "Развернуто",
     },
     Hive: {
       'Error retrieving credentials.': 'Ошибка при получении учетных данных.',
