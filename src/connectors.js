@@ -129,10 +129,21 @@ const connectors = {
       properties: {
         name: { type: 'string', title: 'Name' },
         description: { type: 'string', title: 'Description' },
+
+        // enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'bridge' },
+        // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
         messengers: {
           type: 'object',
           title: 'Messenger Configuration',
           properties: {
+            direction: { type: 'string', title: 'Direction', enum: ['inout', 'in', 'out'], default: 'inout' },
+            PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
+
             general: {
               type: 'object',
               title: 'General Settings',
@@ -232,7 +243,7 @@ const connectors = {
                             valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'TELEGRAM_TOKEN', },
                           },
                         },
-                        RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+                        RemoteNickFormat: { type: 'string', title: 'Remote Nick Format', default: '[{PROTOCOL}] <{NICK}> ' },
                         MessageFormat: { type: 'string', title: 'Message Format' },
                         QuoteFormat: { type: 'string', title: 'Quote Format' },
                         QuoteLengthLimit: { type: 'string', title: 'QuoteLengthLimit' },
@@ -562,7 +573,7 @@ const connectors = {
               }
             },
           },
-          required: ['general', 'protocols' ]
+          required: ['direction', 'general', 'protocols']
         }
       },
       required: ["name"]
