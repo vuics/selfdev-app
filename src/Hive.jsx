@@ -44,16 +44,37 @@ export function JsonEditorField (props) {
 }
 // })
 
+export const sortDeployed = (a, b) => {
+  // 1. Sort by deployed (true first)
+  if (a.deployed !== b.deployed) {
+    return b.deployed - a.deployed  // true > false → descending
+  }
+
+  // 2. Sort by updatedAt (newer first)
+  const updatedA = new Date(a.updatedAt || 0)
+  const updatedB = new Date(b.updatedAt || 0)
+
+  if (updatedA.getTime() !== updatedB.getTime()) {
+    return updatedB - updatedA
+  }
+
+  // 3. Sort by createdAt (newer first)
+  const createdA = new Date(a.createdAt || 0)
+  const createdB = new Date(b.createdAt || 0)
+
+  return createdB - createdA
+}
+
 export default function Hive () {
   const { t } = useTranslation('Hive')
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(true)
   const [ agents, setAgents ] = useState([])
+  const [ agentsImmutable, setAgentsImmutable ] = useState([])
   const [ archetype, setArchetype ] = useState(defaultArchetype.value)
   const [ category, setCategory ] = useState(defaultArchetype.category)
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
-  const [ agentsImmutable, setAgentsImmutable ] = useState([])
 
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
@@ -73,27 +94,6 @@ export default function Hive () {
     }
   }, [xmppClient]);
 
-  const sortAgents = (a, b) => {
-    // 1. Sort by deployed (true first)
-    if (a.deployed !== b.deployed) {
-      return b.deployed - a.deployed  // true > false → descending
-    }
-
-    // 2. Sort by updatedAt (newer first)
-    const updatedA = new Date(a.updatedAt || 0)
-    const updatedB = new Date(b.updatedAt || 0)
-
-    if (updatedA.getTime() !== updatedB.getTime()) {
-      return updatedB - updatedA
-    }
-
-    // 3. Sort by createdAt (newer first)
-    const createdA = new Date(a.createdAt || 0)
-    const createdB = new Date(b.createdAt || 0)
-
-    return createdB - createdA
-  }
-
   const indexAgents = async () => {
     setLoading(true)
     try {
@@ -103,7 +103,7 @@ export default function Hive () {
       })
       // console.log('agents index res:', res)
       console.log('res.data:', res.data)
-      setAgents(res?.data.sort(sortAgents) || [])
+      setAgents(res?.data.sort(sortDeployed) || [])
       setAgentsImmutable(res?.data || [])
     } catch (err) {
       console.error('indexAgents error:', err);

@@ -26,6 +26,8 @@ import { useTranslation } from 'react-i18next'
 import Form from '@rjsf/semantic-ui'
 import validator from '@rjsf/validator-ajv8';
 import connectors, { defaultConnector } from './connectors'
+import { useXmppContext } from './components/XmppContext'
+import { sortDeployed } from './Hive'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -35,9 +37,28 @@ export default function Omni () {
   const [ responseError, setResponseError ] = useState('')
   const [ loading, setLoading ] = useState(false)
   const [ bridges, setBridges ] = useState([])
+  const [ bridgesImmutable, setBridgesImmutable ] = useState([])
   const [ connector, setConnector ] = useState(defaultConnector.key)
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
+
+  const { xmppClient } = useXmppContext()
+  const [ roster, setRoster ] = useState(xmppClient?.roster || [])
+  const [ presence, setPresence ] = useState(xmppClient?.presence || {});
+  // console.log('presence:', presence)
+  // console.log('roster:', roster)
+
+  useEffect(() => {
+    if (!xmppClient?.emitter) return;
+    setRoster(xmppClient.roster)
+    setPresence(xmppClient.presence)
+    xmppClient.emitter.on('roster', setRoster)
+    xmppClient.emitter.on('presence', setPresence)
+    return () => {
+      xmppClient.emitter.removeListener('roster', setRoster)
+      xmppClient.emitter.removeListener('presence', setPresence)
+    }
+  }, [xmppClient]);
 
   const indexBridges = async () => {
     setLoading(true)
@@ -48,7 +69,8 @@ export default function Omni () {
       })
       // console.log('res:', res)
       console.log('res.data:', res.data)
-      setBridges(res.data)
+      setBridges(res.data.sort(sortDeployed) || [])
+      setBridgesImmutable(res?.data || [])
     } catch (err) {
       console.error('get bridges error:', err);
       return setResponseError(err?.response?.data?.message || t('Error getting bridges.'))
@@ -75,6 +97,12 @@ export default function Omni () {
       // console.log('res:', res)
       console.log('res.data:', res.data)
       setBridges([ ...bridges, res.data ])
+      setBridgesImmutable(bridgesImmutable => [res.data, ...bridgesImmutable])
+      await xmppClient?.addToRoster({
+        jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
+        name: res.data.options.name,
+        groups: [res.data.options.joinRoom],
+      })
     } catch (err) {
       console.error('get bridges error:', err);
       return setResponseError(err?.response?.data?.message || t('Error getting bridges.'))
@@ -95,7 +123,24 @@ export default function Omni () {
       })
       console.log('bridge put res:', res)
       // setResponseMessage(`Bridge updated successfully`)
-      setBridges(bridges.map(a => a._id === res.data._id ? res.data : a))
+      const prevBridge = bridgesImmutable.find(b => b._id === bridge._id)
+      setBridges(bridges.map(b => b._id === res.data._id ? res.data : b))
+      setBridgesImmutable(bridgesImmutable.map(b => b._id === res.data._id ? res.data : b))
+      const jid = `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`
+      const name = res.data.options.name
+      const inRoster = roster.find(r => r.jid === jid && r.name === name)
+      console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
+      if (!inRoster) {
+        console.log('Bridge with name:', res.data.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
+        await xmppClient?.removeFromRoster({
+          jid: `${prevBridge.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
+        })
+        await xmppClient?.addToRoster({
+          jid,
+          name: res.data.options.name,
+          groups: [res.data.options.joinRoom],
+        })
+      }
     } catch (err) {
       console.error('put bridge error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting bridge.'))
@@ -112,8 +157,12 @@ export default function Omni () {
         withCredentials: true,
       })
       console.log('bridge delete res:', res)
-      // setResponseMessage(`Bridge deleted successfully`)
+      const [deletedBridge] = bridges.filter(obj => obj._id === _id)
       setBridges(bridges.filter(obj => obj._id !== _id))
+      setBridgesImmutable(bridgesImmutable.filter(obj => obj._id !== _id))
+      await xmppClient?.removeFromRoster({
+        jid: `${deletedBridge.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
+      })
     } catch (err) {
       console.error('delete bridge error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error deleting bridge.'))
@@ -288,10 +337,30 @@ export default function Omni () {
           >
             <Card.Content>
               <Card.Header>
+                <Icon
+                  name={
+                    presence[`${bridge.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                      ? (bridge.deployed ? 'exchange' : 'circle notch')
+                      : (bridge.deployed ? 'circle notch' : 'exchange')
+                  }
+                  color={
+                    presence[`${bridge.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                      ? (bridge.deployed ? 'green' : 'red')
+                      : (bridge.deployed ? 'yellow' : 'grey')
+                  }
+                  loading={
+                    presence[`${bridge.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
+                      ? (bridge.deployed ? false : true)
+                      : (bridge.deployed ? true : false)
+                  }
+                />
+                {' '}
+                {bridge.options.name}
+                {' '}
                 <Dropdown item simple position='right'
-                  icon={
-                   <Icon name='cog' color='grey'/>
-                  }>
+                  icon={<>
+                    <Icon name='cog' color='grey'/>
+                  </>}>
                   <Dropdown.Menu>
                     <Dropdown.Item
                       onClick={() => {
@@ -313,7 +382,6 @@ export default function Omni () {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                {bridge.options.name}
               </Card.Header>
               <Card.Meta>
               </Card.Meta>
