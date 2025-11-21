@@ -1150,7 +1150,9 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 open={dataModal}
                 size='fullscreen'
               >
-                <Modal.Header>Insert Data</Modal.Header>
+                <Modal.Header>
+                  {t('Insert Data')}
+                </Modal.Header>
                 <Modal.Content scrolling>
                   <Data
                     hideMenubar
@@ -1185,7 +1187,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 </Modal.Content>
                 <Modal.Actions>
                   <Button onClick={() => setDataModal(false)}>
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </Modal.Actions>
               </Modal>
@@ -1318,7 +1320,7 @@ const NoteNode = memo(({ id, data, isConnectable, selected }) => {
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => selectKind('data')}>
                   <Icon name={ data.kind === 'data' ? 'dot circle' : 'circle outline'} />
-                  {t('Data Visualization')}
+                  {t('Data Analysis')}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
