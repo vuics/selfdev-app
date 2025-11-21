@@ -97,17 +97,6 @@ const getContentIcon = (contentType = '') => {
   return 'file';
 };
 
-const storageSchema = {
-  title: 'Key-value',
-  description: 'Add key-value pair to the KV storage',
-  type: 'object',
-  properties: {
-    namespace: { type: 'string', title: 'Namespace', default: 'default' },
-    key: { type: 'string', title: 'Key' },
-    value: { type: 'string', title: 'Value', format: 'textarea' },
-  }
-}
-
 const openFile = (file) => {
   const url = `${conf.xmpp.shareUrlPrefix}${file.slot}/${file.filename}`;
   window.open(url, "_blank");
@@ -131,6 +120,17 @@ export default function Data ({
   const [ addingStorage, setAddingStorage ] = useState(false)
   const attachFileInputRef = useRef(null);
   const { xmppClient } = useXmppContext()
+
+  const storageSchema = {
+    title: t('Key-value'),
+    description: t('Add key-value pair to the KV storage'),
+    type: 'object',
+    properties: {
+      namespace: { type: 'string', title: t('Namespace'), default: 'default' },
+      key:        { type: 'string', title: t('Key') },
+      value:      { type: 'string', title: t('Value'), format: 'textarea' },
+    }
+  }
 
   const [ active, setActive ] = useState(() => {
     return localStorage.getItem('data.active') || 'files'
@@ -333,12 +333,12 @@ export default function Data ({
     >
       <Menu pointing>
         <Menu.Item
-          name='File System'
+          name={t('File System')}
           active={active === 'files'}
           onClick={() => setActive('files')}
         />
         <Menu.Item
-          name='KV Storage'
+          name={t('KV Storage')}
           active={active === 'storages'}
           onClick={() => setActive('storages')}
         />
@@ -367,11 +367,11 @@ export default function Data ({
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>File Name</Table.HeaderCell>
-              <Table.HeaderCell>Size</Table.HeaderCell>
-              <Table.HeaderCell>Path</Table.HeaderCell>
-              <Table.HeaderCell>Created At</Table.HeaderCell>
-              <Table.HeaderCell>Actions</Table.HeaderCell>
+              <Table.HeaderCell>{t('File Name')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Size')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Path')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Created At')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Actions')}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -408,14 +408,14 @@ export default function Data ({
                   <Dropdown icon='ellipsis vertical' color='gray'>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        text='Open'
+                        text={t('Open')}
                         onClick={() => {
                           openFile(file)
                         }}
                       />
                       <Dropdown.Divider />
                       <Dropdown.Item
-                        text='Delete'
+                        text={t('Delete')}
                         onClick={() => {
                           deleteFile({ file })
                         }}
@@ -475,11 +475,11 @@ export default function Data ({
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Namespace</Table.HeaderCell>
-              <Table.HeaderCell>Key</Table.HeaderCell>
-              <Table.HeaderCell>Value</Table.HeaderCell>
-              <Table.HeaderCell>Updated At</Table.HeaderCell>
-              <Table.HeaderCell>Actions</Table.HeaderCell>
+              <Table.HeaderCell>{t('Namespace')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Key')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Value')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Updated At')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('Actions')}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -518,14 +518,14 @@ export default function Data ({
                   <Dropdown icon='ellipsis vertical' color='gray'>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        text='Edit'
+                        text={t('Edit')}
                         onClick={() => {
                           editStorage(storage, { storages, setStorages })
                         }}
                       />
                       <Dropdown.Divider />
                       <Dropdown.Item
-                        text='Delete'
+                        text={t('Delete')}
                         onClick={() => {
                           deleteStorage({ storage })
                         }}
@@ -539,7 +539,7 @@ export default function Data ({
                 <Modal
                   open={storage.editing}
                 >
-                  <Modal.Header>Edit Key-value</Modal.Header>
+                  <Modal.Header>{t('Edit Key-value')}</Modal.Header>
                   <Modal.Content>
                     <Form
                       schema={storageSchema}
