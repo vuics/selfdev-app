@@ -8,6 +8,112 @@ const t = (key) => i18next.t(`connectors:${key}`)
 const getDocUrl = (path) => `${conf.docs.url}${conf.docs.i18n[i18n.language]}/docs/agent-connectors/${path}`
 
 const connectors = {
+  'mcp': {
+    key: 'mcp',
+    value: 'mcp',
+    // icon: 'puzzle piece',
+    icon: 'dot circle',
+    text: 'MCP Server',
+    description: t('mcp.description'),
+    docUrl: getDocUrl('mcp'),
+    schema: {
+      title: 'Model Context Protocol',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        mcp: {
+          title: 'Model Context Protocol Configuration',
+          type: 'object',
+          properties: {
+            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
+            // setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
+            // requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
+          },
+          required: ["endpoint"]
+        },
+      }
+    },
+  },
+
+  'email': {
+    key: 'email',
+    value: 'email',
+    icon: 'mail',
+    text: 'Email',
+    description: t('email.description'),
+    docUrl: getDocUrl('email'),
+    schema: {
+      title: 'Email',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        email: {
+          title: 'Email Configuration',
+          type: 'object',
+          properties: {
+
+            imap: {
+              title: 'IMAP',
+              type: 'object',
+              properties: {
+                host: { type: 'string', title: 'Host', default: 'imap.example.com' },
+                port: { type: 'number', title: 'Port', default: 993 },
+                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                password: {
+                  type: 'object',
+                  title: 'Password',
+                  properties: {
+                    valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'EMAIL_PASSWORD', },
+                  },
+                },
+                secure: { type: 'boolean', title: 'Secure', default: true },
+              },
+            },
+            smtp: {
+              title: 'SMTP',
+              type: 'object',
+              properties: {
+                host: { type: 'string', title: 'Host', default: 'smtp.example.com' },
+                port: { type: 'number', title: 'Port', default: 465 },
+                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                password: {
+                  type: 'object',
+                  title: 'Password',
+                  properties: {
+                    valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'EMAIL_PASSWORD', },
+                  },
+                },
+                secure: { type: 'boolean', title: 'Secure', default: true },
+              },
+            },
+            pollSec: { type: 'number', title: 'Poll Every Seconds', default: 30 },
+            defaultRecipient: { type: 'string', title: 'Default Recipient', default: 'default@example.com' },
+            defaultSubject: { type: 'string', title: 'Default Subject', default: 'Message from Agentic AI' },
+          },
+        },
+      },
+    },
+  },
+
   'messengers': {
     key: 'messengers',
     value: 'messengers',
@@ -530,100 +636,6 @@ const connectors = {
             requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
           },
           required: ["method", "endpoint"]
-        },
-      }
-    },
-  },
-
-  'email': {
-    key: 'email',
-    value: 'email',
-    icon: 'mail',
-    text: 'Email',
-    description: t('email.description'),
-    docUrl: getDocUrl('email'),
-    schema: {
-      title: 'Email',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-
-        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-
-        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
-        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-
-        email: {
-          title: 'Email Configuration',
-          type: 'object',
-          properties: {
-
-            imap: {
-              title: 'IMAP',
-              type: 'object',
-              properties: {
-                host: { type: 'string', title: 'Host', default: 'imap.example.com' },
-                port: { type: 'number', title: 'Port', default: 993 },
-                user: { type: 'string', title: 'Host', default: 'user@example.com' },
-                pass: { type: 'string', title: 'Password', default: 'password' },
-                secure: { type: 'boolean', title: 'Secure', default: true },
-              },
-            },
-            smtp: {
-              title: 'SMTP',
-              type: 'object',
-              properties: {
-                host: { type: 'string', title: 'Host', default: 'smtp.example.com' },
-                port: { type: 'number', title: 'Port', default: 465 },
-                user: { type: 'string', title: 'Host', default: 'user@example.com' },
-                pass: { type: 'string', title: 'Password', default: 'password' },
-                secure: { type: 'boolean', title: 'Secure', default: true },
-              },
-            },
-            pollSec: { type: 'number', title: 'Poll Every Seconds', default: 30 },
-            defaultRecipient: { type: 'string', title: 'Default Recipient', default: 'default@example.com' },
-            defaultSubject: { type: 'string', title: 'Default Subject', default: 'Message from Agentic AI' },
-          },
-        },
-      },
-    },
-  },
-
-  'mcp': {
-    key: 'mcp',
-    value: 'mcp',
-    // icon: 'puzzle piece',
-    icon: 'dot circle',
-    text: 'MCP Server',
-    description: t('mcp.description'),
-    docUrl: getDocUrl('mcp'),
-    schema: {
-      title: 'Model Context Protocol',
-      type: 'object',
-      properties: {
-        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
-        description: { type: 'string', title: 'Description', default: '' },
-
-        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
-        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
-
-        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
-        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
-
-        mcp: {
-          title: 'Model Context Protocol Configuration',
-          type: 'object',
-          properties: {
-            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
-            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
-            // setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
-            // requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
-          },
-          required: ["endpoint"]
         },
       }
     },
