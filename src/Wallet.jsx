@@ -232,6 +232,7 @@ export default function Wallet () {
     }
   }
 
+
   return (<>
     <Container fluid>
       <Menubar />
@@ -259,23 +260,23 @@ export default function Wallet () {
         <Form>
           <Segment stacked>
             <div>
-              <b>Address:</b>
+              <b>{t('Address')}:</b>
               {' '}
               {account?.address}
             </div>
             <br/>
 
-            <b>Balance:</b>
+            <b>{t('Balance')}:</b>
 
             <Table unstackable>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Type</Table.HeaderCell>
-                  <Table.HeaderCell>Symbol</Table.HeaderCell>
-                  <Table.HeaderCell>Amount</Table.HeaderCell>
-                  <Table.HeaderCell>Token Index</Table.HeaderCell>
-                  <Table.HeaderCell>URI</Table.HeaderCell>
-                  <Table.HeaderCell textAlign='right'>Actions</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Type')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Symbol')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Amount')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Token Index')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('URI')}</Table.HeaderCell>
+                  <Table.HeaderCell textAlign='right'>{t('Actions')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -289,7 +290,7 @@ export default function Wallet () {
                     <Table.Row key={`${pool}:${tokenIndex}`}>
                       <Table.Cell width='1'>
                         <Popup
-                          content={type === 'fungible' ? 'fungible' : 'nonfungible' }
+                          content={type === 'fungible' ? t('fungible') : t('nonfungible')}
                           trigger={
                             <Icon name={type === 'fungible' ? 'cubes' : 'cube'} />
                           } 
@@ -323,7 +324,7 @@ export default function Wallet () {
                           })}
                         >
                           <Icon name='send' />
-                          Transfer
+                          {t('Transfer')}
                         </Button>
                       </Table.Cell>
                     </Table.Row>
@@ -344,7 +345,7 @@ export default function Wallet () {
               <Form.Group>
                 <Form.Input
                   width='2'
-                  placeholder='Pool'
+                  placeholder={t('Pool')}
                   name='pool'
                   value={transferData.symbol}
                   onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
@@ -353,7 +354,7 @@ export default function Wallet () {
                 <Form.Input
                   width='8'
                   fluid
-                  placeholder='Amount'
+                  placeholder={t('Amount')}
                   name='amount'
                   value={transferData.amount}
                   onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
@@ -366,12 +367,12 @@ export default function Wallet () {
                   onClick={() => setTransferData(d => ({ ...d, amount: d.max }))}
                   disabled={transferData.type !== 'fungible'}
                 >
-                  Max
+                  {t('Max')}
                 </Form.Button>
                 <Form.Input
                   width='6'
                   fluid
-                  placeholder='Token Index'
+                  placeholder={t('Token Index')}
                   name='tokenIndex'
                   value={transferData.tokenIndex}
                   disabled={transferData.type !== 'nonfungible'}
@@ -379,7 +380,7 @@ export default function Wallet () {
                 />
               </Form.Group>
               <Form.Input
-                placeholder='To recipient address'
+                placeholder={t('To recipient address')}
                 name='to'
                 value={transferData.to}
                 onChange={(e, { name, value }) => setTransferData(d => ({ ...d, [name]: value }))}
@@ -389,14 +390,14 @@ export default function Wallet () {
                  onClick={transfer}
                 >
                   <Icon name='send' />
-                  Submit
+                  {t('Submit')}
                 </Button>
                 <Button.Or/>
                 <Button type='button' negative icon
                   onClick={() => setTransferData(null)}
                 >
                   <Icon name='cancel' />
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </Button.Group>
             </Form>
@@ -406,7 +407,7 @@ export default function Wallet () {
         <Button icon
           onClick={() => setCollectData(collectData ? null : { from: '', amount: '' })}
         >
-          Collect tokens
+          {t('Collect Tokens')}
         </Button>
 
         { collectData && (
@@ -418,7 +419,7 @@ export default function Wallet () {
               <Form.Dropdown
                 fluid
                 selection
-                placeholder='Pool'
+                placeholder={t('Pool')}
                 name='pool'
                 value={collectData.pool}
                 options={ account?.pools?.map(p => ({ key: p.id, text: p.symbol, value: p.id })) }
@@ -430,21 +431,21 @@ export default function Wallet () {
               />
               <Form.Input
                 fluid
-                placeholder='Amount'
+                placeholder={t('Amount')}
                 name='amount'
                 value={collectData.amount}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
                 disabled={collectData.type !== 'fungible'}
               />
               <Form.Input
-                placeholder='From address'
+                placeholder={t('From address')}
                 name='from'
                 value={collectData.from}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
               />
               <Form.Input
                 fluid
-                placeholder='Token Index'
+                placeholder={t('Token Index')}
                 name='tokenIndex'
                 value={collectData.tokenIndex}
                 onChange={(e, { name, value }) => setCollectData(d => ({ ...d, [name]: value }))}
@@ -455,14 +456,14 @@ export default function Wallet () {
                  onClick={collect}
                 >
                   <Icon name='send' />
-                  Submit
+                  {t('Submit')}
                 </Button>
                 <Button.Or/>
                 <Button type='button' negative icon
                   onClick={() => setCollectData(null)}
                 >
                   <Icon name='cancel' />
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </Button.Group>
             </Form>
@@ -473,7 +474,7 @@ export default function Wallet () {
           onClick={() => setShowApprovals(!showApprovals)}
         >
           <Icon name={ showApprovals ? 'caret down' : 'caret right' } />
-          Show approvals
+          {t('Show approvals')}
         </Button>
 
         { showApprovals && (
@@ -485,7 +486,7 @@ export default function Wallet () {
             <Button icon
               onClick={() => setApprovalData(approvalData ? null : { allowance: '0', approved: false })}
             >
-              Add approval
+              {t('Add Approval')}
             </Button>
 
             { approvalData && (
@@ -495,7 +496,7 @@ export default function Wallet () {
                 </Header>
                 <Form>
                   <Form.Input
-                    placeholder='Operator Address'
+                    placeholder={t('Operator Address')}
                     name='operator'
                     value={approvalData.operator}
                     onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
@@ -504,7 +505,7 @@ export default function Wallet () {
                   <Form.Dropdown
                     fluid
                     selection
-                    placeholder='Pool'
+                    placeholder={t('Pool')}
                     name='pool'
                     value={approvalData.pool}
                     options={ account?.pools?.map(p => ({ key: p.id, text: p.symbol, value: p.id })) }
@@ -514,33 +515,34 @@ export default function Wallet () {
                       setApprovalData(d => ({ ...d, [name]: value, decimals, type }))
                     }}
                   />
+
                   <Form.Input
-                    // width='8'
                     fluid
-                    placeholder='Allowance'
+                    placeholder={t('Allowance')}
                     name='allowance'
                     value={approvalData.allowance}
                     onChange={(e, { name, value }) => setApprovalData(d => ({ ...d, [name]: value }))}
-                    // disabled={approvalData.type !== 'fungible'}
                   />
+
                   <Form.Checkbox
-                    label='Approved'
+                    label={t('Approved')}
                     onChange={(e, { checked }) => setApprovalData(d => ({ ...d, approved: checked }))}
                     checked={approvalData.approved}
                   />
+
                   <Button.Group>
                     <Button type='button' positive icon
                      onClick={approve}
                     >
                       <Icon name='send' />
-                      Submit
+                      {t('Submit')}
                     </Button>
                     <Button.Or/>
                     <Button type='button' negative icon
                       onClick={() => setApprovalData(null)}
                     >
                       <Icon name='cancel' />
-                      Cancel
+                      {t('Cancel')}
                     </Button>
                   </Button.Group>
                 </Form>
@@ -548,7 +550,7 @@ export default function Wallet () {
             )}
             {' '}
             <Checkbox
-              label='Show inactive approvals'
+              label={t('Show inactive approvals')}
               onChange={(e, data) => setShowInactive(data.checked)}
               checked={showInactive}
             />
@@ -556,12 +558,12 @@ export default function Wallet () {
             <Table celled padded>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Operator</Table.HeaderCell>
-                  <Table.HeaderCell>Symbol</Table.HeaderCell>
-                  <Table.HeaderCell>Active</Table.HeaderCell>
-                  <Table.HeaderCell>Approved</Table.HeaderCell>
-                  <Table.HeaderCell>Allowance</Table.HeaderCell>
-                  <Table.HeaderCell>Created</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Operator')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Symbol')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Active')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Approved')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Allowance')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('Created')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -569,9 +571,8 @@ export default function Wallet () {
               { approvals?.map(approval => {
                 if (!showInactive && !approval.active) { return; }
                 const foundPool = account?.pools?.find(p => p.id === approval.pool)
-                // console.log('foundPool:', foundPool)
-                const { symbol, decimals, type } = foundPool
-                // const amount = decimals ? tokenToDecimal(balance, decimals) : balance
+                const { symbol, decimals } = foundPool
+
                 return (
                   <Table.Row key={approval.localId}>
                     <Table.Cell>
@@ -581,10 +582,10 @@ export default function Wallet () {
                       {symbol}
                     </Table.Cell>
                     <Table.Cell>
-                      {approval.active ? 'Yes' : 'No'}
+                      {approval.active ? t('Yes') : t('No')}
                     </Table.Cell>
                     <Table.Cell>
-                      {approval.approved ? 'Yes' : 'No'}
+                      {approval.approved ? t('Yes') : t('No')}
                     </Table.Cell>
                     <Table.Cell>
                       {approval.info.value && tokenToDecimal(approval.info.value, decimals)}
@@ -604,10 +605,11 @@ export default function Wallet () {
           onClick={() => setShowTransfers(!showTransfers)}
         >
           <Icon name={ showTransfers ? 'caret down' : 'caret right' } />
-          List transfers
+          {t('List transfers')}
         </Button>
       </Segment>
     </Container>
+
 
     { showTransfers && (<>
       <br/>
@@ -618,19 +620,19 @@ export default function Wallet () {
           </Header>
 
           <Checkbox
-            label='Mint'
+            label={t('Mint')}
             onChange={(e, data) => setShowMint(data.checked)}
             checked={showMint}
           />
           {' '}
           <Checkbox
-            label='Transfers from your wallet'
+            label={t('Transfers from your wallet')}
             onChange={(e, data) => setShowTransferFrom(data.checked)}
             checked={showTransferFrom}
           />
           {' '}
           <Checkbox
-            label='Transfers to your wallet'
+            label={t('Transfers to your wallet')}
             onChange={(e, data) => setShowTransferTo(data.checked)}
             checked={showTransferTo}
           />
@@ -638,14 +640,14 @@ export default function Wallet () {
           <Table celled padded>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Local ID</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell>From {'➔'} To (key is bold)</Table.HeaderCell>
-                <Table.HeaderCell>Symbol</Table.HeaderCell>
-                <Table.HeaderCell>Amount</Table.HeaderCell>
-                <Table.HeaderCell>Token Index</Table.HeaderCell>
-                <Table.HeaderCell>URI</Table.HeaderCell>
-                <Table.HeaderCell>Date & Time</Table.HeaderCell>
+                <Table.HeaderCell>{t('Local ID')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Type')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('From ➔ To (key is bold)')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Symbol')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Amount')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Token Index')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('URI')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('Date & Time')}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -656,9 +658,8 @@ export default function Wallet () {
               if (!showTransferTo && transfer.type === 'transfer' && transfer.to === account?.address) { return; }
 
               const foundPool = account?.pools?.find(p => p.id === transfer.pool)
-              // console.log('foundPool:', foundPool)
               const { symbol, decimals, type } = foundPool
-              // const amount = decimals ? tokenToDecimal(balance, decimals) : balance
+
               return (
                 <Table.Row key={transfer.localId}>
                   <Table.Cell>
@@ -701,6 +702,5 @@ export default function Wallet () {
         </Segment>
       </Container>
     </>)}
-
   </>)
 }
