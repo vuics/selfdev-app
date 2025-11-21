@@ -132,6 +132,7 @@ export const prometheusDashboard = {
 };
 
 export function LogsHistogram({ buckets }) {
+  const { t } = useTranslation('O11y')
   const data = useMemo(() => {
     if (!buckets) return [];
     return buckets.map(b => ({
@@ -161,7 +162,7 @@ export function LogsHistogram({ buckets }) {
     },
     yAxis: {
       type: "value",
-      name: "Logs per Minute"
+      name: t("Logs per Minute"),
     },
     dataZoom: [
       { type: "inside" },
@@ -297,15 +298,15 @@ export default function O11y () {
 
 
   const pastDurationOptions = [
-    { key: "15m", text: "Last 15 minutes", value: "15m", seconds: 15 * 60 },
-    { key: "30m", text: "Last 30 minutes", value: "30m", seconds: 30 * 60 },
-    { key: "1h",  text: "Last 1 hour",     value: "1h",  seconds: 1 * 60 * 60 },
-    { key: "3h",  text: "Last 3 hours",    value: "3h",  seconds: 3 * 60 * 60 },
-    { key: "12h", text: "Last 12 hours",   value: "12h", seconds: 12 * 60 * 60 },
-    { key: "1d",  text: "Last 1 day",      value: "1d",  seconds: 24 * 60 * 60 },
-    { key: "3d",  text: "Last 3 days",     value: "3d",  seconds: 3 * 24 * 60 * 60 },
-    { key: "7d",  text: "Last 7 days",     value: "7d",  seconds: 7 * 24 * 60 * 60 },
-    { key: "custom", text: "Custom", value: "custom", seconds: null },
+    { key: "15m", text: t("Last 15 minutes"), value: "15m", seconds: 15 * 60 },
+    { key: "30m", text: t("Last 30 minutes"), value: "30m", seconds: 30 * 60 },
+    { key: "1h",  text: t("Last 1 hour"),     value: "1h",  seconds: 1 * 60 * 60 },
+    { key: "3h",  text: t("Last 3 hours"),    value: "3h",  seconds: 3 * 60 * 60 },
+    { key: "12h", text: t("Last 12 hours"),   value: "12h", seconds: 12 * 60 * 60 },
+    { key: "1d",  text: t("Last 1 day"),      value: "1d",  seconds: 24 * 60 * 60 },
+    { key: "3d",  text: t("Last 3 days"),     value: "3d",  seconds: 3 * 24 * 60 * 60 },
+    { key: "7d",  text: t("Last 7 days"),     value: "7d",  seconds: 7 * 24 * 60 * 60 },
+    { key: "custom", text: t("Custom"),       value: "custom", seconds: null },
   ];
   useEffect(() => {
     if (!pastDuration || pastDuration === "custom") return;
@@ -323,10 +324,10 @@ export default function O11y () {
 
   const metricsQueriesSchema = {
     type: 'array',
-    title: 'Queries',
+    title: t('Queries'),
     items: {
       type: 'string',
-      title: 'PromQL Query',
+      title: t('PromQL Query'),
     },
   }
   const [ metricsQueries, setMetricsQueries ] = useState(() => {
@@ -340,16 +341,16 @@ export default function O11y () {
   // For AgGridReact
   const [logsColumns, ] = useState([
     { field: "@timestamp",
-      headerName: "Timestamp",
+      headerName: t("Timestamp"),
       valueFormatter: (params) => formatLocalTimestamp(params.value),
     },
-    { field: "level" },
-    { field: "name" },
-    { field: "message" },
-    { field: "archetype" },
-    { field: "connector" },
-    { field: "agentId" },
-    { field: "bridgeId" },
+    { field: "level", headerName: t("Level") },
+    { field: "name", headerName: t("Name") },
+    { field: "message", headerName: t("Message") },
+    { field: "archetype", headerName: t("Archetype") },
+    { field: "connector", headerName: t("Connector") },
+    { field: "agentId", headerName: t("Agent ID") },
+    { field: "bridgeId", headerName: t("Bridge ID") },
   ]);
 
   const [ logsData, setLogsData ] = useState([ ]);
@@ -374,15 +375,15 @@ export default function O11y () {
 
 
   const refreshIntervalOptions = [
-    { key: "0s", text: "No refresh", value: "0s", seconds: 0 },
-    { key: "30s", text: "Every 30 seconds", value: "30s", seconds: 30 },
-    { key: "1m", text: "Every 1 minute", value: "1m", seconds: 1 * 60 },
-    { key: "2m", text: "Every 2 minutes", value: "2m", seconds: 2 * 60 },
-    { key: "5m", text: "Every 5 minutes", value: "5m", seconds: 5 * 60 },
-    { key: "10m", text: "Every 10 minutes", value: "10m", seconds: 10 * 60 },
-    { key: "15m", text: "Every 15 minutes", value: "15m", seconds: 15 * 60 },
-    { key: "30m", text: "Every 30 minutes", value: "30m", seconds: 30 * 60 },
-    { key: "1h", text: "Every 1 hour", value: "1h", seconds: 60 * 60 },
+    { key: "0s",  text: t("No refresh"),       value: "0s",  seconds: 0 },
+    { key: "30s", text: t("Every 30 seconds"), value: "30s", seconds: 30 },
+    { key: "1m",  text: t("Every 1 minute"),   value: "1m",  seconds: 1 * 60 },
+    { key: "2m",  text: t("Every 2 minutes"),  value: "2m",  seconds: 2 * 60 },
+    { key: "5m",  text: t("Every 5 minutes"),  value: "5m",  seconds: 5 * 60 },
+    { key: "10m", text: t("Every 10 minutes"), value: "10m", seconds: 10 * 60 },
+    { key: "15m", text: t("Every 15 minutes"), value: "15m", seconds: 15 * 60 },
+    { key: "30m", text: t("Every 30 minutes"), value: "30m", seconds: 30 * 60 },
+    { key: "1h",  text: t("Every 1 hour"),     value: "1h",  seconds: 60 * 60 },
   ];
   const [refreshInterval, setRefreshInterval] = useState(() => {
     return localStorage.getItem('logs.refreshInterval') || '0s'
@@ -464,31 +465,30 @@ export default function O11y () {
   const TimeInterval = () => {
     return (<>
       <Dropdown
-        placeholder="Past duration"
+        placeholder={t("Past duration")}
         selection
         options={pastDurationOptions}
         value={pastDuration}
         onChange={(e, { value }) => setPastDuration(value)}
       />
       {' '}
-      <Icon name='calendar alternate outline' color='grey'/>
+      <Icon name='calendar alternate outline' color='grey' />
       <Input
         type="datetime-local"
-        label="Start"
+        label={t("Start")}
         value={start || ""}
         onChange={(e) => { setStart(e.target.value); setPastDuration('custom') }}
         style={{ marginRight: "10px" }}
       />
       <Input
         type="datetime-local"
-        label="End"
+        label={t("End")}
         value={end || ""}
         onChange={(e) => { setEnd(e.target.value); setPastDuration('custom') }}
         style={{ marginRight: "10px" }}
       />
       <Dropdown
-        placeholder="Refresh Interval"
-        label="Dur"
+        placeholder={t("Refresh Interval")}
         selection
         options={refreshIntervalOptions}
         value={refreshInterval}
@@ -513,9 +513,7 @@ export default function O11y () {
               active={active === 'logs'}
               onClick={() => { setActive('logs') }}
             >
-              {/*/}
               <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
-              {/*/}
               {' '}
               {t('Logs')}
               {' '}
@@ -558,16 +556,14 @@ export default function O11y () {
       }
     </Container>
 
-    <Container fluid
-      style={{ padding: '15px 15px 0 15px' }}
-    >
+    <Container fluid style={{ padding: '15px 15px 0 15px' }}>
       { editing && active === 'logs' && (<>
         <Segment secondary size='mini'>
           <Input
             loading={querying}
             iconPosition='left'
             type='text'
-            placeholder='Query...'
+            placeholder={t('Query...')}
             action
             fluid
             value={logsQuery}
@@ -587,21 +583,16 @@ export default function O11y () {
               color={conf.style.color0}
               onClick={fetchLogs}
             >
-              Query
+              {t('Query')}
               <Icon name='search' />
             </Button>
           </Input>
 
-          <div
-            style={{
-              marginTop: '0.5rem',
-              alignItems: 'center',       // vertically center
-            }}
-          >
+          <div style={{ marginTop: '0.5rem', alignItems: 'center' }}>
             {' '}
             <Icon name='filter' color='grey'/>
             <Dropdown
-              placeholder="Level"
+              placeholder={t("Level")}
               selection
               clearable
               options={aggs?.levels?.buckets?.map(l => ({ key: l.key, text: l.key, value: l.key })) || []}
@@ -609,9 +600,7 @@ export default function O11y () {
               onChange={(e, { value }) => {
                 let q = logsQuery
                 q = q.replace(` AND level:${levelFilter}`, '')
-                if (value) {
-                  q += ` AND level:${value}`;
-                }
+                if (value) q += ` AND level:${value}`;
                 setLevelFilter(value)
                 setLogsQuery(q)
               }}
@@ -619,7 +608,7 @@ export default function O11y () {
 
             {' '}
             <Dropdown
-              placeholder="Name"
+              placeholder={t("Name")}
               selection
               clearable
               options={aggs?.names?.buckets?.map(s => ({ key: s.key, text: s.key, value: s.key })) || []}
@@ -627,9 +616,7 @@ export default function O11y () {
               onChange={(e, { value }) => {
                 let q = logsQuery
                 q = q.replace(` AND name:${nameFilter}`, '')
-                if (value) {
-                  q += ` AND name:${value}`;
-                }
+                if (value) q += ` AND name:${value}`;
                 setNameFilter(value)
                 setLogsQuery(q)
               }}
@@ -640,7 +627,7 @@ export default function O11y () {
 
             {' '}
             <Checkbox
-              label='Show Logs Chart'
+              label={t('Show Logs Chart')}
               onChange={(e, data) => setShowLogsChart(data.checked)}
               checked={showLogsChart}
             />
@@ -689,7 +676,7 @@ export default function O11y () {
               setActive('logs'); setTimeout(() => setActive('metrics'), 10)
             }}
           >
-            Query
+            {t('Query')}
             <Icon name='search' />
           </Button>
 
@@ -697,14 +684,12 @@ export default function O11y () {
       )}
 
       { active === 'logs' && (
-        <div
-          style={{
-            width: width - 25,
-            height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 25
-                    - (showLogsChart ? 340 : 0)
-                    - (editing ? 110 : 0)
-          }}
-        >
+        <div style={{
+          width: width - 25,
+          height: height - conf.iframe.topOffset - conf.iframe.bottomOffset - 25
+                 - (showLogsChart ? 340 : 0)
+                 - (editing ? 110 : 0)
+        }}>
           { showLogsChart && aggs && (
             <LogsHistogram buckets={aggs.per_minute.buckets} />
           )}
@@ -716,13 +701,12 @@ export default function O11y () {
             pagination
             paginationPageSize={1000}
             paginationPageSizeSelector={[200, 500, 1000]}
-
             cacheBlockSize={500}
-            onRowClicked={(e) => { console.log('e:', e); console.log('e.data:', e.data); setSelectedLog(e.data); setModalOpen(true); }}
+            onRowClicked={(e) => { setSelectedLog(e.data); setModalOpen(true); }}
           />
 
           <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-            <Modal.Header>Log Detail</Modal.Header>
+            <Modal.Header>{t('Log Detail')}</Modal.Header>
             <Modal.Content>
               <JsonEditor
                 data={selectedLog || {}}
@@ -799,6 +783,7 @@ export default function O11y () {
               </SnackbarProvider>
             </ChartsProvider>
           </ThemeProvider>
+
         </div>
       )}
 
