@@ -550,12 +550,24 @@ const connectors = {
           properties: {
             host: { type: 'string', title: 'Server Hostname/IP', default: 'example.com' },
             username: { type: 'string', title: 'Username', default: 'username' },
-            password: { type: 'string', title: 'Password', default: 'password' },
+            password: {
+              type: 'object',
+              title: 'Password',
+              properties: {
+                valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'PHONE_PASSWORD', },
+              },
+            },
             realm: { type: 'string', title: 'Realm', default: 'example.com' },
 
             directoryHost: { type: 'string', title: 'Directory Hostname/IP', default: '192.168.50.100' },
             directoryNumber: { type: 'string', title: 'Directory Number', default: '9639' },
-            directoryPassword: { type: 'string', title: 'Directory Password', default: 'password' },
+            directoryPassword: {
+              type: 'object',
+              title: 'Password',
+              properties: {
+                valueFromVault: { type: 'string', title: 'Directory Password Value From Vault', default: 'PHONE_DIRECTORY_PASSWORD', },
+              },
+            },
 
             welcomeMessage: { type: 'string', title: 'Welcome Message', default: 'Welcome to the HyperAgency. Voice your prompt and press hashtag.' },
           },
