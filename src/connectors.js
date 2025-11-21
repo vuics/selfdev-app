@@ -167,12 +167,43 @@ const connectors = {
                 required: ['type', 'name'],
                 allOf: [
 
+                  // === XMPP
+                  {
+                    if: { properties: { type: { const: 'xmpp' } } },
+                    then: {
+                      properties: {
+                        name: { type: 'string', title: 'Server', default: 'matterbridge' },
+                        Server: { type: 'string', title: 'Server', default: 'selfdev-prosody.dev.local' },
+                        Muc: { type: 'string', title: 'MUC Server', default: 'conference.selfdev-prosody.dev.local' },
+                        Jid: { type: 'string', title: 'Jabber ID', default: 'matterbridge@selfdev-prosody.dev.local' },
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'XMPP_PASSWORD', },
+                          },
+                        },
+                        Nick: { type: 'string', title: 'Nickname', default: 'matterbridge' },
+                        RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
+                        SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false }
+                      },
+                      required: ['Jid', 'Muc', 'Nick', 'Password', 'Server']
+                    }
+                  },
+
+
                   // === Discord
                   {
                     if: { properties: { type: { const: 'discord' } } },
                     then: {
                       properties: {
-                        Token: { type: 'string', title: 'Bot Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'DISCORD_TOKEN', },
+                          },
+                        },
                         Server: { type: 'string', title: 'Server ID' },
                         AutoWebhooks: { type: 'boolean', title: 'Auto Webhooks', default: true },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
@@ -187,7 +218,13 @@ const connectors = {
                     if: { properties: { type: { const: 'telegram' } } },
                     then: {
                       properties: {
-                        Token: { type: 'string', title: 'Bot Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'TELEGRAM_TOKEN', },
+                          },
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         MessageFormat: { type: 'string', title: 'Message Format' },
                         QuoteFormat: { type: 'string', title: 'Quote Format' },
@@ -205,8 +242,12 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Matrix Homeserver URL' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password',
-                          // format: 'password'
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'MATRIX_PASSWORD', },
+                          },
                         },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         NoHomeServerSuffix: { type: 'boolean', title: 'No Home Server Suffix', default: false }
@@ -220,7 +261,13 @@ const connectors = {
                     if: { properties: { type: { const: 'slack' } } },
                     then: {
                       properties: {
-                        Token: { type: 'string', title: 'Bot/User Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'SLACK_TOKEN', },
+                          },
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         PreserveThreading: { type: 'boolean', title: 'Preserve Threading', default: true },
                       },
@@ -236,8 +283,12 @@ const connectors = {
                         Server: { type: 'string', title: 'Server URL' },
                         Team: { type: 'string', title: 'Team Name' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password',
-                          // format: 'password'
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'MATTERMOST_PASSWORD', },
+                          },
                         },
                         NoTLS: { type: 'boolean', title: 'No TLS', default: false },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
@@ -255,8 +306,12 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Server URL' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password',
-                          // format: 'password'
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'ROCKETCHAT_PASSWORD', },
+                          },
                         },
                         PrefixMessagesWithNick: { type: 'boolean', title: 'Prefix Messages With Nick', default: true },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
@@ -265,15 +320,28 @@ const connectors = {
                     }
                   },
 
-                  // === IRC
+                  // === IRC and Twitch that uses IRC
                   {
                     if: { properties: { type: { const: 'irc' } } },
                     then: {
                       properties: {
                         Server: { type: 'string', title: 'Server (host:port)' },
                         Nick: { type: 'string', title: 'Nickname' },
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'IRC_PASSWORD', },
+                          },
+                        },
                         NickServNick: { type: 'string', title: 'Nick Serv Nick' },
-                        NickServPassword: { type: 'string', title: 'Nick Serv Password' },
+                        NickServPassword: {
+                          type: 'object',
+                          title: 'Nick Serv Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Nick Serv Password Value From Vault', default: 'IRC_NICKSERV_PASSWORD', },
+                          },
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                         UseTLS: { type: 'boolean', title: 'Use TLS', default: true },
                         UseSASL: { type: 'boolean', title: 'Use SASL', default: true },
@@ -282,23 +350,6 @@ const connectors = {
                       required: ['Server', 'Nick']
                     }
                   },
-
-                  // === Twitch
-                  // {
-                  //   if: { properties: { type: { const: 'irc' } } },
-                  //   then: {
-                  //     properties: {
-                  //       Password: { type: 'string', title: 'Password',
-                  //         format: 'password'
-                  //       },
-                  //       Nick: { type: 'string', title: 'Nickname' },
-                  //       Server: { type: 'string', title: 'Server (host:port)' },
-                  //       UseTLS: { type: 'boolean', title: 'Use TLS', default: true },
-                  //       RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
-                  //     },
-                  //     required: ['Server', 'Nick', 'Password']
-                  //   }
-                  // },
 
                   // === WhatsApp
                   {
@@ -314,33 +365,19 @@ const connectors = {
                     }
                   },
 
-                  // === XMPP
-                  {
-                    if: { properties: { type: { const: 'xmpp' } } },
-                    then: {
-                      properties: {
-                        name: { type: 'string', title: 'Server', default: 'matterbridge' },
-                        Server: { type: 'string', title: 'Server', default: 'selfdev-prosody.dev.local' },
-                        Muc: { type: 'string', title: 'MUC Server', default: 'conference.selfdev-prosody.dev.local' },
-                        Jid: { type: 'string', title: 'Jabber ID', default: 'matterbridge@selfdev-prosody.dev.local' },
-                        Password: { type: 'string', title: 'Password',
-                          // format: 'password'
-                        },
-                        Nick: { type: 'string', title: 'Nickname', default: 'matterbridge' },
-                        RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
-                        SkipTLSVerify: { type: 'boolean', title: 'Skip TLS Verify', default: false }
-                      },
-                      required: ['Jid', 'Muc', 'Nick', 'Password', 'Server']
-                    }
-                  },
-
                   // === Gitter
                   {
                     if: { properties: { type: { const: 'gitter' } } },
                     then: {
                       properties: {
                         name: { type: 'string', title: 'Account Name' },
-                        Token: { type: 'string', title: 'Bot Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'GITTER_TOKEN', },
+                          },
+                        },
                       },
                       required: ['name']
                     }
@@ -365,7 +402,13 @@ const connectors = {
                       properties: {
                         TenantID: { type: 'string', title: 'Tenant ID' },
                         ClientID: { type: 'string', title: 'Client ID' },
-                        TeamID: { type: 'string', title: 'Team ID' },
+                        TeamID: {
+                          type: 'object',
+                          title: 'Team ID',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Team ID Value From Vault', default: 'MSTEAMS_TEAMID', },
+                          },
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                       },
                       required: ['TenantID', 'ClientID', 'TeamID']
@@ -379,7 +422,13 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Server' },
                         Nick: { type: 'string', title: 'Nick' },
-                        Password: { type: 'string', title: 'Password' },
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'MUMBLE_PASSWORD', },
+                          },
+                        },
                         TLSClientCertificate: { type: 'string', title: 'TLSClientCertificate' },
                         TLSClientKey: { type: 'string', title: 'TLSClientKey' },
                         TLSCACertificate: { type: 'string', title: 'TLSCACertificate' },
@@ -396,7 +445,13 @@ const connectors = {
                       properties: {
                         Server: { type: 'string', title: 'Server' },
                         Login: { type: 'string', title: 'Login' },
-                        Password: { type: 'string', title: 'Password' },
+                        Password: {
+                          type: 'object',
+                          title: 'Password',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Password Value From Vault', default: 'NCTALK_PASSWORD', },
+                          },
+                        },
                         RemoteNickFormat: { type: 'string', title: 'Remote Nick Format' },
                       },
                       required: ['Server', 'Login', 'Password']
@@ -421,7 +476,13 @@ const connectors = {
                     if: { properties: { type: { const: 'vk' } } },
                     then: {
                       properties: {
-                        Token: { type: 'string', title: 'Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'VK_TOKEN', },
+                          },
+                        },
                       },
                       required: ['Token']
                     }
@@ -432,7 +493,13 @@ const connectors = {
                     if: { properties: { type: { const: 'zulip' } } },
                     then: {
                       properties: {
-                        Token: { type: 'string', title: 'Token' },
+                        Token: {
+                          type: 'object',
+                          title: 'Token',
+                          properties: {
+                            valueFromVault: { type: 'string', title: 'Token Value From Vault', default: 'ZULIP_TOKEN', },
+                          },
+                        },
                         Login: { type: 'string', title: 'Login' },
                         Server: { type: 'string', title: 'Server' },
                       },
