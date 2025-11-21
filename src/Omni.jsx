@@ -224,7 +224,7 @@ export default function Omni () {
     fileInputRef.current.click(); // triggers hidden input
   };
 
-  const log = (type) => console.log.bind(console, type);
+  // const log = (type) => console.log.bind(console, type);
 
   // console.log('connector:', connector)
 
@@ -305,9 +305,9 @@ export default function Omni () {
           <Form
             schema={connectors[connector].schema}
             validator={validator}
-            onChange={log('changed')}
+            // onChange={log('changed')}
             onSubmit={({ formData }) => { postBridge({ bridgeOptions: formData }); setAdding(!adding) }}
-            onError={log('errors')}
+            // onError={log('errors')}
           >
             <Button.Group>
               <Button type='button' onClick={() => setAdding(!adding) }>
@@ -405,16 +405,22 @@ export default function Omni () {
                   uiSchema={connectors[bridge.connector].uiSchema || {}}
                   validator={validator}
                   formData={bridge.options}
-                  onChange={log('changed')}
+                  // onChange={log('changed')}
+                  onChange={({ formData }) => {
+                    setBridges(bridges.map(b =>
+                      b._id === bridge._id ? { ...bridge, edited: true, options: formData } : b
+                    ))
+                  }}
                   onSubmit={({ formData }) => {
                     putBridge({ bridge: { ...bridge, options: formData }});
                   }}
-                  onError={log('errors')}
+                  // onError={log('errors')}
                 >
                   <Button.Group>
                     <Button type='button' onClick={() => {
+                      const foundBridge = bridgesImmutable.find(b => b._id === bridge._id)
                       setBridges(bridges.map(b =>
-                        b._id === bridge._id ? { ...bridge, editing: false } : b
+                        b._id === bridge._id ? { ...foundBridge, editing: false } : b
                       ))
                     }}>
                       <Icon name='cancel' />
