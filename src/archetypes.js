@@ -21,7 +21,7 @@ const archetypes = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         chat: {
           type: 'object',
           title: 'Chat Configuration',
@@ -62,7 +62,7 @@ const archetypes = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         maptrix: {
           type: 'object',
           title: 'Maptrix Configuration',
@@ -906,7 +906,7 @@ const archetypes = {
       properties: {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
-        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [ ], },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         browseruse: {
           type: 'object',
           title: 'Browser-Use Configuration',

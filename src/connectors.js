@@ -27,7 +27,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'mcp' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['mcp'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         mcp: {
@@ -63,7 +63,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'email' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['email'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         email: {
@@ -134,7 +134,7 @@ const connectors = {
         // recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'bridge' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['bridge'], },
         // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         messengers: {
@@ -601,7 +601,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['phone'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         phone: {
@@ -656,7 +656,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'voip' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['scheduler'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         scheduler: {
@@ -694,7 +694,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'webhook' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['webhook'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         webhook: {
@@ -731,7 +731,7 @@ const connectors = {
         recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
 
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
-        joinRoom: { type: 'string', title: 'Join Room', default: 'webapp' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['webapp'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
         webapp: {

@@ -2675,7 +2675,7 @@ const resources = {
     Dash: {
       "Error getting dash.": "Ошибка получения дашборда.",
       "Error": "Ошибка",
-      "Dashboard": "Дашборд",
+      "Dashboard": "Панель",
       "Maps": "Карты",
       "Files": "Файлы",
       "KV Storages": "KV-хранилища",
@@ -2683,7 +2683,7 @@ const resources = {
       "Deployed Agents": "Развернутые агенты",
       "Deployed Bridges": "Развернутые мосты",
       "Agent Archetypes": "Архетипы агентов",
-      "Bridge Connectors": "Коннекторы мостов",
+      "Bridge Connectors": "Соединители мостов",
       "total": "Всего",
       "deployed": "Развернуто",
     },

@@ -407,6 +407,7 @@ export default function Wallet () {
         <Button icon
           onClick={() => setCollectData(collectData ? null : { from: '', amount: '' })}
         >
+          <Icon name={ collectData ? 'caret down' : 'caret right' } />
           {t('Collect Tokens')}
         </Button>
 

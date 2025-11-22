@@ -101,7 +101,7 @@ export default function Omni () {
       await xmppClient?.addToRoster({
         jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
-        groups: [res.data.options.joinRoom],
+        groups: res.data.options.joinRooms,
       })
     } catch (err) {
       console.error('get bridges error:', err);
@@ -138,7 +138,7 @@ export default function Omni () {
         await xmppClient?.addToRoster({
           jid,
           name: res.data.options.name,
-          groups: [res.data.options.joinRoom],
+          groups: res.data.options.joinRooms,
         })
       }
     } catch (err) {
