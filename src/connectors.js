@@ -771,7 +771,7 @@ const connectors = {
           properties: {
 
           },
-          required: ["domain", "endpoint"]
+          required: []
         },
       }
     },

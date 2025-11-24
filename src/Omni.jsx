@@ -29,6 +29,7 @@ import validator from '@rjsf/validator-ajv8';
 import connectors, { defaultConnector } from './connectors'
 import { useXmppContext } from './components/XmppContext'
 import { sortDeployed } from './Hive'
+// import { sleep } from './helper'
 
 import Menubar from './components/Menubar'
 import conf from './conf'
@@ -47,8 +48,10 @@ export default function Omni () {
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
   const [ presence, setPresence ] = useState(xmppClient?.presence || {});
+
   // console.log('presence:', presence)
   // console.log('roster:', roster)
+  // console.log('client credentials:', clientCredentials)
 
   useEffect(() => {
     if (!xmppClient?.emitter) return;
@@ -100,17 +103,6 @@ export default function Omni () {
       console.log('res.data:', res.data)
       setBridges([ ...bridges, res.data ])
       setBridgesImmutable(bridgesImmutable => [res.data, ...bridgesImmutable])
-
-      if (res.data.connector === 'client') {
-        const res1 = await axios.post(`${conf.api.url}/xmpp/client/${res.data._id}`, {
-        }, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        })
-        console.log('res1.data:', res1.data)
-        setClientCredentials(res1.data)
-      }
-
       await xmppClient?.addToRoster({
         jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
@@ -124,7 +116,27 @@ export default function Omni () {
     }
   }
 
-  // console.log('client credentials:', clientCredentials)
+  const updateRoster = async ({ prevBridge, bridge }) => {
+    try {
+      const jid = `${bridge.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`
+      const name = bridge.options.name
+      const inRoster = roster.find(r => r.jid === jid && r.name === name)
+      console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
+      if (!inRoster) {
+        console.log('Bridge with name:', bridge.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
+        await xmppClient?.removeFromRoster({
+          jid: `${prevBridge.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
+        })
+        await xmppClient?.addToRoster({
+          jid,
+          name: bridge.options.name,
+          groups: bridge.options.joinRooms,
+        })
+      }
+    } catch (err) {
+      console.error('Error updating roster:', err)
+    }
+  }
 
   const putBridge = async ({ bridge }) => {
     setLoading(true)
@@ -141,21 +153,7 @@ export default function Omni () {
       const prevBridge = bridgesImmutable.find(b => b._id === bridge._id)
       setBridges(bridges.map(b => b._id === res.data._id ? res.data : b))
       setBridgesImmutable(bridgesImmutable.map(b => b._id === res.data._id ? res.data : b))
-      const jid = `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`
-      const name = res.data.options.name
-      const inRoster = roster.find(r => r.jid === jid && r.name === name)
-      console.log('jid:', jid, ', name:', name, ', inRoster:', inRoster)
-      if (!inRoster) {
-        console.log('Bridge with name:', res.data.options.name, ', and jid:', jid, 'does not exist in roster. Adding...')
-        await xmppClient?.removeFromRoster({
-          jid: `${prevBridge.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
-        })
-        await xmppClient?.addToRoster({
-          jid,
-          name: res.data.options.name,
-          groups: res.data.options.joinRooms,
-        })
-      }
+      updateRoster({ bridge: res.data, prevBridge })
     } catch (err) {
       console.error('put bridge error:', err);
       return setResponseError(err?.response?.data?.message || err.toString() || t('Error putting bridge.'))
@@ -164,18 +162,75 @@ export default function Omni () {
     }
   }
 
+  const deployBridge = async ({ bridge, deployed }) => {
+    if (bridge.connector === 'client') {
+      if (deployed) {
+        try {
+          console.log('Registering client bridge')
+          const res1 = await axios.post(`${conf.api.url}/xmpp/client/${bridge._id}`, {
+          }, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          })
+          console.log('res1.data:', res1.data)
+          setClientCredentials(res1.data)
+        } catch (err) {
+          console.error('Error registering client bridge:', err)
+        }
+      } else {
+        try {
+          console.log('Unregistering client bridge')
+          const res2 = await axios.delete(`${conf.api.url}/xmpp/client/${bridge._id}`, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          })
+          console.log('res2.data:', res2.data)
+        } catch (err) {
+          console.error('Error unregistering client bridge:', err)
+        }
+      }
+    }
+
+    const patch = [
+      {
+        op: "replace",
+        path: "/deployed",
+        value: deployed,
+      }
+    ];
+    const res = await axios.patch(
+      `${conf.api.url}/bridge/${bridge._id}`,
+      patch,
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    console.log('bridge patch res:', res)
+    const prevBridge = bridgesImmutable.find(b => b._id === bridge._id)
+    setBridges(bridges.map(b => b._id === res.data._id ? res.data : b))
+    setBridgesImmutable(bridgesImmutable.map(b => b._id === res.data._id ? res.data : b))
+
+    await updateRoster({ bridge: res.data, prevBridge })
+    return res.data;
+  };
+
   const deleteBridge = async ({ bridge }) => {
     const { _id } = bridge
     setLoading(true)
     try {
-      if (bridge.connector === 'client') {
-        const res1 = await axios.delete(`${conf.api.url}/xmpp/client/${_id}`, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        })
-        console.log('res1.data:', res1.data)
+      if (bridge.deployed) {
+        try {
+          console.log('Unregistering client bridge')
+          const res2 = await axios.delete(`${conf.api.url}/xmpp/client/${bridge._id}`, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          })
+          console.log('res2.data:', res2.data)
+        } catch (err) {
+          console.error('Error unregistering client bridge:', err)
+        }
       }
-
       const res = await axios.delete(`${conf.api.url}/bridge/${_id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -430,7 +485,10 @@ export default function Omni () {
               <Checkbox toggle label={t('Deployed')}
                 disabled={bridge.editing}
                 onChange={(e, data) => {
-                  putBridge({ bridge: {...bridge, deployed: data.checked } })
+                  deployBridge({
+                    bridge,
+                    deployed: data.checked,
+                  })
                 }}
                 checked={bridge.deployed}
               />
