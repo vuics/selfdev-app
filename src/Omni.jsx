@@ -124,7 +124,7 @@ export default function Omni () {
     }
   }
 
-  console.log('client credentials:', clientCredentials)
+  // console.log('client credentials:', clientCredentials)
 
   const putBridge = async ({ bridge }) => {
     setLoading(true)
@@ -164,9 +164,18 @@ export default function Omni () {
     }
   }
 
-  const deleteBridge = async ({ _id }) => {
+  const deleteBridge = async ({ bridge }) => {
+    const { _id } = bridge
     setLoading(true)
     try {
+      if (bridge.connector === 'client') {
+        const res1 = await axios.delete(`${conf.api.url}/xmpp/client/${_id}`, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        })
+        console.log('res1.data:', res1.data)
+      }
+
       const res = await axios.delete(`${conf.api.url}/bridge/${_id}`, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
@@ -402,7 +411,7 @@ export default function Omni () {
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => {
-                        deleteBridge({ _id: bridge._id })
+                        deleteBridge({ bridge })
                       }}
                     >
                       <Icon name='delete' />
