@@ -406,8 +406,8 @@ export default function Hive () {
                             <Icon
                               name={
                                 presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
-                                  ? (agent.deployed ? 'spy' : 'spinner')
-                                  : (agent.deployed ? 'spinner' : 'spy')
+                                  ? (agent.deployed ? archetypes[agent.archetype].icon : 'spinner')
+                                  : (agent.deployed ? 'spinner' : archetypes[agent.archetype].icon)
                               }
                               color={
                                 presence[`${agent.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]

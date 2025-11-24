@@ -749,6 +749,34 @@ const connectors = {
     },
   },
 
+  'client': {
+    key: 'client',
+    value: 'client',
+    // icon: 'chess knight',
+    icon: 'user secret',
+    // icon: 'child',
+    text: 'XMPP Client',
+    description: t('client.description'),
+    docUrl: getDocUrl('client'),
+    schema: {
+      title: 'Client Configuration',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        client: {
+          title: 'Client Configuration',
+          type: 'object',
+          properties: {
+
+          },
+          required: ["domain", "endpoint"]
+        },
+      }
+    },
+  },
+
 
   // 'api': {
   //   key: 'api',

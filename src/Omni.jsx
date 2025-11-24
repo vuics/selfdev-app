@@ -13,13 +13,14 @@ import {
   Checkbox,
   Dropdown,
   Popup,
+  Modal,
+  Input,
+  Form as SemanticForm,
   // Divider,
   // Accordion,
-  // Input,
   // List,
   // Label,
   // Confirm,
-  // Form,
   // Table,
 } from 'semantic-ui-react'
 import { useTranslation } from 'react-i18next'
@@ -41,6 +42,7 @@ export default function Omni () {
   const [ connector, setConnector ] = useState(defaultConnector.key)
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
+  const [ clientCredentials, setClientCredentials ] = useState(null)
 
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
@@ -98,6 +100,17 @@ export default function Omni () {
       console.log('res.data:', res.data)
       setBridges([ ...bridges, res.data ])
       setBridgesImmutable(bridgesImmutable => [res.data, ...bridgesImmutable])
+
+      if (res.data.connector === 'client') {
+        const res1 = await axios.post(`${conf.api.url}/xmpp/client/${res.data._id}`, {
+        }, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        })
+        console.log('res1.data:', res1.data)
+        setClientCredentials(res1.data)
+      }
+
       await xmppClient?.addToRoster({
         jid: `${res.data.options.name}@${xmppClient?.credentials.user}.${conf.xmpp.host}`,
         name: res.data.options.name,
@@ -110,6 +123,8 @@ export default function Omni () {
       setLoading(false)
     }
   }
+
+  console.log('client credentials:', clientCredentials)
 
   const putBridge = async ({ bridge }) => {
     setLoading(true)
@@ -309,6 +324,19 @@ export default function Omni () {
             onSubmit={({ formData }) => { postBridge({ bridgeOptions: formData }); setAdding(!adding) }}
             // onError={log('errors')}
           >
+            {/*/}
+            {connector === 'client' && (<>
+              <Button
+                icon
+                onClick={() => {
+                }}
+              >
+                Show Credentials
+              </Button>
+              <Divider />
+            </>)}
+            {/*/}
+
             <Button.Group>
               <Button type='button' onClick={() => setAdding(!adding) }>
                 <Icon name='cancel' />
@@ -340,8 +368,8 @@ export default function Omni () {
                 <Icon
                   name={
                     presence[`${bridge.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
-                      ? (bridge.deployed ? 'exchange' : 'circle notch')
-                      : (bridge.deployed ? 'circle notch' : 'exchange')
+                      ? (bridge.deployed ? connectors[bridge.connector].icon : 'circle notch')
+                      : (bridge.deployed ? 'circle notch' : connectors[bridge.connector].icon)
                   }
                   color={
                     presence[`${bridge.options.name}@${xmppClient?.credentials?.user}.${conf.xmpp.host}`]
@@ -442,6 +470,58 @@ export default function Omni () {
           </Card>
         ))}
       </Card.Group>
+
+      { clientCredentials && (
+        <Modal
+          onClose={() => setClientCredentials(null)}
+          open={clientCredentials}
+          trigger={<Button>Show Modal</Button>}
+        >
+          <Modal.Header>
+            {t('Client Credentials')}
+          </Modal.Header>
+          <Modal.Content image>
+            <Modal.Description>
+              <SemanticForm>
+                <SemanticForm.Field>
+                  <label>{t('Jid')}:</label>
+                  <Input
+                    fluid
+                    placeholder={t('Jid') + '...'}
+                    value={clientCredentials.jid}
+                    readOnly
+                  />
+                </SemanticForm.Field>
+                <SemanticForm.Field>
+                  <label>{t('Password')}:</label>
+                  <Input
+                    fluid
+                    placeholder={t('Password') + '...'}
+                    value={clientCredentials.password}
+                  />
+                </SemanticForm.Field>
+                <SemanticForm.Field>
+                  <label>{t('Server')}:</label>
+                  <Input
+                    fluid
+                    placeholder={t('Server') + '...'}
+                    value={clientCredentials.server}
+                  />
+                </SemanticForm.Field>
+              </SemanticForm>
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              content={t('Close')}
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => setClientCredentials(null)}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
+      )}
 
     </Container>
   </>)
