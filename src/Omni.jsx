@@ -44,6 +44,7 @@ export default function Omni () {
   const [ adding, setAdding ] = useState(false)
   const fileInputRef = useRef(null);
   const [ clientCredentials, setClientCredentials ] = useState(null)
+  const [ showPassword, setShowPassword ] = useState(false)
 
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
@@ -557,6 +558,12 @@ export default function Omni () {
                     placeholder={t('Jid') + '...'}
                     value={clientCredentials.jid}
                     readOnly
+                    action={{
+                      icon: 'copy',
+                      basic: true,
+                      title: t('Copy'),
+                      onClick: () => { navigator.clipboard.writeText(clientCredentials.jid) }
+                    }}
                   />
                 </SemanticForm.Field>
                 <SemanticForm.Field>
@@ -564,7 +571,29 @@ export default function Omni () {
                   <Input
                     fluid
                     placeholder={t('Password') + '...'}
+                    type={showPassword ? 'text' : 'password'}
                     value={clientCredentials.password}
+                    readOnly
+                    action={<>
+                      <Button
+                        type="button"
+                        icon
+                        basic
+                        onClick={() => setShowPassword(!showPassword)}
+                        title={showPassword ? t('Hide password') : t('Show password')}
+                      >
+                        <Icon name={showPassword ? 'eye slash' : 'eye'} />
+                      </Button>
+                      <Button
+                        type="button"
+                        icon
+                        basic
+                        title={t('Copy')}
+                        onClick={() => navigator.clipboard.writeText(clientCredentials.password)}
+                      >
+                        <Icon name="copy" />
+                      </Button>
+                    </>}
                   />
                 </SemanticForm.Field>
                 <SemanticForm.Field>
@@ -573,6 +602,13 @@ export default function Omni () {
                     fluid
                     placeholder={t('Server') + '...'}
                     value={clientCredentials.server}
+                    readOnly
+                    action={{
+                      icon: 'copy',
+                      basic: true,
+                      title: t('Copy'),
+                      onClick: () => { navigator.clipboard.writeText(clientCredentials.server) }
+                    }}
                   />
                 </SemanticForm.Field>
               </SemanticForm>
