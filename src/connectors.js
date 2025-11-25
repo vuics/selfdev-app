@@ -45,6 +45,42 @@ const connectors = {
     },
   },
 
+  'a2a': {
+    key: 'a2a',
+    value: 'a2a',
+    icon: 'chess',
+    text: 'A2A Server',
+    description: t('a2a.description'),
+    docUrl: getDocUrl('a2a'),
+    schema: {
+      title: 'Model Context Protocol',
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', default: '' },
+
+        enablePersonal: { type: 'boolean', title: 'Enable Personal Message', default: true },
+        recipient: { type: 'string', title: 'Recipient JID', default: 'artemarakcheev@selfdev-prosody.dev.local' },
+
+        enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['a2a'], },
+        recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        a2a: {
+          title: 'Agent2Agent (A2A) Protocol Configuration',
+          type: 'object',
+          properties: {
+            endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
+            timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
+            setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
+            requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
+          },
+          required: ["endpoint"]
+        },
+      }
+    },
+  },
+
   'email': {
     key: 'email',
     value: 'email',
