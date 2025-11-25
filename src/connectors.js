@@ -72,8 +72,7 @@ const connectors = {
           properties: {
             endpoint: { type: 'string', title: 'Endpoint', default: faker.lorem.slug() },
             timeoutSec: { type: 'number', title: 'Timeout in Seconds', default: 300 },
-            setRequestId: { type: 'boolean', title: 'Set Request ID', default: true },
-            requestIdKey: { type: 'string', title: 'Request ID Key', default: 'requestId' },
+            textOnly: { type: 'boolean', title: 'Send text only (else, A2A JSON message)', default: false },
           },
           required: ["endpoint"]
         },
