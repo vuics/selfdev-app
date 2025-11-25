@@ -131,6 +131,32 @@ const archetypes = {
     },
   },
 
+  'a2a-v1.0': {
+    key: 'a2a-v1.0',
+    value: 'a2a-v1.0',
+    category: 'Web',
+    icon: 'chess pawn',
+    text: 'A2A Client v1.0',
+    description: t('a2a.description'),
+    docUrl: getDocUrl('a2a'),
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
+        description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
+        joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        a2a: {
+          type: 'object',
+          title: 'Agent2Agent (A2A) Protocol',
+          properties: {
+            url: { type: 'string', title: 'URL', default: 'http://localhost:6370/a2a/679b3c9a6e26f022ca69515b/server' },
+            textOnly: { type: 'boolean', title: 'Send text only (else, A2A JSON message)', default: false },
+          },
+        },
+      },
+    },
+  },
+
   'system-v1.0': {
     key: 'system-v1.0',
     value: 'system-v1.0',
