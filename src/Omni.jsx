@@ -382,6 +382,21 @@ export default function Omni () {
             ))}
           </Menu>
 
+          <p>
+            { connectors[connector].text && (<>
+              <b>{t('Connector')}:</b> {connectors[connector].text}
+              <br/>
+            </>)}
+            { connectors[connector].description && (<>
+              <b>{t('Description')}:</b> {connectors[connector].description}
+              <br/>
+            </>)}
+            { connectors[connector].docUrl && (<>
+              <b>{t('Bridge Creation Guide')}:</b>{' '}<a href={connectors[connector].docUrl} target='_blank' rel="noreferrer">{connectors[connector].text}</a>{' '}
+              <br/>
+            </>)}
+          </p>
+
           <Form
             schema={connectors[connector].schema}
             validator={validator}

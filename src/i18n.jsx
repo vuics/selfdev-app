@@ -1007,6 +1007,9 @@ const resources = {
       "Password": "Password",
       "Server": "Server",
       "Close": "Close",
+      'Connector': 'Connector',
+      'Description': 'Description',
+      'Bridge Creation Guide': 'Bridge Creation Guide',
       "Error getting bridges.": "Error getting bridges.",
       "Error putting bridge.": "Error updating the bridge.",
       "Error deleting bridge.": "Error deleting the bridge.",
@@ -1899,6 +1902,35 @@ const resources = {
       },
       browseruse: {
         description: 'Navigator operates a real browser to perform web-based tasks.',
+      },
+    },
+    connectors: {
+      mcp: {
+        description: 'Protocol server enabling external MCP clients to communicate and execute tasks.',
+      },
+      a2a: {
+        description: 'Agent-to-agent server facilitating seamless action execution across A2A agents.',
+      },
+      email: {
+        description: 'Inbox and outbox handler for sending, receiving, and managing emails.',
+      },
+      messengers: {
+        description: 'Unified messaging interface for social messengers, sending and receiving messages in real-time.',
+      },
+      phone: {
+        description: 'Telephony interface to receive calls and interact via voice channels.',
+      },
+      scheduler: {
+        description: 'Timekeeper automating message delivery and task execution with CRON scheduling.',
+      },
+      webhook: {
+        description: 'HTTP(S) listener receiving and processing webhook events from external systems.',
+      },
+      webapp: {
+        description: 'Web app generator that converts YAML definitions into hosted applications on your domain.',
+      },
+      client: {
+        description: 'Connector for external XMPP clients, enabling real-time chat and command execution.',
       },
     },
   },
@@ -2890,6 +2922,9 @@ const resources = {
       "Password": "Пароль",
       "Server": "Сервер",
       "Close": "Закрыть",
+      'Connector': 'Коннектор',
+      'Description': 'Описание',
+      'Bridge Creation Guide': 'Руководство по созданию моста',
       "Error getting bridges.": "Ошибка при получении мостов.",
       "Error putting bridge.": "Ошибка при обновлении моста.",
       "Error deleting bridge.": "Ошибка при удалении моста.",
@@ -3767,6 +3802,35 @@ const resources = {
       },
       browseruse: {
         description: 'Навигатор управляет реальным браузером для выполнения веб-задач.',
+      },
+    },
+    connectors: {
+      mcp: {
+        description: 'Сервер протокола, позволяющий внешним MCP-клиентам взаимодействовать и выполнять задачи.',
+      },
+      a2a: {
+        description: 'Сервер агент-агент, обеспечивающий бесшовное выполнение действий между A2A-агентами.',
+      },
+      email: {
+        description: 'Обработчик входящих и исходящих писем для отправки, получения и управления электронной почтой.',
+      },
+      messengers: {
+        description: 'Единый интерфейс обмена сообщениями в социальных мессенджерах, для отправки и получения сообщений в реальном времени.',
+      },
+      phone: {
+        description: 'Телефонный интерфейс для приема звонков и взаимодействия через голосовые каналы.',
+      },
+      scheduler: {
+        description: 'Хронометрист, автоматизирующий доставку сообщений и выполнение задач по расписанию CRON.',
+      },
+      webhook: {
+        description: 'HTTP(S)-слушатель, принимающий и обрабатывающий события вебхуков от внешних систем.',
+      },
+      webapp: {
+        description: 'Генератор веб-приложений, преобразующий YAML-описания в хостинговые приложения на вашем домене.',
+      },
+      client: {
+        description: 'Коннектор для внешних XMPP-клиентов, обеспечивающий обмен сообщениями и выполнение команд в реальном времени.',
       },
     },
   },

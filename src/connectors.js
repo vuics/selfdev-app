@@ -5,7 +5,7 @@ import conf from './conf'
 import i18n from './i18n'
 
 const t = (key) => i18next.t(`connectors:${key}`)
-const getDocUrl = (path) => `${conf.docs.url}${conf.docs.i18n[i18n.language]}/docs/agent-connectors/${path}`
+const getDocUrl = (path) => `${conf.docs.url}${conf.docs.i18n[i18n.language]}/docs/bridge-connectors/${path}`
 
 const connectors = {
   'mcp': {
