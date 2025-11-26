@@ -833,7 +833,6 @@ const resources = {
       'Archetype': 'Archetype',
       'Description': 'Description',
       'Agent Creation Guide': 'Agent Creation Guide',
-      'Options': 'Options',
       'Select Archetype': 'Select Archetype',
       'Not compliant with JSON Schema': 'Not compliant with JSON Schema',
       'JSON Schema error': 'JSON Schema error',
@@ -1844,6 +1843,9 @@ const resources = {
       mcp: {
         description: 'Tools executor through the Model Context Protocol on external MCP servers.',
       },
+      a2a: {
+        description: 'Agent negotiator executes actions through the Agent2Agent Protocol on external A2A servers.',
+      },
       system: {
         description: 'Administrator interacts with our infrastructure and manages records in the database.',
       },
@@ -1853,9 +1855,6 @@ const resources = {
       proxy: {
         description: 'Relay messages between the sender and another recipient.',
       },
-      // architect: {
-      //   description: 'Designer creates new maps from textual descriptions.',
-      // },
       rag: {
         description: 'Researcher retrieves knowledge from memory or external docs.',
       },
@@ -1894,6 +1893,12 @@ const resources = {
       },
       avatar: {
         description: 'Performer represents human-like interaction visually.',
+      },
+      curl: {
+        description: 'Requester calls HTTP(S) endpoints and web APIs programmatically.',
+      },
+      browseruse: {
+        description: 'Navigator operates a real browser to perform web-based tasks.',
       },
     },
   },
@@ -2711,7 +2716,6 @@ const resources = {
       'Archetype': 'Архетип',
       'Description': 'Описание',
       'Agent Creation Guide': 'Руководство по созданию агента',
-      'Options': 'Параметры',
       'Select Archetype': 'Выбрать архетип',
       'Not compliant with JSON Schema': 'Не соответствует схеме JSON',
       'JSON Schema error': 'Ошибка схемы JSON',
@@ -3707,6 +3711,9 @@ const resources = {
       mcp: {
         description: 'Исполнитель инструментов через протокол контекста модели на внешних серверах MCP.',
       },
+      a2a: {
+        description: 'Агент-переговорщик выполняет действия через протокол Agent2Agent на внешних серверах A2A.',
+      },
       system: {
         description: 'Администратор взаимодействует с инфраструктурой и управляет записями в базе данных.',
       },
@@ -3716,9 +3723,6 @@ const resources = {
       proxy: {
         description: 'Реле передаёт сообщения между отправителем и другим получателем.',
       },
-      // architect: {
-      //   description: 'Дизайнер создаёт новые карты на основе текстовых описаний.',
-      // },
       rag: {
         description: 'Исследователь извлекает знания из памяти или внешней документации.',
       },
@@ -3757,6 +3761,12 @@ const resources = {
       },
       avatar: {
         description: 'Актёр визуально представляет человекоподобное взаимодействие.',
+      },
+      curl: {
+        description: 'Запросчик программно вызывает HTTP(S)-эндпоинты и веб-API.',
+      },
+      browseruse: {
+        description: 'Навигатор управляет реальным браузером для выполнения веб-задач.',
       },
     },
   },

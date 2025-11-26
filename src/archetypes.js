@@ -106,7 +106,7 @@ const archetypes = {
   'mcp-v1.0': {
     key: 'mcp-v1.0',
     value: 'mcp-v1.0',
-    category: 'Web',
+    category: 'Protocols',
     icon: 'dot circle outline',
     text: 'MCP Client v1.0',
     description: t('mcp.description'),
@@ -134,7 +134,7 @@ const archetypes = {
   'a2a-v1.0': {
     key: 'a2a-v1.0',
     value: 'a2a-v1.0',
-    category: 'Web',
+    category: 'Protocols',
     icon: 'chess pawn',
     text: 'A2A Client v1.0',
     description: t('a2a.description'),
@@ -894,9 +894,9 @@ const archetypes = {
   'curl-v1.0': {
     key: 'curl-v1.0',
     value: 'curl-v1.0',
-    category: 'Web',
+    category: 'Protocols',
     icon: 'external',
-    text: 'Curl v1.0',
+    text: 'Curl (HTTPs) v1.0',
     description: t('curl.description'),
     docUrl: getDocUrl('curl'),
     schema: {

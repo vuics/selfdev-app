@@ -356,9 +356,6 @@ export default function Hive () {
               <b>{t('Agent Creation Guide')}:</b>{' '}<a href={archetypes[archetype].docUrl} target='_blank' rel="noreferrer">{archetypes[archetype].text}</a>{' '}
               <br/>
             </>)}
-            <span>
-              <b>{t('Options')}:</b>
-            </span>
           </p>
 
           <Form
