@@ -164,6 +164,7 @@ const resources = {
         "interaction": "Interaction",
         "actors": "Actors",
         "archetypes": "Agent Archetypes",
+        "connectors": "Omni-channel",
         "business": "Business Engine",
         "distributed": "Distributed System"
       },
@@ -593,6 +594,71 @@ const resources = {
           "langflow": "programs flows for",
           "nodered": "connects systems"
         }
+      },
+      "ConnectorsDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "Central communication channel for all connectors",
+            "caption": "System communication"
+          },
+          "mcp": {
+            "title": "MCP Server",
+            "tooltip": "Hosts Machine Control Protocol endpoints enabling tool and skill execution for agents",
+            "caption": "Tool & skill integration"
+          },
+          "a2a": {
+            "title": "A2A Server",
+            "tooltip": "Provides Agent-to-Agent communication, routing structured messages across autonomous agents",
+            "caption": "Inter-agent protocol"
+          },
+          "email": {
+            "title": "Email",
+            "tooltip": "Allows agents to send, receive, and parse emails to operate across traditional communication channels",
+            "caption": "Email channel"
+          },
+          "messengers": {
+            "title": "Messengers",
+            "tooltip": "Bridges agents with real-time chat platforms like Telegram, WhatsApp, Discord, and Slack",
+            "caption": "Chat platforms"
+          },
+          "phone": {
+            "title": "Phone",
+            "tooltip": "Enables telephony interactions including voice calls, IVR flows, and SMS operations",
+            "caption": "Telephony interface"
+          },
+          "scheduler": {
+            "title": "Scheduler",
+            "tooltip": "Triggers time-based, recurring, or delayed actions for autonomous workflows",
+            "caption": "Automation timing"
+          },
+          "webhook": {
+            "title": "Webhook",
+            "tooltip": "Receives external HTTP callbacks to activate agent workflows and event-driven integrations",
+            "caption": "Event triggers"
+          },
+          "webapp": {
+            "title": "Web App",
+            "tooltip": "Provides a unified web interface for controlling agents, managing structures, and visualizing workloads",
+            "caption": "Control dashboard"
+          },
+          "client": {
+            "title": "XMPP Client",
+            "tooltip": "Connects external XMPP clients for messaging, bot control, and distributed agent communication",
+            "caption": "XMPP channel"
+          }
+        },
+        "edges": {
+          "mcp": "executes tools through",
+          "a2a": "communicates with agents via",
+          "email": "sends and receives through",
+          "messengers": "interacts with users through",
+          "phone": "handles calls and SMS via",
+          "scheduler": "triggers tasks using",
+          "webhook": "reacts to events from",
+          "webapp": "is managed through",
+          "client": "routes XMPP messages via"
+        },
       },
       "BusinessDiagram": {
         "nodes": {
@@ -2079,6 +2145,7 @@ const resources = {
         "interaction": "Взаимодействие",
         "actors": "Акторы",
         "archetypes": "Архетипы агентов",
+        "connectors": "Оминиканальность",
         "business": "Бизнес-двигатель",
         "distributed": "Распределённая система"
       },
@@ -2507,6 +2574,71 @@ const resources = {
           "command": "создаёт для",
           "langflow": "программирует потоки для",
           "nodered": "подключает системы"
+        }
+      },
+      "ConnectorsDiagram": {
+        "nodes": {
+          "hyperAgency": {
+            "title": "HyperAgency",
+            "tooltip": "Центральный коммуникационный канал для всех коннекторов",
+            "caption": "Системная коммуникация"
+          },
+          "mcp": {
+            "title": "MCP-сервер",
+            "tooltip": "Хостит Model Context Protocol-эндпоинты, позволяя агентам выполнять инструменты и навыки",
+            "caption": "Интеграция инструментов и навыков"
+          },
+          "a2a": {
+            "title": "A2A-сервер",
+            "tooltip": "Обеспечивает коммуникацию агентов с агентами, маршрутизируя структурированные сообщения между автономными агентами",
+            "caption": "Межагентный протокол"
+          },
+          "email": {
+            "title": "Email",
+            "tooltip": "Позволяет агентам отправлять, получать и разбирать письма для работы с традиционными каналами связи",
+            "caption": "Email-канал"
+          },
+          "messengers": {
+            "title": "Мессенджеры",
+            "tooltip": "Соединяет агентов с платформами чатов в реальном времени, такими как Telegram, WhatsApp, Discord и Slack",
+            "caption": "Чат-платформы"
+          },
+          "phone": {
+            "title": "Телефония",
+            "tooltip": "Обеспечивает взаимодействия по телефону, включая голосовые вызовы, IVR-сценарии и операции SMS",
+            "caption": "Телефонийный интерфейс"
+          },
+          "scheduler": {
+            "title": "Планировщик",
+            "tooltip": "Запускает действия по расписанию, циклические или отложенные задачи для автономных рабочих процессов",
+            "caption": "Тайминг автоматизации"
+          },
+          "webhook": {
+            "title": "Webhook",
+            "tooltip": "Получает внешние HTTP-callback’и для активации рабочих процессов агента и событийных интеграций",
+            "caption": "Триггеры событий"
+          },
+          "webapp": {
+            "title": "Веб-приложение",
+            "tooltip": "Предоставляет единый веб-интерфейс для управления агентами, структурами и визуализации нагрузки",
+            "caption": "Панель управления"
+          },
+          "client": {
+            "title": "XMPP-клиент",
+            "tooltip": "Подключает внешние XMPP-клиенты для обмена сообщениями, управления ботами и распределённой агентной коммуникации",
+            "caption": "XMPP-канал"
+          }
+        },
+        "edges": {
+          "mcp": "выполняет инструменты через",
+          "a2a": "обменивается сообщениями между агентами через",
+          "email": "отправляет и получает через",
+          "messengers": "взаимодействует с пользователями через",
+          "phone": "обрабатывает звонки и SMS через",
+          "scheduler": "запускает задачи используя",
+          "webhook": "реагирует на события от",
+          "webapp": "управляется через",
+          "client": "маршрутизирует XMPP-сообщения через"
         }
       },
       "BusinessDiagram": {
