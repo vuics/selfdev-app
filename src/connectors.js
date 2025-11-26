@@ -787,9 +787,7 @@ const connectors = {
   'client': {
     key: 'client',
     value: 'client',
-    // icon: 'chess knight',
     icon: 'user secret',
-    // icon: 'child',
     text: 'XMPP Client',
     description: t('client.description'),
     docUrl: getDocUrl('client'),

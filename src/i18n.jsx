@@ -305,6 +305,10 @@ const resources = {
       common: {
         audioNotSupported: "Your browser does not support the audio element."
       },
+      // rndBlueprint: {
+      //   featureRequest: 'Create a new REST API endpoint for user authentication with JWT support.[[approval-decision]]',
+      //   generatedFeature: 'Endpoint /api/auth/login created with JWT token generation and validation. Unit tests generated.',
+      // },
       chatBlueprint: {
         prompt: "What model are you?",
         answerChatGPT: "I am ChatGPT by OpenAI.",
