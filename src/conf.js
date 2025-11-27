@@ -240,7 +240,8 @@ const conf = {
     websocketUrl: import.meta.env.VITE_XMPP_WEBSOCKET_URL || 'wss://localhost:5281/xmpp-websocket',
     mucHost: import.meta.env.VITE_XMPP_MUC_HOST || 'conference.localhost',
     shareHost: import.meta.env.VITE_XMPP_SHARE_HOST || 'share.localhost',
-    shareUrlPrefix: import.meta.env.VITE_XMPP_SHARE_URL_PREFIX || 'https://selfdev-files.dev.local:6371/fs/',
+    shareUrlPrefix: import.meta.env.VITE_XMPP_SHARE_URL_PREFIX || 'https://selfdev-api.dev.local:6369/v1/files/',
+
   },
 
   jitsi: {
