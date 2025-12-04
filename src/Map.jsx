@@ -24,6 +24,7 @@ import {
   Segment,
   // Header,
 } from 'semantic-ui-react'
+import ReactECharts from "echarts-for-react";
 import TextareaAutosize from "react-textarea-autosize";
 import {
   ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState,
@@ -624,6 +625,7 @@ const FormEditor = memo(({ text, setText, id, setNodes, roster, data, cancelText
 const MdxViewer = ({ text, setText, roster, data, id, setNodes }) => {
   const components = {
     ...SemanticUiReact,
+    ReactECharts,
     ExternalButtonExample: (props) => <button {...props} style={{ color: 'violet' }} />,
   }
 
