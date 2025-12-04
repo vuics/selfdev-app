@@ -19,7 +19,7 @@ const conf = {
 
   contact: {
     email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@hyag.org',
-    github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/hyag',
+    github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/h9y',
     linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
     discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
     youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
