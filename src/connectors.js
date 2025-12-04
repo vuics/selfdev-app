@@ -112,7 +112,7 @@ const connectors = {
               properties: {
                 host: { type: 'string', title: 'Host', default: 'imap.example.com' },
                 port: { type: 'number', title: 'Port', default: 993 },
-                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                user: { type: 'string', title: 'User Name (Email Address)', default: 'user@example.com' },
                 password: {
                   type: 'object',
                   title: 'Password',
@@ -129,7 +129,7 @@ const connectors = {
               properties: {
                 host: { type: 'string', title: 'Host', default: 'smtp.example.com' },
                 port: { type: 'number', title: 'Port', default: 465 },
-                user: { type: 'string', title: 'Host', default: 'user@example.com' },
+                user: { type: 'string', title: 'User Name (Email Address)', default: 'user@example.com' },
                 password: {
                   type: 'object',
                   title: 'Password',
