@@ -146,17 +146,11 @@ export default function Menubar ({ children }) {
           {t('Train')}
         </Menu.Item>
       ) }
-      { conf.docs.enable && (
-        <Menu.Item onClick={() => navigate('/docs')} active={pathname==='/docs'}>
-          <Icon name='book' />
-          {t('Docs')}
-        </Menu.Item>
-      ) }
 
       {children}
 
       <Menu.Menu position='right'>
-        { conf.docs.linkEnable && (
+        { conf.docs.enable && (
           <Menu.Item
             onClick={() => window.open(`${conf.docs.url}${conf.docs.i18n[i18n.language]}`, '_blank')}
           >
