@@ -384,7 +384,7 @@ const archetypes = {
                   glob: { type: 'string', title: 'Glob', default: '**/*.*', },
 
                   // web loader
-                  urls: { type: 'array', title: 'URLs', items: { type: 'string' }, default: [/* "https://hyag.org" */], },
+                  urls: { type: 'array', title: 'URLs', items: { type: 'string' }, default: [/* "https://h9y.ai" */], },
 
                   // google-drive loader
                   folderId: { type: 'string', title: 'Folder ID', default: '', },

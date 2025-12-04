@@ -18,7 +18,7 @@ const conf = {
   },
 
   contact: {
-    email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@hyag.org',
+    email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@h9y.ai',
     github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/h9y',
     linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
     discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
@@ -217,7 +217,7 @@ const conf = {
 
   mobile: {
     enable: bool(import.meta.env.VITE_MOBILE_ENABLE || true),
-    webAppUrl: import.meta.env.VITE_MOBILE_WEB_APP_URL || 'https://m.hyag.org/',
+    webAppUrl: import.meta.env.VITE_MOBILE_WEB_APP_URL || 'https://m.h9y.ai/',
   },
 
   team: {
@@ -261,7 +261,7 @@ const conf = {
 
   tiledesk: {
     enable: bool(import.meta.env.VITE_TILEDESK_ENABLE || false),
-    url: import.meta.env.VITE_TILEDESK_URL || 'https://tiledesk.hyag.ru/widget/launch.js',
+    url: import.meta.env.VITE_TILEDESK_URL || 'https://tiledesk.h9y.ai/widget/launch.js',
     projectId: import.meta.env.VITE_TILEDESK_PROJECT_ID || '68f52da07782880012123522',
     respectConsent: bool(import.meta.env.VITE_TILEDESK_RESPECT_CONSENT || false),
   },

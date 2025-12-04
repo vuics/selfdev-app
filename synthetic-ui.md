@@ -5,7 +5,7 @@ The synthetic UI allows to create a user experience uniquely tailored to the use
 
 ## Synthetic UI commands
 
-To use Synthetic UI, open communication app and add `synethetic-ui@x.hyag.org` or `synethetic-ui-executor@x.hyag.org` agent, then you can send the following commands to the agent:
+To use Synthetic UI, open communication app and add `synethetic-ui@x.h9y.ai` or `synethetic-ui-executor@x.h9y.ai` agent, then you can send the following commands to the agent:
 
 - `/show flow`, `/hide flow` - building agentic workflows with LLMs, APIs and databases.
 
