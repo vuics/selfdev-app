@@ -20,8 +20,7 @@ const conf = {
   contact: {
     email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@hyag.org',
     github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/hyag',
-    linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/showcase/hyag/',
-    // linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/hyag-ai/',
+    linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
     discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
     youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
     x: import.meta.env.VITE_CONTACT_X || '',
@@ -103,7 +102,7 @@ const conf = {
 
   apps: {
     enable: bool(import.meta.env.VITE_APPS_ENABLE || true),
-    registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://verdaccio.hyag.ru',
+    registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://verdaccio.h9y.ai',
   },
 
   meet: {
