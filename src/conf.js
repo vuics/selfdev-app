@@ -8,8 +8,7 @@ const conf = {
     name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
     company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
     url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
-    // qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-org.svg',
-    qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-ru.svg',
+    qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-h9y-ai.svg',
   },
 
   style: {
