@@ -31,6 +31,7 @@ import { useXmppContext } from './components/XmppContext'
 import { sortDeployed } from './Hive'
 // import { sleep } from './helper'
 
+import { useIndexContext } from './components/IndexContext'
 import Menubar from './components/Menubar'
 import conf from './conf'
 
@@ -49,6 +50,7 @@ export default function Omni () {
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState(xmppClient?.roster || [])
   const [ presence, setPresence ] = useState(xmppClient?.presence || {});
+  const { user } = useIndexContext()
 
   // console.log('presence:', presence)
   // console.log('roster:', roster)
@@ -492,6 +494,20 @@ export default function Omni () {
                 </Dropdown>
               </Card.Header>
               <Card.Meta>
+                { bridge.connector === 'mcp' && (<>
+                  {`${conf.bridge.url}/mcp/${user._id}/${bridge.options.mcp.endpoint}`}
+                </>)}
+                { bridge.connector === 'a2a' && (<>
+                  {`${conf.bridge.url}/a2a/${user._id}/${bridge.options.a2a.endpoint}`}
+                </>)}
+                { bridge.connector === 'webhook' && (<>
+                  {`${conf.bridge.url}/wh/${user._id}/${bridge.options.webhook.endpoint}`}
+                </>)}
+                { bridge.connector === 'webapp' && (<>
+                  {bridge.options.webapp.domain}
+                  {' '} ← {' '}
+                  {`${conf.bridge.url}/wa/${user._id}/${bridge.options.webapp.endpoint}`}
+                </>)}
               </Card.Meta>
               <Card.Description>
                 {bridge.options.description}

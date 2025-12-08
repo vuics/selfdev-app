@@ -39,6 +39,10 @@ const conf = {
     url: import.meta.env.VITE_API_URL || 'http://localhost:6369/v1',
   },
 
+  bridge: {
+    url: import.meta.env.VITE_BRIDGE_URL || 'http://localhost:6370',
+  },
+
   interestForm: {
     url: import.meta.env.VITE_INTEREST_FORM_URL || 'https://forms.gle/927RwUdTpSwc6EbE7',
   },
