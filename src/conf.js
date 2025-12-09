@@ -105,7 +105,7 @@ const conf = {
 
   apps: {
     enable: bool(import.meta.env.VITE_APPS_ENABLE || true),
-    registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://verdaccio.h9y.ai',
+    registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://hyag.org',
   },
 
   meet: {
