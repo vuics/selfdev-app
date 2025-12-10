@@ -2013,7 +2013,7 @@ const resources = {
     Home: {
       "Agentic AI Operating System": "Операционная система агентного ИИ",
       "Self-developing tools for building autonomous software companies": "Саморазвивающиеся инструменты для создания автономных программных компаний",
-      'Open-source · Decentralized · Omni-channel · Web3 Marketplace': 'Открытый исходный код · Децентрализованный · Оминиканальный · Веб3 Маркетплейс',
+      'Open-source · Decentralized · Omni-channel · Web3 Marketplace': 'Открытый исходный код · Децентрализованный · Омниканальный · Веб3 Маркетплейс',
 
       'Autopilot your business. Focus on what you love.': 'Переведите бизнес на автопилот. Займитесь тем, что любите.',
       'Powered by Self-developing': 'Наслаждайтесь само-развивающейся платформой',
