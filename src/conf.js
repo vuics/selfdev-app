@@ -113,7 +113,7 @@ const conf = {
   },
 
   hive: {
-    enable: bool(import.meta.env.VITE_HIVE_ENABLE || false),
+    enable: bool(import.meta.env.VITE_HIVE_ENABLE || true),
     skip: 0,
     limit: 1000,
   },
