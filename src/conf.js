@@ -52,8 +52,8 @@ const conf = {
   },
 
   synthetic: {
-    enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || false),
-    // enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || true),
+    // enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || false),
+    enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || true),
     components: json(import.meta.env.VITE_SYNTHETIC_COMPONENTS || '{"talk":{},"meet":{},"hive":{},"flow":{"url":"http://localhost:7860/"},"node":{"url":"http://localhost:1880/"},"code":{"url":"http://localhost:8000/"},"note":{"url":"http://localhost:8889/lab?token=my-token-abc"},"sell":{"url":"http://localhost:8059"},"train":{"url":"http://localhost:8180/vnc.html"},"bank":{"url":"http://localhost:4200"},"blockchain":{"url":"http://localhost:5000/ui"},"contract":{"url":"http://localhost:5109"},"blockchain1":{"url":"http://localhost:5001/ui"},"contract1":{"url":"http://localhost:5209"},"blockchain2":{"url":"http://localhost:5002/ui"},"contract2":{"url":"http://localhost:5309"},"ecommerce":{"url":"http://localhost:9012"},"storefront":{"url":"http://localhost:8012"},"docs":{"url":"http://localhost:9188"}}'),
   },
 

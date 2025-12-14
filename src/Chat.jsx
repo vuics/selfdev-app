@@ -9,6 +9,8 @@ import {
   Segment,
   Button,
   Icon,
+  Menu,
+  Sidebar,
 } from 'semantic-ui-react'
 // import { ErrorBoundary } from "react-error-boundary";
 import Iframe from 'react-iframe'
@@ -19,6 +21,7 @@ import Menubar from './components/Menubar'
 import conf from './conf'
 import { useWindowDimensions } from './helper.js'
 import { useIndexContext } from './components/IndexContext'
+import { MdxViewer } from './Map'
 
 // function ErrorFallback({ error, resetErrorBoundary }) {
 //   // Call resetErrorBoundary() to reset the error boundary and retry the render.
@@ -182,6 +185,7 @@ export default function Chat () {
   const [ credentials, setCredentials ] = useState(null)
   // const [ panels, setPanels ] = useState(["node", "flow"])
   const [ panels, setPanels ] = useState([])
+  const [ mdx, setMdx ] = useState(null)
 
   useEffect(() =>{
     async function fetchCredentials () {
@@ -212,7 +216,7 @@ export default function Chat () {
         // console.log('converse:', converse)
         try {
           if (conf.synthetic.enable) {
-            // console.log('user:', user)
+            console.log('user:', user)
             if (user?.limits?.synthetic != null && !user.limits.synthetic) {
               console.warn(t('Synthetic UI is not allowed for this account'))
             } else {
@@ -236,7 +240,15 @@ export default function Chat () {
                       if (!body) {
                         return
                       }
-                      if (body.includes("[[synthetic-ui:hide('all')]]")) {
+
+                      // if (body.startsWith("#!h9y+kind://mdx")) {
+                      // if (body.startsWith("#!h9y://kind/mdx")) {
+                      if (body.startsWith("#!h9y://mdx")) {
+                        console.log('The message is mdx:', body)
+                        const mdxBody = body.replace(/^#!h9y:\/\/mdx/, '')
+                        console.log('mdxBody:', mdxBody)
+                        setMdx(mdxBody);
+                      } else if (body.includes("[[synthetic-ui:hide('all')]]")) {
                         setPanels([])
                       } else {
                         for (const component in conf.synthetic.components) {
@@ -561,7 +573,63 @@ export default function Chat () {
         />
       }
 
+      {/*
+        * NOTE: Make a sidebar to add session with MDX, form, markdown, data, code, etc. panels
+        *
+      <div style={{ width: '100vw', height: '100vh' }}>
+        <Sidebar.Pushable as={Segment}>
+          <Sidebar
+            // as={Menu}
+            // animation='overlay'
+            // icon='labeled'
+            // inverted
+            // vertical
+            visible
+            // width='thin'
+            width='very thin'
+            style={{
+              width: '51px',
+              // padding: '0 0 0 0',
+              // margin: '0 0 0 0'
+            }}
+          >
+            <Menu
+              icon
+              vertical
+            >
+              <Menu.Item>
+                <Icon name='home'/>
+              </Menu.Item>
+              <Menu.Item>
+                <Icon name='gamepad' />
+              </Menu.Item>
+              <Menu.Item>
+                <Icon name='camera' />
+              </Menu.Item>
+            </Menu>
+          </Sidebar>
+
+          <Sidebar.Pusher>
+            <Segment basic>
+              <MdxViewer
+                text={mdx}
+                // setText={() => {}}
+                data={{ editing: false }}
+              />
+            </Segment>
+          </Sidebar.Pusher>
+        </Sidebar.Pushable>
+      </div>
+      */}
+
+      <MdxViewer
+        text={mdx}
+        // setText={() => {}}
+        data={{ editing: false }}
+      />
+      {/*
       <SplitLayout panels={panels} />
+      */}
 
       <div>
         { credentials && (

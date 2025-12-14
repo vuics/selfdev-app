@@ -622,7 +622,7 @@ const FormEditor = memo(({ text, setText, id, setNodes, roster, data, cancelText
 })
 
 
-const MdxViewer = ({ text, setText, roster, data, id, setNodes }) => {
+export const MdxViewer = ({ text, setText, roster, data, id, setNodes }) => {
   const components = {
     ...SemanticUiReact,
     ReactECharts,
