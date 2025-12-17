@@ -5,27 +5,16 @@ export const arr = (str) => str ? str.split(',') : []
 
 const conf = {
   // TODO: leave?
-  // app: {
-  //   name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
-  //   company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
-  //   url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
-  //   // qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-h9y-ai.svg',
-  // },
+  app: {
+    name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
+    // company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
+    // url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
+  },
 
   style: {
     color0: 'teal',
     grayLogo: false,
   },
-
-  // TODO: leave?
-  // contact: {
-  //   email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@h9y.ai',
-  //   // github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/h9y',
-  //   // linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
-  //   // discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
-  //   // youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
-  //   // x: import.meta.env.VITE_CONTACT_X || '',
-  // },
 
   api: {
     url: import.meta.env.VITE_API_URL || 'http://localhost:6369/v1',
@@ -36,8 +25,8 @@ const conf = {
   },
 
   synthetic: {
-    // enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || false),
-    enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || true),
+    enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || false),
+    // enable: bool(import.meta.env.VITE_SYNTHETIC_PLUGIN || true),
     components: json(import.meta.env.VITE_SYNTHETIC_COMPONENTS || '{"talk":{},"meet":{},"hive":{},"flow":{"url":"http://localhost:7860/"},"node":{"url":"http://localhost:1880/"},"code":{"url":"http://localhost:8000/"},"note":{"url":"http://localhost:8889/lab?token=my-token-abc"},"sell":{"url":"http://localhost:8059"},"train":{"url":"http://localhost:8180/vnc.html"},"bank":{"url":"http://localhost:4200"},"blockchain":{"url":"http://localhost:5000/ui"},"contract":{"url":"http://localhost:5109"},"blockchain1":{"url":"http://localhost:5001/ui"},"contract1":{"url":"http://localhost:5209"},"blockchain2":{"url":"http://localhost:5002/ui"},"contract2":{"url":"http://localhost:5309"},"ecommerce":{"url":"http://localhost:9012"},"storefront":{"url":"http://localhost:8012"},"docs":{"url":"http://localhost:9188"}}'),
   },
 

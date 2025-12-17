@@ -12,7 +12,6 @@ import { IndexContext, usePersistentState, useIndexContext } from './components/
 import { ConditionalXmppProvider } from './components/XmppContext'
 import UnamiLoader from './components/UnamiLoader'
 
-// import App from './App'
 import Home from './Home'
 
 import Signup from './Signup'
