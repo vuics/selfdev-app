@@ -82,7 +82,7 @@ const conf = {
   map: {
     enable: bool(import.meta.env.VITE_MAP_ENABLE || true),
     skip: 0,
-    limit: 100,
+    limit: 1000,
   },
 
   omni: {

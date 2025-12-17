@@ -69,32 +69,44 @@ import reportWebVitals from './reportWebVitals';
 
 const Test = () => (<div>Test</div>)
 
+export const fetchLoginStatus = async () => {
+  const res = await axios.get(`${conf.api.url}/login/status`, {
+    withCredentials: true,
+  })
+  return res.data
+}
+
 const Private = ({ children }) => {
-  const { user } = useIndexContext()
+  const { user, authChecked } = useIndexContext()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!user || !user.email) {
-      console.error('Unauthorized. Redirecting to /login')
+    if (authChecked && (!user || !user.email)) {
       navigate('/login', { replace: true })
     }
-  }, [user, navigate])
+  }, [user, authChecked, navigate])
 
-  if (!user || !user.email) {
+  if (!authChecked) {
     return (
       <div style={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh'  // full viewport height
+        height: '100vh'
       }}>
-        <Loader active inline='centered' size='large' />
+        <Loader active inline="centered" size="large" />
       </div>
     )
   }
 
+  if (!user || !user.email) {
+    return null
+  }
+
   return children
 }
+
+
 
 const Secret = ({ children }) => {
   const { user } = useIndexContext()
@@ -129,6 +141,7 @@ function Index () {
   const navigate = useNavigate()
   const [available, setAvailable] = useState(true)
   const [user, setUser, clearUser] = usePersistentState('user', {});
+  const [authChecked, setAuthChecked] = useState(false)
   const [country, setCountry, clearCountry] = usePersistentState('country', '');
   const [cookieConsent, setCookieConsent] = usePersistentState('cookieConsent', null)
 
@@ -144,6 +157,28 @@ function Index () {
       window.open(conf.interestForm.url, '_blank')
     }
   }
+
+  useEffect(() => {
+    let mounted = true
+    const bootstrapAuth = async () => {
+      try {
+        const data = await fetchLoginStatus()
+        if (mounted && data.isAuthenticated && data.user?.email) {
+          setUser(data.user)
+        } else {
+          setUser(null)
+        }
+      } catch (err) {
+        console.error('Failed to fetch login status', err)
+        setUser(null)
+      } finally {
+        setAuthChecked(true)
+      }
+    }
+    bootstrapAuth()
+    return () => { mounted = false }
+  }, [])
+
 
   useEffect(() => {
     // Run only once
@@ -185,6 +220,7 @@ function Index () {
   <IndexContext.Provider value={{
     available, logIn,
     user, setUser, clearUser,
+    authChecked,
     country, setCountry, clearCountry,
     cookieConsent, setCookieConsent,
   }}>
