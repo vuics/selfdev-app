@@ -122,10 +122,10 @@ const conf = {
   },
 
   // FIXME: rename to umami
-  unami: {
-    enable: bool(import.meta.env.VITE_UNAMI_ENABLE || false),
-    url: import.meta.env.VITE_UNAMI_URL || 'http://umami.dev.local:3083/script.js',
-    websiteId: import.meta.env.VITE_UNAMI_WEBSITE_ID || 'TBS',
+  umami: {
+    enable: bool(import.meta.env.VITE_UMAMI_ENABLE || false),
+    url: import.meta.env.VITE_UMAMI_URL || 'http://umami.dev.local:3083/script.js',
+    websiteId: import.meta.env.VITE_UMAMI_WEBSITE_ID || 'TBS',
   },
 
   protocol: {

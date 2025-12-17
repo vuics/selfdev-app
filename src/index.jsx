@@ -10,7 +10,7 @@ import conf from './conf.js'
 import './i18n'
 import { IndexContext, usePersistentState, useIndexContext } from './components/IndexContext'
 import { ConditionalXmppProvider } from './components/XmppContext'
-import UnamiLoader from './components/UnamiLoader'
+import UmamiLoader from './components/UmamiLoader'
 
 import Home from './Home'
 
@@ -250,7 +250,7 @@ function Index () {
       </Routes>
     </ConditionalXmppProvider>
 
-    <UnamiLoader />
+    <UmamiLoader />
   </IndexContext.Provider>
   )
 }

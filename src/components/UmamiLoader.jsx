@@ -3,14 +3,14 @@ import conf from "../conf.js"
 
 export default function UmamiScript() {
   useEffect(() => {
-    if (!conf.unami.enable) {
+    if (!conf.umami.enable) {
       return;
     }
 
     const script = document.createElement("script");
     script.defer = true;
-    script.src = conf.unami.url
-    script.dataset.websiteId = conf.unami.websiteId
+    script.src = conf.umami.url
+    script.dataset.websiteId = conf.umami.websiteId
     document.head.appendChild(script);
   }, []);
 
