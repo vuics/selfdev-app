@@ -4,11 +4,10 @@ export const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 export const arr = (str) => str ? str.split(',') : []
 
 const conf = {
-  // TODO: leave?
-  app: {
+  meta: {
     name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
     // company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
-    // url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
+    url: import.meta.env.VITE_APP_URL || 'http://localhost:3990',
   },
 
   style: {
@@ -18,6 +17,10 @@ const conf = {
 
   api: {
     url: import.meta.env.VITE_API_URL || 'http://localhost:6369/v1',
+  },
+
+  web: {
+    url: import.meta.env.VITE_WEB_URL || 'http://localhost:3690',
   },
 
   bridge: {
@@ -93,6 +96,14 @@ const conf = {
 
   profile: {
     enable: bool(import.meta.env.VITE_PROFILE_ENABLE || true),
+  },
+
+  subscription: {
+    enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || true),
+  },
+
+  subscribe: {
+    enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || true),
   },
 
   keys: {

@@ -24,7 +24,7 @@ const resources = {
     translation: {
     },
     app: {
-      'name': conf.app.name,
+      'name': conf.meta.name,
     },
     Login: {
       'Please enter a valid email address': 'Please enter a valid email address',

@@ -43,7 +43,7 @@ export default function Menubar ({ children }) {
 
   return (
     <Menu size='tiny'>
-      <Menu.Item header onClick={() => navigate('/')} active={pathname==='/'}>
+      <Menu.Item header onClick={() => window.location.assign(conf.web.url)} active={pathname==='/'}>
         <Logo size='milli' gray />
         {'\u00A0'}
         <span style={{color: 'grey'}}>
@@ -145,20 +145,18 @@ export default function Menubar ({ children }) {
                 {t('Profile')}
               </Dropdown.Item>
             )}
-            {/*/}
             { conf.subscription.enable && (
-              <Dropdown.Item onClick={() => navigate('/subscription')}>
+              <Dropdown.Item onClick={() => window.location.assign(`${conf.web.url}/subscription`)}>
                 <Icon name='handshake' />
                 {t('Subscription')}
               </Dropdown.Item>
             )}
             { conf.subscribe.enable && (
-              <Dropdown.Item onClick={() => navigate('/subscribe')}>
+              <Dropdown.Item onClick={() => window.location.assign(`${conf.web.url}/subscribe`)}>
                 <Icon name='shopping cart' />
                 {t('Subscription')}
               </Dropdown.Item>
             )}
-            {/*/}
             { conf.wallet.enable && (
               <Dropdown.Item onClick={() => navigate('/wallet')}>
                 <Icon name='credit card outline' />
