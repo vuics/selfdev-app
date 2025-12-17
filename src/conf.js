@@ -7,7 +7,7 @@ const conf = {
   meta: {
     name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
     // company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
-    url: import.meta.env.VITE_APP_URL || 'http://localhost:3990',
+    // url: import.meta.env.VITE_APP_URL || 'http://localhost:3990',
   },
 
   style: {
