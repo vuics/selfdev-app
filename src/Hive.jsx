@@ -202,6 +202,27 @@ export default function Hive () {
     }
   }
 
+  const downloadAgent = ({ agentId }) => {
+    setLoading(true)
+    try {
+      const agentObj = agents.find(a => a._id === agentId)
+      const jsonString = JSON.stringify(agentObj, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${agentObj.options.name}.json`;
+      link.click();
+      URL.revokeObjectURL(url); // Clean up
+    } catch (err) {
+      console.error('download agents error:', err);
+      return setResponseError(err.toString() || t('Error downloading agents.'))
+    } finally {
+      setLoading(false)
+    }
+  };
+
+
   const downloadAgents = () => {
     setLoading(true)
     try {
@@ -230,10 +251,13 @@ export default function Hive () {
         reader.onload = async (e) => {
           try {
             const parsedAgents = JSON.parse(e.target.result);
-            for (const agent of parsedAgents) {
+            const agentsArray = Array.isArray(parsedAgents)
+              ? parsedAgents
+              : [parsedAgents];
+            for (const agent of agentsArray) {
               await postAgent({ agent })
             }
-            console.log('Agents loaded:', parsedAgents);
+            console.log('Agents loaded:', agentsArray);
           } catch (err) {
             alert(`${t('Invalid JSON file')}: ${err}`);
           }
@@ -289,7 +313,7 @@ export default function Hive () {
           <Popup content='Download agents' trigger={
             <Button icon onClick={downloadAgents}>
               <Icon name='download' />
-              {t('Download')}
+              {t('Download All')}
             </Button>
           } />
           <Popup content='Upload agents' trigger={
@@ -435,6 +459,15 @@ export default function Hive () {
                                   <Icon name='edit' />
                                   {t('Edit')}
                                 </Dropdown.Item>
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    downloadAgent({ agentId: agent._id })
+                                  }}
+                                >
+                                  <Icon name='download' />
+                                  {t('Download')}
+                                </Dropdown.Item>
+                                <Dropdown.Divider />
                                 <Dropdown.Item
                                   onClick={() => {
                                     deleteAgent({ _id: agent._id })

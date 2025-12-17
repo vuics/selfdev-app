@@ -253,6 +253,26 @@ export default function Omni () {
     }
   }
 
+  const downloadBridge = ({ bridgeId }) => {
+    setLoading(true)
+    try {
+      const bridgeObj = bridges.find(a => a._id === bridgeId)
+      const jsonString = JSON.stringify(bridgeObj, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${bridgeObj.options.name}.json`;
+      link.click();
+      URL.revokeObjectURL(url); // Clean up
+    } catch (err) {
+      console.error('download bridges error:', err);
+      return setResponseError(err.toString() || t('Error downloading bridges.'))
+    } finally {
+      setLoading(false)
+    }
+  };
+
   const downloadBridges = () => {
     setLoading(true)
     try {
@@ -347,7 +367,7 @@ export default function Omni () {
             <Popup content='Download bridges' trigger={
               <Button icon onClick={downloadBridges}>
                 <Icon name='download' />
-                {t('Download')}
+                {t('Download All')}
               </Button>
             } />
             <Popup content='Upload bridges' trigger={
@@ -482,6 +502,15 @@ export default function Omni () {
                       <Icon name='edit' />
                       {t('Edit')}
                     </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        downloadBridge({ bridgeId: bridge._id })
+                      }}
+                    >
+                      <Icon name='download' />
+                      {t('Download')}
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
                     <Dropdown.Item
                       onClick={() => {
                         deleteBridge({ bridge })
