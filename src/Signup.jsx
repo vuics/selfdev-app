@@ -164,7 +164,7 @@ export default function Signup () {
 
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-      <Grid.Column style={{ maxWidth: 450 }}>
+      <Grid.Column style={{ maxWidth: 700 }}>
         <Header as='h2' color={conf.style.color0} textAlign='center'>
           <div style={{
             display: 'flex',
@@ -193,6 +193,9 @@ export default function Signup () {
 
         <Form size='large'>
           <Segment stacked>
+            <LanguageSelector fluid />
+            <Divider />
+
             <Form.Input fluid
               icon='user'
               iconPosition='left'
@@ -285,12 +288,8 @@ export default function Signup () {
             />
 
             <Divider />
-
-            <LanguageSelector fluid />
-            <br />
             <CountryFormField fluid countryError={countryError} />
 
-            <Divider />
             <Form.Group>
               <Form.Checkbox
                 label={
