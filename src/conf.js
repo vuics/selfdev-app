@@ -4,36 +4,28 @@ export const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 export const arr = (str) => str ? str.split(',') : []
 
 const conf = {
-  app: {
-    name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
-    company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
-    url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
-    qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-h9y-ai.svg',
-  },
+  // TODO: leave?
+  // app: {
+  //   name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
+  //   company: import.meta.env.VITE_APP_COMPANY || 'Vuics LLC',
+  //   url: import.meta.env.VITE_APP_URL || 'https://selfdev-web.dev.local:3690',
+  //   // qr: import.meta.env.VITE_APP_QR || '/images/qr/qr-h9y-ai.svg',
+  // },
 
   style: {
     color0: 'teal',
     grayLogo: false,
   },
 
-  contact: {
-    email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@h9y.ai',
-    github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/h9y',
-    linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
-    discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
-    youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
-    x: import.meta.env.VITE_CONTACT_X || '',
-  },
-
-  legal: {
-    dir: import.meta.env.VITE_LEGAL_DIR || 'legal/org',
-    fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'en_default',
-    noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || 'noteBodyOrg',
-    // dir: import.meta.env.VITE_LEGAL_DIR || 'legal/ru',
-    // fallbackKey: import.meta.env.VITE_LEGAL_FALLBACK_KEY || 'ru_default',
-    // noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || '',
-    // noteKey: import.meta.env.VITE_LEGAL_NOTE_KEY || 'noteBodyRu'
-  },
+  // TODO: leave?
+  // contact: {
+  //   email: import.meta.env.VITE_CONTACT_EMAIL || 'admin@h9y.ai',
+  //   // github: import.meta.env.VITE_CONTACT_GITHUB || 'https://github.com/vuics/h9y',
+  //   // linkedin: import.meta.env.VITE_CONTACT_LINKEDIN || 'https://www.linkedin.com/company/h9y/',
+  //   // discord: import.meta.env.VITE_CONTACT_DISCORD || 'https://discord.gg/nr4ps6Dk',
+  //   // youtube: import.meta.env.VITE_CONTACT_YOUTUBE || 'https://youtube.com/@hyper-agency',
+  //   // x: import.meta.env.VITE_CONTACT_X || '',
+  // },
 
   api: {
     url: import.meta.env.VITE_API_URL || 'http://localhost:6369/v1',
@@ -41,14 +33,6 @@ const conf = {
 
   bridge: {
     url: import.meta.env.VITE_BRIDGE_URL || 'http://localhost:6370',
-  },
-
-  interestForm: {
-    url: import.meta.env.VITE_INTEREST_FORM_URL || 'https://forms.gle/927RwUdTpSwc6EbE7',
-  },
-
-  cookie: {
-    banner: bool(import.meta.env.VITE_COOKIE_BANNER || true),
   },
 
   synthetic: {
@@ -63,20 +47,21 @@ const conf = {
   },
 
   account: {
-    start: import.meta.env.VITE_ACCOUNT_START || '/chat',
+    start: import.meta.env.VITE_ACCOUNT_START || '/dash',
   },
 
   dash: {
     enable: bool(import.meta.env.VITE_DASH_ENABLE || true),
   },
 
-  chat: {
-    enable: bool(import.meta.env.VITE_CHAT_ENABLE || true),
+  hive: {
+    enable: bool(import.meta.env.VITE_HIVE_ENABLE || true),
+    skip: 0,
+    limit: 1000,
   },
 
-  talk: {
-    enable: bool(import.meta.env.VITE_TALK_ENABLE || false),
-    limit: 5,
+  chat: {
+    enable: bool(import.meta.env.VITE_CHAT_ENABLE || true),
   },
 
   map: {
@@ -108,16 +93,6 @@ const conf = {
     registryUrl: import.meta.env.VITE_APPS_REGISTRY_URL || 'https://hyag.org',
   },
 
-  meet: {
-    enable: bool(import.meta.env.VITE_MEET_ENABLE || false),
-  },
-
-  hive: {
-    enable: bool(import.meta.env.VITE_HIVE_ENABLE || true),
-    skip: 0,
-    limit: 1000,
-  },
-
   docs: {
     enable: bool(import.meta.env.VITE_DOCS_ENABLE || true),
     url: import.meta.env.VITE_DOCS_URL || 'http://docs.dev.local:9298/',
@@ -125,48 +100,6 @@ const conf = {
       'en-US': '',
       'ru-RU': '/ru',
     },
-  },
-
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  flow: {
-    enable: bool(import.meta.env.VITE_FLOW_ENABLE || false),
-    url: import.meta.env.VITE_FLOW_URL || 'http://localhost:7860/',
-
-    widget: bool(import.meta.env.VITE_FLOW_WIDGET || false),
-    widgetOffset: num(import.meta.env.VITE_FLOW_WIDGET_OFFSET || 50),
-    flowId: import.meta.env.VITE_FLOW_FLOW_ID || '0d9fa75c-61f6-4a21-afe6-609975ea4082',
-    chatInputs: import.meta.env.VITE_FLOW_CHAT_INPUTS || '{"your_key":"value"}',
-    chatInputField: import.meta.env.VITE_FLOW_CHAT_INPUT_FIELD || "your_chat_key",
-  },
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  node: {
-    enable: bool(import.meta.env.VITE_NODE_ENABLE || false),
-    url: import.meta.env.VITE_NODE_URL || 'http://localhost:1880/',
-  },
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  code: {
-    enable: bool(import.meta.env.VITE_CODE_ENABLE || false),
-    url: import.meta.env.VITE_CODE_URL || 'http://localhost:8000/',
-  },
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  note: {
-    enable: bool(import.meta.env.VITE_NOTE_ENABLE || false),
-    url: import.meta.env.VITE_NOTE_URL || 'http://localhost:8889/lab?token=my-token-abc',
-  },
-
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  sell: {
-    enable: bool(import.meta.env.VITE_SELL_ENABLE || false),
-    url: import.meta.env.VITE_SELL_URL || 'http://localhost:8059',
-  },
-  // TODO: deprecate the section and related component (replaced with synthetic UI)
-  train: {
-    enable: bool(import.meta.env.VITE_TRAIN_ENABLE || false),
-    url: import.meta.env.VITE_TRAIN_URL || 'http://localhost:8180/vnc.html',
   },
 
   profile: {
@@ -181,57 +114,12 @@ const conf = {
     enable: bool(import.meta.env.VITE_VAULT_ENABLE || true),
   },
 
-  pricing: {
-    enable: bool(import.meta.env.VITE_PRICING_ENABLE || true),
-    allowedPlans: arr(import.meta.env.VITE_PRICING_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
-    priceKey: import.meta.env.VITE_PRICING_PRICE_KEY || 'price',   // options: price, priceRu
-  },
-
-  subscription: {
-    enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || true),
-    allowedPlans: arr(import.meta.env.VITE_SUBSCRIPTION_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
-    priceKey: import.meta.env.VITE_SUBSCRIPTION_PRICE_KEY || 'price',
-
-    stripePaymentElement: 'PaymentElement',  // 'CardElement' or 'PaymentElement'
-  },
-
-  subscribe: {
-    enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || true),
-    allowedPlans: arr(import.meta.env.VITE_SUBSCRIBE_ALLOWED_PLANS || 'free,basic1,premium1,enterprise'), // test8
-    priceKey: import.meta.env.VITE_SUBSCRIBE_PRICE_KEY || 'priceRu',
-  },
-
   wallet: {
     enable: bool(import.meta.env.VITE_WALLET_ENABLE || true),
   },
 
   settings: {
     enable: bool(import.meta.env.VITE_SETTINGS_ENABLE || true),
-  },
-
-  admin: {
-    enable: bool(import.meta.env.VITE_ADMIN_ENABLE || true),
-  },
-
-  security: {
-    enable: bool(import.meta.env.VITE_SECURITY_ENABLE || true),
-  },
-
-  mobile: {
-    enable: bool(import.meta.env.VITE_MOBILE_ENABLE || true),
-    webAppUrl: import.meta.env.VITE_MOBILE_WEB_APP_URL || 'https://m.h9y.ai/',
-  },
-
-  team: {
-    enable: bool(import.meta.env.VITE_TEAM_ENABLE || true),
-  },
-
-  mission: {
-    enable: bool(import.meta.env.VITE_MISSION_ENABLE || true),
-  },
-
-  roadmap: {
-    enable: bool(import.meta.env.VITE_ROADMAP_ENABLE || false),
   },
 
   xmpp: {
@@ -244,28 +132,11 @@ const conf = {
     shareUrlPrefix: import.meta.env.VITE_XMPP_SHARE_URL_PREFIX || 'https://selfdev-api.dev.local:6369/v1/files/',
   },
 
-  jitsi: {
-    domain: import.meta.env.VITE_JITSI_DOMAIN || 'localhost:8443',
-    roomName: import.meta.env.VITE_JITSI_ROOM_NAME || 'selfdev-meet-room',
-  },
-
+  // FIXME: rename to umami
   unami: {
     enable: bool(import.meta.env.VITE_UNAMI_ENABLE || false),
     url: import.meta.env.VITE_UNAMI_URL || 'http://umami.dev.local:3083/script.js',
     websiteId: import.meta.env.VITE_UNAMI_WEBSITE_ID || 'TBS',
-  },
-
-  tawk: {
-    enable: bool(import.meta.env.VITE_TAWK_ENABLE || false),
-    url: import.meta.env.VITE_TAWK_URL || 'https://embed.tawk.to/685ce6b56a55a619118475e7/1iuleadir',
-    respectConsent: bool(import.meta.env.VITE_TAWK_RESPECT_CONSENT || true),
-  },
-
-  tiledesk: {
-    enable: bool(import.meta.env.VITE_TILEDESK_ENABLE || false),
-    url: import.meta.env.VITE_TILEDESK_URL || 'https://tiledesk.h9y.ai/widget/launch.js',
-    projectId: import.meta.env.VITE_TILEDESK_PROJECT_ID || '68f52da07782880012123522',
-    respectConsent: bool(import.meta.env.VITE_TILEDESK_RESPECT_CONSENT || false),
   },
 
   protocol: {

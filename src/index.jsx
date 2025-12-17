@@ -10,19 +10,10 @@ import conf from './conf.js'
 import './i18n'
 import { IndexContext, usePersistentState, useIndexContext } from './components/IndexContext'
 import { ConditionalXmppProvider } from './components/XmppContext'
-import CookieBanner from './components/CookieBanner'
 import UnamiLoader from './components/UnamiLoader'
-import TawkLoader from './components/TawkLoader'
-import TiledeskLoader from './components/TiledeskLoader'
 
 // import App from './App'
 import Home from './Home'
-
-import Terms from './Terms'
-import Privacy from './Privacy'
-import Cookies from './Cookies'
-import Disclaimer from './Disclaimer'
-import Acceptable from './Acceptable'
 
 import Signup from './Signup'
 import Login from './Login'
@@ -30,40 +21,20 @@ import Forgot from './Forgot'
 import Reset from './Reset'
 import Logout from './Logout'
 
-import Pricing from './Pricing'
-import Security from './Security'
-import Mobile from './Mobile'
-import Team from './Team'
-import Mission from './Mission'
-import Roadmap from './Roadmap'
-
 import Dash from './Dash'
 import Chat from './Chat'
-import Talk from './Talk'
 import Map from './Map'
-import Meet from './Meet'
 import Hive from './Hive'
 import Omni from './Omni'
 import Data from './Data'
 import O11y from './O11y'
 import Apps from './Apps'
-import Flow from './Flow'
-import Node from './Node'
-import Code from './Code'
-import Note from './Note'
-import Sell from './Sell'
-import Train from './Train'
 import Error from './Error'
 import Profile from './Profile'
 import Keys from './Keys'
 import Vault from './Vault'
-import Subscription from './Subscription'
-import Subscribe from './Subscribe'
 import Wallet from './Wallet'
 import Settings from './Settings'
-import Landing from './Landing'
-
-import Admin from './Admin'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -229,56 +200,23 @@ function Index () {
         <Route path="/" element={<Home />}/>
         <Route path="/test" element={<Test />}/>
 
-        <Route path="/terms" element={<Terms />}/>
-        <Route path="/privacy" element={<Privacy />}/>
-        <Route path="/cookies" element={<Cookies />}/>
-        <Route path="/disclaimer" element={<Disclaimer />}/>
-        <Route path="/acceptable" element={<Acceptable />}/>
-
         <Route path="/signup" element={<Signup />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/forgot" element={<Forgot />}/>
         <Route path="/reset" element={<Reset />}/>
         <Route path="/logout" element={<Logout />}/>
-        <Route path="/landing/:id" element={<Landing />}/>
-
-        { conf.pricing.enable && (
-          <Route path="/pricing" element={<Pricing />}/>
-        )}
-        { conf.security.enable && (
-          <Route path="/security" element={<Security />}/>
-        )}
-        { conf.mobile.enable && (
-          <Route path="/mobile" element={<Mobile />}/>
-        )}
-
-        { conf.team.enable && (
-          <Route path="/team" element={<Team />}/>
-        )}
-        { conf.mission.enable && (
-          <Route path="/mission" element={<Mission />}/>
-        )}
-        { conf.roadmap.enable && (
-          <Route path="/roadmap" element={<Roadmap />}/>
-        )}
 
         { conf.dash.enable && (
           <Route path="/dash" element={(<Private> <Dash /> </Private>)}/>
         )}
+        { conf.hive.enable && (
+          <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
+        )}
         { conf.chat.enable && (
           <Route path="/chat" element={(<Private> <Chat /> </Private>)}/>
         )}
-        { conf.talk.enable && (
-          <Route path="/talk" element={(<Private> <Talk /> </Private>)}/>
-        )}
         { conf.map.enable && (
           <Route path="/map" element={(<Private> <Map /> </Private>)}/>
-        )}
-        { conf.meet.enable && (
-          <Route path="/meet" element={(<Private> <Meet /> </Private>)}/>
-        )}
-        { conf.hive.enable && (
-          <Route path="/hive" element={(<Private> <Hive/> </Private>)}/>
         )}
         { conf.omni.enable && (
           <Route path="/omni" element={(<Private> <Omni/> </Private>)}/>
@@ -292,24 +230,6 @@ function Index () {
         { conf.apps.enable && (
           <Route path="/apps" element={(<Private> <Apps/> </Private>)}/>
         )}
-        { conf.flow.enable && (
-          <Route path="/flow" element={(<Private> <Flow /> </Private>)}/>
-        )}
-        { conf.node.enable && (
-          <Route path="/node" element={(<Private> <Node /> </Private>)}/>
-        )}
-        { conf.code.enable && (
-          <Route path="/code" element={(<Private> <Code /> </Private>)}/>
-        )}
-        { conf.note.enable && (
-          <Route path="/note" element={(<Private> <Note /> </Private>)}/>
-        )}
-        { conf.sell.enable && (
-          <Route path="/sell" element={(<Private> <Sell /> </Private>)}/>
-        )}
-        { conf.train.enable && (
-          <Route path="/train" element={(<Private> <Train /> </Private>)}/>
-        )}
 
         { conf.profile.enable && (
           <Route path='/profile' element={(<Private> <Profile /> </Private>)}/>
@@ -320,12 +240,6 @@ function Index () {
         { conf.vault.enable && (
           <Route path='/vault' element={(<Private> <Vault /> </Private>)}/>
         )}
-        { conf.subscription.enable && (<>
-          <Route path='/subscription' element={(<Private> <Subscription/> </Private>)}/>
-        </>)}
-        { conf.subscribe.enable && (<>
-          <Route path='/subscribe' element={(<Private> <Subscribe/> </Private>)}/>
-        </>)}
         { conf.wallet.enable && (<>
           <Route path='/wallet' element={(<Private> <Wallet/> </Private>)}/>
         </>)}
@@ -333,20 +247,11 @@ function Index () {
           <Route path='/settings' element={(<Private> <Settings/> </Private>)}/>
         </>)}
 
-        { conf.admin.enable && (<>
-          <Route path='/admin' element={(<Private><Secret> <Admin/> </Secret></Private>)}/>
-        </>)}
-
         <Route path="*" element={<Error />}/>
       </Routes>
     </ConditionalXmppProvider>
 
-    { conf.cookie.banner && (
-      <CookieBanner />
-    )}
     <UnamiLoader />
-    <TawkLoader />
-    <TiledeskLoader />
   </IndexContext.Provider>
   )
 }

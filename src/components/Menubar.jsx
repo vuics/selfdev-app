@@ -68,12 +68,6 @@ export default function Menubar ({ children }) {
           {t('Chat')}
         </Menu.Item>
       ) }
-      { conf.talk.enable && (
-        <Menu.Item onClick={() => navigate('/talk')} active={pathname==='/talk'}>
-          <Icon name='talk' />
-          {t('Talk')}
-        </Menu.Item>
-      ) }
       { conf.map.enable && (
         <Menu.Item onClick={() => navigate('/map')} active={pathname==='/map'}>
           <Icon name='sitemap' />
@@ -98,52 +92,10 @@ export default function Menubar ({ children }) {
           {t('O11y')}
         </Menu.Item>
       ) }
-      { conf.meet.enable && (
-        <Menu.Item onClick={() => navigate('/meet')} active={pathname==='/meet'}>
-          <Icon name='video' />
-          {t('Meet')}
-        </Menu.Item>
-      ) }
       { conf.apps.enable && (
         <Menu.Item onClick={() => navigate('/apps')} active={pathname==='/apps'}>
           <Icon name='cloud download' />
           {t('Apps')}
-        </Menu.Item>
-      ) }
-      { conf.flow.enable && (
-        <Menu.Item onClick={() => navigate('/flow')} active={pathname==='/flow'}>
-          <Icon name='code branch' />
-          {t('Flow')}
-        </Menu.Item>
-      ) }
-      { conf.node.enable && (
-        <Menu.Item onClick={() => navigate('/node')} active={pathname==='/node'}>
-          <Icon name='map signs' />
-          {t('Node')}
-        </Menu.Item>
-      ) }
-      { conf.code.enable && (
-        <Menu.Item onClick={() => navigate('/code')} active={pathname==='/code'}>
-          <Icon name='code' />
-          {t('Code')}
-        </Menu.Item>
-      ) }
-      { conf.note.enable && (
-        <Menu.Item onClick={() => navigate('/note')} active={pathname==='/note'}>
-          <Icon name='edit outline' />
-          {t('Note')}
-        </Menu.Item>
-      ) }
-      { conf.sell.enable && (
-        <Menu.Item onClick={() => navigate('/sell')} active={pathname==='/sell'}>
-          <Icon name='handshake outline' />
-          {t('Sell')}
-        </Menu.Item>
-      ) }
-      { conf.train.enable && (
-        <Menu.Item onClick={() => navigate('/train')} active={pathname==='/train'}>
-          <Icon name='graduation cap' />
-          {t('Train')}
         </Menu.Item>
       ) }
 
@@ -193,6 +145,7 @@ export default function Menubar ({ children }) {
                 {t('Profile')}
               </Dropdown.Item>
             )}
+            {/*/}
             { conf.subscription.enable && (
               <Dropdown.Item onClick={() => navigate('/subscription')}>
                 <Icon name='handshake' />
@@ -205,6 +158,7 @@ export default function Menubar ({ children }) {
                 {t('Subscription')}
               </Dropdown.Item>
             )}
+            {/*/}
             { conf.wallet.enable && (
               <Dropdown.Item onClick={() => navigate('/wallet')}>
                 <Icon name='credit card outline' />
@@ -233,6 +187,7 @@ export default function Menubar ({ children }) {
             </Dropdown.Item>
             )}
 
+            {/*/}
             { conf.admin.enable && user.roles.includes('admin') && (<>
               <Dropdown.Divider />
               <Dropdown.Item onClick={() => navigate('/admin')}>
@@ -240,6 +195,7 @@ export default function Menubar ({ children }) {
                 {t('Admin')}
               </Dropdown.Item>
             </>)}
+            {/*/}
 
             <Dropdown.Divider />
 

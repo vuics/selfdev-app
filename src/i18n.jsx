@@ -23,9 +23,9 @@ const resources = {
   'en-US': {
     translation: {
     },
-    app: {
-      'name': conf.app.name,
-    },
+    // app: {
+    //   'name': conf.app.name,
+    // },
     Home: {
       'Agentic AI Operating System': 'Agentic AI Operating System',
       'Self-developing tools for building autonomous software companies': 'Self-developing tools for building autonomous software companies',
