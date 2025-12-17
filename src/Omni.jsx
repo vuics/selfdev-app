@@ -301,10 +301,13 @@ export default function Omni () {
         reader.onload = async (e) => {
           try {
             const parsedBridges = JSON.parse(e.target.result);
-            for (const bridge of parsedBridges) {
+            const bridgesArray = Array.isArray(parsedBridges)
+              ? parsedBridges
+              : [parsedBridges];
+            for (const bridge of bridgesArray) {
               await postBridge({ bridge })
             }
-            console.log('Bridges loaded:', parsedBridges);
+            console.log('Bridges loaded:', bridgesArray);
             await indexBridges()
           } catch (err) {
             alert(`${t('Invalid JSON file')}: ${err}`);
