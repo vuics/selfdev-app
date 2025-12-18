@@ -714,7 +714,7 @@ const archetypes = {
   'langflow-v1.0': {
     key: 'langflow-v1.0',
     value: 'langflow-v1.0',
-    enable: hasProfile(['all', 'langflow']),
+    enable: hasProfile(['all', 'h9y', 'langflow']),
     category: 'Automation',
     icon: 'pallet',
     text: 'Langflow v1.0',
@@ -741,7 +741,7 @@ const archetypes = {
   'nodered-v1.0': {
     key: 'nodered-v1.0',
     value: 'nodered-v1.0',
-    enable: hasProfile(['all', 'nodered']),
+    enable: hasProfile(['all', 'h9y', 'nodered']),
     category: 'Automation',
     icon: 'map signs',
     text: 'Node-RED v1.0',
@@ -785,7 +785,7 @@ const archetypes = {
   'n8n-v1.0': {
     key: 'n8n-v1.0',
     value: 'n8n-v1.0',
-    enable: hasProfile(['all', 'n8n']),
+    enable: hasProfile(['all', 'h9y', 'agency']),
     category: 'Automation',
     icon: 'code branch',
     text: 'N8n (external) v1.0',
@@ -874,7 +874,7 @@ const archetypes = {
   'avatar-v1.0': {
     key: 'avatar-v1.0',
     value: 'avatar-v1.0',
-    enable: hasProfile(['all', 'avatar']),
+    enable: hasProfile(['all', 'h9y', 'avatar']),
     category: 'Video',
     icon: 'smile outline',
     text: 'Avatar (LipSync) v1.0',
@@ -943,7 +943,7 @@ const archetypes = {
   'browseruse-v1.0': {
     key: 'browseruse-v1.0',
     value: 'browseruse-v1.0',
-    enable: hasProfile(['all', 'fleet']),
+    enable: hasProfile(['all', 'h9y', 'fleet']),
     category: 'Web',
     icon: 'compass',
     text: 'Browser-Use v1.0',
