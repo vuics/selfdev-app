@@ -99,7 +99,7 @@ const conf = {
   },
 
   subscription: {
-    enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || true),
+    enable: bool(import.meta.env.VITE_SUBSCRIPTION_ENABLE || false),
   },
 
   subscribe: {
