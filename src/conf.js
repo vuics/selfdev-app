@@ -103,7 +103,7 @@ const conf = {
   },
 
   subscribe: {
-    enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || true),
+    enable: bool(import.meta.env.VITE_SUBSCRIBE_ENABLE || false),
   },
 
   keys: {
