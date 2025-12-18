@@ -60,7 +60,7 @@ import * as timeseriesChartPlugin from "@perses-dev/timeseries-chart-plugin";
 import { useWindowDimensions } from './helper.js'
 import Menubar from './components/Menubar'
 import { useIndexContext } from './components/IndexContext'
-import conf, { bool } from './conf'
+import conf, { bool, hasProfile } from './conf'
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
@@ -434,6 +434,9 @@ export default function O11y () {
 
 
   const fetchLogs = async () => {
+    if (!hasProfile(['all', 'h9y', 'logs'])) {
+      return;
+    }
     // setLoading(true)
     setQuerying(true)
     try {
@@ -509,34 +512,40 @@ export default function O11y () {
           paddingRight: '0.5rem',
         }}>
           <Menu pointing secondary compact>
-            <Menu.Item
-              active={active === 'logs'}
-              onClick={() => { setActive('logs') }}
-            >
-              <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
-              {' '}
-              {t('Logs')}
-              {' '}
-            </Menu.Item>
+            { hasProfile(['all', 'h9y', 'logs']) && (
+              <Menu.Item
+                active={active === 'logs'}
+                onClick={() => { setActive('logs') }}
+              >
+                <Icon name='th list' color={active === 'logs' ? conf.style.color0 : 'grey'}/>
+                {' '}
+                {t('Logs')}
+                {' '}
+              </Menu.Item>
+            )}
 
-            <Menu.Item
-              active={active === 'metrics'}
-              onClick={() => { setActive('metrics') }}
-            >
-              {' '}
-              {t('Metrics')}
-              {' '}
-            </Menu.Item>
+            { hasProfile(['all', 'h9y', 'metrics']) && (
+              <Menu.Item
+                active={active === 'metrics'}
+                onClick={() => { setActive('metrics') }}
+              >
+                {' '}
+                {t('Metrics')}
+                {' '}
+              </Menu.Item>
+            )}
 
-            <Menu.Item
-              position='right'
-              onClick={() => { setEditing(!editing) }}
-            >
-              <Icon name={editing ? 'toggle on' : 'toggle off'} color={editing ? conf.style.color0 : 'grey'}/>
-              {' '}
-              {t('Edit Queries')}
-              {' '}
-            </Menu.Item>
+            { hasProfile(['all', 'h9y', 'logs', 'metrics']) && (
+              <Menu.Item
+                position='right'
+                onClick={() => { setEditing(!editing) }}
+              >
+                <Icon name={editing ? 'toggle on' : 'toggle off'} color={editing ? conf.style.color0 : 'grey'}/>
+                {' '}
+                {t('Edit Queries')}
+                {' '}
+              </Menu.Item>
+            )}
           </Menu>
         </Menu.Header>
       </Menubar>
@@ -557,7 +566,7 @@ export default function O11y () {
     </Container>
 
     <Container fluid style={{ padding: '15px 15px 0 15px' }}>
-      { editing && active === 'logs' && (<>
+      { editing && active === 'logs' && hasProfile(['all', 'h9y', 'logs']) && (<>
         <Segment secondary size='mini'>
           <Input
             loading={querying}
@@ -635,7 +644,7 @@ export default function O11y () {
         </Segment>
       </>)}
 
-      { editing && active === 'metrics' && (
+      { editing && active === 'metrics' && hasProfile(['all', 'h9y', 'metrics']) && (
         <Segment secondary size='mini'>
           <Form
             schema={metricsQueriesSchema}

@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Loader, } from 'semantic-ui-react'
 
-import conf from './conf.js'
+import conf, { hasProfile } from './conf.js'
 import './i18n'
 import { IndexContext, usePersistentState, useIndexContext } from './components/IndexContext'
 import { ConditionalXmppProvider } from './components/XmppContext'
@@ -223,7 +223,7 @@ function Index () {
         { conf.data.enable && (
           <Route path="/data" element={(<Private> <Data/> </Private>)}/>
         )}
-        { conf.o11y.enable && (
+        { conf.o11y.enable && hasProfile(['all', 'h9y', 'logs', 'metrics']) && (
           <Route path="/o11y" element={(<Private> <O11y /> </Private>)}/>
         )}
         { conf.apps.enable && (

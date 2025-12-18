@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 
 import i18n from '../i18n'
-import conf from '../conf.js'
+import conf, { hasProfile } from '../conf.js'
 import Logo from './Logo'
 import { useIndexContext } from './IndexContext'
 
@@ -86,7 +86,7 @@ export default function Menubar ({ children }) {
           {t('Data')}
         </Menu.Item>
       ) }
-      { conf.o11y.enable && (
+      { conf.o11y.enable && hasProfile(['all', 'h9y', 'logs', 'metrics']) && (
         <Menu.Item onClick={() => navigate('/o11y')} active={pathname==='/o11y'}>
           <Icon name='chart bar' />
           {t('O11y')}
