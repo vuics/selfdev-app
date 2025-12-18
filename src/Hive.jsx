@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import {
   Container,
@@ -28,7 +28,6 @@ import conf from './conf'
 import archetypes, { defaultArchetype } from './archetypes'
 import { useXmppContext } from './components/XmppContext'
 
-// export const JsonEditorField = memo((props) => {
 export function JsonEditorField (props) {
   console.log('JsonEditorField props:', props)
   return (<>
@@ -341,7 +340,7 @@ export default function Hive () {
           </Header>
 
           <Menu attached='top' tabular>
-            { [...new Set(Object.values(archetypes).map(ar => ar.category))].map(cat => (
+            { [...new Set(Object.values(archetypes).filter(ar => ar.enable).map(ar => ar.category))].map(cat => (
               <Menu.Item
                 key={cat}
                 active={category === cat}
@@ -353,7 +352,7 @@ export default function Hive () {
           </Menu>
           <Segment attached='bottom'>
             <Menu icon='labeled' horizontal>
-              { Object.values(archetypes).filter(ar => ar.category === category).map(c => (
+              { Object.values(archetypes).filter(ar => ar.enable && ar.category === category).map(c => (
                 <Menu.Item
                   key={c.key}
                   name={c.text}

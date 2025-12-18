@@ -29,7 +29,6 @@ import validator from '@rjsf/validator-ajv8';
 import connectors, { defaultConnector } from './connectors'
 import { useXmppContext } from './components/XmppContext'
 import { sortDeployed } from './Hive'
-// import { sleep } from './helper'
 
 import { useIndexContext } from './components/IndexContext'
 import Menubar from './components/Menubar'
@@ -394,7 +393,7 @@ export default function Omni () {
             {t('Add Bridge')}:
           </Header>
           <Menu icon='labeled' horizontal>
-            { Object.values(connectors).map(c => (
+            { Object.values(connectors).filter(c => c.enable).map(c => (
               <Menu.Item
                 key={c.key}
                 name={c.text}

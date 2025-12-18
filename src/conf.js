@@ -3,6 +3,8 @@ export const json = (val) => val && JSON.parse(val)
 export const num = (val) => val ? Number(val) : (val === 0 ? 0 : undefined)
 export const arr = (str) => str ? str.split(',') : []
 
+export const hasProfile = (profiles) => profiles.some(x => conf.compose.profiles.includes(x))
+
 const conf = {
   meta: {
     name: import.meta.env.VITE_APP_NAME || 'HyperAgency',
@@ -141,6 +143,10 @@ const conf = {
   protocol: {
     enable: bool(import.meta.env.VITE_PROTOCOL_ENABLE || true),
     proto: import.meta.env.VITE_PROTOCOL_PROTO || "web+hyag",
+  },
+
+  compose: {
+    profiles: arr(import.meta.env.VITE_COMPOSE_PROFILES || 'all'),
   },
 }
 

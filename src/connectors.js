@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import i18next from 'i18next'
 
-import conf from './conf'
+import conf, { hasProfile } from './conf'
 import i18n from './i18n'
 
 const t = (key) => i18next.t(`connectors:${key}`)
@@ -11,6 +11,7 @@ const connectors = {
   'mcp': {
     key: 'mcp',
     value: 'mcp',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     // icon: 'puzzle piece',
     icon: 'dot circle',
     text: 'MCP Server',
@@ -48,6 +49,7 @@ const connectors = {
   'a2a': {
     key: 'a2a',
     value: 'a2a',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'chess',
     text: 'A2A Server',
     description: t('a2a.description'),
@@ -83,6 +85,7 @@ const connectors = {
   'email': {
     key: 'email',
     value: 'email',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'mail',
     text: 'Email',
     description: t('email.description'),
@@ -152,6 +155,7 @@ const connectors = {
   'messengers': {
     key: 'messengers',
     value: 'messengers',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'comments',
     text: 'Messengers',
     description: t('messengers.description'),
@@ -621,6 +625,7 @@ const connectors = {
   'phone': {
     key: 'phone',
     value: 'phone',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'phone',
     text: 'Phone',
     description: t('phone.description'),
@@ -676,6 +681,7 @@ const connectors = {
   'scheduler': {
     key: 'scheduler',
     value: 'scheduler',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'calendar alternate outline',
     text: 'Scheduler',
     description: t('scheduler.description'),
@@ -714,6 +720,7 @@ const connectors = {
   'webhook': {
     key: 'webhook',
     value: 'webhook',
+    enable: hasProfile(['all', 'h9y', 'bridge']),
     icon: 'anchor',
     text: 'Webhook',
     description: t('webhook.description'),
@@ -787,6 +794,7 @@ const connectors = {
   'client': {
     key: 'client',
     value: 'client',
+    enable: hasProfile(['all', 'h9y', 'try', 'prosody']),
     icon: 'user secret',
     text: 'XMPP Client',
     description: t('client.description'),
@@ -882,6 +890,6 @@ const connectors = {
 
 export default connectors
 
-const defaultConnector = Object.values(connectors)[0]
+const defaultConnector = Object.values(connectors).find(c => c.enable)
 
 export { defaultConnector }

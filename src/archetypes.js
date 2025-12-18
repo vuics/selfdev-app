@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import i18next from 'i18next'
 
-import conf from './conf'
+import conf, { hasProfile } from './conf'
 import i18n from './i18n'
 
 const t = (key) => i18next.t(`archetypes:${key}`)
@@ -11,6 +11,7 @@ const archetypes = {
   'chat-v1.0': {
     key: 'chat-v1.0',
     value: 'chat-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'LLM',
     icon: 'chat',
     text: 'Chat v1.0',
@@ -52,6 +53,7 @@ const archetypes = {
   'maptrix-v1.0': {
     key: 'maptrix-v1.0',
     value: 'maptrix-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'System',
     icon: 'sitemap',
     text: 'Maptrix v1.0',
@@ -106,6 +108,7 @@ const archetypes = {
   'mcp-v1.0': {
     key: 'mcp-v1.0',
     value: 'mcp-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'Protocols',
     icon: 'dot circle outline',
     text: 'MCP Client v1.0',
@@ -134,6 +137,7 @@ const archetypes = {
   'a2a-v1.0': {
     key: 'a2a-v1.0',
     value: 'a2a-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'Protocols',
     icon: 'chess pawn',
     text: 'A2A Client v1.0',
@@ -160,6 +164,7 @@ const archetypes = {
   'system-v1.0': {
     key: 'system-v1.0',
     value: 'system-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'System',
     icon: 'cog',
     text: 'System v1.0',
@@ -186,6 +191,7 @@ const archetypes = {
   'transform-v1.0': {
     key: 'transform-v1.0',
     value: 'transform-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'System',
     icon: 'edit',
     text: 'Transform v1.0',
@@ -282,6 +288,7 @@ const archetypes = {
   'proxy-v1.0': {
     key: 'proxy-v1.0',
     value: 'proxy-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'System',
     icon: 'exchange',
     text: 'Proxy v1.0',
@@ -307,6 +314,7 @@ const archetypes = {
   'rag-v1.0': {
     key: 'rag-v1.0',
     value: 'rag-v1.0',
+    enable: hasProfile(['all', 'h9y', 'rag']),
     category: 'LLM',
     icon: 'archive',
     text: 'RAG v1.0',
@@ -404,6 +412,7 @@ const archetypes = {
   'stt-v1.0': {
     key: 'stt-v1.0',
     value: 'stt-v1.0',
+    enable: hasProfile(['all', 'h9y', 'speech']),
     category: 'Speech',
     icon: 'headphones',
     text: 'Speech-to-Text v1.0',
@@ -444,6 +453,7 @@ const archetypes = {
   'tts-v1.0': {
     key: 'tts-v1.0',
     value: 'tts-v1.0',
+    enable: hasProfile(['all', 'h9y', 'speech']),
     category: 'Speech',
     icon: 'file audio',
     text: 'Text-to-Speech v1.0',
@@ -486,6 +496,7 @@ const archetypes = {
   'imagegen-v1.0': {
     key: 'imagegen-v1.0',
     value: 'imagegen-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Image',
     icon: 'images',
     text: 'ImageGen v1.0',
@@ -529,6 +540,7 @@ const archetypes = {
   'code-v1.0': {
     key: 'code-v1.0',
     value: 'code-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Code',
     icon: 'code',
     text: 'Code v1.0',
@@ -580,6 +592,7 @@ const archetypes = {
   'quantum-v1.0': {
     key: 'quantum-v1.0',
     value: 'quantum-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Code',
     icon: 'react',
     text: 'Quantum v1.0',
@@ -632,6 +645,7 @@ const archetypes = {
   'storage-v1.0': {
     key: 'storage-v1.0',
     value: 'storage-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Data',
     icon: 'database',
     text: 'Storage v1.0',
@@ -672,6 +686,7 @@ const archetypes = {
   'command-v1.0': {
     key: 'command-v1.0',
     value: 'command-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Code',
     icon: 'terminal',
     text: 'Command v1.0',
@@ -699,6 +714,7 @@ const archetypes = {
   'langflow-v1.0': {
     key: 'langflow-v1.0',
     value: 'langflow-v1.0',
+    enable: hasProfile(['all', 'langflow']),
     category: 'Automation',
     icon: 'pallet',
     text: 'Langflow v1.0',
@@ -725,6 +741,7 @@ const archetypes = {
   'nodered-v1.0': {
     key: 'nodered-v1.0',
     value: 'nodered-v1.0',
+    enable: hasProfile(['all', 'nodered']),
     category: 'Automation',
     icon: 'map signs',
     text: 'Node-RED v1.0',
@@ -768,6 +785,7 @@ const archetypes = {
   'n8n-v1.0': {
     key: 'n8n-v1.0',
     value: 'n8n-v1.0',
+    enable: hasProfile(['all', 'n8n']),
     category: 'Automation',
     icon: 'code branch',
     text: 'N8n (external) v1.0',
@@ -811,6 +829,7 @@ const archetypes = {
   'notebook-v1.0': {
     key: 'notebook-v1.0',
     value: 'notebook-v1.0',
+    enable: hasProfile(['all', 'h9y', 'try', 'agency']),
     category: 'Code',
     icon: 'file code',
     text: 'Notebook v1.0',
@@ -855,6 +874,7 @@ const archetypes = {
   'avatar-v1.0': {
     key: 'avatar-v1.0',
     value: 'avatar-v1.0',
+    enable: hasProfile(['all', 'avatar']),
     category: 'Video',
     icon: 'smile outline',
     text: 'Avatar (LipSync) v1.0',
@@ -894,6 +914,7 @@ const archetypes = {
   'curl-v1.0': {
     key: 'curl-v1.0',
     value: 'curl-v1.0',
+    enable: hasProfile(['all', 'h9y', 'swarm']),
     category: 'Protocols',
     icon: 'external',
     text: 'Curl (HTTPs) v1.0',
@@ -922,6 +943,7 @@ const archetypes = {
   'browseruse-v1.0': {
     key: 'browseruse-v1.0',
     value: 'browseruse-v1.0',
+    enable: hasProfile(['all', 'fleet']),
     category: 'Web',
     icon: 'compass',
     text: 'Browser-Use v1.0',
@@ -962,6 +984,6 @@ const archetypes = {
 
 export default archetypes
 
-const defaultArchetype = Object.values(archetypes)[0]
+const defaultArchetype = Object.values(archetypes).find(a => a.enable)
 
 export { defaultArchetype }
