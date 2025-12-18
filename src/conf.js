@@ -132,7 +132,6 @@ const conf = {
     shareUrlPrefix: import.meta.env.VITE_XMPP_SHARE_URL_PREFIX || 'https://selfdev-api.dev.local:6369/v1/files/',
   },
 
-  // FIXME: rename to umami
   umami: {
     enable: bool(import.meta.env.VITE_UMAMI_ENABLE || false),
     url: import.meta.env.VITE_UMAMI_URL || 'http://umami.dev.local:3083/script.js',
