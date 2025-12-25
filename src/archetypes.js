@@ -23,6 +23,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         chat: {
           type: 'object',
           title: 'Chat Configuration',
@@ -65,6 +66,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         maptrix: {
           type: 'object',
           title: 'Maptrix Configuration',
@@ -120,6 +122,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         mcp: {
           type: 'object',
           title: 'Model Context Protocol (MCP)',
@@ -149,6 +152,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         a2a: {
           type: 'object',
           title: 'Agent2Agent (A2A) Protocol',
@@ -176,6 +180,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         system: {
           type: 'object',
           title: 'System',
@@ -203,6 +208,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         transform: {
           type: 'object',
           title: 'Transform',
@@ -300,6 +306,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [] },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         proxy: {
           type: 'object',
           title: 'Proxy',
@@ -326,6 +333,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         rag: {
           type: 'object',
           title: 'RAG',
@@ -424,6 +432,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         stt: {
           type: 'object',
           title: 'Stt',
@@ -465,6 +474,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         tts: {
           type: 'object',
           title: 'TTS',
@@ -508,6 +518,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         imagegen: {
           type: 'object',
           title: 'Imagegen',
@@ -552,6 +563,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         code: {
           type: 'object',
           title: 'Code',
@@ -604,6 +616,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         quantum: {
           type: 'object',
           title: 'Quantum',
@@ -657,6 +670,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         storage: {
           type: 'object',
           title: 'Storage',
@@ -698,6 +712,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         command: {
           type: 'object',
           title: 'Command',
@@ -726,6 +741,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         langflow: {
           type: 'object',
           title: 'Langflow',
@@ -753,6 +769,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         nodered: {
           type: 'object',
           title: 'Nodered',
@@ -797,6 +814,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         n8n: {
           type: 'object',
           title: 'N8n',
@@ -841,6 +859,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         notebook: {
           type: 'object',
           title: 'Notebook',
@@ -886,6 +905,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         avatar: {
           type: 'object',
           title: 'Avatar',
@@ -926,6 +946,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase(), },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '', },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         curl: {
           type: 'object',
           title: 'Curl',
@@ -955,6 +976,7 @@ const archetypes = {
         name: { type: 'string', title: 'Name', default: faker.internet.username().toLowerCase() },
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
         browseruse: {
           type: 'object',
           title: 'Browser-Use Configuration',

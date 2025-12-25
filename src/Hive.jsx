@@ -503,6 +503,12 @@ export default function Hive () {
                       }}
                       checked={agent.deployed}
                     />
+                    { agent.options.expire && (<>
+                      <Label style={{ marginLeft: '1rem' }}>
+                        <Icon name='hourglass half' />
+                        {t('Expiry')}: {agent.options.expire}
+                      </Label>
+                    </>)}
                   </Card.Content>
                   { agent.editing && (
                     <Card.Content extra>

@@ -164,7 +164,8 @@ const resources = {
       'Delete': 'Delete',
       '(no description)': '(no description)',
       'Deployed': 'Deployed',
-      'Update': 'Update'
+      'Update': 'Update',
+      'Expiry': 'Expiry',
     },
     Chat: {
     },
@@ -1121,7 +1122,8 @@ const resources = {
       'Delete': 'Удалить',
       '(no description)': '(без описания)',
       'Deployed': 'Развернуто',
-      'Update': 'Обновить'
+      'Update': 'Обновить',
+      'Expiry': 'Истечение',
     },
     Chat: {
     },
