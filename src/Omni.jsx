@@ -165,6 +165,7 @@ export default function Omni () {
   }
 
   const deployBridge = async ({ bridge, deployed }) => {
+    setLoading(true)
     if (bridge.connector === 'client') {
       if (deployed) {
         try {
@@ -193,28 +194,35 @@ export default function Omni () {
       }
     }
 
-    const patch = [
-      {
-        op: "replace",
-        path: "/deployed",
-        value: deployed,
-      }
-    ];
-    const res = await axios.patch(
-      `${conf.api.url}/bridge/${bridge._id}`,
-      patch,
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      }
-    );
-    console.log('bridge patch res:', res)
-    const prevBridge = bridgesImmutable.find(b => b._id === bridge._id)
-    setBridges(bridges.map(b => b._id === res.data._id ? res.data : b))
-    setBridgesImmutable(bridgesImmutable.map(b => b._id === res.data._id ? res.data : b))
+    try {
+      const patch = [
+        {
+          op: "replace",
+          path: "/deployed",
+          value: deployed,
+        }
+      ];
+      const res = await axios.patch(
+        `${conf.api.url}/bridge/${bridge._id}`,
+        patch,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log('bridge patch res:', res)
+      const prevBridge = bridgesImmutable.find(b => b._id === bridge._id)
+      setBridges(bridges.map(b => b._id === res.data._id ? res.data : b))
+      setBridgesImmutable(bridgesImmutable.map(b => b._id === res.data._id ? res.data : b))
 
-    await updateRoster({ bridge: res.data, prevBridge })
-    return res.data;
+      await updateRoster({ bridge: res.data, prevBridge })
+      return res.data;
+    } catch (err) {
+      console.error('put bridge error:', err);
+      return setResponseError(err?.response?.data?.message || err.toString() || t('Error patching bridge.'))
+    } finally {
+      setLoading(false)
+    }
   };
 
   const deleteBridge = async ({ bridge }) => {

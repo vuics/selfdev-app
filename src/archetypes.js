@@ -24,6 +24,7 @@ const archetypes = {
         description: { type: 'string', title: 'Description', format: 'textarea', default: '' },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: [], },
         expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+        // expire: { type: 'string', enum: ['1m', '1h', '12h', '1d', '1w', '1mo', ''], title: 'Expire Deployment', default: '1h' },
         chat: {
           type: 'object',
           title: 'Chat Configuration',
