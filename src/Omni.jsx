@@ -16,10 +16,10 @@ import {
   Modal,
   Input,
   Form as SemanticForm,
+  Label,
   // Divider,
   // Accordion,
   // List,
-  // Label,
   // Confirm,
   // Table,
 } from 'semantic-ui-react'
@@ -555,6 +555,12 @@ export default function Omni () {
                 }}
                 checked={bridge.deployed}
               />
+              { bridge.options.expire && (<>
+                <Label style={{ marginLeft: '1rem' }}>
+                  <Icon name='hourglass half' />
+                  {t('Expiry')}: {bridge.options.expire}
+                </Label>
+              </>)}
             </Card.Content>
             { bridge.editing && (
               <Card.Content extra>

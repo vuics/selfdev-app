@@ -31,6 +31,8 @@ const connectors = {
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['mcp'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+
         mcp: {
           title: 'Model Context Protocol Configuration',
           type: 'object',
@@ -68,6 +70,8 @@ const connectors = {
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['a2a'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+
         a2a: {
           title: 'Agent2Agent (A2A) Protocol Configuration',
           type: 'object',
@@ -103,6 +107,8 @@ const connectors = {
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['email'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
 
         email: {
           title: 'Email Configuration',
@@ -175,6 +181,8 @@ const connectors = {
         // enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['bridge'], },
         // recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
 
         messengers: {
           type: 'object',
@@ -644,6 +652,8 @@ const connectors = {
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['phone'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+
         phone: {
           title: 'Phone Configuration',
           type: 'object',
@@ -700,6 +710,8 @@ const connectors = {
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['scheduler'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+
         scheduler: {
           title: 'Scheduler Configuration',
           type: 'object',
@@ -739,6 +751,8 @@ const connectors = {
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['webhook'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
 
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
+
         webhook: {
           title: 'Webhook Configuration',
           type: 'object',
@@ -775,6 +789,8 @@ const connectors = {
         enableRoom: { type: 'boolean', title: 'Enable Room Message', default: true },
         joinRooms: { type: 'array', items: { type: 'string' }, title: 'Join Rooms', default: ['webapp'], },
         recipientNickname: { type: 'string', title: 'Recipient Nickname in Room', default: 'artemarakcheev' },
+
+        expire: { type: 'string', enum: ['', '1m', '1h', '12h', '1d', '1w', '1mo'], title: 'Expire Deployment', default: '' },
 
         webapp: {
           title: 'Web App Configuration',
