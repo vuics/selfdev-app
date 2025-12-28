@@ -30,7 +30,7 @@ import {
   ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState,
   addEdge, Panel, SelectionMode, useReactFlow, ReactFlowProvider, Handle,
   Position, BaseEdge, EdgeLabelRenderer, getBezierPath, MarkerType,
-  useNodesData, NodeResizer,
+  useNodesData, NodeResizer, useNodesInitialized,
   // reconnectEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -2267,7 +2267,7 @@ function Map () {
   const [ loading, setLoading ] = useState(true)
   const [ responseError, setResponseError ] = useState('')
   const [ responseMessage, setResponseMessage ] = useState('')
-  // const [ prompt, setPrompt ] = useState('Tell me a new random joke. Give a short and concise one sentence answer. And print a random number at the end.')
+  const [ prompt, setPrompt ] = useState('')
   // const [ room, setRoom ] = useState('matrix')
   const [ maps, setMaps ] = useState([])
   const [ title, setTitle ] = useState('example-map')
@@ -2293,12 +2293,15 @@ function Map () {
 
   const [ currentSlide, setCurrentSlide ] = useState(-1)
   const [ deckSidebar, setDeckSidebar ] = useState(false)
+  const [ promptSidebar, setPromptSidebar ] = useState(false)
 
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
   const [ edges, setEdges, onEdgesChange ] = useEdgesState([]);
   const {
-    screenToFlowPosition, getNodes, getEdges, setViewport, fitView
+    screenToFlowPosition, flowToScreenPosition,
+    getViewport, setViewport, fitView,
+    getNodes, getEdges, getNode,
   } = useReactFlow();
   const [ rfInstance, setRfInstance ] = useState(null);
 
@@ -2404,6 +2407,14 @@ function Map () {
     localStorage.setItem('map.showSlides', showSlides.toString());
   }, [showSlides]);
 
+  const [ showPrompt, setShowPrompt ] = useState(() => {
+    const saved = localStorage.getItem('map.showPrompt')
+    return saved !== null ? bool(saved) : false
+  })
+  useEffect(() => {
+    localStorage.setItem('map.showPrompt', showPrompt.toString());
+  }, [showPrompt]);
+
   const [ editorTheme, setEditorTheme ] = useState(() => {
     return localStorage.getItem('map.editorTheme') || 'default'
   })
@@ -2432,6 +2443,7 @@ function Map () {
   useEffect(() => {
     localStorage.setItem('map.markdownEditor', markdownEditor);
   }, [markdownEditor]);
+
 
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState([])
@@ -2756,7 +2768,7 @@ function Map () {
     });
   };
 
-  const addNote = useCallback(() => {
+  const addNote = useCallback(({ text = '', editing = true } = {}) => {
     const id = getNodeId()
     const position = screenToFlowPosition({ x: width/2, y: height/2, })
     position.x -= 300
@@ -2768,8 +2780,8 @@ function Map () {
       position,
       data: {
         uname: getUname(id),
-        text: '',
-        editing: true,
+        text,
+        editing,
         renaming: false,
         color,
         backgroundColor,
@@ -2779,6 +2791,7 @@ function Map () {
       height: undefined,
     };
     setNodes((nds) => nds.concat(newNode));
+    return newNode
   }, [setNodes, width, height, screenToFlowPosition, color, backgroundColor]);
 
   const groupSelected = useCallback(() => {
@@ -2895,8 +2908,61 @@ function Map () {
         xmppClient,
         edgeId, targetId: id,
       })
+
+      return { newNode, newEdge }
     }
   }, [screenToFlowPosition, xmppClient, recipient, condition, getNodes, setNodes, getEdges, setEdges, color, backgroundColor, stroke, t]);
+
+  const inputPrompt = useCallback(async ({ text }) => {
+    const connection = {
+      isValid: false,
+      fromNode: null,
+    }
+    connection.fromNode = addNote({ text, editing: false })
+    let node = null, width = null, height = null
+    for (let i = 0; i < 20; i++) {
+      node = getNode(connection.fromNode.id);
+      width = node?.width || node?.measured?.width
+      height = node?.height || node?.measured?.height
+      if (node && width && height) {
+        break
+      }
+      await sleep(100)
+    }
+    // console.log('node:', node, ', width:', width, ', height:', height)
+
+    const edgeHeight = 100
+    const yOffset = 100
+
+    console.log('connection.fromNode:', connection.fromNode)
+    const screenPosition = flowToScreenPosition({
+      x: connection.fromNode.position.x + width / 2,
+      y: connection.fromNode.position.y + height + edgeHeight,
+    })
+    console.log('screenPosition:', screenPosition)
+    const event = {
+      clientX: screenPosition.x,
+      clientY: screenPosition.y,
+    }
+    console.log('event:', event)
+    const { newNode } = await onConnectEnd(event, connection)
+
+    let node1 = null, width1 = null, height1 = null
+    for (let i = 0; i < 20; i++) {
+      node1 = getNode(newNode.id);
+      width1 = node1?.width || node1?.measured?.width
+      height1 = node1?.height || node1?.measured?.height
+      if (node1 && width1 && height1) {
+        break
+      }
+      await sleep(100)
+    }
+    // console.log('node1:', node1, ', width1:', width1, ', height1:', height1)
+
+    const viewport = getViewport()
+    viewport.y -= (height + edgeHeight + height1 + yOffset) * viewport.zoom
+    setViewport(viewport, { duration: 1000, interpolate: "smooth" })
+  }, [addNote, onConnectEnd, getNode, flowToScreenPosition, setViewport, getViewport])
 
 
   const playMap = useCallback(async ({ step = false } = {}) => {
@@ -3157,12 +3223,26 @@ function Map () {
                           checked={showSlides}
                         />
                       </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label={t('Show prompt controls')}
+                          onChange={(e, data) => setShowPrompt(data.checked)}
+                          checked={showPrompt}
+                        />
+                      </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>
                         <Checkbox
                           label={t('Show slides deck sidebar')}
                           checked={deckSidebar}
                           onChange={(e, data) => setDeckSidebar(data.checked)}
+                        />
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <Checkbox
+                          label={t('Show prompt sidebar')}
+                          checked={promptSidebar}
+                          onChange={(e, data) => setPromptSidebar(data.checked)}
                         />
                       </Dropdown.Item>
                       <Dropdown.Divider />
@@ -3598,6 +3678,26 @@ function Map () {
         </Button.Group>
       </>)}
 
+      { showPrompt && (<>
+        {' '} {' '}
+        <Button.Group>
+          <Popup
+            content={ !promptSidebar ? t('Show prompt sidebar') : t('Hide prompt sidebar') }
+            trigger={
+              <Button
+                icon basic
+                onClick={() => setPromptSidebar(!promptSidebar)}
+              >
+                <Icon name={promptSidebar ? 'edit' : 'edit outline'}
+                  color={promptSidebar ? 'blue' : 'standard'}
+                />
+              </Button>
+            }
+          />
+        </Button.Group>
+      </>)}
+
+
       <Loader active={loading} inline='centered' />
       { responseError &&
         <Message
@@ -3622,149 +3722,207 @@ function Map () {
         />
       }
 
-      <Sidebar.Pushable>
+      <Sidebar.Pushable as={Container} fluid>
         <Sidebar
-          as={Menu}
-          animation='overlay'
-          icon='labeled'
-          inverted
-          // onHide={() => setDeckSidebar(false)}
-          vertical
-          width='thin'
-          visible={deckSidebar}
+          animation='push'
+          width='very wide'
+          direction='bottom'
+          visible={promptSidebar}
         >
-          { nodes
-            .filter(nd => nd.data?.slide)
-            .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
-            .map(nd => (
-              <Menu.Item
-                key={nd.id}
-                active={nd.data.slideIndex === currentSlide}
-                onClick={() => {
-                  setTimeout(() => {
-                    // NOTE: fitView is deferred to ensure layout is up to date
-                    fitView({ nodes: [nd], duration: 1000 });
-                  }, 0);
-                  setCurrentSlide(nd.data.slideIndex);
+
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: '1rem'
+          }}>
+            <TextareaAutosize
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey)) {
+                  e.preventDefault();
+                  inputPrompt({ text: prompt })
+                  setPrompt('')
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  // cancelText()
+                }
+              }}
+              className="nodrag"
+              minRows={6}
+              maxRows={12}
+              style={{
+                fontSize: '1.6rem',
+                width: '100%',
+                maxWidth: '900px',
+                height: '100%',
+              }}
+            />
+            <Button
+              icon
+              style={{ marginLeft: '0.5rem' }}
+              onClick={() => { inputPrompt({ text: prompt }); setPrompt('') }}
+            >
+              <Icon name='arrow up' />
+            </Button>
+          </div>
+        </Sidebar>
+        <Sidebar.Pusher dimmed={false}>
+
+          <Sidebar.Pushable>
+            <Sidebar
+              as={Menu}
+              animation='overlay'
+              icon='labeled'
+              inverted
+              // onHide={() => setDeckSidebar(false)}
+              vertical
+              width='thin'
+              visible={deckSidebar}
+            >
+              { nodes
+                .filter(nd => nd.data?.slide)
+                .sort((a, b) => (a.data.slideIndex ?? 0) - (b.data.slideIndex ?? 0))
+                .map(nd => (
+                  <Menu.Item
+                    key={nd.id}
+                    active={nd.data.slideIndex === currentSlide}
+                    onClick={() => {
+                      setTimeout(() => {
+                        // NOTE: fitView is deferred to ensure layout is up to date
+                        fitView({ nodes: [nd], duration: 1000 });
+                      }, 0);
+                      setCurrentSlide(nd.data.slideIndex);
+                    }}
+                  >
+                    <Icon name='image outline' />
+                    {nd.data.slideIndex+1}. {nd.data.uname}
+                  </Menu.Item>
+                ))
+              }
+            </Sidebar>
+
+            <Sidebar.Pusher dimmed={false}>
+              <div
+                className="wrapper" ref={reactFlowWrapper}
+                style={{
+                  width: width,
+                  height: height - conf.iframe.topOffset - conf.iframe.bottomOffset,
                 }}
               >
-                <Icon name='image outline' />
-                {nd.data.slideIndex+1}. {nd.data.uname}
-              </Menu.Item>
-            ))
-          }
-        </Sidebar>
+                <ReactFlow
+                  style={{ backgroundColor: "#F7F9FB" }}
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onEdgesDelete={onEdgesDelete}
+                  nodeTypes={nodeTypes}
+                  edgeTypes={edgeTypes}
+                  onInit={setRfInstance}
+                  onConnect={onConnect}
+                  onConnectEnd={onConnectEnd}
+                  // onReconnect={onReconnect}
+                  fitView
+                  fitViewOptions={{ padding: 2 }}
+                  // nodeOrigin={nodeOrigin}
 
-        <Sidebar.Pusher dimmed={false}>
-          <div
-            className="wrapper" ref={reactFlowWrapper}
-            style={{ width: width, height: height - conf.iframe.topOffset - conf.iframe.bottomOffset }}
-          >
-            <ReactFlow
-              style={{ backgroundColor: "#F7F9FB" }}
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onEdgesDelete={onEdgesDelete}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
-              onInit={setRfInstance}
-              onConnect={onConnect}
-              onConnectEnd={onConnectEnd}
-              // onReconnect={onReconnect}
-              fitView
-              fitViewOptions={{ padding: 2 }}
-              // nodeOrigin={nodeOrigin}
+                  panOnScroll={true}
+                  selectionOnDrag={true}
+                  selectionMode={SelectionMode.Partial}
+                  panOnDrag={[1, 2]}
 
-              panOnScroll={true}
-              selectionOnDrag={true}
-              selectionMode={SelectionMode.Partial}
-              panOnDrag={[1, 2]}
-            >
-              <Controls />
-              { showMinimap && (
-                <MiniMap pannable zoomable position='top-left' />
-              )}
-              <Background variant="dots" gap={12} size={1} />
-              { showPanel && (
-                <Panel position="top-right">
-                  <Popup content={t('Select recipient')} trigger={
-                    <Dropdown
-                      compact
-                      fluid
-                      selection
-                      clearable
-                      onSearchChange={(e, { value }) => setRecipientSearch(value)}
-                      trigger={
-                        <>
-                        { !recipientSearch && (
-                          <span>
-                            <Icon name='user' color={ presence[recipient] ? 'green' : 'grey' }/>
-                            {(roster.find(r => r.jid === recipient))?.name || recipient}
-                          </span>
-                        )}
-                        </>
-                      }
-                      multiple={false}
-                      search={true}
-                      options={
-                        roster.map(r => {
-                          return {
-                            key: r.jid,
-                            text: r.name,
-                            value: r.jid,
-                            content: (
-                              <>
-                                <Icon name='user' color={presence[r.jid] ? 'green' : 'grey'} />
-                                {r.name}
-                              </>
-                            ),
+                  minZoom={0.01}
+                  maxZoom={10}
+                >
+                  <Controls />
+                  { showMinimap && (
+                    <MiniMap pannable zoomable position='top-left' />
+                  )}
+                  <Background variant="dots" gap={12} size={1} />
+                  { showPanel && (
+                    <Panel position="top-right">
+                      <Popup content={t('Select recipient')} trigger={
+                        <Dropdown
+                          compact
+                          fluid
+                          selection
+                          clearable
+                          onSearchChange={(e, { value }) => setRecipientSearch(value)}
+                          trigger={
+                            <>
+                            { !recipientSearch && (
+                              <span>
+                                <Icon name='user' color={ presence[recipient] ? 'green' : 'grey' }/>
+                                {(roster.find(r => r.jid === recipient))?.name || recipient}
+                              </span>
+                            )}
+                            </>
                           }
-                        })
-                      }
-                      value={recipient}
-                      placeholder={t('Recipient')}
-                      onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
-                      loading={roster.length === 0}
-                    />
-                  } />
-                  <Input
-                    iconPosition='left'
-                    placeholder={t('/RegExp/ Condition...')}
-                    value={condition}
-                    onChange={e => setCondition(e.target.value)}
-                    fluid
-                  ><Icon name='usb' /><input /></Input>
-                  <Button.Group vertical labeled icon fluid compact>
-                    <Button icon='sticky note outline' content={t('Add Note')} onClick={addNote} />
-                    <Button icon='object group' content={t('Loop Selected')} onClick={groupSelected} />
-                  </Button.Group>
-                  <br/>
-                  {/*
-                  <Input
-                    iconPosition='left' placeholder='room...' size='mini'
-                    value={room}
-                    onChange={e => setRoom(e.target.value)}
-                  ><Icon name='group' /><input /></Input>
-                  <Button basic size='mini'
-                    onClick={async () => {
-                      await xmppClient.sendRoomMessage({ room, recipient, prompt, mucHost: conf.xmpp.mucHost });
-                    }}
-                  >Groupchat</Button>
-                  <Input
-                    iconPosition='left' placeholder='prompt...' size='mini'
-                    value={prompt}
-                    onChange={e => setPrompt(e.target.value)}
-                  ><Icon name='edit outline' /><input /></Input>
-                  */}
-                  <br />
-                </Panel>
-              )}
-            </ReactFlow>
-          </div>
+                          multiple={false}
+                          search={true}
+                          options={
+                            roster.map(r => {
+                              return {
+                                key: r.jid,
+                                text: r.name,
+                                value: r.jid,
+                                content: (
+                                  <>
+                                    <Icon name='user' color={presence[r.jid] ? 'green' : 'grey'} />
+                                    {r.name}
+                                  </>
+                                ),
+                              }
+                            })
+                          }
+                          value={recipient}
+                          placeholder={t('Recipient')}
+                          onChange={(e, { value }) => { setRecipient(value); setRecipientSearch('') }}
+                          loading={roster.length === 0}
+                        />
+                      } />
+                      <Input
+                        iconPosition='left'
+                        placeholder={t('/RegExp/ Condition...')}
+                        value={condition}
+                        onChange={e => setCondition(e.target.value)}
+                        fluid
+                      ><Icon name='usb' /><input /></Input>
+                      <Button.Group vertical labeled icon fluid compact>
+                        <Button icon='sticky note outline' content={t('Add Note')} onClick={addNote} />
+                        <Button icon='object group' content={t('Loop Selected')} onClick={groupSelected} />
+                      </Button.Group>
+                      <br/>
+                      {/*
+                      <Input
+                        iconPosition='left' placeholder='room...' size='mini'
+                        value={room}
+                        onChange={e => setRoom(e.target.value)}
+                      ><Icon name='group' /><input /></Input>
+                      <Button basic size='mini'
+                        onClick={async () => {
+                          await xmppClient.sendRoomMessage({ room, recipient, prompt, mucHost: conf.xmpp.mucHost });
+                        }}
+                      >Groupchat</Button>
+                      <Input
+                        iconPosition='left' placeholder='prompt...' size='mini'
+                        value={prompt}
+                        onChange={e => setPrompt(e.target.value)}
+                      ><Icon name='edit outline' /><input /></Input>
+                      */}
+                      <br />
+                    </Panel>
+                  )}
+                </ReactFlow>
+              </div>
+            </Sidebar.Pusher>
+          </Sidebar.Pushable>
+
         </Sidebar.Pusher>
       </Sidebar.Pushable>
+
     </MapContext.Provider>
   )
 }
