@@ -2293,7 +2293,7 @@ function Map () {
 
   const [ currentSlide, setCurrentSlide ] = useState(-1)
   const [ deckSidebar, setDeckSidebar ] = useState(false)
-  const [ promptSidebar, setPromptSidebar ] = useState(false)
+  const [ promptInput, setPromptInput ] = useState(true)
 
   const reactFlowWrapper = useRef(null);
   const [ nodes, setNodes, onNodesChange ] = useNodesState([]);
@@ -2409,7 +2409,7 @@ function Map () {
 
   const [ showPrompt, setShowPrompt ] = useState(() => {
     const saved = localStorage.getItem('map.showPrompt')
-    return saved !== null ? bool(saved) : false
+    return saved !== null ? bool(saved) : true
   })
   useEffect(() => {
     localStorage.setItem('map.showPrompt', showPrompt.toString());
@@ -2448,8 +2448,8 @@ function Map () {
   const { xmppClient } = useXmppContext()
   const [ roster, setRoster ] = useState([])
   const [ presence, setPresence ] = useState({});
-  console.log('presence:', presence)
-  console.log('roster:', roster)
+  // console.log('presence:', presence)
+  // console.log('roster:', roster)
   const onChatMessageRef = useRef(null);
   if (!onChatMessageRef.current) {
     onChatMessageRef.current = createOnChatMessage({
@@ -2768,9 +2768,9 @@ function Map () {
     });
   };
 
-  const addNote = useCallback(({ text = '', editing = true } = {}) => {
+  const addNote = useCallback(({ text = '', editing = true, toCenter = true } = {}) => {
     const id = getNodeId()
-    const position = screenToFlowPosition({ x: width/2, y: height/2, })
+    const position = screenToFlowPosition({ x: width/2, y: (toCenter ? height/2 : height), })
     position.x -= 300
     position.y -= 200
     console.log('position:', position)
@@ -2918,38 +2918,10 @@ function Map () {
       isValid: false,
       fromNode: null,
     }
-    connection.fromNode = addNote({ text, editing: false })
-    let node = null, width = null, height = null
-    for (let i = 0; i < 20; i++) {
-      node = getNode(connection.fromNode.id);
-      width = node?.width || node?.measured?.width
-      height = node?.height || node?.measured?.height
-      if (node && width && height) {
-        break
-      }
-      await sleep(100)
-    }
-    // console.log('node:', node, ', width:', width, ', height:', height)
-
-    const edgeHeight = 100
-    const yOffset = 100
-
-    console.log('connection.fromNode:', connection.fromNode)
-    const screenPosition = flowToScreenPosition({
-      x: connection.fromNode.position.x + width / 2,
-      y: connection.fromNode.position.y + height + edgeHeight,
-    })
-    console.log('screenPosition:', screenPosition)
-    const event = {
-      clientX: screenPosition.x,
-      clientY: screenPosition.y,
-    }
-    console.log('event:', event)
-    const { newNode } = await onConnectEnd(event, connection)
-
+    connection.fromNode = addNote({ text, editing: false, toCenter: false })
     let node1 = null, width1 = null, height1 = null
     for (let i = 0; i < 20; i++) {
-      node1 = getNode(newNode.id);
+      node1 = getNode(connection.fromNode.id);
       width1 = node1?.width || node1?.measured?.width
       height1 = node1?.height || node1?.measured?.height
       if (node1 && width1 && height1) {
@@ -2959,10 +2931,38 @@ function Map () {
     }
     // console.log('node1:', node1, ', width1:', width1, ', height1:', height1)
 
+    const edgeHeight = 100
+    const yOffset = 100
+
+    console.log('connection.fromNode:', connection.fromNode)
+    const screenPosition = flowToScreenPosition({
+      x: connection.fromNode.position.x + width1 / 2,
+      y: connection.fromNode.position.y + height1 + edgeHeight,
+    })
+    console.log('screenPosition:', screenPosition)
+    const event = {
+      clientX: screenPosition.x,
+      clientY: screenPosition.y,
+    }
+    console.log('event:', event)
+    const { newNode } = await onConnectEnd(event, connection)
+
+    let node2 = null, width2 = null, height2 = null
+    for (let i = 0; i < 20; i++) {
+      node2 = getNode(newNode.id);
+      width2 = node2?.width || node2?.measured?.width
+      height2 = node2?.height || node2?.measured?.height
+      if (node2 && width2 && height2) {
+        break
+      }
+      await sleep(100)
+    }
+    // console.log('node2:', node2, ', width2:', width2, ', height2:', height2)
+
     const viewport = getViewport()
-    viewport.y -= (height + edgeHeight + height1 + yOffset) * viewport.zoom
+    viewport.y -= (height1 + edgeHeight + height2 + yOffset) * viewport.zoom
     setViewport(viewport, { duration: 1000, interpolate: "smooth" })
-  }, [addNote, onConnectEnd, getNode, flowToScreenPosition, setViewport, getViewport])
+  }, [addNote, onConnectEnd, getNode, flowToScreenPosition, setViewport, getViewport, height])
 
 
   const playMap = useCallback(async ({ step = false } = {}) => {
@@ -3163,7 +3163,7 @@ function Map () {
                           func: deleteMap,
                         })
                       } }>
-                        <Icon name='trash alternative' />
+                        <Icon name='trash alternate' />
                         {t('Delete')}
                       </Dropdown.Item>
                     </Dropdown.Menu>
@@ -3240,9 +3240,9 @@ function Map () {
                       </Dropdown.Item>
                       <Dropdown.Item>
                         <Checkbox
-                          label={t('Show prompt sidebar')}
-                          checked={promptSidebar}
-                          onChange={(e, data) => setPromptSidebar(data.checked)}
+                          label={t('Show prompt input')}
+                          checked={promptInput}
+                          onChange={(e, data) => setPromptInput(data.checked)}
                         />
                       </Dropdown.Item>
                       <Dropdown.Divider />
@@ -3682,14 +3682,14 @@ function Map () {
         {' '} {' '}
         <Button.Group>
           <Popup
-            content={ !promptSidebar ? t('Show prompt sidebar') : t('Hide prompt sidebar') }
+            content={ !promptInput ? t('Show prompt input') : t('Hide prompt input') }
             trigger={
               <Button
                 icon basic
-                onClick={() => setPromptSidebar(!promptSidebar)}
+                onClick={() => setPromptInput(!promptInput)}
               >
-                <Icon name={promptSidebar ? 'edit' : 'edit outline'}
-                  color={promptSidebar ? 'blue' : 'standard'}
+                <Icon name={promptInput ? 'edit' : 'edit outline'}
+                  color={promptInput ? 'blue' : 'standard'}
                 />
               </Button>
             }
@@ -3727,7 +3727,7 @@ function Map () {
           animation='push'
           width='very wide'
           direction='bottom'
-          visible={promptSidebar}
+          visible={promptInput}
         >
 
           <div style={{
@@ -3836,7 +3836,7 @@ function Map () {
                   minZoom={0.01}
                   maxZoom={10}
                 >
-                  <Controls />
+                  <Controls position={promptInput ? 'center-left' : 'bottom-left'}/>
                   { showMinimap && (
                     <MiniMap pannable zoomable position='top-left' />
                   )}
