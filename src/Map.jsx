@@ -439,7 +439,7 @@ const NoteEditor = memo(({
 })
 
 const MarkdownEditor = memo(({
-  text, setText, data, allNodes, setNodes, id, roster,
+  text, setText, data, allNodes, setNodes, id, roster, applyText, cancelText,
 }) => {
   const { markdownEditor } = useMapContext();
 
@@ -489,6 +489,21 @@ const MarkdownEditor = memo(({
         <div style={{ flex: 1, width: '50%'  }}>
           <NoteViewer
             data={data} allNodes={allNodes} setNodes={setNodes} id={id} text={text}
+          />
+        </div>
+      </div>
+    )
+  }
+
+
+  if (markdownEditor === 'text-area') {
+    return (
+      <div style={{ display: 'flex', gap: '0.5rem', padding: '0.5rem', width: '100%', height: '100%' }}>
+        <div style={{ flex: 1, width: '50%' }}>
+          <NoteEditor
+            text={text} setText={setText}
+            applyText={applyText} cancelText={cancelText} data={data}
+            allNodes={allNodes} setNodes={setNodes} id={id}
           />
         </div>
       </div>
@@ -2438,7 +2453,7 @@ function Map () {
   }, [vimMode]);
 
   const [ markdownEditor, setMarkdownEditor ] = useState(() => {
-    return localStorage.getItem('map.markdownEditor') || 'markdown'
+    return localStorage.getItem('map.markdownEditor') || 'text-area'
   })
   useEffect(() => {
     localStorage.setItem('map.markdownEditor', markdownEditor);
@@ -3315,6 +3330,10 @@ function Map () {
                       </Dropdown>
                       <Dropdown text={t('Markdown editor options')} pointing='left' className='link item'>
                         <Dropdown.Menu>
+                          <Dropdown.Item onClick={() => { setMarkdownEditor('text-area') } }>
+                            <Icon name={ markdownEditor === 'text-area' ? 'dot circle' : 'circle outline'} />
+                            {t('Text-area')}
+                          </Dropdown.Item>
                           <Dropdown.Item onClick={() => { setMarkdownEditor('markdown') } }>
                             <Icon name={ markdownEditor === 'markdown' ? 'dot circle' : 'circle outline'} />
                             {t('Markdown editor (light)')}
