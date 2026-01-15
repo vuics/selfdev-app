@@ -684,12 +684,21 @@ const archetypes = {
               title: 'Commands',
               properties: {
                 list: { type: 'string', title: 'List Command RegExp', default: '^//LIST$', },
-                get: { type: 'string', title: 'Get Command RegExp', default: '^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$', },
-                set: { type: 'string', title: 'Set Command RegExp', default: '^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
-                append: { type: 'string', title: 'Append Command RegExp', default: '^//APPEND\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
+
+                // get: { type: 'string', title: 'Get Command RegExp', default: '^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>.+))?$', },
+                get: { type: 'string', title: 'Get Command RegExp', default: '^//GET\\s+(?P<key>\\S+)(?:\\s+(?P<default>[\\s\\S]+))?$', },
+
+                // set: { type: 'string', title: 'Set Command RegExp', default: '^//SET\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
+                set: { type: 'string', title: 'Set Command RegExp', default: '^//SET\\s+(?P<key>\\S+)\\s+(?P<value>[\\s\\S]+)$', },
+
+                // append: { type: 'string', title: 'Append Command RegExp', default: '^//APPEND\\s+(?P<key>\\S+)\\s+(?P<value>.+)$', },
+                append: { type: 'string', title: 'Append Command RegExp', default: '^//APPEND\\s+(?P<key>\\S+)\\s+(?P<value>[\\s\\S]+)$', },
+
                 delete: { type: 'string', title: 'Delete Command RegExp', default: '^//DELETE\\s+(?P<key>\\S+)$', },
                 load: { type: 'string', title: 'Load from Files Command RegExp', default: '^//LOAD\\s+(?P<key>\\S+)$', },
-                save: { type: 'string', title: 'Save to File Command RegExp', default: '^//SAVE\\s+(?P<key>\\S+)(?:\\s+(?P<filename>\\S+))?(?:\\s+(?P<default>.*))?$', },
+
+                // save: { type: 'string', title: 'Save to File Command RegExp', default: '^//SAVE\\s+(?P<key>\\S+)(?:\\s+(?P<filename>\\S+))?(?:\\s+(?P<default>.*))?$', },
+                save: { type: 'string', title: 'Save to File Command RegExp', default: '^//SAVE\\s+(?P<key>\\S+)(?:\\s+(?P<filename>\\S+))?(?:\\r?\\n(?P<default>[\\s\\S]+))?\\s*$', },
               },
             },
           },
